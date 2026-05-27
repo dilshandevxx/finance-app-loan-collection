@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 export async function createLoan(formData: FormData) {
   const name = formData.get("name") as string;
   const phone = formData.get("phone") as string;
+  const memberId = formData.get("memberId") as string;
   const principalStr = formData.get("principal") as string;
   const interestStr = formData.get("interest") as string;
   const weeksStr = formData.get("weeks") as string;
@@ -22,6 +23,7 @@ export async function createLoan(formData: FormData) {
   const customerId = `c${MOCK_CUSTOMERS.length + 1}`;
   MOCK_CUSTOMERS.push({
     id: customerId,
+    memberId: memberId || `M-${1000 + MOCK_CUSTOMERS.length + 1}`,
     name,
     phone,
     avatarUrl: `https://i.pravatar.cc/150?u=${customerId}`

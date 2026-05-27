@@ -21,16 +21,28 @@ export function NewLoanForm() {
     <form action={createLoan} className="flex flex-col gap-6">
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-white">Customer Information</h3>
-        <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium text-white/70">Full Name</label>
-          <input 
-            type="text" 
-            id="name"
-            name="name"
-            required
-            placeholder="e.g. John Doe" 
-            className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2 col-span-2 sm:col-span-1">
+            <label htmlFor="name" className="text-sm font-medium text-white/70">Full Name</label>
+            <input 
+              type="text" 
+              id="name"
+              name="name"
+              required
+              placeholder="e.g. John Doe" 
+              className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
+            />
+          </div>
+          <div className="space-y-2 col-span-2 sm:col-span-1">
+            <label htmlFor="memberId" className="text-sm font-medium text-white/70">Member ID / Account #</label>
+            <input 
+              type="text" 
+              id="memberId"
+              name="memberId"
+              placeholder="e.g. M-1004" 
+              className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
+            />
+          </div>
         </div>
         <div className="space-y-2">
           <label htmlFor="phone" className="text-sm font-medium text-white/70">Phone Number</label>

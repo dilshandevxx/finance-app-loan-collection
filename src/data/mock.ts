@@ -1,5 +1,6 @@
 export type Customer = {
   id: string;
+  memberId?: string;
   name: string;
   phone: string;
   avatarUrl?: string;
@@ -29,6 +30,7 @@ export type Installment = {
 export const MOCK_CUSTOMERS: Customer[] = [
   {
     id: "c1",
+    memberId: "M-1001",
     name: "Nataly Smith",
     phone: "555-0101",
     avatarUrl: "https://i.pravatar.cc/150?u=c1",
@@ -36,12 +38,14 @@ export const MOCK_CUSTOMERS: Customer[] = [
   },
   {
     id: "c2",
+    memberId: "M-1002",
     name: "John Doe",
     phone: "555-0102",
     avatarUrl: "https://i.pravatar.cc/150?u=c2"
   },
   {
     id: "c3",
+    memberId: "M-1003",
     name: "Starbucks Owner",
     phone: "555-0103",
     avatarUrl: "https://i.pravatar.cc/150?u=c3"

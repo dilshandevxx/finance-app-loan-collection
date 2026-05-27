@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
 import { BottomNav } from "@/components/BottomNav";
+import { DashboardRoster } from "@/components/DashboardRoster";
 import Link from "next/link";
 
 export default function Home() {
@@ -51,48 +52,11 @@ export default function Home() {
         </section>
 
         {/* Today's Roster */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Today's Roster</h3>
-            <button className="text-sm text-white/50 hover:text-white transition">See All</button>
-          </div>
-          
-          <Card className="bg-[#121214] border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-            <CardContent className="p-0">
-              {pendingInstallments.map((inst, i) => {
-                const loan = MOCK_LOANS.find(l => l.id === inst.loanId);
-                const customer = MOCK_CUSTOMERS.find(c => c.id === loan?.customerId);
-                
-                if (!customer) return null;
-                
-                return (
-                  <Link key={inst.id} href={`/customers/${customer.id}`}>
-                    <div className={`flex items-center justify-between p-4 px-6 hover:bg-white/5 transition cursor-pointer ${i !== pendingInstallments.length - 1 ? 'border-b border-white/5' : ''}`}>
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-white/10 overflow-hidden relative">
-                          {customer.avatarUrl ? (
-                            <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-white/50 font-semibold">
-                              {customer.name.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="font-medium text-white">{customer.name}</span>
-                          <span className="text-xs text-white/50">Weekly Installment</span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="font-medium text-red-400">-${inst.amount.toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </CardContent>
-          </Card>
-        </section>
+        <DashboardRoster 
+          pendingInstallments={pendingInstallments} 
+          customers={MOCK_CUSTOMERS} 
+          loans={MOCK_LOANS} 
+        />
       </div>
       
       <BottomNav />
