@@ -2,8 +2,13 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { NewLoanForm } from "@/components/NewLoanForm";
+import { getCustomers } from "@/data/db";
 
-export default function NewLoan() {
+export const dynamic = 'force-dynamic';
+
+export default async function NewLoan() {
+  const customers = await getCustomers();
+
   return (
     <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
       {/* Header */}
@@ -20,7 +25,7 @@ export default function NewLoan() {
       <div className="max-w-2xl mx-auto w-full">
         <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6 md:p-8 flex flex-col gap-6">
-            <NewLoanForm />
+            <NewLoanForm customers={customers} />
           </CardContent>
         </Card>
       </div>

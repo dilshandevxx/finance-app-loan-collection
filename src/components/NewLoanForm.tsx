@@ -3,10 +3,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createLoan } from "@/app/actions";
-import { MOCK_CUSTOMERS } from "@/data/mock";
 import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2 } from "lucide-react";
 
-export function NewLoanForm() {
+type Customer = {
+  id: string;
+  name: string;
+  memberId?: string;
+};
+
+export function NewLoanForm({ customers }: { customers: Customer[] }) {
   const [isExisting, setIsExisting] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [principal, setPrincipal] = useState<number>(0);
@@ -67,7 +72,7 @@ export function NewLoanForm() {
                 required
               >
                 <option value="" disabled>Select a customer...</option>
-                {MOCK_CUSTOMERS.map(c => (
+                {customers.map(c => (
                   <option key={c.id} value={c.id}>{c.name} (ID: {c.memberId || c.id})</option>
                 ))}
               </select>

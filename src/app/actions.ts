@@ -18,11 +18,17 @@ export async function createLoan(formData: FormData) {
 
   const existingCustomerId = formData.get("existingCustomerId") as string | null;
 
-  if (isNaN(principalAmount) || isNaN(interest) || isNaN(weeks) || weeks <= 0) {
-    throw new Error("Invalid loan input");
+  if (isNaN(principalAmount) || principalAmount <= 0) {
+    throw new Error("Invalid principal amount");
+  }
+  if (isNaN(interest) || interest < 0) {
+    throw new Error("Invalid interest rate");
+  }
+  if (isNaN(weeks) || weeks <= 0) {
+    throw new Error("Invalid duration in weeks");
   }
 
-  let customerId = existingCustomerId;
+  let customerId = existingCustomerId || null;
 
   if (!customerId) {
     if (!name || !phone) throw new Error("Name and phone required for new customer");
@@ -33,12 +39,15 @@ export async function createLoan(formData: FormData) {
         name,
         phone,
         member_id: memberId || null,
-        avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`
+        avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`
       })
       .select()
       .single();
       
-    if (customerError) throw new Error(customerError.message);
+    if (customerError) {
+      console.error("Customer insert error:", customerError);
+      throw new Error(customerError.message);
+    }
     customerId = newCustomer.id;
   }
 
@@ -60,10 +69,13 @@ export async function createLoan(formData: FormData) {
     .select()
     .single();
 
-  if (loanError) throw new Error(loanError.message);
+  if (loanError) {
+    console.error("Loan insert error:", loanError);
+    throw new Error(loanError.message);
+  }
 
   const installments = [];
-  let currentDate = new Date();
+  const currentDate = new Date();
   for (let i = 0; i < weeks; i++) {
     currentDate.setDate(currentDate.getDate() + 7);
     installments.push({
@@ -78,7 +90,10 @@ export async function createLoan(formData: FormData) {
     .from("installments")
     .insert(installments);
 
-  if (installmentsError) throw new Error(installmentsError.message);
+  if (installmentsError) {
+    console.error("Installments insert error:", installmentsError);
+    throw new Error(installmentsError.message);
+  }
 
   revalidatePath("/");
   redirect("/");
