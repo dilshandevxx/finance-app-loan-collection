@@ -36,11 +36,11 @@ export default function Home() {
             <span className="text-base sm:text-lg font-extrabold tracking-tight text-black dark:text-white leading-none">Agent 007</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 pr-1">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <ThemeToggle />
-          <button className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#333] flex items-center justify-center text-black dark:text-white hover:bg-gray-50 dark:hover:bg-[#222] transition-colors shadow-sm">
-            <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-white/80" />
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#1a1a1a]"></span>
+          <button className="relative shrink-0 w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white dark:hover:bg-[#111] transition-colors shadow-sm">
+            <Bell className="w-4 h-4 text-black/70 dark:text-white/70" />
+            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-[#0a0a0a]"></span>
           </button>
         </div>
       </header>
@@ -68,20 +68,20 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 text-gray-500 dark:text-white/50 mb-2">
-                <Users className="w-4 h-4" />
-                <span className="text-xs font-medium">Active Loans</span>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl p-4 sm:p-5 shadow-sm">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-gray-500 dark:text-white/50 mb-2">
+                <Users className="w-4 h-4 shrink-0" />
+                <span className="text-xs font-medium uppercase tracking-wider">Active</span>
               </div>
-              <div className="text-2xl font-semibold text-black dark:text-white">{activeLoans}</div>
+              <div className="text-xl sm:text-2xl font-semibold text-black dark:text-white">{activeLoans}</div>
             </div>
-            <div className="bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 text-red-500 dark:text-red-400 mb-2">
-                <AlertCircle className="w-4 h-4" />
-                <span className="text-xs font-medium">Overdue Amount</span>
+            <div className="bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 rounded-2xl p-4 sm:p-5 shadow-sm">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-red-500 dark:text-red-400 mb-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span className="text-xs font-medium uppercase tracking-wider">Overdue</span>
               </div>
-              <div className="text-2xl font-semibold text-red-600 dark:text-red-400">${overdueAmount.toFixed(2)}</div>
+              <div className="text-xl sm:text-2xl font-semibold text-red-600 dark:text-red-400">${overdueAmount.toFixed(2)}</div>
             </div>
           </div>
         </section>
