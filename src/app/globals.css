@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0a0a0c;
+  --color-background: #000000;
   --color-foreground: #ffffff;
-  --color-card: #18181b;
-  --color-card-foreground: #f4f4f5;
-  --color-popover: #18181b;
-  --color-popover-foreground: #f4f4f5;
+  --color-card: #0a0a0a;
+  --color-card-foreground: #ffffff;
+  --color-popover: #0a0a0a;
+  --color-popover-foreground: #ffffff;
   --color-primary: #ffffff;
-  --color-primary-foreground: #09090b;
-  --color-secondary: #27272a;
-  --color-secondary-foreground: #fafafa;
-  --color-muted: #27272a;
-  --color-muted-foreground: #a1a1aa;
-  --color-accent: #27272a;
-  --color-accent-foreground: #fafafa;
-  --color-destructive: #7f1d1d;
+  --color-primary-foreground: #000000;
+  --color-secondary: #1a1a1a;
+  --color-secondary-foreground: #ffffff;
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #888888;
+  --color-accent: #1a1a1a;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #3f0f0f;
   --color-destructive-foreground: #f87171;
-  --color-border: #27272a;
-  --color-input: #27272a;
-  --color-ring: #d4d4d8;
-  --radius: 1rem;
+  --color-border: #222222;
+  --color-input: #222222;
+  --color-ring: #ffffff;
+  --radius: 0.75rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

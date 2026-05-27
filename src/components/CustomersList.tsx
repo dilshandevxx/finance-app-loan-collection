@@ -37,13 +37,13 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by Name, Member ID, or Phone..."
-          className="w-full bg-[#121214] border border-white/10 rounded-2xl pl-11 pr-4 py-4 text-base text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition shadow-2xl"
+          className="w-full bg-[#0a0a0a] border border-[#222] rounded-2xl pl-11 pr-4 py-4 text-base text-white placeholder:text-white/30 focus:outline-none focus:border-white/40 transition shadow-sm"
         />
       </div>
 
       <div className="flex flex-col gap-4">
         {filteredCustomers.length === 0 ? (
-          <Card className="bg-[#121214] border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+          <Card className="bg-[#0a0a0a] border-[#222] rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-8 text-center text-white/50">
               No customers found matching "{searchQuery}".
             </CardContent>
@@ -56,10 +56,10 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
 
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
-                <Card className="bg-[#121214] border-white/5 rounded-3xl overflow-hidden shadow-2xl hover:bg-white/5 transition-colors cursor-pointer group">
+                <Card className="bg-[#0a0a0a] border-[#222] rounded-2xl overflow-hidden shadow-sm hover:bg-[#111] transition-colors cursor-pointer group">
                   <CardContent className="p-4 px-6 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-full bg-white/10 overflow-hidden relative border border-white/10">
+                      <div className="w-12 h-12 rounded-full bg-[#111] overflow-hidden relative border border-[#222]">
                         {customer.avatarUrl ? (
                           <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
                         ) : (
@@ -70,7 +70,7 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                       </div>
                       <div className="flex flex-col">
                         <span className="font-semibold text-lg text-white">{customer.name}</span>
-                        <div className="flex items-center gap-2 text-sm text-white/50">
+                        <div className="flex items-center gap-2 text-xs text-white/50">
                           <span>{customer.memberId || customer.id}</span>
                           <span>•</span>
                           <span>{customer.phone}</span>
@@ -82,11 +82,11 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                       <div className="flex flex-col items-end hidden sm:flex">
                         {activeLoan ? (
                           <>
-                            <span className="font-semibold text-white">${totalRemaining.toFixed(2)}</span>
+                            <span className="font-bold text-white tracking-tight">${totalRemaining.toFixed(2)}</span>
                             <span className="text-xs text-white/40">Remaining Balance</span>
                           </>
                         ) : (
-                          <span className="text-sm text-white/40 bg-white/5 px-3 py-1 rounded-full">No Active Loan</span>
+                          <span className="text-xs text-white/40 bg-[#111] border border-[#222] px-3 py-1 rounded-md">No Active Loan</span>
                         )}
                       </div>
                       <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-white/60 transition-colors" />

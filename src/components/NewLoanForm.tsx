@@ -93,7 +93,7 @@ export function NewLoanForm() {
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="weeks" className="text-sm font-medium text-white/70">Weeks</label>
+            <label htmlFor="weeks" className="text-sm font-medium text-white/50">Weeks</label>
             <input 
               type="number" 
               id="weeks"
@@ -103,20 +103,28 @@ export function NewLoanForm() {
               value={weeks || ""}
               onChange={(e) => setWeeks(parseInt(e.target.value) || 0)}
               placeholder="10" 
-              className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
+              className="w-full bg-[#0a0a0a] border border-[#222] rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-white/40 transition"
             />
           </div>
         </div>
       </div>
 
-      <div className="bg-white/5 rounded-2xl p-4 flex justify-between items-center mt-2">
+      <div className="bg-[#111] border border-[#222] rounded-2xl p-5 flex justify-between items-center mt-2">
         <div className="flex flex-col">
-          <span className="text-sm text-white/60">Calculated Installment</span>
-          <span className="text-2xl font-bold text-white">${installmentAmount.toFixed(2)} <span className="text-sm text-white/40 font-normal">/ week</span></span>
+          <span className="text-sm font-medium text-white/50">Calculated Installment</span>
+          <span className="text-2xl font-bold text-white tracking-tight">${installmentAmount.toFixed(2)} <span className="text-sm text-white/40 font-medium">/ week</span></span>
         </div>
       </div>
 
-      <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 rounded-full h-14 text-lg font-semibold mt-4 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black to-transparent z-50">
+        <div className="bg-[#111] p-2 rounded-2xl border border-[#222] shadow-2xl backdrop-blur-xl">
+          <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 rounded-xl h-14 text-base font-semibold shadow-sm">
+            Create Loan Account
+          </Button>
+        </div>
+      </div>
+
+      <Button type="submit" className="hidden md:flex w-full bg-white text-black hover:bg-white/90 rounded-xl h-14 text-lg font-semibold mt-4 shadow-sm">
         Create Loan Account
       </Button>
     </form>

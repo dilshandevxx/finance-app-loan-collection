@@ -60,3 +60,26 @@ export async function createLoan(formData: FormData) {
   revalidatePath("/");
   redirect("/");
 }
+
+export async function markInstallmentPaid(installmentId: string) {
+  const installment = MOCK_INSTALLMENTS.find(i => i.id === installmentId);
+  if (!installment) return { error: "Installment not found" };
+
+  installment.status = "PAID";
+  installment.paidDate = new Date().toISOString().split('T')[0];
+
+  const loan = MOCK_LOANS.find(l => l.id === installment.loanId);
+  if (loan) {
+    loan.remainingBalance -= installment.amount;
+    if (loan.remainingBalance <= 0) {
+      loan.status = "PAID_OFF";
+      loan.remainingBalance = 0;
+    }
+  }
+
+  revalidatePath("/");
+  revalidatePath("/customers/[id]", "page");
+  revalidatePath("/reports");
+  
+  return { success: true };
+}

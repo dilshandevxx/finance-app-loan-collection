@@ -95,7 +95,7 @@ export const MOCK_INSTALLMENTS: Installment[] = [
     id: "I3",
     loanId: "L2",
     amount: 100,
-    dueDate: "2024-07-27",
-    status: "PENDING"
+    dueDate: "2024-05-01",
+    status: "MISSED"
   }
 ];

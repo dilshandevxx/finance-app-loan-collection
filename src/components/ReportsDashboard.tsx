@@ -113,31 +113,30 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
     <div className="flex flex-col gap-8 w-full max-w-5xl mx-auto">
       
       {/* Filters Area (Hidden during print) */}
-      <section className="print:hidden bg-gradient-to-tr from-[#1c1c1f] to-[#121214] border border-white/5 rounded-3xl p-6 shadow-2xl flex flex-col sm:flex-row items-end justify-between gap-6 relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+      <section className="print:hidden bg-[#0a0a0a] border border-[#222] rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-end justify-between gap-6">
         
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-10">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <div className="flex flex-col gap-2">
-            <label className="text-xs text-white/50 uppercase font-semibold tracking-wider">Start Date</label>
+            <label className="text-xs text-white/50 uppercase font-medium tracking-wider">Start Date</label>
             <div className="relative">
               <input 
                 type="date" 
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-black/50 border border-white/10 rounded-xl pl-4 pr-10 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition w-full sm:w-auto"
+                className="bg-[#111] border border-[#222] rounded-xl pl-4 pr-10 py-3 text-white focus:outline-none focus:border-white/40 transition w-full sm:w-auto"
                 style={{ colorScheme: "dark" }}
               />
               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-xs text-white/50 uppercase font-semibold tracking-wider">End Date</label>
+            <label className="text-xs text-white/50 uppercase font-medium tracking-wider">End Date</label>
             <div className="relative">
               <input 
                 type="date" 
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-black/50 border border-white/10 rounded-xl pl-4 pr-10 py-3 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition w-full sm:w-auto"
+                className="bg-[#111] border border-[#222] rounded-xl pl-4 pr-10 py-3 text-white focus:outline-none focus:border-white/40 transition w-full sm:w-auto"
                 style={{ colorScheme: "dark" }}
               />
               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
@@ -145,14 +144,14 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto relative z-10">
-          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl px-6 h-12 gap-2">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl px-6 h-12 gap-2 shadow-sm">
             <Table className="w-4 h-4" /> Excel
           </Button>
-          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20 rounded-xl px-6 h-12 gap-2">
+          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20 rounded-xl px-6 h-12 gap-2 shadow-sm">
             <Download className="w-4 h-4" /> CSV
           </Button>
-          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-white text-black hover:bg-white/90 rounded-xl px-6 h-12 gap-2 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-white text-black hover:bg-white/90 rounded-xl px-6 h-12 gap-2 shadow-sm">
             <Printer className="w-4 h-4" /> PDF
           </Button>
         </div>
@@ -167,33 +166,33 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
 
       {/* Summary Metrics */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-[#121214] print:bg-white print:border-black/20 border-white/5 rounded-3xl overflow-hidden shadow-xl">
+        <Card className="bg-[#0a0a0a] print:bg-white print:border-black/20 border-[#222] rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
-            <span className="text-white/60 print:text-black/60 text-sm font-medium">Expected Collections</span>
-            <div className="text-3xl font-bold mt-2 text-white print:text-black">${totalExpected.toFixed(2)}</div>
+            <span className="text-white/50 print:text-black/60 text-sm font-medium">Expected Collections</span>
+            <div className="text-3xl font-bold mt-2 text-white print:text-black tracking-tight">${totalExpected.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-[#121214] print:bg-white print:border-black/20 border-white/5 rounded-3xl overflow-hidden shadow-xl">
+        <Card className="bg-[#0a0a0a] print:bg-white print:border-black/20 border-[#222] rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
-            <span className="text-white/60 print:text-black/60 text-sm font-medium">Actually Collected</span>
-            <div className="text-3xl font-bold mt-2 text-green-400 print:text-green-700">${totalCollected.toFixed(2)}</div>
+            <span className="text-white/50 print:text-black/60 text-sm font-medium">Actually Collected</span>
+            <div className="text-3xl font-bold mt-2 text-green-400 print:text-green-700 tracking-tight">${totalCollected.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-[#121214] print:bg-white print:border-black/20 border-white/5 rounded-3xl overflow-hidden shadow-xl">
+        <Card className="bg-[#0a0a0a] print:bg-white print:border-black/20 border-[#222] rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
-            <span className="text-white/60 print:text-black/60 text-sm font-medium">Pending / Missed</span>
-            <div className="text-3xl font-bold mt-2 text-red-400 print:text-red-700">${totalPending.toFixed(2)}</div>
+            <span className="text-white/50 print:text-black/60 text-sm font-medium">Pending / Missed</span>
+            <div className="text-3xl font-bold mt-2 text-red-400 print:text-red-700 tracking-tight">${totalPending.toFixed(2)}</div>
           </CardContent>
         </Card>
       </section>
 
       {/* Detailed Table */}
       <section>
-        <h3 className="text-lg font-semibold text-white print:text-black mb-4">Transaction Details</h3>
-        <Card className="bg-[#121214] print:bg-white print:border-black/20 print:shadow-none border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+        <h3 className="text-lg font-semibold text-white print:text-black mb-4 tracking-tight">Transaction Details</h3>
+        <Card className="bg-[#0a0a0a] print:bg-white print:border-black/20 print:shadow-none border-[#222] rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-0 overflow-x-auto">
             <table className="w-full text-left text-sm print:text-black">
-              <thead className="bg-white/5 print:bg-black/5 text-white/50 print:text-black/60 uppercase tracking-wider">
+              <thead className="bg-[#111] print:bg-black/5 text-white/50 print:text-black/60 uppercase tracking-wider text-xs font-medium">
                 <tr>
                   <th className="p-4 px-6 font-medium">Customer</th>
                   <th className="p-4 font-medium">Member ID</th>
@@ -202,7 +201,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                   <th className="p-4 px-6 font-medium text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 print:divide-black/10">
+              <tbody className="divide-y divide-[#222] print:divide-black/10">
                 {filteredInstallments.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="p-8 text-center text-white/40 print:text-black/50">
@@ -215,13 +214,13 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                     const customer = customers.find(c => c.id === loan?.customerId);
                     
                     return (
-                      <tr key={inst.id} className="hover:bg-white/5 print:hover:bg-transparent transition-colors text-white print:text-black">
-                        <td className="p-4 px-6 font-medium">{customer?.name || "Unknown"}</td>
-                        <td className="p-4 text-white/60 print:text-black/70">{customer?.memberId || customer?.id || "N/A"}</td>
-                        <td className="p-4 text-white/60 print:text-black/70">{inst.dueDate}</td>
-                        <td className="p-4 text-right font-medium">${inst.amount.toFixed(2)}</td>
+                      <tr key={inst.id} className="hover:bg-[#111] print:hover:bg-transparent transition-colors text-white print:text-black">
+                        <td className="p-4 px-6 font-medium text-sm">{customer?.name || "Unknown"}</td>
+                        <td className="p-4 text-white/60 print:text-black/70 text-xs">{customer?.memberId || customer?.id || "N/A"}</td>
+                        <td className="p-4 text-white/60 print:text-black/70 text-xs">{inst.dueDate}</td>
+                        <td className="p-4 text-right font-medium text-sm">${inst.amount.toFixed(2)}</td>
                         <td className="p-4 px-6 text-right">
-                          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                          <span className={`inline-block px-3 py-1 rounded-md text-xs font-semibold ${
                             inst.status === "PAID" ? "bg-green-500/10 text-green-400 print:text-green-700" :
                             inst.status === "PENDING" ? "bg-yellow-500/10 text-yellow-400 print:text-yellow-700" :
                             "bg-red-500/10 text-red-400 print:text-red-700"
