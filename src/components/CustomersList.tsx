@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, ChevronRight, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Customer, Loan } from "@/data/mock";
+import { Customer, Loan, MOCK_INSTALLMENTS } from "@/data/mock";
 
 type CustomersListProps = {
   customers: Customer[];
@@ -52,7 +52,9 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
             const customerLoans = loans.filter(l => l.customerId === customer.id);
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
-            const isOverdue = customer.status === 'Arrears';
+            const isOverdue = customerLoans.some(l => 
+              MOCK_INSTALLMENTS.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+            );
 
             // Generate a consistent gradient color based on name length/index for avatar fallback
             const gradients = [
@@ -105,12 +107,12 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                           <div className="mt-2 flex flex-col gap-1 w-full max-w-[200px]">
                             <div className="flex items-center justify-between text-[10px] font-semibold text-gray-500 dark:text-white/50">
                               <span>Progress</span>
-                              <span>{Math.round(((activeLoan.amount - totalRemaining) / activeLoan.amount) * 100)}%</span>
+                              <span>{Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%</span>
                             </div>
                             <div className="w-full h-1.5 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
                               <div 
                                 className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
-                                style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.amount - totalRemaining) / activeLoan.amount) * 100))}%` }}
+                                style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
                               />
                             </div>
                           </div>
