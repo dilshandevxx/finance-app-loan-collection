@@ -16,18 +16,25 @@ export async function createLoan(formData: FormData) {
   const interest = parseFloat(interestStr);
   const weeks = parseInt(weeksStr);
 
-  if (!name || !phone || isNaN(principalAmount) || isNaN(interest) || isNaN(weeks) || weeks <= 0) {
-    throw new Error("Invalid input");
+  const existingCustomerId = formData.get("existingCustomerId") as string | null;
+
+  if (isNaN(principalAmount) || isNaN(interest) || isNaN(weeks) || weeks <= 0) {
+    throw new Error("Invalid loan input");
   }
 
-  const customerId = `c${MOCK_CUSTOMERS.length + 1}`;
-  MOCK_CUSTOMERS.push({
-    id: customerId,
-    memberId: memberId || `M-${1000 + MOCK_CUSTOMERS.length + 1}`,
-    name,
-    phone,
-    avatarUrl: `https://i.pravatar.cc/150?u=${customerId}`
-  });
+  let customerId = existingCustomerId;
+
+  if (!customerId) {
+    if (!name || !phone) throw new Error("Name and phone required for new customer");
+    customerId = `c${MOCK_CUSTOMERS.length + 1}`;
+    MOCK_CUSTOMERS.push({
+      id: customerId,
+      memberId: memberId || `M-${1000 + MOCK_CUSTOMERS.length + 1}`,
+      name,
+      phone,
+      avatarUrl: `https://i.pravatar.cc/150?u=${customerId}`
+    });
+  }
 
   const loanId = `L${MOCK_LOANS.length + 1}`;
   const totalAmountDue = principalAmount * (1 + interest / 100);

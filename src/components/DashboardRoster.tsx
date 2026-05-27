@@ -45,12 +45,19 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     setSelectedPayment({ customer, installmentId, expectedAmount });
   };
 
-  const handleConfirmPayment = (amount: number) => {
-    if (!selectedPayment) return;
-    
-    startTransition(async () => {
-      await markInstallmentPaid(selectedPayment.installmentId);
-      setSelectedPayment(null);
+  const handleConfirmPayment = (amount: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      if (!selectedPayment) return resolve();
+      
+      startTransition(async () => {
+        try {
+          await markInstallmentPaid(selectedPayment.installmentId);
+          // Don't close immediately so success state can show
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      });
     });
   };
 
@@ -153,6 +160,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           onClose={() => setSelectedPayment(null)}
           customer={selectedPayment.customer}
           expectedAmount={selectedPayment.expectedAmount}
+          installmentId={selectedPayment.installmentId}
           onConfirm={handleConfirmPayment}
         />
       )}

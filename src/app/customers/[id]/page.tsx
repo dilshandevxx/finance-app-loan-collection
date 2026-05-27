@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
+import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -24,6 +24,13 @@ export default async function CustomerDetails({ params }: Props) {
   const paidCount = installments.filter(i => i.status === "PAID").length;
   const progressPercent = Math.round((paidCount / installments.length) * 100) || 0;
 
+  // Calculate reliability score: Paid on-time vs late/missed (simplified for mock data)
+  // Assume if it's PAID, it's reliable.
+  const reliabilityScore = paidCount > 0 ? 95 : 100; // Mock score
+
+  // Find next pending installment
+  const nextInstallment = installments.find(i => i.status !== "PAID");
+
   return (
     <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
       {/* Header */}
@@ -42,8 +49,13 @@ export default async function CustomerDetails({ params }: Props) {
         <div className="md:col-span-5 flex flex-col gap-4">
           
           {/* Profile Card */}
-          <div className="flex flex-col items-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-[2rem] p-8 shadow-sm">
+          <div className="flex flex-col items-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-[2rem] p-8 shadow-sm relative">
             
+            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-500/20">
+              <TrendingUp className="w-3.5 h-3.5" />
+              {reliabilityScore}
+            </div>
+
             <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-[#222]">
               {customer.avatarUrl ? (
                 <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
@@ -54,9 +66,11 @@ export default async function CustomerDetails({ params }: Props) {
               )}
             </div>
             
-            <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white">{customer.name}</h1>
-            <span className="text-gray-500 dark:text-white/50 text-sm font-medium">{customer.phone} • ID: {customer.memberId || customer.id}</span>
+            <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white text-center">{customer.name}</h1>
+            <span className="text-gray-500 dark:text-white/50 text-sm font-medium">ID: {customer.memberId || customer.id}</span>
             
+            <CustomerContactActions customer={customer} />
+
             <div className="mt-8 text-center w-full">
               <span className="text-gray-500 dark:text-white/50 text-sm font-medium">Remaining Balance</span>
               <div className="text-5xl font-bold tracking-tighter mt-1 text-black dark:text-white">
@@ -78,14 +92,9 @@ export default async function CustomerDetails({ params }: Props) {
               </div>
             </div>
 
-            {/* Desktop Actions (Hidden on Mobile, replaced by sticky bar) */}
-            <div className="hidden md:flex gap-3 mt-8 w-full">
-              <Button className="flex-1 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl font-medium h-12 shadow-sm">
-                Mark Paid
-              </Button>
-              <Button variant="outline" className="flex-1 border-gray-200 dark:border-[#222] bg-white dark:bg-[#0a0a0a] rounded-xl hover:bg-gray-50 dark:hover:bg-[#111] text-black dark:text-white h-12 shadow-sm">
-                Edit
-              </Button>
+            {/* Desktop Actions */}
+            <div className="hidden md:flex mt-8 w-full">
+              <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
             </div>
           </div>
 
@@ -184,13 +193,8 @@ export default async function CustomerDetails({ params }: Props) {
 
       {/* Sticky Mobile Action Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-black dark:via-black to-transparent z-50">
-        <div className="flex gap-3 bg-white dark:bg-[#111] p-2 rounded-2xl border border-gray-200 dark:border-[#222] shadow-2xl backdrop-blur-xl">
-          <Button className="flex-1 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl font-medium h-14">
-            Mark Paid
-          </Button>
-          <Button variant="outline" className="flex-1 border-gray-200 dark:border-[#222] bg-transparent rounded-xl hover:bg-gray-50 dark:hover:bg-[#222] text-black dark:text-white h-14">
-            Edit
-          </Button>
+        <div className="bg-white dark:bg-[#111] p-2 rounded-2xl border border-gray-200 dark:border-[#222] shadow-2xl backdrop-blur-xl">
+          <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
         </div>
       </div>
 
