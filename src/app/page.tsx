@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 
 export default function Home() {
@@ -33,9 +34,12 @@ export default function Home() {
             <span className="text-sm font-semibold tracking-tight">Agent 007</span>
           </div>
         </div>
-        <button className="w-10 h-10 rounded-xl bg-[#0a0a0a] border border-[#222] flex items-center justify-center text-white hover:bg-[#111] transition-colors shadow-sm">
-          <Search className="w-4 h-4 text-white/70" />
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button className="w-10 h-10 rounded-xl bg-[#0a0a0a] border border-[#222] flex items-center justify-center text-white hover:bg-[#111] transition-colors shadow-sm">
+            <Search className="w-4 h-4 text-white/70" />
+          </button>
+        </div>
       </header>
 
       <div className="grid lg:grid-cols-2 gap-8 items-start">
