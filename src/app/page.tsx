@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Plus, ArrowUpRight, TrendingUp, AlertCircle, Users, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
+import { getCustomers, getInstallments, getLoans } from "@/data/db";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -10,14 +10,20 @@ import { Greeting } from "@/components/Greeting";
 import { LogoutButton } from "@/components/LogoutButton";
 import Link from "next/link";
 
-export default function Home() {
-  const pendingInstallments = MOCK_INSTALLMENTS.filter(i => i.status === "PENDING" || i.status === "MISSED");
+export default async function Home() {
+  const [customers, loans, installments] = await Promise.all([
+    getCustomers(),
+    getLoans(),
+    getInstallments(),
+  ]);
+
+  const pendingInstallments = installments.filter(i => i.status === "PENDING" || i.status === "MISSED");
   
   const expectedToday = pendingInstallments
     .filter(i => new Date(i.dueDate).toDateString() === new Date().toDateString() || i.status === "MISSED")
     .reduce((sum, inst) => sum + inst.amount, 0);
 
-  const activeLoans = MOCK_LOANS.filter(l => l.status === "ACTIVE").length;
+  const activeLoans = loans.filter(l => l.status === "ACTIVE").length;
   
   const overdueAmount = pendingInstallments
     .filter(i => i.status === "MISSED" || new Date(i.dueDate) < new Date(new Date().toDateString()))
@@ -99,8 +105,8 @@ export default function Home() {
         <div className="animate-in slide-in-from-bottom-8 duration-700 delay-500 fill-mode-forwards opacity-0">
           <DashboardRoster 
             pendingInstallments={pendingInstallments} 
-            customers={MOCK_CUSTOMERS} 
-            loans={MOCK_LOANS} 
+            customers={customers} 
+            loans={loans} 
           />
         </div>
       </div>

@@ -31,13 +31,21 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     setLoading(true);
-    // Simulate slight network delay for premium feel
-    await new Promise(r => setTimeout(r, 600));
     
-    const result = await loginWithPin(pin);
-    if (result.success) {
-      router.push("/");
-    } else {
+    try {
+      // Simulate slight network delay for premium feel
+      await new Promise(r => setTimeout(r, 600));
+      
+      const result = await loginWithPin(pin);
+      if (result.success) {
+        router.push("/");
+      } else {
+        setError(true);
+        setPin("");
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
       setError(true);
       setPin("");
       setLoading(false);
