@@ -69,11 +69,11 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                         )}
                       </div>
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="font-semibold text-lg text-black dark:text-white truncate">{customer.name}</span>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50 min-w-0 w-full">
+                        <span className="font-semibold text-lg text-black dark:text-white break-words">{customer.name}</span>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50 min-w-0 w-full flex-wrap">
                           <span className="shrink-0">{customer.memberId || customer.id}</span>
                           <span className="shrink-0">•</span>
-                          <span className="truncate">{customer.phone}</span>
+                          <span className="break-words">{customer.phone}</span>
                         </div>
                       </div>
                     </div>
