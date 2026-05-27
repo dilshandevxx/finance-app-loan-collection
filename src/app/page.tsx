@@ -7,6 +7,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
+import { LogoutButton } from "@/components/LogoutButton";
 import Link from "next/link";
 
 export default function Home() {
@@ -39,6 +40,7 @@ export default function Home() {
             <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
             <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-[#222] animate-pulse"></span>
           </button>
+          <LogoutButton />
         </div>
       </header>
 

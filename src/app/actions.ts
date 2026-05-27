@@ -1,8 +1,8 @@
 "use server";
 
-import { MOCK_CUSTOMERS, MOCK_LOANS, MOCK_INSTALLMENTS } from "@/data/mock";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export async function createLoan(formData: FormData) {
   const name = formData.get("name") as string;
@@ -26,62 +26,99 @@ export async function createLoan(formData: FormData) {
 
   if (!customerId) {
     if (!name || !phone) throw new Error("Name and phone required for new customer");
-    customerId = `c${MOCK_CUSTOMERS.length + 1}`;
-    MOCK_CUSTOMERS.push({
-      id: customerId,
-      memberId: memberId || `M-${1000 + MOCK_CUSTOMERS.length + 1}`,
-      name,
-      phone,
-      avatarUrl: `https://i.pravatar.cc/150?u=${customerId}`
-    });
+    
+    const { data: newCustomer, error: customerError } = await supabase
+      .from("customers")
+      .insert({
+        name,
+        phone,
+        member_id: memberId || null,
+        avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`
+      })
+      .select()
+      .single();
+      
+    if (customerError) throw new Error(customerError.message);
+    customerId = newCustomer.id;
   }
 
-  const loanId = `L${MOCK_LOANS.length + 1}`;
   const totalAmountDue = principalAmount * (1 + interest / 100);
   const weeklyInstallment = totalAmountDue / weeks;
   const startDate = new Date().toISOString().split('T')[0];
 
-  MOCK_LOANS.push({
-    id: loanId,
-    customerId,
-    principalAmount,
-    totalAmountDue,
-    remainingBalance: totalAmountDue,
-    weeklyInstallment,
-    startDate,
-    status: "ACTIVE"
-  });
+  const { data: newLoan, error: loanError } = await supabase
+    .from("loans")
+    .insert({
+      customer_id: customerId,
+      principal_amount: principalAmount,
+      total_amount_due: totalAmountDue,
+      remaining_balance: totalAmountDue,
+      weekly_installment: weeklyInstallment,
+      start_date: startDate,
+      status: "ACTIVE"
+    })
+    .select()
+    .single();
 
+  if (loanError) throw new Error(loanError.message);
+
+  const installments = [];
   let currentDate = new Date();
   for (let i = 0; i < weeks; i++) {
     currentDate.setDate(currentDate.getDate() + 7);
-    MOCK_INSTALLMENTS.push({
-      id: `I${MOCK_INSTALLMENTS.length + 1}`,
-      loanId,
+    installments.push({
+      loan_id: newLoan.id,
       amount: weeklyInstallment,
-      dueDate: currentDate.toISOString().split('T')[0],
+      due_date: currentDate.toISOString().split('T')[0],
       status: "PENDING"
     });
   }
+
+  const { error: installmentsError } = await supabase
+    .from("installments")
+    .insert(installments);
+
+  if (installmentsError) throw new Error(installmentsError.message);
 
   revalidatePath("/");
   redirect("/");
 }
 
 export async function markInstallmentPaid(installmentId: string) {
-  const installment = MOCK_INSTALLMENTS.find(i => i.id === installmentId);
-  if (!installment) return { error: "Installment not found" };
+  // Get installment
+  const { data: installment, error: instError } = await supabase
+    .from("installments")
+    .select("*")
+    .eq("id", installmentId)
+    .single();
 
-  installment.status = "PAID";
-  installment.paidDate = new Date().toISOString().split('T')[0];
+  if (instError || !installment) return { error: "Installment not found" };
 
-  const loan = MOCK_LOANS.find(l => l.id === installment.loanId);
+  // Update installment
+  await supabase
+    .from("installments")
+    .update({ 
+      status: "PAID", 
+      paid_date: new Date().toISOString().split('T')[0] 
+    })
+    .eq("id", installmentId);
+
+  // Update loan balance
+  const { data: loan } = await supabase
+    .from("loans")
+    .select("*")
+    .eq("id", installment.loan_id)
+    .single();
+
   if (loan) {
-    loan.remainingBalance -= installment.amount;
-    if (loan.remainingBalance <= 0) {
-      loan.status = "PAID_OFF";
-      loan.remainingBalance = 0;
-    }
+    const newBalance = Math.max(0, loan.remaining_balance - installment.amount);
+    await supabase
+      .from("loans")
+      .update({
+        remaining_balance: newBalance,
+        status: newBalance <= 0 ? "PAID_OFF" : loan.status
+      })
+      .eq("id", loan.id);
   }
 
   revalidatePath("/");

@@ -51,11 +51,35 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       
       startTransition(async () => {
         try {
-          await markInstallmentPaid(selectedPayment.installmentId);
-          // Don't close immediately so success state can show
-          resolve();
-        } catch (err) {
-          reject(err);
+          if (!navigator.onLine) {
+            // Queue offline
+            const queueStr = localStorage.getItem("offlineSyncQueue");
+            const queue = queueStr ? JSON.parse(queueStr) : [];
+            queue.push({
+              type: "markInstallmentPaid",
+              installmentId: selectedPayment.installmentId,
+              timestamp: Date.now()
+            });
+            localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+            resolve();
+          } else {
+            await markInstallmentPaid(selectedPayment.installmentId);
+            resolve();
+          }
+        } catch (err: any) {
+          if (err?.message?.includes("fetch") || err?.message?.includes("network")) {
+            const queueStr = localStorage.getItem("offlineSyncQueue");
+            const queue = queueStr ? JSON.parse(queueStr) : [];
+            queue.push({
+              type: "markInstallmentPaid",
+              installmentId: selectedPayment.installmentId,
+              timestamp: Date.now()
+            });
+            localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+            resolve();
+          } else {
+            reject(err);
+          }
         }
       });
     });

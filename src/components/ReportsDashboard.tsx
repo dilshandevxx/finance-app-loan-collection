@@ -243,7 +243,10 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                     contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
                     itemStyle={{ color: '#000', fontWeight: 'bold' }}
                     labelStyle={{ color: '#888', marginBottom: '8px' }}
-                    formatter={(value: number) => [`$${value.toFixed(2)}`, undefined]}
+                    formatter={(value: any) => {
+                      const num = Number(value) || 0;
+                      return [`$${num.toFixed(2)}`, undefined];
+                    }}
                   />
                   <Area 
                     type="monotone" 
