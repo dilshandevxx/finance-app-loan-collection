@@ -7,7 +7,7 @@ export default function CustomersPage() {
     <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full">
       {/* Header */}
       <header className="flex items-center justify-between mb-2">
-        <h1 className="text-2xl font-bold text-white tracking-tight">All Customers</h1>
+        <h1 className="text-2xl font-bold text-black dark:text-white tracking-tight">All Customers</h1>
       </header>
 
       <CustomersList customers={MOCK_CUSTOMERS} loans={MOCK_LOANS} />

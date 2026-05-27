@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BottomNav } from "@/components/BottomNav";
 import { NewLoanForm } from "@/components/NewLoanForm";
 
 export default function NewLoan() {
@@ -26,8 +24,6 @@ export default function NewLoan() {
           </CardContent>
         </Card>
       </div>
-      
-      <BottomNav />
     </div>
   );
 }

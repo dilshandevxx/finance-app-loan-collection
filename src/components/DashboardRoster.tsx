@@ -92,20 +92,20 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-black dark:text-white text-sm">{customer.name}</span>
+                            <span className="font-medium text-black dark:text-white text-sm truncate">{customer.name}</span>
                             {isOverdue && (
-                              <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-400/10 px-2 py-0.5 rounded-full">
+                              <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-400/10 px-2 py-0.5 rounded-full">
                                 <AlertCircle className="w-3 h-3" /> Overdue
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-gray-500 dark:text-white/40 mt-0.5">ID: {customer.memberId || customer.id} • Due {inst.dueDate}</span>
+                          <span className="text-xs text-gray-500 dark:text-white/40 mt-0.5 truncate">ID: {customer.memberId || customer.id} • Due {inst.dueDate}</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3 shrink-0 pl-2">
                         <div className="flex flex-col items-end">
                           <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
                             ${inst.amount.toFixed(2)}

@@ -58,8 +58,8 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
               <Link key={customer.id} href={`/customers/${customer.id}`}>
                 <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:bg-gray-50 dark:hover:bg-[#111] transition-colors cursor-pointer group">
                   <CardContent className="p-4 px-6 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border border-gray-200 dark:border-[#222]">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border border-gray-200 dark:border-[#222] shrink-0">
                         {customer.avatarUrl ? (
                           <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
                         ) : (
@@ -68,18 +68,18 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-col">
-                        <span className="font-semibold text-lg text-black dark:text-white">{customer.name}</span>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50">
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-semibold text-lg text-black dark:text-white truncate">{customer.name}</span>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50 truncate">
                           <span>{customer.memberId || customer.id}</span>
                           <span>•</span>
-                          <span>{customer.phone}</span>
+                          <span className="truncate">{customer.phone}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-6">
-                      <div className="flex flex-col items-end hidden sm:flex">
+                    <div className="flex items-center gap-6 shrink-0 pl-2">
+                      <div className="flex flex-col items-end">
                         {activeLoan ? (
                           <>
                             <span className="font-bold text-black dark:text-white tracking-tight">${totalRemaining.toFixed(2)}</span>
