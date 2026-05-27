@@ -3,6 +3,7 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 import { Download, FileText, Printer, Calendar, Table } from "lucide-react";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Customer, Installment, Loan } from "@/data/mock";
@@ -37,6 +38,23 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
     .reduce((sum, inst) => sum + inst.amount, 0);
   
   const totalPending = totalExpected - totalCollected;
+
+  // Generate chart data
+  const chartDataMap = new Map<string, { date: string, expected: number, collected: number }>();
+  
+  filteredInstallments.forEach(inst => {
+    const dateStr = inst.dueDate;
+    if (!chartDataMap.has(dateStr)) {
+      chartDataMap.set(dateStr, { date: dateStr, expected: 0, collected: 0 });
+    }
+    const data = chartDataMap.get(dateStr)!;
+    data.expected += inst.amount;
+    if (inst.status === "PAID") {
+      data.collected += inst.amount;
+    }
+  });
+
+  const chartData = Array.from(chartDataMap.values()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const exportCSV = () => {
     if (filteredInstallments.length === 0) {
@@ -183,6 +201,77 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
             <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Pending / Missed</span>
             <div className="text-3xl font-bold mt-2 text-red-600 dark:text-red-400 print:text-red-700 tracking-tight">${totalPending.toFixed(2)}</div>
           </CardContent>
+        </Card>
+      </section>
+
+      {/* Chart Section */}
+      <section className="print:hidden">
+        <h3 className="text-lg font-semibold text-black dark:text-white mb-4 tracking-tight">Collection Trends</h3>
+        <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm pt-6">
+          <div className="h-[300px] w-full px-4 sm:px-6">
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 12, fill: '#888' }} 
+                    dy={10}
+                    tickFormatter={(val) => {
+                      const d = new Date(val);
+                      return `${d.getMonth() + 1}/${d.getDate()}`;
+                    }}
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 12, fill: '#888' }}
+                    tickFormatter={(value) => `$${value}`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
+                    itemStyle={{ color: '#000', fontWeight: 'bold' }}
+                    labelStyle={{ color: '#888', marginBottom: '8px' }}
+                    formatter={(value: number) => [`$${value.toFixed(2)}`, undefined]}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="expected" 
+                    stroke="#94a3b8" 
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    fillOpacity={1} 
+                    fill="url(#colorExpected)" 
+                    name="Expected"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="collected" 
+                    stroke="#10b981" 
+                    strokeWidth={3}
+                    fillOpacity={1} 
+                    fill="url(#colorCollected)" 
+                    name="Collected"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-white/40">
+                No data available for this date range
+              </div>
+            )}
+          </div>
         </Card>
       </section>
 
