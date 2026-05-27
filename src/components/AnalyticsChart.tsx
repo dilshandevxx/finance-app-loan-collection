@@ -37,7 +37,7 @@ export function AnalyticsChart() {
   const textColor = isDark ? "rgba(255,255,255,0.5)" : "#6b7280";
 
   return (
-    <div className="h-[250px] w-full mt-4">
+    <div className="h-[250px] w-full mt-4 min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={data}
