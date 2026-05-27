@@ -41,12 +41,16 @@ export default function Home() {
             </div>
             
             <div className="flex items-center gap-4">
-              <Button className="bg-white text-black hover:bg-white/90 rounded-full px-6 flex items-center gap-2 font-medium">
-                <Plus className="w-4 h-4" /> New Loan
-              </Button>
-              <Button variant="outline" className="rounded-full px-6 border-white/10 text-white hover:bg-white/10 flex items-center gap-2">
-                <ArrowUpRight className="w-4 h-4" /> Reports
-              </Button>
+              <Link href="/new">
+                <Button className="bg-white text-black hover:bg-white/90 rounded-full px-6 flex items-center gap-2 font-medium">
+                  <Plus className="w-4 h-4" /> New Loan
+                </Button>
+              </Link>
+              <Link href="/reports">
+                <Button variant="outline" className="rounded-full px-6 border-white/10 text-white hover:bg-white/10 flex items-center gap-2">
+                  <ArrowUpRight className="w-4 h-4" /> Reports
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
