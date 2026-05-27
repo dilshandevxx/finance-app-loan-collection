@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ChevronRight, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan } from "@/data/mock";
 
@@ -28,69 +28,100 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
-      <div className="relative mb-2">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-500 dark:text-white/50" />
+      <div className="relative mb-2 group">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search customers..."
-          className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm"
+          placeholder="Search by name, ID, or phone..."
+          className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/10 dark:focus:border-blue-500 transition-all shadow-sm"
         />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         {filteredCustomers.length === 0 ? (
-          <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
-            <CardContent className="p-8 text-center text-gray-500 dark:text-white/50">
-              No customers found matching "{searchQuery}".
-            </CardContent>
-          </Card>
+          <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a]">
+            <p className="text-gray-500 dark:text-white/50 mb-1">No customers found matching "{searchQuery}"</p>
+            <p className="text-sm text-gray-400 dark:text-white/30">Try a different name or member ID</p>
+          </div>
         ) : (
-          filteredCustomers.map((customer) => {
+          filteredCustomers.map((customer, i) => {
             const customerLoans = loans.filter(l => l.customerId === customer.id);
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
+            const isOverdue = customer.status === 'Arrears';
+
+            // Generate a consistent gradient color based on name length/index for avatar fallback
+            const gradients = [
+              "from-blue-500 to-cyan-400",
+              "from-purple-500 to-pink-500",
+              "from-orange-500 to-amber-400",
+              "from-emerald-500 to-teal-400",
+            ];
+            const gradient = gradients[i % gradients.length];
 
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
-                <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:bg-gray-50 dark:hover:bg-[#111] transition-colors cursor-pointer group">
-                  <CardContent className="p-4 px-6 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-4 flex-1 min-w-0">
-                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#111] border border-gray-200 dark:border-[#222] overflow-hidden relative shrink-0">
+                <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-[#444] transition-all cursor-pointer group transform hover:-translate-y-0.5">
+                  <CardContent className="p-4 sm:p-5 flex items-center justify-between gap-3 sm:gap-4">
+                    
+                    {/* Left: Avatar & Info */}
+                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm ${!customer.avatarUrl ? `bg-gradient-to-br ${gradient}` : ''}`}>
                         {customer.avatarUrl ? (
                           <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-white/40 font-bold text-lg">
+                          <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-inner">
                             {customer.name.charAt(0)}
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-col min-w-0 flex-1">
-                        <span className="font-semibold text-lg text-black dark:text-white break-words">{customer.name}</span>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50 min-w-0 w-full flex-wrap">
-                          <span className="shrink-0">{customer.memberId || customer.id}</span>
-                          <span className="shrink-0">•</span>
-                          <span className="break-words">{customer.phone}</span>
+                      
+                      <div className="flex flex-col min-w-0 flex-1 gap-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-base sm:text-lg text-black dark:text-white break-words tracking-tight">{customer.name}</span>
+                          {isOverdue ? (
+                            <span className="px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] uppercase font-bold tracking-wider shrink-0 border border-red-200 dark:border-red-500/20">Overdue</span>
+                          ) : activeLoan ? (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] uppercase font-bold tracking-wider shrink-0 border border-emerald-200 dark:border-emerald-500/20">Active</span>
+                          ) : (
+                            <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-white/50 min-w-0 w-full flex-wrap font-medium">
+                          <span className="shrink-0 text-gray-400 dark:text-white/40">ID: {customer.memberId || customer.id}</span>
+                          <span className="shrink-0 text-gray-300 dark:text-white/20">•</span>
+                          <span className="flex items-center gap-1 shrink-0">
+                            <Phone className="w-3 h-3" />
+                            {customer.phone}
+                          </span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4 shrink-0">
+                    {/* Right: Balance & Arrow */}
+                    <div className="flex items-center gap-3 sm:gap-4 shrink-0">
                       <div className="flex flex-col items-end">
                         {activeLoan ? (
                           <>
-                            <span className="font-bold text-black dark:text-white tracking-tight">${totalRemaining.toFixed(2)}</span>
+                            <span className={`font-bold text-base sm:text-lg tracking-tight ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
+                              ${totalRemaining.toFixed(2)}
+                            </span>
                             <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
                           </>
                         ) : (
-                          <span className="text-sm font-medium text-gray-400 dark:text-white/40">No active loan</span>
+                          <span className="text-sm font-medium text-gray-400 dark:text-white/40">Settled</span>
                         )}
                       </div>
-                      <ChevronRight className="w-5 h-5 shrink-0 text-gray-300 dark:text-white/20 group-hover:text-gray-600 dark:group-hover:text-white/60 transition-colors" />
+                      <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-[#222] flex items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
+                        <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
+                      </div>
                     </div>
+                    
                   </CardContent>
                 </Card>
               </Link>
