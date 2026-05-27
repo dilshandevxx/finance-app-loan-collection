@@ -30,21 +30,21 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
       <div className="relative mb-2">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-white/50" />
+          <Search className="h-5 w-5 text-gray-500 dark:text-white/50" />
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by Name, Member ID, or Phone..."
-          className="w-full bg-[#0a0a0a] border border-[#222] rounded-2xl pl-11 pr-4 py-4 text-base text-white placeholder:text-white/30 focus:outline-none focus:border-white/40 transition shadow-sm"
+          className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm"
         />
       </div>
 
       <div className="flex flex-col gap-4">
         {filteredCustomers.length === 0 ? (
-          <Card className="bg-[#0a0a0a] border-[#222] rounded-2xl overflow-hidden shadow-sm">
-            <CardContent className="p-8 text-center text-white/50">
+          <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-8 text-center text-gray-500 dark:text-white/50">
               No customers found matching "{searchQuery}".
             </CardContent>
           </Card>
@@ -56,21 +56,21 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
 
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
-                <Card className="bg-[#0a0a0a] border-[#222] rounded-2xl overflow-hidden shadow-sm hover:bg-[#111] transition-colors cursor-pointer group">
+                <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:bg-gray-50 dark:hover:bg-[#111] transition-colors cursor-pointer group">
                   <CardContent className="p-4 px-6 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-[#111] overflow-hidden relative border border-[#222]">
+                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border border-gray-200 dark:border-[#222]">
                         {customer.avatarUrl ? (
                           <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-white/50 font-semibold text-lg">
+                          <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-white/50 font-semibold text-lg">
                             {customer.name.charAt(0)}
                           </div>
                         )}
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-semibold text-lg text-white">{customer.name}</span>
-                        <div className="flex items-center gap-2 text-xs text-white/50">
+                        <span className="font-semibold text-lg text-black dark:text-white">{customer.name}</span>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50">
                           <span>{customer.memberId || customer.id}</span>
                           <span>•</span>
                           <span>{customer.phone}</span>
@@ -82,14 +82,14 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                       <div className="flex flex-col items-end hidden sm:flex">
                         {activeLoan ? (
                           <>
-                            <span className="font-bold text-white tracking-tight">${totalRemaining.toFixed(2)}</span>
-                            <span className="text-xs text-white/40">Remaining Balance</span>
+                            <span className="font-bold text-black dark:text-white tracking-tight">${totalRemaining.toFixed(2)}</span>
+                            <span className="text-xs text-gray-400 dark:text-white/40">Remaining Balance</span>
                           </>
                         ) : (
-                          <span className="text-xs text-white/40 bg-[#111] border border-[#222] px-3 py-1 rounded-md">No Active Loan</span>
+                          <span className="text-xs text-gray-400 dark:text-white/40 bg-gray-100 dark:bg-[#111] border border-gray-200 dark:border-[#222] px-3 py-1 rounded-md">No Active Loan</span>
                         )}
                       </div>
-                      <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-white/60 transition-colors" />
+                      <ChevronRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-gray-600 dark:group-hover:text-white/60 transition-colors" />
                     </div>
                   </CardContent>
                 </Card>

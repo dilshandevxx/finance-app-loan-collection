@@ -25,6 +25,8 @@ export const viewport: Viewport = {
   userScalable: false, // Prevents zooming on mobile inputs
 }
 
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,12 +35,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary selection:text-primary-foreground pb-24 md:pb-0 relative">
-        <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-4 md:px-8 pt-8 md:pl-28">
-          {children}
-        </main>
+      <body className="min-h-full flex flex-col bg-white dark:bg-[#000000] text-black dark:text-white transition-colors duration-300 pb-24 md:pb-0 relative">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-4 md:px-8 pt-8 md:pl-28">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
