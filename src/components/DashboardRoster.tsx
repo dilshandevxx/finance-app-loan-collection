@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Search, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/mock";
@@ -42,10 +42,15 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   };
 
   return (
-    <section>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold tracking-tight text-black dark:text-white">Today's Roster</h3>
-        <button className="text-sm font-medium text-gray-500 dark:text-white/50 hover:text-black dark:hover:text-white transition">See All</button>
+    <section className="flex flex-col h-full w-full max-w-full">
+      <div className="flex items-center justify-between mb-4 gap-4">
+        <h2 className="text-xl font-bold tracking-tight text-black dark:text-white truncate">Due Today</h2>
+        <Link href="/customers" className="shrink-0">
+          <Button variant="ghost" className="text-gray-500 hover:text-black dark:text-white/50 dark:hover:text-white group text-sm h-8 px-2 sm:px-4">
+            See all
+            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </Link>
       </div>
 
       <div className="relative mb-6">
