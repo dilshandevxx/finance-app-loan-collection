@@ -68,77 +68,84 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
                 <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-[#444] transition-all cursor-pointer group transform hover:-translate-y-0.5">
-                  <CardContent className="p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+                  <CardContent className="p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
                     
-                    {/* Left: Avatar & Info */}
-                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm ${!customer.avatarUrl ? `bg-gradient-to-br ${gradient}` : ''}`}>
-                        {customer.avatarUrl ? (
-                          <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-inner">
-                            {customer.name.charAt(0)}
-                          </div>
-                        )}
-                      </div>
+                    {/* Avatar */}
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 ${!customer.avatarUrl ? `bg-gradient-to-br ${gradient}` : ''}`}>
+                      {customer.avatarUrl ? (
+                        <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-inner">
+                          {customer.name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Right Side: Info & Balance Column */}
+                    <div className="flex flex-col flex-1 min-w-0 gap-2 sm:gap-3">
                       
-                      <div className="flex flex-col min-w-0 flex-1 gap-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-base sm:text-lg text-black dark:text-white break-words tracking-tight">{customer.name}</span>
-                          {isOverdue ? (
-                            <span className="px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] uppercase font-bold tracking-wider shrink-0 border border-red-200 dark:border-red-500/20">Overdue</span>
-                          ) : activeLoan ? (
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] uppercase font-bold tracking-wider shrink-0 border border-emerald-200 dark:border-emerald-500/20">Active</span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
-                          )}
+                      {/* Top Row: Name/ID and Balance */}
+                      <div className="flex items-start justify-between gap-2 w-full">
+                        
+                        <div className="flex flex-col min-w-0 gap-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-base sm:text-lg text-black dark:text-white truncate tracking-tight">{customer.name}</span>
+                            {isOverdue ? (
+                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-red-200 dark:border-red-500/20">Overdue</span>
+                            ) : activeLoan ? (
+                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-emerald-200 dark:border-emerald-500/20">Active</span>
+                            ) : (
+                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
+                            )}
+                          </div>
+                          
+                          <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-gray-500 dark:text-white/50 min-w-0 flex-wrap font-medium">
+                            <span className="shrink-0 text-gray-400 dark:text-white/40">ID: {customer.memberId || customer.id}</span>
+                            <span className="shrink-0 text-gray-300 dark:text-white/20 hidden sm:block">•</span>
+                            <span className="flex items-center gap-1 shrink-0">
+                              <Phone className="w-3 h-3" />
+                              {customer.phone}
+                            </span>
+                          </div>
                         </div>
                         
-                        <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-white/50 min-w-0 w-full flex-wrap font-medium">
-                          <span className="shrink-0 text-gray-400 dark:text-white/40">ID: {customer.memberId || customer.id}</span>
-                          <span className="shrink-0 text-gray-300 dark:text-white/20">•</span>
-                          <span className="flex items-center gap-1 shrink-0">
-                            <Phone className="w-3 h-3" />
-                            {customer.phone}
-                          </span>
-                        </div>
-
-                        {activeLoan && (
-                          <div className="mt-2 flex flex-col gap-1 w-full max-w-[200px]">
-                            <div className="flex items-center justify-between text-[10px] font-semibold text-gray-500 dark:text-white/50">
-                              <span>Progress</span>
-                              <span>{Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%</span>
-                            </div>
-                            <div className="w-full h-1.5 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
-                                style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
-                              />
-                            </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex flex-col items-end">
+                            {activeLoan ? (
+                              <>
+                                <span className={`font-bold text-base sm:text-lg tracking-tight ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
+                                  ${totalRemaining.toFixed(2)}
+                                </span>
+                                <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
+                              </>
+                            ) : (
+                              <span className="text-sm font-medium text-gray-400 dark:text-white/40">Settled</span>
+                            )}
                           </div>
-                        )}
+                          <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-[#222] items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
+                            <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
+                          </div>
+                        </div>
+                        
                       </div>
+
+                      {/* Bottom Row: Progress Bar */}
+                      {activeLoan && (
+                        <div className="flex flex-col gap-1.5 w-full pr-0 sm:pr-12">
+                          <div className="flex items-center justify-between text-[10px] font-semibold text-gray-500 dark:text-white/50">
+                            <span>Repayment Progress</span>
+                            <span>{Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%</span>
+                          </div>
+                          <div className="w-full h-1.5 sm:h-2 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
+                              style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      
                     </div>
-                    
-                    {/* Right: Balance & Arrow */}
-                    <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-                      <div className="flex flex-col items-end">
-                        {activeLoan ? (
-                          <>
-                            <span className={`font-bold text-base sm:text-lg tracking-tight ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
-                              ${totalRemaining.toFixed(2)}
-                            </span>
-                            <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
-                          </>
-                        ) : (
-                          <span className="text-sm font-medium text-gray-400 dark:text-white/40">Settled</span>
-                        )}
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-[#222] flex items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
-                        <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
-                      </div>
-                    </div>
-                    
                   </CardContent>
                 </Card>
               </Link>
