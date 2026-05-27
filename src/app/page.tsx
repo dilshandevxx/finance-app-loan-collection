@@ -6,6 +6,7 @@ import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Greeting } from "@/components/Greeting";
 import Link from "next/link";
 
 export default function Home() {
@@ -28,13 +29,10 @@ export default function Home() {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-[#222] dark:to-[#111] overflow-hidden relative border-2 border-white dark:border-[#333] shadow-inner p-0.5 shrink-0">
             <div className="w-full h-full rounded-[14px] overflow-hidden relative">
-              <Image src="https://i.pravatar.cc/150?u=admin" alt="Profile" fill className="object-cover" />
+              <Image src="https://i.pravatar.cc/150?u=dilshan" alt="Profile" fill className="object-cover" />
             </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] sm:text-xs text-gray-500 dark:text-white/50 font-bold uppercase tracking-wider mb-0.5">Welcome back</span>
-            <span className="text-base sm:text-lg font-extrabold tracking-tight text-black dark:text-white leading-none">Agent 007</span>
-          </div>
+          <Greeting name="Dilshan" />
         </div>
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <ThemeToggle />
