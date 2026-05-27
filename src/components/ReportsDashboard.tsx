@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Download, FileText, Printer, Calendar } from "lucide-react";
+import * as XLSX from "xlsx";
+import { Download, FileText, Printer, Calendar, Table } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Customer, Installment, Loan } from "@/data/mock";
@@ -77,6 +78,32 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
     document.body.removeChild(link);
   };
 
+  const exportExcel = () => {
+    if (filteredInstallments.length === 0) {
+      alert("No data to export for this period.");
+      return;
+    }
+
+    const headers = ["ID", "Customer Name", "Member ID", "Due Date", "Status", "Amount"];
+    const rows = filteredInstallments.map(inst => {
+      const loan = loans.find(l => l.id === inst.loanId);
+      const customer = customers.find(c => c.id === loan?.customerId);
+      return [
+        inst.id,
+        customer?.name || "Unknown",
+        customer?.memberId || customer?.id || "N/A",
+        inst.dueDate,
+        inst.status,
+        inst.amount
+      ];
+    });
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
+    XLSX.writeFile(workbook, `Loan_Report_${startDate}_to_${endDate}.xlsx`);
+  };
+
   const exportPDF = () => {
     // We rely on CSS @media print rules to hide the UI and format the table cleanly
     window.print();
@@ -119,6 +146,9 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto relative z-10">
+          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl px-6 h-12 gap-2">
+            <Table className="w-4 h-4" /> Excel
+          </Button>
           <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20 rounded-xl px-6 h-12 gap-2">
             <Download className="w-4 h-4" /> CSV
           </Button>
