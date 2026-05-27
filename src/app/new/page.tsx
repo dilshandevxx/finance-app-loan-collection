@@ -3,6 +3,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BottomNav } from "@/components/BottomNav";
+import { NewLoanForm } from "@/components/NewLoanForm";
 
 export default function NewLoan() {
   return (
@@ -25,68 +26,7 @@ export default function NewLoan() {
         
         <CardContent className="p-8 flex flex-col gap-6">
           
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Customer Information</h3>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Full Name</label>
-              <input 
-                type="text" 
-                placeholder="e.g. John Doe" 
-                className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Phone Number</label>
-              <input 
-                type="tel" 
-                placeholder="e.g. 555-0199" 
-                className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
-              />
-            </div>
-          </div>
-
-          <div className="w-full h-px bg-white/5 my-2" />
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Loan Details</h3>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-white/70">Principal Amount ($)</label>
-              <input 
-                type="number" 
-                placeholder="0.00" 
-                className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">Interest (%)</label>
-                <input 
-                  type="number" 
-                  placeholder="10" 
-                  className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">Weeks</label>
-                <input 
-                  type="number" 
-                  placeholder="10" 
-                  className="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-white/20 transition"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/5 rounded-2xl p-4 flex justify-between items-center mt-2">
-            <div className="flex flex-col">
-              <span className="text-sm text-white/60">Calculated Installment</span>
-              <span className="text-2xl font-bold text-white">$0.00 <span className="text-sm text-white/40 font-normal">/ week</span></span>
-            </div>
-          </div>
-
-          <Button className="w-full bg-white text-black hover:bg-white/90 rounded-full h-14 text-lg font-semibold mt-4 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            Create Loan Account
-          </Button>
+          <NewLoanForm />
           
         </CardContent>
       </Card>
