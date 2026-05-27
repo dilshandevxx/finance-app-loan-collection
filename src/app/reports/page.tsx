@@ -1,8 +1,16 @@
 import { ReportsDashboard } from "@/components/ReportsDashboard";
 import { BottomNav } from "@/components/BottomNav";
-import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
+import { getCustomers, getInstallments, getLoans } from "@/data/db";
 
-export default function ReportsPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function ReportsPage() {
+  const [customers, loans, installments] = await Promise.all([
+    getCustomers(),
+    getLoans(),
+    getInstallments(),
+  ]);
+
   return (
     <div className="flex flex-col gap-6 pb-24">
       {/* Header */}
@@ -11,9 +19,9 @@ export default function ReportsPage() {
       </header>
 
       <ReportsDashboard 
-        installments={MOCK_INSTALLMENTS} 
-        loans={MOCK_LOANS} 
-        customers={MOCK_CUSTOMERS} 
+        installments={installments} 
+        loans={loans} 
+        customers={customers} 
       />
       
       <div className="print:hidden">
