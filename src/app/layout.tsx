@@ -13,8 +13,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LoanTrack - Premium Collection Management",
-  description: "Track and manage your loan collections effortlessly.",
+  title: "LoanTrack Pro",
+  description: "Professional loan collection and management platform",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "LoanTrack",
+  },
 };
 
 export const viewport: Viewport = {
