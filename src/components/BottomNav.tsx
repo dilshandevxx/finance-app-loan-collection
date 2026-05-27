@@ -3,8 +3,8 @@ import { Home, Users, PlusCircle, Settings, FileText } from "lucide-react";
 
 export function BottomNav() {
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm md:w-auto md:max-w-none md:left-6 md:top-1/2 md:-translate-y-1/2 md:translate-x-0 md:bottom-auto z-50">
-      <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-full px-6 py-3 md:px-3 md:py-6 flex md:flex-col items-center justify-between shadow-2xl gap-2 md:gap-8">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-sm md:w-auto md:max-w-none md:left-6 md:top-1/2 md:-translate-y-1/2 md:translate-x-0 md:bottom-auto z-50">
+      <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-full px-4 py-3 md:px-3 md:py-6 flex md:flex-col items-center justify-between shadow-2xl gap-1 sm:gap-2 md:gap-8">
         <Link href="/" className="p-2 text-gray-400 hover:text-black dark:text-white/50 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#111] rounded-full transition-colors group relative">
           <Home className="w-5 h-5" />
           <span className="hidden md:block absolute left-14 bg-gray-900 dark:bg-[#111] px-3 py-1 rounded-md text-sm text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-800 dark:border-[#222]">Dashboard</span>

@@ -80,9 +80,9 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                 
                 return (
                   <Link key={inst.id} href={`/customers/${customer.id}`} className="block hover:bg-gray-50 dark:hover:bg-[#111] transition-colors">
-                    <div className="flex items-center justify-between p-4 px-5">
+                    <div className="flex items-center justify-between p-4 px-5 gap-2">
                       
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-[#222] overflow-hidden relative shrink-0">
                           {customer.avatarUrl ? (
                             <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
@@ -92,8 +92,8 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                             </div>
                           )}
                         </div>
-                        <div className="flex flex-col min-w-0">
-                          <div className="flex items-center gap-2">
+                        <div className="flex flex-col min-w-0 flex-1">
+                          <div className="flex items-center gap-2 min-w-0 w-full">
                             <span className="font-medium text-black dark:text-white text-sm truncate">{customer.name}</span>
                             {isOverdue && (
                               <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-400/10 px-2 py-0.5 rounded-full">
@@ -105,7 +105,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 shrink-0 pl-2">
+                      <div className="flex items-center gap-3 shrink-0">
                         <div className="flex flex-col items-end">
                           <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
                             ${inst.amount.toFixed(2)}
@@ -114,7 +114,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                         <Button 
                           onClick={(e) => handlePay(e, inst.id)}
                           disabled={isPending}
-                          className="h-8 px-4 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm"
+                          className="h-8 px-4 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
                         >
                           Pay
                         </Button>

@@ -57,39 +57,39 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
                 <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:bg-gray-50 dark:hover:bg-[#111] transition-colors cursor-pointer group">
-                  <CardContent className="p-4 px-6 flex items-center justify-between">
-                    <div className="flex items-center gap-4 min-w-0">
-                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border border-gray-200 dark:border-[#222] shrink-0">
+                  <CardContent className="p-4 px-6 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#111] border border-gray-200 dark:border-[#222] overflow-hidden relative shrink-0">
                         {customer.avatarUrl ? (
                           <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-white/50 font-semibold text-lg">
+                          <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-white/40 font-bold text-lg">
                             {customer.name.charAt(0)}
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-col min-w-0">
+                      <div className="flex flex-col min-w-0 flex-1">
                         <span className="font-semibold text-lg text-black dark:text-white truncate">{customer.name}</span>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50 truncate">
-                          <span>{customer.memberId || customer.id}</span>
-                          <span>•</span>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50 min-w-0 w-full">
+                          <span className="shrink-0">{customer.memberId || customer.id}</span>
+                          <span className="shrink-0">•</span>
                           <span className="truncate">{customer.phone}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-6 shrink-0 pl-2">
+                    <div className="flex items-center gap-4 shrink-0">
                       <div className="flex flex-col items-end">
                         {activeLoan ? (
                           <>
                             <span className="font-bold text-black dark:text-white tracking-tight">${totalRemaining.toFixed(2)}</span>
-                            <span className="text-xs text-gray-400 dark:text-white/40">Remaining Balance</span>
+                            <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
                           </>
                         ) : (
-                          <span className="text-xs text-gray-400 dark:text-white/40 bg-gray-100 dark:bg-[#111] border border-gray-200 dark:border-[#222] px-3 py-1 rounded-md">No Active Loan</span>
+                          <span className="text-sm font-medium text-gray-400 dark:text-white/40">No active loan</span>
                         )}
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-gray-600 dark:group-hover:text-white/60 transition-colors" />
+                      <ChevronRight className="w-5 h-5 shrink-0 text-gray-300 dark:text-white/20 group-hover:text-gray-600 dark:group-hover:text-white/60 transition-colors" />
                     </div>
                   </CardContent>
                 </Card>
