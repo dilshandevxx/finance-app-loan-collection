@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, Shield, Moon, DownloadCloud, LogOut, ChevronRight, CheckCircle2 } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
@@ -68,8 +69,8 @@ export default function SettingsPage() {
           <h3 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-3 uppercase tracking-wider px-2">Account</h3>
           <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-0 flex flex-col">
-              <button 
-                onClick={() => handleActionClick("Security")}
+              <Link 
+                href="/settings/security"
                 className="flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-[#111] transition-colors border-b border-gray-200 dark:border-[#222] group"
               >
                 <div className="flex items-center gap-4">
@@ -79,9 +80,9 @@ export default function SettingsPage() {
                   <span className="text-black dark:text-white font-medium text-sm">Security & Password</span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-black dark:group-hover:text-white transition-colors" />
-              </button>
-              <button 
-                onClick={() => handleActionClick("Notifications")}
+              </Link>
+              <Link 
+                href="/settings/notifications"
                 className="flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-[#111] transition-colors group"
               >
                 <div className="flex items-center gap-4">
@@ -91,7 +92,7 @@ export default function SettingsPage() {
                   <span className="text-black dark:text-white font-medium text-sm">Notifications</span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-black dark:group-hover:text-white transition-colors" />
-              </button>
+              </Link>
             </CardContent>
           </Card>
         </section>
