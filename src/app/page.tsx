@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Search, Plus, ArrowUpRight, TrendingUp, AlertCircle, Users } from "lucide-react";
+import { Plus, ArrowUpRight, TrendingUp, AlertCircle, Users, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
@@ -22,22 +22,25 @@ export default function Home() {
     .reduce((sum, inst) => sum + inst.amount, 0);
   
   return (
-    <div className="flex flex-col gap-8 pb-24 max-w-5xl mx-auto">
-      {/* Header */}
-      <header className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border border-gray-200 dark:border-[#222]">
-            <Image src="https://i.pravatar.cc/150?u=admin" alt="Profile" fill className="object-cover" />
+    <div className="flex flex-col gap-6 sm:gap-8 pb-24 max-w-5xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8">
+      {/* Premium Header */}
+      <header className="flex items-center justify-between bg-white/70 dark:bg-[#111]/70 backdrop-blur-xl p-3 sm:p-4 rounded-3xl border border-gray-200/60 dark:border-[#333]/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)]">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-[#222] dark:to-[#111] overflow-hidden relative border-2 border-white dark:border-[#333] shadow-inner p-0.5 shrink-0">
+            <div className="w-full h-full rounded-[14px] overflow-hidden relative">
+              <Image src="https://i.pravatar.cc/150?u=admin" alt="Profile" fill className="object-cover" />
+            </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-gray-500 dark:text-white/50 font-medium uppercase tracking-wider">Welcome back</span>
-            <span className="text-sm font-semibold tracking-tight text-black dark:text-white">Agent 007</span>
+            <span className="text-[10px] sm:text-xs text-gray-500 dark:text-white/50 font-bold uppercase tracking-wider mb-0.5">Welcome back</span>
+            <span className="text-base sm:text-lg font-extrabold tracking-tight text-black dark:text-white leading-none">Agent 007</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 pr-1">
           <ThemeToggle />
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
-            <Search className="w-4 h-4 text-gray-500 dark:text-white/70" />
+          <button className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#333] flex items-center justify-center text-black dark:text-white hover:bg-gray-50 dark:hover:bg-[#222] transition-colors shadow-sm">
+            <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-white/80" />
+            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#1a1a1a]"></span>
           </button>
         </div>
       </header>
