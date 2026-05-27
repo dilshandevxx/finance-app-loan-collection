@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { createLoan } from "@/app/actions";
-import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2 } from "lucide-react";
+import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle } from "lucide-react";
 
 type Customer = {
   id: string;
@@ -11,7 +11,17 @@ type Customer = {
   memberId?: string;
 };
 
+const initialState = { error: undefined as string | undefined };
+
 export function NewLoanForm({ customers }: { customers: Customer[] }) {
+  const [state, formAction, isPending] = useActionState(
+    async (_prev: typeof initialState, formData: FormData) => {
+      const result = await createLoan(formData);
+      return result ?? initialState;
+    },
+    initialState
+  );
+
   const [isExisting, setIsExisting] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [principal, setPrincipal] = useState<number>(0);
@@ -27,8 +37,16 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
   const installmentAmount = calculateInstallment();
 
   return (
-    <form action={createLoan} className="flex flex-col gap-8">
+    <form action={formAction} className="flex flex-col gap-8">
       
+      {/* Error Banner */}
+      {state?.error && (
+        <div className="flex items-start gap-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-4 text-red-700 dark:text-red-400">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+          <p className="text-sm font-medium">{state.error}</p>
+        </div>
+      )}
+
       {/* Segmented Control for Customer Type */}
       <div className="bg-gray-100/80 dark:bg-[#111] p-1.5 rounded-2xl flex items-center relative overflow-hidden">
         <div 
@@ -73,7 +91,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
               >
                 <option value="" disabled>Select a customer...</option>
                 {customers.map(c => (
-                  <option key={c.id} value={c.id}>{c.name} (ID: {c.memberId || c.id})</option>
+                  <option key={c.id} value={c.id}>{c.name} (ID: {c.memberId || c.id.slice(0, 8)})</option>
                 ))}
               </select>
             </div>
@@ -97,7 +115,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
               </div>
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <label htmlFor="memberId" className="text-sm font-medium text-gray-700 dark:text-white/70">Member ID</label>
+              <label htmlFor="memberId" className="text-sm font-medium text-gray-700 dark:text-white/70">Member ID <span className="text-gray-400">(optional)</span></label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Hash className="h-5 w-5 text-gray-400 dark:text-white/40" />
@@ -181,7 +199,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
             </div>
           </div>
           <div className="space-y-2">
-            <label htmlFor="weeks" className="text-sm font-medium text-gray-700 dark:text-white/70">Duration</label>
+            <label htmlFor="weeks" className="text-sm font-medium text-gray-700 dark:text-white/70">Duration (Weeks)</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <CalendarDays className="h-5 w-5 text-gray-400 dark:text-white/40" />
@@ -218,15 +236,23 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
       {/* Mobile Sticky Action */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-black dark:via-black to-transparent z-50">
         <div className="bg-white dark:bg-[#111] p-2 rounded-2xl border border-gray-200 dark:border-[#222] shadow-2xl backdrop-blur-xl">
-          <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl h-14 text-base font-semibold shadow-sm transition-all active:scale-[0.98]">
-            Create Loan Account
+          <Button 
+            type="submit" 
+            disabled={isPending}
+            className="w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl h-14 text-base font-semibold shadow-sm transition-all active:scale-[0.98] disabled:opacity-60"
+          >
+            {isPending ? "Creating..." : "Create Loan Account"}
           </Button>
         </div>
       </div>
 
       {/* Desktop Action */}
-      <Button type="submit" className="hidden md:flex w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-2xl h-14 text-lg font-semibold mt-4 shadow-sm transition-all active:scale-[0.98]">
-        Create Loan Account
+      <Button 
+        type="submit" 
+        disabled={isPending}
+        className="hidden md:flex w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-2xl h-14 text-lg font-semibold mt-4 shadow-sm transition-all active:scale-[0.98] disabled:opacity-60"
+      >
+        {isPending ? "Creating Loan..." : "Create Loan Account"}
       </Button>
     </form>
   );

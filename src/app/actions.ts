@@ -19,34 +19,36 @@ export async function createLoan(formData: FormData) {
   const existingCustomerId = formData.get("existingCustomerId") as string | null;
 
   if (isNaN(principalAmount) || principalAmount <= 0) {
-    throw new Error("Invalid principal amount");
+    return { error: "Please enter a valid principal amount greater than 0." };
   }
   if (isNaN(interest) || interest < 0) {
-    throw new Error("Invalid interest rate");
+    return { error: "Please enter a valid interest rate." };
   }
   if (isNaN(weeks) || weeks <= 0) {
-    throw new Error("Invalid duration in weeks");
+    return { error: "Please enter a valid loan duration (weeks)." };
   }
 
   let customerId = existingCustomerId || null;
 
   if (!customerId) {
-    if (!name || !phone) throw new Error("Name and phone required for new customer");
+    if (!name || !phone) {
+      return { error: "Name and phone number are required for a new customer." };
+    }
     
     const { data: newCustomer, error: customerError } = await supabase
       .from("customers")
       .insert({
-        name,
-        phone,
-        member_id: memberId || null,
-        avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`
+        name: name.trim(),
+        phone: phone.trim(),
+        member_id: memberId?.trim() || null,
+        avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name.trim())}`
       })
       .select()
       .single();
       
     if (customerError) {
       console.error("Customer insert error:", customerError);
-      throw new Error(customerError.message);
+      return { error: `Failed to create customer: ${customerError.message}` };
     }
     customerId = newCustomer.id;
   }
@@ -71,7 +73,7 @@ export async function createLoan(formData: FormData) {
 
   if (loanError) {
     console.error("Loan insert error:", loanError);
-    throw new Error(loanError.message);
+    return { error: `Failed to create loan: ${loanError.message}` };
   }
 
   const installments = [];
@@ -92,7 +94,7 @@ export async function createLoan(formData: FormData) {
 
   if (installmentsError) {
     console.error("Installments insert error:", installmentsError);
-    throw new Error(installmentsError.message);
+    return { error: `Loan created but installments failed: ${installmentsError.message}` };
   }
 
   revalidatePath("/");
