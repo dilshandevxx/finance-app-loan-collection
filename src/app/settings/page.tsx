@@ -7,6 +7,7 @@ import { Bell, Shield, Moon, DownloadCloud, LogOut, ChevronRight, CheckCircle2 }
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Greeting } from "@/components/Greeting";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -43,15 +44,20 @@ export default function SettingsPage() {
       </header>
 
       {/* Profile Section */}
-      <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+      <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm relative">
+        <div className="absolute top-0 right-0 p-4">
+          <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/20">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Active
+          </span>
+        </div>
         <CardContent className="p-8 flex items-center gap-6">
-          <div className="w-20 h-20 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border-2 border-gray-200 dark:border-[#222]">
+          <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border-4 border-white dark:border-[#0a0a0a] shadow-xl shrink-0">
             <Image src="https://i.pravatar.cc/150?u=dilshan" alt="Agent Profile" fill className="object-cover" />
           </div>
-          <div className="flex flex-col">
-            <h2 className="text-2xl font-bold text-black dark:text-white tracking-tight">Dilshan</h2>
-            <span className="text-gray-500 dark:text-white/50 text-sm font-medium">ID: AGT-84729</span>
-            <span className="text-green-600 dark:text-green-400 text-xs font-semibold mt-1 bg-green-100 dark:bg-green-400/10 w-fit px-2 py-0.5 rounded-md">Active</span>
+          <div className="flex flex-col gap-1.5">
+            <Greeting name="Dilshan" />
+            <span className="text-gray-400 dark:text-white/40 text-sm font-semibold tracking-wide uppercase mt-1">ID: AGT-84729</span>
           </div>
         </CardContent>
       </Card>
