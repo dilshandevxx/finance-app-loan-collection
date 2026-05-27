@@ -66,7 +66,7 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
                 <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-[#444] transition-all cursor-pointer group transform hover:-translate-y-0.5">
-                  <CardContent className="p-4 sm:p-5 flex items-center justify-between gap-3 sm:gap-4">
+                  <CardContent className="p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
                     
                     {/* Left: Avatar & Info */}
                     <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
@@ -100,6 +100,21 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
                             {customer.phone}
                           </span>
                         </div>
+
+                        {activeLoan && (
+                          <div className="mt-2 flex flex-col gap-1 w-full max-w-[200px]">
+                            <div className="flex items-center justify-between text-[10px] font-semibold text-gray-500 dark:text-white/50">
+                              <span>Progress</span>
+                              <span>{Math.round(((activeLoan.amount - totalRemaining) / activeLoan.amount) * 100)}%</span>
+                            </div>
+                            <div className="w-full h-1.5 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
+                                style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.amount - totalRemaining) / activeLoan.amount) * 100))}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                     

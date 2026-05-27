@@ -48,10 +48,16 @@ export default function Home() {
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         {/* Left Column: Metrics & Actions */}
         <section className="flex flex-col gap-4">
-          <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-8 border border-gray-200 dark:border-[#222] shadow-sm flex flex-col">
-            <h2 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-1">Expected Collection</h2>
-            <div className="text-5xl font-semibold tracking-tighter mb-8 text-black dark:text-white">
-              ${expectedToday.toFixed(2).split('.')[0]}<span className="text-gray-400 dark:text-white/40 text-3xl">.{expectedToday.toFixed(2).split('.')[1]}</span>
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-5 sm:p-8 border border-gray-200 dark:border-[#222] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] relative overflow-hidden flex flex-col">
+            
+            {/* Background Decoration */}
+            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-gradient-to-br from-gray-100 to-white dark:from-[#1a1a1a] dark:to-[#0a0a0a] blur-2xl opacity-50 pointer-events-none"></div>
+            
+            <h2 className="text-gray-500 dark:text-white/50 font-medium mb-1 relative z-10 flex items-center gap-2">
+              Expected Collection
+            </h2>
+            <div className="text-4xl sm:text-5xl font-semibold tracking-tighter mb-6 sm:mb-8 text-black dark:text-white relative z-10">
+              ${expectedToday.toFixed(2).split('.')[0]}<span className="text-gray-400 dark:text-white/40 text-2xl sm:text-3xl">.{expectedToday.toFixed(2).split('.')[1]}</span>
             </div>
             
             <div className="flex items-center gap-3">

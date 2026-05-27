@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/mock";
 import { markInstallmentPaid } from "@/app/actions";
+import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 
 type DashboardRosterProps = {
   pendingInstallments: Installment[];
@@ -18,6 +19,11 @@ type DashboardRosterProps = {
 export function DashboardRoster({ pendingInstallments, loans, customers }: DashboardRosterProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [selectedPayment, setSelectedPayment] = useState<{
+    customer: Customer;
+    installmentId: string;
+    expectedAmount: number;
+  } | null>(null);
 
   const filteredInstallments = pendingInstallments.filter((inst) => {
     const loan = loans.find(l => l.id === inst.loanId);
@@ -34,10 +40,17 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     return nameMatch || idMatch;
   });
 
-  const handlePay = (e: React.MouseEvent, installmentId: string) => {
+  const handlePayClick = (e: React.MouseEvent, installmentId: string, customer: Customer, expectedAmount: number) => {
     e.preventDefault(); // Prevent navigating to customer details
+    setSelectedPayment({ customer, installmentId, expectedAmount });
+  };
+
+  const handleConfirmPayment = (amount: number) => {
+    if (!selectedPayment) return;
+    
     startTransition(async () => {
-      await markInstallmentPaid(installmentId);
+      await markInstallmentPaid(selectedPayment.installmentId);
+      setSelectedPayment(null);
     });
   };
 
@@ -85,9 +98,9 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                 
                 return (
                   <Link key={inst.id} href={`/customers/${customer.id}`} className="block hover:bg-gray-50 dark:hover:bg-[#111] transition-colors">
-                    <div className="flex items-center justify-between p-4 px-5 gap-2">
+                    <div className="flex items-center justify-between p-3 sm:p-4 px-3 sm:px-5 gap-2">
                       
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-[#222] overflow-hidden relative shrink-0">
                           {customer.avatarUrl ? (
                             <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
@@ -98,10 +111,10 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           )}
                         </div>
                         <div className="flex flex-col min-w-0 flex-1">
-                          <div className="flex items-center gap-2 min-w-0 w-full flex-wrap">
+                          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full flex-wrap">
                             <span className="font-medium text-black dark:text-white text-sm break-words">{customer.name}</span>
                             {isOverdue && (
-                              <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-400/10 px-2 py-0.5 rounded-full">
+                              <span className="flex shrink-0 items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-400/10 px-1.5 sm:px-2 py-0.5 rounded-full">
                                 <AlertCircle className="w-3 h-3" /> Overdue
                               </span>
                             )}
@@ -117,7 +130,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           </span>
                         </div>
                         <Button 
-                          onClick={(e) => handlePay(e, inst.id)}
+                          onClick={(e) => handlePayClick(e, inst.id, customer, inst.amount)}
                           disabled={isPending}
                           className="h-8 px-4 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
                         >
@@ -133,6 +146,16 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           )}
         </CardContent>
       </Card>
+
+      {selectedPayment && (
+        <QuickPaymentModal
+          isOpen={!!selectedPayment}
+          onClose={() => setSelectedPayment(null)}
+          customer={selectedPayment.customer}
+          expectedAmount={selectedPayment.expectedAmount}
+          onConfirm={handleConfirmPayment}
+        />
+      )}
     </section>
   );
 }
