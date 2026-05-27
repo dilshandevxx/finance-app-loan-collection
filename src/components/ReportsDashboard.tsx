@@ -161,7 +161,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       <div className="hidden print:block text-black mb-8 text-center border-b border-black/20 pb-4">
         <h1 className="text-3xl font-bold">Loan Collection Report</h1>
         <p className="text-sm mt-2">Period: {startDate || "All Time"} to {endDate || "All Time"}</p>
-        <p className="text-xs mt-1 text-black/50">Generated on: {new Date().toLocaleString()}</p>
+        <p className="text-xs mt-1 text-black/50" suppressHydrationWarning>Generated on: {new Date().toLocaleString()}</p>
       </div>
 
       {/* Summary Metrics */}
