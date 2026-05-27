@@ -6,6 +6,7 @@ import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AnalyticsChart } from "@/components/AnalyticsChart";
 import Link from "next/link";
 
 export default function Home() {
@@ -83,6 +84,12 @@ export default function Home() {
               </div>
               <div className="text-2xl font-semibold text-red-600 dark:text-red-400">${overdueAmount.toFixed(2)}</div>
             </div>
+          </div>
+
+          <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)]">
+            <h2 className="text-black dark:text-white font-semibold mb-1 tracking-tight">Collection Trend</h2>
+            <p className="text-xs text-gray-500 dark:text-white/50 mb-2">Past 7 days performance</p>
+            <AnalyticsChart />
           </div>
         </section>
 
