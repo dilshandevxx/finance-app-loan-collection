@@ -23,13 +23,13 @@ export function Greeting({ name }: { name: string }) {
 
   return (
     <div className="flex flex-col justify-center">
-      <div className="flex items-center gap-1.5 mb-1 opacity-0 animate-in fade-in slide-in-from-bottom-1 duration-500 fill-mode-forwards">
+      <div className="flex items-center gap-1.5 mb-1 animate-pulse duration-1000">
         <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 dark:text-blue-400" />
         <span className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-white/60 tracking-wide">
           {greeting},
         </span>
       </div>
-      <div className="text-xl sm:text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-600 dark:from-white dark:to-gray-400 leading-none opacity-0 animate-in fade-in slide-in-from-bottom-2 duration-700 delay-100 fill-mode-forwards flex items-center gap-2">
+      <div className="text-xl sm:text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-600 dark:from-white dark:to-gray-400 leading-none flex items-center gap-2">
         {name} 
         <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 dark:text-yellow-400 animate-pulse inline-block" />
       </div>
