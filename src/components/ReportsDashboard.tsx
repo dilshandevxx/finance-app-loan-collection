@@ -144,15 +144,15 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 rounded-xl px-6 h-12 gap-2 shadow-sm">
-            <Table className="w-4 h-4" /> Excel
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
+            <Table className="w-4 h-4 shrink-0" /> Excel
           </Button>
-          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-500/20 border border-green-200 dark:border-green-500/20 rounded-xl px-6 h-12 gap-2 shadow-sm">
-            <Download className="w-4 h-4" /> CSV
+          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-500/20 border border-green-200 dark:border-green-500/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
+            <Download className="w-4 h-4 shrink-0" /> CSV
           </Button>
-          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl px-6 h-12 gap-2 shadow-sm">
-            <Printer className="w-4 h-4" /> PDF
+          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
+            <Printer className="w-4 h-4 shrink-0" /> PDF
           </Button>
         </div>
       </section>
@@ -191,7 +191,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         <h3 className="text-lg font-semibold text-black dark:text-white print:text-black mb-4 tracking-tight">Transaction Details</h3>
         <Card className="bg-white dark:bg-[#0a0a0a] print:bg-white print:border-black/20 print:shadow-none border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-0 overflow-x-auto">
-            <table className="w-full text-left text-sm print:text-black">
+            <table className="w-full text-left text-sm print:text-black whitespace-nowrap">
               <thead className="bg-gray-50 dark:bg-[#111] print:bg-black/5 text-gray-500 dark:text-white/50 print:text-black/60 uppercase tracking-wider text-xs font-medium">
                 <tr>
                   <th className="p-4 px-6 font-medium">Customer</th>
