@@ -36,7 +36,7 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by Name, Member ID, or Phone..."
+          placeholder="Search customers..."
           className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm"
         />
       </div>
