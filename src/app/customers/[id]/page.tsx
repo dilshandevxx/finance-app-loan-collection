@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { MOCK_CUSTOMERS, MOCK_INSTALLMENTS, MOCK_LOANS } from "@/data/mock";
+import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId } from "@/data/db";
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
+
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -12,14 +14,56 @@ type Props = {
 export default async function CustomerDetails({ params }: Props) {
   const resolvedParams = await params;
   const customerId = resolvedParams.id;
-  const customer = MOCK_CUSTOMERS.find(c => c.id === customerId);
-  const loan = MOCK_LOANS.find(l => l.customerId === customerId);
+  const customer = await getCustomerById(customerId);
   
-  if (!customer || !loan) {
-    return <div className="p-12 text-center text-gray-500 dark:text-white/50">Customer or Loan not found</div>;
+  if (!customer) {
+    return <div className="p-12 text-center text-gray-500 dark:text-white/50">Customer not found</div>;
   }
 
-  const installments = MOCK_INSTALLMENTS.filter(i => i.loanId === loan.id).sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+  const customerLoans = await getLoansByCustomerId(customerId);
+  const loan = customerLoans.find(l => l.status === "ACTIVE") || customerLoans[0];
+  
+  if (!loan) {
+    return (
+      <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
+        {/* Header */}
+        <header className="flex items-center justify-between mb-2">
+          <Link href="/customers">
+            <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          </Link>
+          <span className="text-gray-600 dark:text-white/70 font-medium tracking-tight">Customer Profile</span>
+          <div className="w-10" /> {/* Spacer */}
+        </header>
+
+        <div className="max-w-md mx-auto w-full">
+          <div className="flex flex-col items-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-[2rem] p-8 shadow-sm">
+            <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-[#222]">
+              {customer.avatarUrl ? (
+                <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-white/50 font-bold text-2xl">
+                  {customer.name.charAt(0)}
+                </div>
+              )}
+            </div>
+            
+            <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white text-center">{customer.name}</h1>
+            <span className="text-gray-500 dark:text-white/50 text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            
+            <CustomerContactActions customer={customer} />
+
+            <div className="mt-8 text-center text-gray-500 dark:text-white/50">
+              No active or past loans found for this customer.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const installments = await getInstallmentsByLoanId(loan.id);
   
   const paidCount = installments.filter(i => i.status === "PAID").length;
   const progressPercent = Math.round((paidCount / installments.length) * 100) || 0;

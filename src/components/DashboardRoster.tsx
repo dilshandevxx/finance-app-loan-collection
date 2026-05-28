@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Search, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Installment, Loan, Customer } from "@/data/mock";
+import { Installment, Loan, Customer } from "@/data/db";
 import { markInstallmentPaid } from "@/app/actions";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 

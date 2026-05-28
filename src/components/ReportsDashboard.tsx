@@ -6,7 +6,7 @@ import { Download, FileText, Printer, Calendar, Table } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Customer, Installment, Loan } from "@/data/mock";
+import { Customer, Installment, Loan } from "@/data/db";
 
 type ReportsDashboardProps = {
   installments: Installment[];

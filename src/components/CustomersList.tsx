@@ -5,14 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, ChevronRight, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Customer, Loan, MOCK_INSTALLMENTS } from "@/data/mock";
+import { Customer, Loan, Installment } from "@/data/db";
 
 type CustomersListProps = {
   customers: Customer[];
   loans: Loan[];
+  installments: Installment[];
 };
 
-export function CustomersList({ customers, loans }: CustomersListProps) {
+export function CustomersList({ customers, loans, installments }: CustomersListProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredCustomers = customers.filter((customer) => {
@@ -53,7 +54,7 @@ export function CustomersList({ customers, loans }: CustomersListProps) {
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
             const isOverdue = customerLoans.some(l => 
-              MOCK_INSTALLMENTS.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+              installments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
             );
 
             // Generate a consistent gradient color based on name length/index for avatar fallback

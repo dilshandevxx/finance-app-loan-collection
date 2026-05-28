@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, CheckCircle2, DollarSign, MessageCircle } from "lucide-react";
-import { Customer } from "@/data/mock";
+import { Customer } from "@/data/db";
 
 type QuickPaymentModalProps = {
   customer: Customer;

@@ -5,7 +5,7 @@ import { Phone, MessageSquare, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 import { markInstallmentPaid } from "@/app/actions";
-import { Customer, Loan, Installment } from "@/data/mock";
+import { Customer, Loan, Installment } from "@/data/db";
 
 export function CustomerContactActions({ customer }: { customer: Customer }) {
   const phone = customer.phone.replace(/[^0-9]/g, '');
