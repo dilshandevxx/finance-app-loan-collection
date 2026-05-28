@@ -40,6 +40,52 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     return nameMatch || idMatch;
   });
 
+  // Group the filtered installments by customer
+  const customerGroups = filteredInstallments.reduce((acc, inst) => {
+    const loan = loans.find(l => l.id === inst.loanId);
+    const customer = customers.find(c => c.id === loan?.customerId);
+    
+    if (!customer) return acc;
+    
+    const existingGroup = acc.find(g => g.customer.id === customer.id);
+    const isOverdue = inst.status === "MISSED" || new Date(inst.dueDate) < new Date(new Date().toDateString());
+    
+    if (existingGroup) {
+      existingGroup.installments.push(inst);
+      existingGroup.totalAmount += inst.amount;
+      if (isOverdue) {
+        existingGroup.isOverdue = true;
+      }
+      // Keep oldest installment
+      if (new Date(inst.dueDate) < new Date(existingGroup.oldestInstallment.dueDate)) {
+        existingGroup.oldestInstallment = inst;
+      }
+    } else {
+      acc.push({
+        customer,
+        installments: [inst],
+        totalAmount: inst.amount,
+        isOverdue,
+        oldestInstallment: inst
+      });
+    }
+    
+    return acc;
+  }, [] as Array<{
+    customer: Customer;
+    installments: Installment[];
+    totalAmount: number;
+    isOverdue: boolean;
+    oldestInstallment: Installment;
+  }>);
+
+  // Sort customer groups: overdue first, then by oldest installment date ascending
+  const sortedCustomerGroups = [...customerGroups].sort((a, b) => {
+    if (a.isOverdue && !b.isOverdue) return -1;
+    if (!a.isOverdue && b.isOverdue) return 1;
+    return new Date(a.oldestInstallment.dueDate).getTime() - new Date(b.oldestInstallment.dueDate).getTime();
+  });
+
   const handlePayClick = (e: React.MouseEvent, installmentId: string, customer: Customer, expectedAmount: number) => {
     e.preventDefault(); // Prevent navigating to customer details
     setSelectedPayment({ customer, installmentId, expectedAmount });
@@ -112,7 +158,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       
       <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
         <CardContent className="p-0">
-          {filteredInstallments.length === 0 ? (
+          {sortedCustomerGroups.length === 0 ? (
             <div className="p-12 flex flex-col items-center justify-center text-center">
               <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-[#111] flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-6 h-6 text-gray-300 dark:text-white/30" />
@@ -122,13 +168,11 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             </div>
           ) : (
             <div className="divide-y divide-gray-100 dark:divide-[#222]">
-              {filteredInstallments.map((inst) => {
-                const loan = loans.find(l => l.id === inst.loanId);
-                const customer = customers.find(c => c.id === loan?.customerId)!;
-                const isOverdue = inst.status === "MISSED" || new Date(inst.dueDate) < new Date();
+              {sortedCustomerGroups.map((group) => {
+                const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
                 
                 return (
-                  <Link key={inst.id} href={`/customers/${customer.id}`} className="block hover:bg-gray-50 dark:hover:bg-[#111] transition-colors">
+                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-gray-50 dark:hover:bg-[#111] transition-colors">
                     <div className="flex items-center justify-between p-2.5 sm:p-4 px-2 sm:px-5 gap-2">
                       
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
@@ -150,18 +194,20 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-gray-500 dark:text-white/40 mt-0.5 break-words">ID: {customer.memberId || customer.id} • Due {inst.dueDate}</span>
+                          <span className="text-xs text-gray-500 dark:text-white/40 mt-0.5 break-words">
+                            ID: {customer.memberId || customer.id.slice(0, 8)} • {installments.length > 1 ? `${installments.length} weeks due (oldest: ${oldestInstallment.dueDate})` : `Due ${oldestInstallment.dueDate}`}
+                          </span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                         <div className="flex flex-col items-end">
                           <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
-                            ${inst.amount.toFixed(2)}
+                            ${totalAmount.toFixed(2)}
                           </span>
                         </div>
                         <Button 
-                          onClick={(e) => handlePayClick(e, inst.id, customer, inst.amount)}
+                          onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
                           disabled={isPending}
                           className="h-8 px-3.5 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
                         >
