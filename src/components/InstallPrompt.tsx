@@ -24,8 +24,10 @@ export function InstallPrompt() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      (window as any).deferredPrompt = e;
       setPlatform("android");
       setShowPrompt(true);
+      window.dispatchEvent(new CustomEvent("pwa-prompt-available"));
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);

@@ -1,10 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, Shield, Moon, DownloadCloud, LogOut, ChevronRight, CheckCircle2 } from "lucide-react";
+import { 
+  Bell, 
+  Shield, 
+  Moon, 
+  DownloadCloud, 
+  LogOut, 
+  ChevronRight, 
+  CheckCircle2, 
+  Download, 
+  HelpCircle, 
+  RefreshCw, 
+  Info,
+  Smartphone
+} from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -17,18 +30,62 @@ export default function SettingsPage() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
 
+  // PWA Installation states
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showTroubleshooting, setShowTroubleshooting] = useState(false);
+
+  useEffect(() => {
+    // 1. Detect if running in standalone PWA mode
+    const checkStandalone = () => {
+      const standalone = window.matchMedia("(display-mode: standalone)").matches 
+        || (window.navigator as any).standalone === true;
+      setIsInstalled(standalone);
+    };
+
+    checkStandalone();
+
+    // 2. Check if global prompt already exists
+    if ((window as any).deferredPrompt) {
+      setDeferredPrompt((window as any).deferredPrompt);
+    }
+
+    // 3. Listen for the prompt event if it fires later
+    const handlePrompt = () => {
+      if ((window as any).deferredPrompt) {
+        setDeferredPrompt((window as any).deferredPrompt);
+      }
+    };
+
+    window.addEventListener("pwa-prompt-available", handlePrompt);
+    return () => {
+      window.removeEventListener("pwa-prompt-available", handlePrompt);
+    };
+  }, []);
+
   const handleSignOut = () => {
     setIsSigningOut(true);
     // Simulate sign out process
     setTimeout(() => {
-      // In a real app, we'd clear auth tokens here
       router.push("/");
     }, 1000);
   };
 
-  const handleActionClick = (actionName: string) => {
-    setShowToast(`${actionName} settings coming soon!`);
-    setTimeout(() => setShowToast(null), 3000);
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+      (window as any).deferredPrompt = null;
+    }
+  };
+
+  const handleResetBanner = () => {
+    localStorage.removeItem("pwa_install_dismissed");
+    setShowToast("Install banner reset! Reload to see it.");
+    setTimeout(() => setShowToast(null), 4000);
   };
 
   return (
@@ -41,7 +98,7 @@ export default function SettingsPage() {
       )}
 
       {/* Header */}
-      <header className="flex items-center justify-between mb-4">
+      <header className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold text-black dark:text-white tracking-tight">Settings</h1>
       </header>
 
@@ -65,6 +122,87 @@ export default function SettingsPage() {
       </Card>
 
       <div className="flex flex-col gap-8 mt-2">
+        
+        {/* App Installation Section */}
+        <section>
+          <h3 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-3 uppercase tracking-wider px-2">Mobile Application</h3>
+          <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-5 flex flex-col gap-4">
+              
+              {/* Status Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] p-2 rounded-xl text-black dark:text-white">
+                    <Smartphone className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-black dark:text-white font-medium text-sm">Standalone Mode</span>
+                    <span className="text-gray-400 dark:text-white/40 text-xs">Run without browser borders</span>
+                  </div>
+                </div>
+                <div>
+                  {isInstalled ? (
+                    <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">Installed ✅</span>
+                  ) : (
+                    <span className="text-xs font-bold text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full">Not Installed</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Install Button Trigger */}
+              {!isInstalled && deferredPrompt && (
+                <button
+                  onClick={handleInstallApp}
+                  className="w-full h-11 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all mt-2"
+                >
+                  <Download className="w-4 h-4" /> Install {config.appShortName} App Now
+                </button>
+              )}
+
+              {/* Reset Banner Button & Troubleshooting Toggle */}
+              {!isInstalled && (
+                <div className="flex gap-2.5 mt-2 border-t border-gray-100 dark:border-[#1a1a1a] pt-4">
+                  <button
+                    onClick={handleResetBanner}
+                    className="flex-1 h-9 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:hover:bg-[#1c1c1c] text-xs font-semibold text-gray-600 dark:text-neutral-400 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-gray-200 dark:border-[#222]"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" /> Reset Install Popups
+                  </button>
+                  <button
+                    onClick={() => setShowTroubleshooting(!showTroubleshooting)}
+                    className="flex-1 h-9 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:hover:bg-[#1c1c1c] text-xs font-semibold text-gray-600 dark:text-neutral-400 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-gray-200 dark:border-[#222]"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" /> Can't Install?
+                  </button>
+                </div>
+              )}
+
+              {/* Troubleshooting Instructions */}
+              {!isInstalled && showTroubleshooting && (
+                <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 mt-2 text-left flex flex-col gap-3 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex items-center gap-2 text-amber-500 text-xs font-bold uppercase tracking-wider">
+                    <Info className="w-4 h-4" /> Why is "Install" not showing?
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-neutral-400 leading-relaxed">
+                    If you installed the app before and then uninstalled it, Android or Chrome puts the app on a **temporary installation cooldown** (often 24 hours) to prevent spam.
+                  </p>
+                  <div className="text-xs text-gray-600 dark:text-neutral-400 flex flex-col gap-2">
+                    <span className="font-bold text-black dark:text-white">To bypass the cooldown and force the install button:</span>
+                    <ol className="list-decimal pl-4 space-y-2">
+                      <li>Open the website in your mobile browser.</li>
+                      <li>Tap the **lock icon** 🔒 (or settings icon) next to the URL in the address bar.</li>
+                      <li>Select **Site settings** (or **Cookies and site data**).</li>
+                      <li>Tap **Clear data** or **Clear & reset** (this resets Chrome's install records for this site).</li>
+                      <li>**Reload/refresh the page twice**. The "Install" prompt will now show up!</li>
+                    </ol>
+                  </div>
+                </div>
+              )}
+
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Account Settings */}
         <section>
           <h3 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-3 uppercase tracking-wider px-2">Account</h3>
