@@ -216,7 +216,7 @@ export default function SettingsPage() {
                   <div className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border p-2 rounded-xl text-black dark:text-white group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
                     <Shield className="w-5 h-5" />
                   </div>
-                  <span className="text-black dark:text-white font-medium text-sm">Security & Password</span>
+                  <span className="text-black dark:text-white font-medium text-sm">Security & PIN</span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-black dark:group-hover:text-white transition-colors" />
               </Link>

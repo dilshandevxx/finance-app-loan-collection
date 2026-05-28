@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { ChevronLeft, Shield, KeyRound, CheckCircle2, AlertCircle } from "lucide-react";
+import { ChevronLeft, Shield, KeyRound, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { updateAgentPin } from "@/app/auth-actions";
@@ -11,6 +11,7 @@ export default function SecuritySettingsPage() {
   const [currentPin, setCurrentPin] = useState("");
   const [newPin, setNewPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
+  const [showPins, setShowPins] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -60,7 +61,7 @@ export default function SecuritySettingsPage() {
       {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <Link href="/settings">
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -70,12 +71,12 @@ export default function SecuritySettingsPage() {
 
       <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
         <CardContent className="p-0">
-          <div className="p-8 border-b border-gray-100 dark:border-[#111] flex flex-col items-center justify-center gap-4 text-center">
+          <div className="p-8 border-b border-gray-100 dark:border-border/60 flex flex-col items-center justify-center gap-4 text-center">
             <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-2">
               <Shield className="w-8 h-8 text-blue-500" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-black dark:text-white">Agent Security</h2>
+              <h2 className="text-xl font-bold text-black dark:text-white">Agent Security PIN</h2>
               <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
                 Manage your Agent Login PIN to keep your collection dashboard secure.
               </p>
@@ -85,9 +86,30 @@ export default function SecuritySettingsPage() {
           <div className="p-6 md:p-8">
             <form onSubmit={handleUpdatePin} className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-black dark:text-white flex items-center gap-2">
-                  <KeyRound className="w-4 h-4 text-gray-400" /> Update Agent PIN
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-black dark:text-white flex items-center gap-2">
+                    <KeyRound className="w-4 h-4 text-gray-400" /> Update Agent PIN
+                  </h3>
+                  
+                  {/* Show/Hide PIN Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setShowPins(!showPins)}
+                    className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 flex items-center gap-1.5 transition-colors cursor-pointer select-none"
+                  >
+                    {showPins ? (
+                      <>
+                        <EyeOff className="w-4 h-4" />
+                        Hide PIN digits
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4" />
+                        Show PIN digits
+                      </>
+                    )}
+                  </button>
+                </div>
 
                 {error && (
                   <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
@@ -104,17 +126,17 @@ export default function SecuritySettingsPage() {
                 )}
 
                 <div className="space-y-4">
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 relative">
                     <label className="text-xs font-medium text-gray-500 dark:text-white/50">Current 4-Digit PIN</label>
                     <input
-                      type="password"
+                      type={showPins ? "text" : "password"}
                       inputMode="numeric"
                       pattern="[0-9]*"
                       maxLength={4}
                       value={currentPin}
                       onChange={(e) => handleNumericInput(e.target.value, setCurrentPin)}
-                      placeholder="••••"
-                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                      placeholder={showPins ? "0000" : "••••"}
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-colors tracking-widest text-lg font-bold"
                     />
                   </div>
 
@@ -122,27 +144,27 @@ export default function SecuritySettingsPage() {
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-gray-500 dark:text-white/50">New 4-Digit PIN</label>
                       <input
-                        type="password"
+                        type={showPins ? "text" : "password"}
                         inputMode="numeric"
                         pattern="[0-9]*"
                         maxLength={4}
                         value={newPin}
                         onChange={(e) => handleNumericInput(e.target.value, setNewPin)}
-                        placeholder="••••"
-                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                        placeholder={showPins ? "0000" : "••••"}
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-gray-500 dark:text-white/50">Confirm New PIN</label>
                       <input
-                        type="password"
+                        type={showPins ? "text" : "password"}
                         inputMode="numeric"
                         pattern="[0-9]*"
                         maxLength={4}
                         value={confirmPin}
                         onChange={(e) => handleNumericInput(e.target.value, setConfirmPin)}
-                        placeholder="••••"
-                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                        placeholder={showPins ? "0000" : "••••"}
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                   </div>
@@ -151,10 +173,10 @@ export default function SecuritySettingsPage() {
                 <Button
                   type="submit"
                   disabled={isPending || currentPin.length < 4 || newPin.length < 4 || confirmPin.length < 4}
-                  className="w-full mt-4 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-2xl h-14 font-bold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+                  className="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white rounded-2xl h-14 font-bold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
                 >
                   {isPending ? (
-                    <div className="w-5 h-5 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     "Update Agent PIN"
                   )}
