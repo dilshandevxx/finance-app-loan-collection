@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ChevronRight, Phone } from "lucide-react";
+import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
 
@@ -15,6 +15,19 @@ type CustomersListProps = {
 
 export function CustomersList({ customers, loans, installments }: CustomersListProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<"active" | "settled">("active");
+
+  // Determine all active customers (have at least one active loan)
+  const allActiveCustomers = customers.filter(customer => {
+    const customerLoans = loans.filter(l => l.customerId === customer.id);
+    return customerLoans.some(l => l.status === "ACTIVE");
+  });
+
+  // Determine all settled customers (no loans, or all loans paid off/not active)
+  const allSettledCustomers = customers.filter(customer => {
+    const customerLoans = loans.filter(l => l.customerId === customer.id);
+    return customerLoans.length === 0 || customerLoans.every(l => l.status !== "ACTIVE");
+  });
 
   const filteredCustomers = customers.filter((customer) => {
     if (searchQuery.trim() === "") return true;
@@ -27,44 +40,92 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
     return nameMatch || idMatch || phoneMatch;
   });
 
+  // Split search results between the active tab
+  const displayCustomers = activeTab === "active"
+    ? filteredCustomers.filter(c => allActiveCustomers.some(ac => ac.id === c.id))
+    : filteredCustomers.filter(c => allSettledCustomers.some(sc => sc.id === c.id));
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
-      <div className="relative mb-2 group">
+      
+      {/* Search Field */}
+      <div className="relative mb-1 group">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by name, ID, or phone..."
-          className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-[#333] rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/10 dark:focus:border-blue-500 transition-all shadow-sm"
+          className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all shadow-sm"
         />
       </div>
 
+      {/* Segmented Tab Switcher */}
+      <div className="flex bg-gray-50 dark:bg-muted p-1.5 rounded-2xl w-full max-w-sm mx-auto shadow-inner border border-gray-100 dark:border-border/30">
+        <button
+          onClick={() => setActiveTab("active")}
+          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${
+            activeTab === "active"
+              ? "bg-white dark:bg-card text-black dark:text-white shadow-md"
+              : "text-gray-500 dark:text-white/40 hover:text-black dark:hover:text-white"
+          }`}
+        >
+          <UserCheck className="w-4 h-4" />
+          Active Clients
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
+            activeTab === "active"
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
+          }`}>
+            {allActiveCustomers.length}
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab("settled")}
+          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${
+            activeTab === "settled"
+              ? "bg-white dark:bg-card text-black dark:text-white shadow-md"
+              : "text-gray-500 dark:text-white/40 hover:text-black dark:hover:text-white"
+          }`}
+        >
+          <CheckCircle2 className="w-4 h-4" />
+          Settled
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
+            activeTab === "settled"
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
+          }`}>
+            {allSettledCustomers.length}
+          </span>
+        </button>
+      </div>
+
+      {/* Grid of Clients */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredCustomers.length === 0 ? (
-          <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-card">
-            <p className="text-gray-500 dark:text-white/50 mb-1">No customers found matching "{searchQuery}"</p>
-            <p className="text-sm text-gray-400 dark:text-white/30">Try a different name or member ID</p>
+        {displayCustomers.length === 0 ? (
+          <div className="col-span-full text-center py-16 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-border bg-gray-50/50 dark:bg-card/30 flex flex-col items-center justify-center gap-3">
+            <Inbox className="w-8 h-8 text-gray-300 dark:text-neutral-700" />
+            <div className="flex flex-col gap-1">
+              <p className="text-gray-500 dark:text-white/50 text-sm font-medium">
+                No {activeTab} clients found
+              </p>
+              {searchQuery && (
+                <p className="text-xs text-gray-400 dark:text-white/30">
+                  Try adjusting your search query "{searchQuery}"
+                </p>
+              )}
+            </div>
           </div>
         ) : (
-          filteredCustomers.map((customer, i) => {
+          displayCustomers.map((customer, i) => {
             const customerLoans = loans.filter(l => l.customerId === customer.id);
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
             const isOverdue = customerLoans.some(l => 
               installments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
             );
-
-            // Generate a consistent gradient color based on name length/index for avatar fallback
-            const gradients = [
-              "from-blue-500 to-cyan-400",
-              "from-purple-500 to-pink-500",
-              "from-orange-500 to-amber-400",
-              "from-emerald-500 to-teal-400",
-            ];
-            const gradient = gradients[i % gradients.length];
 
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
@@ -114,7 +175,9 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                                 <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
                               </>
                             ) : (
-                              <span className="text-sm font-medium text-gray-400 dark:text-white/40">Settled</span>
+                              <span className="text-sm font-semibold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full flex items-center gap-1 select-none">
+                                Paid ✅
+                              </span>
                             )}
                           </div>
                           <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-muted border border-gray-100 dark:border-border items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
@@ -123,7 +186,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                         </div>
                         
                       </div>
-
+ 
                       {/* Bottom Row: Progress Bar */}
                       {activeLoan && (
                         <div className="flex flex-col gap-1.5 w-full pr-0 sm:pr-12">
