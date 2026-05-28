@@ -156,98 +156,89 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   return (
     <section className="flex flex-col h-full w-full max-w-full">
       <div className="flex items-center justify-between mb-4 gap-4">
-        <h2 className="text-xl font-bold tracking-tight text-black dark:text-white truncate">Due Today</h2>
+        <h2 className="text-xl font-bold tracking-tight text-foreground truncate">Due Today</h2>
         <Link href="/customers" className="shrink-0">
-          <Button variant="ghost" className="text-gray-500 hover:text-black dark:text-white/50 dark:hover:text-white group text-sm h-8 px-2 sm:px-4">
+          <Button variant="ghost" className="text-muted-foreground hover:text-foreground group text-sm h-8 px-2 sm:px-4">
             See all
             <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
           </Button>
         </Link>
       </div>
 
-      <div className="relative mb-6">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-white/30" />
+      <div className="relative mb-4">
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 text-muted-foreground" />
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by Name or Member ID..."
-          className="w-full bg-white/[0.02] border border-white/5 focus:border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:outline-none transition-all duration-300 shadow-inner"
+          placeholder="Search by name or member ID…"
+          className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
         />
       </div>
       
-      <Card 
-        className="rounded-2xl overflow-hidden shadow-2xl border border-white/5"
-        style={{
-          background: 'var(--color-fintech-dark)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
-        }}
-      >
+      <Card className="rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
         <CardContent className="p-0">
           {sortedCustomerGroups.length === 0 ? (
             <div className="p-12 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center mb-4">
-                <CheckCircle2 className="w-6 h-6 text-white/20" />
+              <div className="w-12 h-12 rounded-full bg-secondary border border-border flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-6 h-6 text-muted-foreground/40" />
               </div>
-              <h4 className="text-white font-medium mb-1">No pending collections</h4>
-              <p className="text-white/40 text-sm">You're all caught up for the day.</p>
+              <h4 className="text-foreground font-semibold mb-1">No pending collections</h4>
+              <p className="text-muted-foreground text-sm">You're all caught up for the day.</p>
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-border">
               {sortedCustomerGroups.map((group) => {
                 const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
                 
                 return (
-                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-white/[0.02] transition-colors">
-                    <div className="flex items-center justify-between p-2.5 sm:p-4 px-2 sm:px-5 gap-2">
+                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
+                    <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
                       
-                      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/5 overflow-hidden relative shrink-0">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
                           <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full flex-wrap">
-                            <span className="font-semibold text-white text-sm break-words">{customer.name}</span>
+                          <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
+                            <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
                             {isOverdue && (
-                              <span className="flex shrink-0 items-center gap-1 text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-fintech-crimson bg-fintech-crimson/10 border border-fintech-crimson/20 px-1.5 sm:px-2 py-0.5 rounded-full">
-                                <AlertCircle className="w-3 h-3" /> Overdue
+                              <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-white bg-[#e05470] px-2 py-0.5 rounded-full">
+                                <AlertCircle className="w-2.5 h-2.5" /> Overdue
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-white/40 mt-0.5 break-words">
-                            ID: {customer.memberId || customer.id.slice(0, 8)} • {installments.length > 1 ? `${installments.length} weeks due (oldest: ${oldestInstallment.dueDate})` : `Due ${oldestInstallment.dueDate}`}
+                          <span className="text-xs text-muted-foreground mt-0.5 break-words">
+                            {customer.memberId || customer.id.slice(0, 8)} · {installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-                        <div className="flex flex-col items-end">
-                          <span className={`font-semibold text-sm ${isOverdue ? 'text-fintech-crimson' : 'text-white'}`}>
-                            ${totalAmount.toFixed(2)}
-                          </span>
-                        </div>
-                        
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`font-bold text-sm ${isOverdue ? 'text-[#e05470]' : 'text-foreground'}`}>
+                          ${totalAmount.toFixed(2)}
+                        </span>
                         <div className="flex items-center gap-1.5">
                           <button
                             onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
-                            title="Send WhatsApp Reminder"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-primary/10 hover:bg-fintech-primary/20 text-fintech-primary border border-fintech-primary/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                            title="WhatsApp"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-[#7c6dbf]/10 hover:bg-[#7c6dbf]/20 text-[#7c6dbf] border border-[#7c6dbf]/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageCircle className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
-                            title="Send SMS Reminder"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-accent/10 hover:bg-fintech-accent/20 text-fintech-accent border border-fintech-accent/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                            title="SMS"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-[#6ab4e8]/10 hover:bg-[#6ab4e8]/20 text-[#6ab4e8] border border-[#6ab4e8]/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageSquare className="w-4 h-4" />
                           </button>
                           <Button 
                             onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
                             disabled={isPending}
-                            className="h-8 px-3 text-xs font-black bg-fintech-primary hover:bg-fintech-primary/90 text-white rounded-lg shadow-sm shrink-0 border-none cursor-pointer"
+                            className="h-8 px-3 text-xs font-bold bg-[#7c6dbf] hover:bg-[#6a5caa] text-white rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-[#7c6dbf]/20"
                           >
                             Pay
                           </Button>

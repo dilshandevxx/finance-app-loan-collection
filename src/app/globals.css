@@ -1,78 +1,100 @@
 @import "tailwindcss";
 
+/* ─── Light Mode ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #09090b;
+  --background: #f5f4ff;
+  --foreground: #13102a;
   --card: #ffffff;
-  --card-foreground: #09090b;
+  --card-foreground: #13102a;
   --popover: #ffffff;
-  --popover-foreground: #09090b;
-  --primary: #18181b;
-  --primary-foreground: #fafafa;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
-  --destructive: #fee2e2;
-  --destructive-foreground: #ef4444;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #18181b;
+  --popover-foreground: #13102a;
+  --primary: #7c6dbf;
+  --primary-foreground: #ffffff;
+  --secondary: #ede9fc;
+  --secondary-foreground: #13102a;
+  --muted: #ede9fc;
+  --muted-foreground: #6b6899;
+  --accent: #ede9fc;
+  --accent-foreground: #13102a;
+  --destructive: #fde8ed;
+  --destructive-foreground: #e05470;
+  --border: #e2dff5;
+  --input: #e2dff5;
+  --ring: #7c6dbf;
 }
 
+/* ─── Dark Mode: deep navy-purple ────────────────────────── */
 .dark {
-  --background: #141414; /* Low black background */
-  --foreground: #fafafa;
-  --card: #1f1f21; /* Match card backgrounds in reference image */
-  --card-foreground: #fafafa;
-  --popover: #1f1f21;
-  --popover-foreground: #fafafa;
-  --primary: #fafafa;
-  --primary-foreground: #141414;
-  --secondary: #252528;
-  --secondary-foreground: #fafafa;
-  --muted: #252528;
-  --muted-foreground: #a1a1aa;
-  --accent: #252528;
-  --accent-foreground: #fafafa;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #fca5a5;
-  --border: #28282b; /* Subtle low black border outline */
-  --input: #1f1f21;
-  --ring: #d4d4d8;
+  --background: #13102a;
+  --foreground: #f0eeff;
+  --card: #1e1a36;
+  --card-foreground: #f0eeff;
+  --popover: #1e1a36;
+  --popover-foreground: #f0eeff;
+  --primary: #f0eeff;
+  --primary-foreground: #13102a;
+  --secondary: #2a2548;
+  --secondary-foreground: #f0eeff;
+  --muted: #2a2548;
+  --muted-foreground: #9e99c8;
+  --accent: #2a2548;
+  --accent-foreground: #f0eeff;
+  --destructive: #4a1020;
+  --destructive-foreground: #f28ba0;
+  --border: #2e2a4a;
+  --input: #1e1a36;
+  --ring: #7c6dbf;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-popover:              var(--popover);
+  --color-popover-foreground:   var(--popover-foreground);
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-secondary:            var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
+  --color-muted:                var(--muted);
+  --color-muted-foreground:     var(--muted-foreground);
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-destructive:          var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-neon-lime: #e2ff3b;
-  --color-neon-dark: #0f1400;
-  --color-fintech-primary: #7c3aed;
-  --color-fintech-accent: #fda4af;
-  --color-fintech-emerald: #10b981;
-  --color-fintech-crimson: #ef4444;
-  --color-fintech-dark: #18181b;
-  --color-fintech-background: #09090b;
-  --radius: 0.85rem;
+  --color-border:               var(--border);
+  --color-input:                var(--input);
+  --color-ring:                 var(--ring);
+
+  /* ─── Vibrant App Palette (from reference screenshots) ── */
+  /* Coral-red card  */ --color-vibe-coral:      #e05470;
+  /* Soft-pink card  */ --color-vibe-pink:       #e8849a;
+  /* Purple-violet   */ --color-vibe-violet:     #7c6dbf;
+  /* Sky-blue card   */ --color-vibe-sky:        #6ab4e8;
+
+  /* Light-mode pastel tints */
+  --color-vibe-coral-lt:   #fde8ed;
+  --color-vibe-pink-lt:    #fce9f0;
+  --color-vibe-violet-lt:  #ede9fc;
+  --color-vibe-sky-lt:     #e3f4fd;
+
+  /* App surface layers (dark navy) */
+  --color-app-bg:       #13102a;
+  --color-app-surface:  #1e1a36;
+  --color-app-surface2: #2a2548;
+
+  /* Mood-face palette (for CollectionGoalCard SVG faces) */
+  --color-mood-pink:        #fbb7db;
+  --color-mood-pink-light:  #fae6f0;
+  --color-mood-mint:        #9dedc8;
+  --color-mood-mint-light:  #e6f9f0;
+  --color-mood-blue:        #a3e0f5;
+  --color-mood-blue-light:  #d5f2fc;
+  --color-mood-charcoal:    #1e1a36;
+  --color-mood-gray:        #2a2548;
+
+  --radius:    1.5rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
@@ -86,8 +108,7 @@
   40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
-html,
-body {
+html, body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
@@ -95,17 +116,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar for a premium feel */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-muted-foreground);
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }

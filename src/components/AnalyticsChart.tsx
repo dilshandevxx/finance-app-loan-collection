@@ -2,101 +2,81 @@
 
 import { useTheme } from "next-themes";
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Cell,
 } from "recharts";
 import { useEffect, useState } from "react";
 
 const data = [
-  { name: "Mon", expected: 400, collected: 240 },
-  { name: "Tue", expected: 300, collected: 139 },
-  { name: "Wed", expected: 200, collected: 980 },
-  { name: "Thu", expected: 278, collected: 390 },
-  { name: "Fri", expected: 189, collected: 480 },
-  { name: "Sat", expected: 239, collected: 380 },
-  { name: "Sun", expected: 349, collected: 430 },
+  { name: "Mon", collected: 240, expected: 400 },
+  { name: "Tue", collected: 139, expected: 300 },
+  { name: "Wed", collected: 380, expected: 200 },
+  { name: "Thu", collected: 390, expected: 278 },
+  { name: "Fri", collected: 480, expected: 189 },
+  { name: "Sat", collected: 380, expected: 239 },
+  { name: "Sun", collected: 430, expected: 349 },
 ];
+
+// Vibrant bar colors cycling through the vibe palette
+const COLORS = ["#7c6dbf", "#e05470", "#6ab4e8", "#e8849a", "#7c6dbf", "#e05470", "#6ab4e8"];
 
 export function AnalyticsChart() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
-  if (!mounted) return <div className="h-[250px] w-full animate-pulse bg-gray-100 dark:bg-muted rounded-xl"></div>;
+  if (!mounted) return <div className="h-[200px] w-full animate-pulse bg-secondary rounded-2xl" />;
 
   const isDark = resolvedTheme === "dark";
-  const gridColor = isDark ? "#222222" : "#f0f0f0";
-  const textColor = isDark ? "rgba(255,255,255,0.5)" : "#6b7280";
+  const textColor  = isDark ? "#9e99c8" : "#6b6899";
+  const gridColor  = isDark ? "#2e2a4a" : "#e2dff5";
+  const tooltipBg  = isDark ? "#1e1a36" : "#ffffff";
+  const tooltipBdr = isDark ? "#2e2a4a" : "#e2dff5";
 
   return (
-    <div className="h-[250px] w-full mt-4 min-w-0 overflow-hidden">
+    <div className="h-[200px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
-          data={data}
-          margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={isDark ? "#ffffff" : "#000000"} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={isDark ? "#ffffff" : "#000000"} stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.1} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-            </linearGradient>
-          </defs>
+        <BarChart data={data} margin={{ top: 4, right: 0, left: -24, bottom: 0 }} barSize={18} barGap={4}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
-          <XAxis 
-            dataKey="name" 
+          <XAxis
+            dataKey="name"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: textColor, fontSize: 12 }}
-            dy={10}
+            tick={{ fill: textColor, fontSize: 11 }}
+            dy={6}
           />
-          <YAxis 
+          <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fill: textColor, fontSize: 12 }}
-            tickFormatter={(value) => `$${value}`}
+            tick={{ fill: textColor, fontSize: 11 }}
+            tickFormatter={(v) => `$${v}`}
           />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: isDark ? '#111' : '#fff',
-              borderRadius: '12px',
-              border: isDark ? '1px solid #333' : '1px solid #eaeaea',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-              color: isDark ? '#fff' : '#000'
+          <Tooltip
+            contentStyle={{
+              backgroundColor: tooltipBg,
+              borderRadius: "16px",
+              border: `1px solid ${tooltipBdr}`,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+              color: isDark ? "#f0eeff" : "#13102a",
+              fontSize: 12,
             }}
-            itemStyle={{ color: isDark ? '#fff' : '#000' }}
+            itemStyle={{ color: isDark ? "#f0eeff" : "#13102a" }}
+            cursor={{ fill: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
           />
-          <Area 
-            type="monotone" 
-            dataKey="expected" 
-            stroke="#8884d8" 
-            strokeDasharray="5 5"
-            fillOpacity={1} 
-            fill="url(#colorExpected)" 
-            name="Expected"
-            strokeWidth={2}
-          />
-          <Area 
-            type="monotone" 
-            dataKey="collected" 
-            stroke={isDark ? "#ffffff" : "#000000"} 
-            fillOpacity={1} 
-            fill="url(#colorCollected)" 
-            name="Collected"
-            strokeWidth={2}
-          />
-        </AreaChart>
+          {/* Expected – muted tint */}
+          <Bar dataKey="expected" name="Expected" radius={[8, 8, 4, 4]} fill={isDark ? "#2a2548" : "#ede9fc"} />
+          {/* Collected – vibrant cycling colors */}
+          <Bar dataKey="collected" name="Collected" radius={[8, 8, 4, 4]}>
+            {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+          </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );
