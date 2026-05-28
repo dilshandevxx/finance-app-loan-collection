@@ -34,6 +34,7 @@ export const viewport: Viewport = {
 
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { OfflineProvider } from "@/components/OfflineProvider";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 export default function RootLayout({
   children,
@@ -52,6 +53,7 @@ export default function RootLayout({
             <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-4 md:px-8 pt-8 md:pl-28">
               {children}
             </main>
+            <InstallPrompt />
           </OfflineProvider>
         </ThemeProvider>
       </body>
