@@ -181,7 +181,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       <Card 
         className="rounded-2xl overflow-hidden shadow-2xl border border-white/5"
         style={{
-          background: 'linear-gradient(145deg, #121214 0%, #0d0d0f 100%)',
+          background: 'var(--color-fintech-dark)',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
         }}
       >
@@ -233,21 +233,21 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           <button
                             onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
                             title="Send WhatsApp Reminder"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-purple/10 hover:bg-fintech-purple/20 text-fintech-purple border border-fintech-purple/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-primary/10 hover:bg-fintech-primary/20 text-fintech-primary border border-fintech-primary/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageCircle className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
                             title="Send SMS Reminder"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-pink/10 hover:bg-fintech-pink/20 text-fintech-pink border border-fintech-pink/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-accent/10 hover:bg-fintech-accent/20 text-fintech-accent border border-fintech-accent/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageSquare className="w-4 h-4" />
                           </button>
                           <Button 
                             onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
                             disabled={isPending}
-                            className="h-8 px-3 text-xs font-black bg-fintech-purple hover:bg-fintech-purple/90 text-white rounded-lg shadow-sm shrink-0 border-none cursor-pointer"
+                            className="h-8 px-3 text-xs font-black bg-fintech-primary hover:bg-fintech-primary/90 text-white rounded-lg shadow-sm shrink-0 border-none cursor-pointer"
                           >
                             Pay
                           </Button>

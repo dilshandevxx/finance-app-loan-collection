@@ -27,8 +27,7 @@ export function Greeting({ name }: { name: string }) {
       <div 
         className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 shrink-0 shadow-lg"
       >
-        <Icon className="w-5 h-5 text-fintech-pink relative z-10 animate-pulse" />
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-fintech-purple/20 to-fintech-pink/20 blur-sm pointer-events-none" />
+        <Icon className="w-5 h-5 text-fintech-accent relative z-10 animate-pulse" />
       </div>
       
       <div className="flex flex-col justify-center text-left">
@@ -37,7 +36,7 @@ export function Greeting({ name }: { name: string }) {
         </span>
         <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white leading-none flex items-center gap-2">
           {name}
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-fintech-pink animate-bounce inline-block shrink-0" />
+          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-fintech-accent animate-bounce inline-block shrink-0" />
         </h1>
       </div>
     </div>
