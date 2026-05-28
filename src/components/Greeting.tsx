@@ -22,16 +22,21 @@ export function Greeting({ name }: { name: string }) {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center">
-      <div className="flex items-center gap-1.5 mb-1 animate-pulse duration-1000">
-        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 dark:text-blue-400" />
-        <span className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-white/60 tracking-wide">
-          {greeting},
-        </span>
+    <div className="flex items-center gap-3.5">
+      {/* Dynamic Time-based Icon Indicator with animated background pulse */}
+      <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-orange-500/10 dark:bg-emerald-500/10 border border-orange-500/20 dark:border-emerald-500/20 shrink-0">
+        <div className="absolute inset-0 rounded-2xl bg-orange-500/5 dark:bg-emerald-500/5 animate-ping opacity-40 duration-1000" />
+        <Icon className="w-5 h-5 text-orange-500 dark:text-emerald-400 relative z-10" />
       </div>
-      <div className="text-xl sm:text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-600 dark:from-white dark:to-gray-400 leading-none flex items-center gap-2">
-        {name} 
-        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 dark:text-yellow-400 animate-pulse inline-block" />
+      
+      <div className="flex flex-col justify-center">
+        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-450 dark:text-white/40 leading-none mb-1">
+          {greeting}
+        </span>
+        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-black dark:text-white leading-none flex items-center gap-1.5">
+          {name}
+          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 dark:text-yellow-400 animate-pulse inline-block shrink-0" />
+        </h1>
       </div>
     </div>
   );
