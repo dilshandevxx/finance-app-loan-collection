@@ -56,7 +56,7 @@ export default async function Home() {
         {/* Left Column: Metrics & Actions */}
         <section className="flex flex-col gap-5">
           {/* Main Balance Card */}
-          <div className="rounded-3xl p-6 sm:p-8 relative overflow-hidden flex flex-col shadow-xl bg-gradient-to-br from-emerald-900 to-teal-950 dark:from-emerald-950 dark:to-black animate-in slide-in-from-bottom-8 duration-700 delay-100 fill-mode-forwards opacity-0">
+          <div className="rounded-3xl p-6 sm:p-8 relative overflow-hidden flex flex-col shadow-xl bg-gradient-to-br from-emerald-900 to-teal-950 dark:from-emerald-950 dark:to-black">
             
             {/* Background Decoration */}
             <div className="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 rounded-full bg-emerald-500 blur-3xl opacity-20 pointer-events-none"></div>
@@ -85,7 +85,7 @@ export default async function Home() {
 
           {/* Secondary Metric Cards */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-100 dark:border-blue-900/30 rounded-3xl p-5 shadow-sm animate-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-forwards opacity-0">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-100 dark:border-blue-900/30 rounded-3xl p-5 shadow-sm">
               <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 mb-3 bg-blue-100/50 dark:bg-blue-900/30 w-fit px-3 py-1.5 rounded-xl">
                 <Users className="w-4 h-4 shrink-0" />
                 <span className="text-xs font-bold uppercase tracking-wider">Active</span>
@@ -93,7 +93,7 @@ export default async function Home() {
               <div className="text-3xl font-black text-blue-950 dark:text-blue-100 tracking-tight">{activeLoans}</div>
             </div>
             
-            <div className="bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/20 dark:to-orange-950/20 border border-rose-100 dark:border-rose-900/30 rounded-3xl p-5 shadow-sm animate-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-forwards opacity-0">
+            <div className="bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/20 dark:to-orange-950/20 border border-rose-100 dark:border-rose-900/30 rounded-3xl p-5 shadow-sm">
               <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 mb-3 bg-rose-100/50 dark:bg-rose-900/30 w-fit px-3 py-1.5 rounded-xl">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span className="text-xs font-bold uppercase tracking-wider">Overdue</span>
@@ -104,7 +104,7 @@ export default async function Home() {
         </section>
 
         {/* Right Column: Today's Roster */}
-        <div className="animate-in slide-in-from-bottom-8 duration-700 delay-500 fill-mode-forwards opacity-0">
+        <div>
           <DashboardRoster 
             pendingInstallments={pendingInstallments} 
             customers={customers} 
