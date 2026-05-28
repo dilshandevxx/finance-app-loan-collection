@@ -15,6 +15,8 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   turbopack: {},
   images: {
+    dangerouslyAllowSVG: true,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",

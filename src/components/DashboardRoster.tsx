@@ -177,7 +177,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                       
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-[#222] overflow-hidden relative shrink-0">
-                          <Image src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} fill className="object-cover" />
+                          <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full flex-wrap">

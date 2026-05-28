@@ -55,7 +55,7 @@ export default function SettingsPage() {
         </div>
         <CardContent className="p-8 flex items-center gap-6">
           <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border-4 border-white dark:border-[#0a0a0a] shadow-xl shrink-0">
-            <Image src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Agent Profile" fill className="object-cover" />
+            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Agent Profile" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col gap-1.5">
             <Greeting name={config.agentName} />

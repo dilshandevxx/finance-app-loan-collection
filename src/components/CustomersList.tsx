@@ -73,7 +73,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                     
                     {/* Avatar */}
                     <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 bg-gray-50 dark:bg-[#111]">
-                      <Image src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} fill className="object-cover" />
+                      <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                     </div>
                     
                     {/* Right Side: Info & Balance Column */}
