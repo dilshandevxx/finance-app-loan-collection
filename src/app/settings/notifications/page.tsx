@@ -13,13 +13,13 @@ export default function NotificationsSettingsPage() {
   return (
     <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full min-h-screen">
       {/* Header */}
-      <header className="flex items-center justify-between mb-4">
+      <header className="w-full flex items-center justify-between bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] p-4 rounded-[1.75rem] border border-emerald-500/10 dark:border-emerald-500/20 shadow-sm relative overflow-hidden mb-4">
         <Link href="/settings">
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
-        <span className="text-gray-600 dark:text-white/70 font-medium tracking-tight">Notifications</span>
+        <span className="text-sm font-semibold tracking-tight text-black dark:text-white">Notifications</span>
         <div className="w-10" /> {/* Spacer */}
       </header>
 
