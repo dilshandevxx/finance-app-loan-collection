@@ -48,14 +48,14 @@ export default async function Home() {
     <div className="w-full flex flex-col gap-5 pb-28 max-w-md mx-auto px-4 pt-6 min-h-screen">
 
       {/* ── Header ───────────────────────────────────────── */}
-      <header className="flex items-center justify-between py-1">
-        <div className="flex flex-col">
-          <span className="text-xs font-medium text-muted-foreground">Hello,</span>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            {config.agentName} 👋
+      <header className="flex items-center justify-between py-2">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[13px] font-bold text-[#9e99c8]">Hello,</span>
+          <h1 className="text-3xl font-black tracking-tight text-white flex items-center gap-2">
+            {config.agentName} <span className="text-2xl">👋</span>
           </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <NotificationPanel customers={customers} loans={loans} installments={installments} />
         </div>
       </header>
