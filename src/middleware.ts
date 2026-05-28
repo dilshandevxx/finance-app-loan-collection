@@ -3,10 +3,18 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const session = request.cookies.get('agent_session')?.value
-  const isLoginPage = request.nextUrl.pathname === '/login'
+  const pathname = request.nextUrl.pathname
+  const isLoginPage = pathname === '/login'
 
-  // If the user is not authenticated and is not already on the login page, redirect to login
-  if (!session && !isLoginPage) {
+  // Exclude PWA and service worker files from authentication redirects
+  const isPwaFile = 
+    pathname === '/manifest.webmanifest' || 
+    pathname === '/sw.js' || 
+    pathname.startsWith('/workbox-') || 
+    pathname.startsWith('/swe-worker-')
+
+  // If the user is not authenticated and is not already on the login page/PWA files, redirect to login
+  if (!session && !isLoginPage && !isPwaFile) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
@@ -24,3 +32,4 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
+
