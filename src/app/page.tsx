@@ -11,6 +11,7 @@ import { LogoutButton } from "@/components/LogoutButton";
 import Link from "next/link";
 import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
+import { NotificationPanel } from "@/components/NotificationPanel";
 
 export const dynamic = 'force-dynamic';
 
@@ -54,10 +55,11 @@ export default async function Home() {
             LoanTrack Pro
           </span>
           
-          <button className="relative w-12 h-12 rounded-2xl bg-gray-50 hover:bg-gray-100 dark:bg-muted border border-gray-200/60 dark:border-border flex items-center justify-center text-black dark:text-white dark:hover:bg-[#222] transition-all active:scale-95 shadow-sm group">
-            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors" />
-            <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-[#161616] animate-pulse"></span>
-          </button>
+          <NotificationPanel 
+            customers={customers}
+            loans={loans}
+            installments={installments}
+          />
         </div>
       </header>
 
