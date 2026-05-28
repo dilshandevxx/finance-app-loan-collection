@@ -12,7 +12,6 @@ import Link from "next/link";
 import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
 import { NotificationPanel } from "@/components/NotificationPanel";
-import { AnalyticsChart } from "@/components/AnalyticsChart";
 
 export const dynamic = 'force-dynamic';
 
@@ -52,17 +51,30 @@ export default async function Home() {
   const collectedClientsToday = todayInstallmentsList.filter(i => i.status === "PAID").length;
   
   return (
-    <div className="w-full flex flex-col gap-6 pb-28 max-w-md mx-auto px-4 pt-6 overflow-hidden min-h-screen">
-      {/* Premium Minimalist Header */}
-      <header className="w-full flex items-center justify-between py-2">
-        <div className="flex flex-col">
-          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-medium">Hello,</span>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-1.5">
-            {config.agentName} 👋
-          </h1>
+    <div className="w-full flex flex-col gap-6 sm:gap-8 pb-24 max-w-5xl mx-auto px-1.5 sm:px-6 pt-4 sm:pt-8 overflow-hidden">
+      {/* Premium Header */}
+      <header 
+        className="w-full flex flex-col sm:flex-row sm:items-center justify-between backdrop-blur-2xl p-5 sm:p-6 rounded-[2.25rem] border border-white/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden gap-4 sm:gap-0"
+        style={{
+          background: 'var(--color-fintech-dark)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+        }}
+      >
+        <div className="flex items-center gap-4">
+          <Greeting name={config.agentName} />
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between sm:justify-end gap-3.5">
+          {/* Brand/Role Subtitle */}
+          <span 
+            className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white px-3.5 py-1.5 rounded-full border-none"
+            style={{
+              backgroundColor: 'var(--color-fintech-primary)'
+            }}
+          >
+            LoanTrack Pro
+          </span>
+          
           <NotificationPanel 
             customers={customers}
             loans={loans}
@@ -70,39 +82,61 @@ export default async function Home() {
           />
         </div>
       </header>
+ 
+      <div className="w-full grid lg:grid-cols-2 gap-6 sm:gap-8 items-start">
+        {/* Left Column: Metrics & Actions */}
+        <section className="w-full flex flex-col gap-5">
+          {/* Main Balance / Collection Goal Card */}
+          <CollectionGoalCard 
+            expectedToday={expectedToday} 
+            collectedToday={collectedToday} 
+            totalClientsToday={totalClientsToday}
+            collectedClientsToday={collectedClientsToday}
+          />
 
-      {/* Main Dynamic Mood Portfolio Status Card */}
-      <section className="w-full">
-        <CollectionGoalCard 
-          expectedToday={expectedToday} 
-          collectedToday={collectedToday} 
-          totalClientsToday={totalClientsToday}
-          collectedClientsToday={collectedClientsToday}
-          activeLoans={activeLoans}
-          overdueAmount={overdueAmount}
-        />
-      </section>
-
-      {/* Analytics chart: Weekly Mood/Collections Progress */}
-      <section className="w-full bg-white dark:bg-mood-charcoal border border-neutral-100 dark:border-[#1f1f23] rounded-[2rem] p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex flex-col">
-            <span className="text-[11px] text-neutral-400 dark:text-neutral-500 font-bold uppercase tracking-wider">Collections</span>
-            <span className="text-sm font-bold text-neutral-800 dark:text-white">Weekly Performance</span>
+          {/* Secondary Metric Cards */}
+          <div className="w-full grid grid-cols-2 gap-2.5 sm:gap-4">
+            <div 
+              className="rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-white/5 overflow-hidden flex flex-col relative"
+              style={{
+                background: 'var(--color-fintech-dark)',
+                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+              }}
+            >
+              <div className="flex items-center gap-1.5 text-fintech-primary mb-3 bg-fintech-primary/10 border border-fintech-primary/20 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
+                <Users className="w-3.5 h-3.5 shrink-0" />
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider">Active</span>
+              </div>
+              <div className="text-[17px] min-[360px]:text-xl sm:text-3xl font-black text-white tracking-tight truncate">{activeLoans}</div>
+            </div>
+            
+            <div 
+              className="rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-white/5 overflow-hidden flex flex-col relative"
+              style={{
+                background: 'var(--color-fintech-dark)',
+                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+              }}
+            >
+              <div className="flex items-center gap-1.5 text-fintech-crimson mb-3 bg-fintech-crimson/10 border border-fintech-crimson/20 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider">Overdue</span>
+              </div>
+              <div className="text-[17px] min-[360px]:text-xl sm:text-3xl font-black text-white tracking-tight truncate" title={`$${overdueAmount.toFixed(2)}`}>
+                ${overdueAmount.toFixed(2)}
+              </div>
+            </div>
           </div>
-          <span className="text-xs text-neutral-400 dark:text-neutral-500 font-medium">This Week</span>
-        </div>
-        <AnalyticsChart />
-      </section>
+        </section>
 
-      {/* Today's Roster List */}
-      <section className="w-full">
-        <DashboardRoster 
-          pendingInstallments={pendingInstallments} 
-          customers={customers} 
-          loans={loans} 
-        />
-      </section>
+        {/* Right Column: Today's Roster */}
+        <div className="w-full">
+          <DashboardRoster 
+            pendingInstallments={pendingInstallments} 
+            customers={customers} 
+            loans={loans} 
+          />
+        </div>
+      </div>
       
       <BottomNav />
     </div>
