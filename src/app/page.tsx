@@ -5,7 +5,7 @@ import { DashboardRoster } from "@/components/DashboardRoster";
 import Link from "next/link";
 import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
-import { NotificationPanel } from "@/components/NotificationPanel";
+import { DashboardHeader } from "@/components/DashboardHeader";
 import { AnalyticsChart } from "@/components/AnalyticsChart";
 
 export const dynamic = 'force-dynamic';
@@ -48,17 +48,12 @@ export default async function Home() {
     <div className="w-full flex flex-col gap-5 pb-28 max-w-md mx-auto px-4 pt-6 min-h-screen">
 
       {/* ── Header ───────────────────────────────────────── */}
-      <header className="flex items-center justify-between py-2">
-        <div className="flex flex-col">
-          <span className="text-sm font-semibold text-[#9e99c8]">Hello,</span>
-          <h1 className="text-[32px] font-extrabold text-white flex items-center gap-2.5 mt-0.5">
-            {config.agentName} <span className="text-[26px]">👋</span>
-          </h1>
-        </div>
-        <div className="flex items-center">
-          <NotificationPanel customers={customers} loans={loans} installments={installments} />
-        </div>
-      </header>
+      <DashboardHeader
+        agentName={config.agentName}
+        customers={customers}
+        loans={loans}
+        installments={installments}
+      />
 
       {/* ── Metric Pills ─────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3">
