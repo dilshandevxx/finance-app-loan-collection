@@ -2,8 +2,8 @@
 
 import { cookies } from "next/headers";
 
-// Define the valid agent PIN for the prototype
-const AGENT_PIN = "1234";
+// Define the valid agent PIN for the client instance, falling back to a default
+const AGENT_PIN = process.env.AGENT_PIN || "1234";
 
 export async function loginWithPin(pin: string) {
   if (pin === AGENT_PIN) {

@@ -1,9 +1,9 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Delete, ShieldCheck, Lock } from "lucide-react";
 import { loginWithPin } from "@/app/auth-actions";
+import { config } from "@/lib/config";
 
 export default function LoginPage() {
   const [pin, setPin] = useState("");
@@ -66,7 +66,7 @@ export default function LoginPage() {
         </div>
 
         <h1 className="text-3xl font-black tracking-tight text-black dark:text-white mb-2 text-center">
-          LoanTrack <span className="text-emerald-600 dark:text-emerald-400">Pro</span>
+          {config.appName}
         </h1>
         <p className="text-gray-500 dark:text-gray-400 font-medium mb-10 text-center">
           Enter your Agent PIN to continue

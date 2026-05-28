@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { X, CheckCircle2, DollarSign, MessageCircle } from "lucide-react";
 import { Customer } from "@/data/db";
+import { config } from "@/lib/config";
 
 type QuickPaymentModalProps = {
   customer: Customer;
@@ -74,7 +75,7 @@ export function QuickPaymentModal({
   const handleWhatsAppShare = () => {
     const finalAmount = parseFloat(amount) || expectedAmount;
     const phone = customer.phone.replace(/[^0-9]/g, '');
-    const message = `Receipt: Payment of $${finalAmount.toFixed(2)} received on ${new Date().toLocaleDateString()}. Thank you! - LoanTrack Pro`;
+    const message = `Receipt: Payment of $${finalAmount.toFixed(2)} received on ${new Date().toLocaleDateString()}. Thank you! - ${config.appName}`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 

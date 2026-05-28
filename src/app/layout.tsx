@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { config } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,14 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LoanTrack Pro",
-  description: "Professional loan collection and management platform",
+  title: config.appName,
+  description: config.appDescription,
   manifest: "/manifest.json",
-  themeColor: "#000000",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "LoanTrack",
+    title: config.appShortName,
   },
 };
 
