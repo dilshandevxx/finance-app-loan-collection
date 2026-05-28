@@ -35,7 +35,7 @@ export function BottomNav() {
           </div>
         </div>
 
-        {NAV.map(({ href, Icon, label }) => {
+        {NAV.slice(0, 2).map(({ href, Icon, label }) => {
           const active = pathname === href;
           return (
             <Link
@@ -61,7 +61,7 @@ export function BottomNav() {
         })}
 
         {/* Center new-loan rainbow ring button (mobile only) */}
-        <Link href="/new" className="flex flex-col items-center gap-0.5 group">
+        <Link href="/new" className="flex flex-col items-center gap-0.5 group shrink-0 mx-1">
           <div className="p-[2.5px] rounded-full bg-gradient-to-tr from-[#e05470] via-[#7c6dbf] to-[#6ab4e8] shadow-lg">
             <div className="bg-card dark:bg-[#1e1a36] rounded-full p-2.5 flex items-center justify-center">
               <Plus className="w-5 h-5 text-foreground stroke-[2.5]" />
@@ -69,6 +69,31 @@ export function BottomNav() {
           </div>
           <span className="text-[10px] font-semibold text-muted-foreground md:hidden">New</span>
         </Link>
+
+        {NAV.slice(2).map(({ href, Icon, label }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`
+                flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-2
+                flex-1 md:flex-none
+                p-2 md:px-3 md:py-2.5
+                rounded-2xl
+                transition-all duration-200
+                ${active
+                  ? "bg-[#7c6dbf] text-white shadow-md shadow-[#7c6dbf]/30"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }
+              `}
+            >
+              <Icon className="w-5 h-5 shrink-0" />
+              <span className="text-[10px] font-semibold md:hidden">{label}</span>
+              <span className="hidden md:block text-xs font-semibold">{label}</span>
+            </Link>
+          );
+        })}
 
         {/* Desktop theme toggle */}
         <div className="hidden md:flex items-center justify-center mt-2 pt-2 border-t border-border w-full">
