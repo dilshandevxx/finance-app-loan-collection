@@ -129,7 +129,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                 
                 return (
                   <Link key={inst.id} href={`/customers/${customer.id}`} className="block hover:bg-gray-50 dark:hover:bg-[#111] transition-colors">
-                    <div className="flex items-center justify-between p-3 sm:p-4 px-3 sm:px-5 gap-2">
+                    <div className="flex items-center justify-between p-2.5 sm:p-4 px-2 sm:px-5 gap-2">
                       
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-[#222] overflow-hidden relative shrink-0">
@@ -154,7 +154,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 shrink-0">
+                      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                         <div className="flex flex-col items-end">
                           <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
                             ${inst.amount.toFixed(2)}
@@ -163,7 +163,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                         <Button 
                           onClick={(e) => handlePayClick(e, inst.id, customer, inst.amount)}
                           disabled={isPending}
-                          className="h-8 px-4 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
+                          className="h-8 px-3.5 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
                         >
                           Pay
                         </Button>
