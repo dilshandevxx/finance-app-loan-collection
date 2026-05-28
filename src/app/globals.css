@@ -66,9 +66,9 @@
   --color-ring: var(--ring);
   --color-neon-lime: #e2ff3b;
   --color-neon-dark: #0f1400;
-  --color-aesthetic-rose: #e5829b;
-  --color-aesthetic-rose-hover: #d26d86;
-  --color-aesthetic-rose-light: #f7b4c4;
+  --color-aesthetic-pink: #ec4899;
+  --color-aesthetic-purple: #8b5cf6;
+  --color-aesthetic-violet: #7c3aed;
   --radius: 0.85rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
