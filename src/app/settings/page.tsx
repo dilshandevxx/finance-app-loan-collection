@@ -23,6 +23,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
+import { logout } from "@/app/auth-actions";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -63,12 +64,23 @@ export default function SettingsPage() {
     };
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setIsSigningOut(true);
-    // Simulate sign out process
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
+    try {
+      const res = await logout();
+      if (res.success) {
+        router.push("/login");
+      } else {
+        setIsSigningOut(false);
+        setShowToast("Sign out failed");
+        setTimeout(() => setShowToast(null), 4000);
+      }
+    } catch (err) {
+      console.error("Sign out error:", err);
+      setIsSigningOut(false);
+      setShowToast("An error occurred during sign out");
+      setTimeout(() => setShowToast(null), 4000);
+    }
   };
 
   const handleInstallApp = async () => {
