@@ -254,3 +254,32 @@ export async function restructureWeeklyInstallment(loanId: string, newAmount: nu
   return { success: true };
 }
 
+export async function clearAllData() {
+  try {
+    // 1. Delete customer notes
+    const { error: notesErr } = await supabase.from("customer_notes").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (notesErr) console.error("Error deleting customer_notes:", notesErr);
+
+    // 2. Delete installments
+    const { error: instErr } = await supabase.from("installments").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (instErr) console.error("Error deleting installments:", instErr);
+
+    // 3. Delete loans
+    const { error: loansErr } = await supabase.from("loans").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (loansErr) console.error("Error deleting loans:", loansErr);
+
+    // 4. Delete customers
+    const { error: custErr } = await supabase.from("customers").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (custErr) console.error("Error deleting customers:", custErr);
+
+    revalidatePath("/");
+    revalidatePath("/customers");
+    revalidatePath("/reports");
+    
+    return { success: true };
+  } catch (err: any) {
+    console.error("Error in clearAllData action:", err);
+    return { success: false, error: err?.message || "Failed to clear database tables" };
+  }
+}
+

@@ -16,7 +16,8 @@ import {
   HelpCircle, 
   RefreshCw, 
   Info,
-  Smartphone
+  Smartphone,
+  Trash2
 } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,12 +25,44 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
 import { logout } from "@/app/auth-actions";
+import { clearAllData } from "@/app/actions";
 
 export default function SettingsPage() {
   const router = useRouter();
   const [offlineSyncEnabled, setOfflineSyncEnabled] = useState(true);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
+  const [isClearing, setIsClearing] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  const handleClearAllData = async () => {
+    setIsClearing(true);
+    try {
+      const res = await clearAllData();
+      if (res.success) {
+        // Clear local storage sync queues
+        localStorage.removeItem("offlineSyncQueue");
+        localStorage.removeItem("pwa_install_dismissed");
+        setShowToast("All application data cleared successfully!");
+        setTimeout(() => {
+          setShowToast(null);
+          // Redirect to home page
+          router.push("/");
+          router.refresh();
+        }, 2000);
+      } else {
+        setShowToast(res.error || "Failed to clear data");
+        setTimeout(() => setShowToast(null), 4000);
+      }
+    } catch (err) {
+      console.error(err);
+      setShowToast("An unexpected error occurred");
+      setTimeout(() => setShowToast(null), 4000);
+    } finally {
+      setIsClearing(false);
+      setShowClearConfirm(false);
+    }
+  };
 
   // PWA Installation states
   const [isInstalled, setIsInstalled] = useState(false);
@@ -281,6 +314,50 @@ export default function SettingsPage() {
                 <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${offlineSyncEnabled ? 'bg-neon-lime' : 'bg-gray-200 dark:bg-[#222]'}`}>
                   <div className={`w-4 h-4 bg-white rounded-full absolute top-1 shadow-md transition-all ${offlineSyncEnabled ? 'left-7' : 'left-1 dark:bg-[#666]'}`} />
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+        
+        {/* Danger Zone */}
+        <section className="mt-2">
+          <h3 className="text-red-500 dark:text-red-400 text-sm font-bold mb-3 uppercase tracking-wider px-2">Danger Zone</h3>
+          <Card className="border-red-200/60 dark:border-red-950/40 bg-red-500/[0.02] dark:bg-red-500/[0.01] rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-5 flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex flex-col text-left">
+                  <span className="text-black dark:text-white font-bold text-sm">Clear All Application Data</span>
+                  <span className="text-gray-400 dark:text-white/40 text-xs">Permanently delete all customers, loans, payment logs, and offline queues.</span>
+                </div>
+                {!showClearConfirm ? (
+                  <button
+                    onClick={() => setShowClearConfirm(true)}
+                    className="px-4 h-10 bg-red-600 hover:bg-red-500 text-white font-extrabold rounded-xl text-xs transition-all active:scale-95 shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Clear All Data
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => setShowClearConfirm(false)}
+                      className="px-3 h-9 bg-gray-100 dark:bg-muted text-gray-700 dark:text-white/80 hover:bg-gray-200 dark:hover:bg-[#222] font-bold rounded-lg text-[11px] transition-all active:scale-95 cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleClearAllData}
+                      disabled={isClearing}
+                      className="px-3 h-9 bg-red-600 hover:bg-red-500 text-white font-extrabold rounded-lg text-[11px] transition-all active:scale-95 flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      {isClearing ? (
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        "Yes, Delete Everything"
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
