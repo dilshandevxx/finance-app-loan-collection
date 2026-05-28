@@ -47,7 +47,7 @@ export function CollectionGoalCard({
     <div className="w-full rounded-[2rem] p-6 sm:p-8 relative overflow-hidden flex flex-col shadow-2xl bg-gradient-to-br from-[#121214] via-[#0b0b0c] to-black border border-neutral-800 text-white min-h-[220px]">
       
       {/* Background Decorative Blur Gradients */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-56 h-56 rounded-full bg-rose-500 blur-[80px] opacity-15 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-56 h-56 rounded-full bg-aesthetic-rose blur-[80px] opacity-15 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-56 h-56 rounded-full bg-violet-600 blur-[80px] opacity-15 pointer-events-none"></div>
 
       {/* Confetti Celebration Particle Layer */}
@@ -58,7 +58,7 @@ export function CollectionGoalCard({
             const delay = Math.random() * 2;
             const size = Math.random() * 8 + 6;
             const colorClass = [
-              "bg-rose-500",
+              "bg-aesthetic-rose",
               "bg-violet-400",
               "bg-blue-400",
               "bg-amber-400",
@@ -87,7 +87,7 @@ export function CollectionGoalCard({
         
         {/* Left Side: Amounts & Labels */}
         <div className="col-span-8 flex flex-col gap-1.5">
-          <h2 className="text-rose-400/80 font-bold uppercase tracking-widest text-[10px] sm:text-xs">
+          <h2 className="text-aesthetic-rose/80 font-bold uppercase tracking-widest text-[10px] sm:text-xs">
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "🏆 Today's Goal Achieved!" : "📅 No Due Collections Today") 
               : "Remaining Today"}
@@ -95,7 +95,7 @@ export function CollectionGoalCard({
           
           <div className="text-4xl sm:text-5xl font-black tracking-tight text-white drop-shadow-sm leading-none">
             ${(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[0]}
-            <span className="text-rose-400 text-2xl sm:text-3xl font-black">
+            <span className="text-aesthetic-rose text-2xl sm:text-3xl font-black">
               .{(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[1]}
             </span>
           </div>
@@ -104,17 +104,17 @@ export function CollectionGoalCard({
           {totalClientsToday > 0 && (
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold self-start mt-1 shadow-sm transition-all duration-300 ${
               progressPercent >= 100 
-                ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" 
+                ? "bg-aesthetic-rose/20 text-aesthetic-rose border border-aesthetic-rose/30" 
                 : "bg-white/5 text-gray-300 border border-white/10"
             }`}>
-              <CheckCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
+              <CheckCircle className="w-3.5 h-3.5 shrink-0 text-aesthetic-rose" />
               <span>{collectedClientsToday} of {totalClientsToday} clients settled today</span>
             </div>
           )}
 
           <div className="mt-1 text-[11px] sm:text-xs text-gray-400 font-medium">
             {progressPercent >= 100 && totalTargetToday > 0 ? (
-              <span className="text-rose-400/90 font-medium">
+              <span className="text-aesthetic-rose/90 font-medium">
                 Outstanding work! 100% of scheduled targets are cleared.
               </span>
             ) : (
@@ -150,7 +150,7 @@ export function CollectionGoalCard({
                 r={radius}
                 cx={size / 2}
                 cy={size / 2}
-                className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(244,63,94,0.3)]"
+                className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(229,130,155,0.3)]"
               />
               
               {/* Gradients definition - Blue to Purple to Rose */}
@@ -158,7 +158,7 @@ export function CollectionGoalCard({
                 <linearGradient id="progressMultiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#3b82f6" />
                   <stop offset="50%" stopColor="#8b5cf6" />
-                  <stop offset="100%" stopColor="#fb7185" />
+                  <stop offset="100%" stopColor="#e5829b" />
                 </linearGradient>
               </defs>
             </svg>
@@ -166,13 +166,13 @@ export function CollectionGoalCard({
             {/* Inner Ring Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               {progressPercent >= 100 ? (
-                <CheckCircle className="w-6 h-6 text-rose-400 animate-bounce" />
+                <CheckCircle className="w-6 h-6 text-aesthetic-rose animate-bounce" />
               ) : (
                 <>
                   <span className="text-lg font-black tracking-tight text-white leading-none">
                     {animatedProgress}%
                   </span>
-                  <span className="text-[9px] text-rose-400 font-bold uppercase tracking-wider mt-0.5">
+                  <span className="text-[9px] text-aesthetic-rose font-bold uppercase tracking-wider mt-0.5">
                     Paid
                   </span>
                 </>
@@ -185,7 +185,7 @@ export function CollectionGoalCard({
       {/* Bottom Actions */}
       <div className="flex items-center gap-3 relative z-10 mt-auto">
         <Link href="/new" className="flex-1">
-          <Button className="w-full bg-rose-500 hover:bg-rose-600 text-white rounded-2xl h-12 flex items-center justify-center gap-2 font-black shadow-[0_4px_20px_rgba(244,63,94,0.25)] transition-all active:scale-95 border-none">
+          <Button className="w-full bg-aesthetic-rose hover:bg-aesthetic-rose-hover text-white rounded-2xl h-12 flex items-center justify-center gap-2 font-black shadow-[0_4px_20px_rgba(229,130,155,0.25)] transition-all active:scale-95 border-none">
             <Plus className="w-5 h-5 shrink-0 stroke-[3]" /> New Loan
           </Button>
         </Link>

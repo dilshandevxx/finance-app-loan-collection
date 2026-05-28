@@ -55,8 +55,8 @@ export default async function Home() {
       {/* Premium Header */}
       <header className="w-full flex flex-col sm:flex-row sm:items-center justify-between bg-gradient-to-br from-neutral-50/90 via-white to-neutral-100/50 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] backdrop-blur-2xl p-5 sm:p-6 rounded-[2.25rem] border-2 border-neutral-200 dark:border-neutral-800/60 shadow-[0_8px_32px_rgba(0,0,0,0.15)] animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden gap-4 sm:gap-0">
         {/* Subtle decorative top border glow */}
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-rose-500/40 to-transparent" />
-        <div className="absolute -right-10 -top-10 w-28 h-28 bg-rose-500/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-aesthetic-rose/40 to-transparent" />
+        <div className="absolute -right-10 -top-10 w-28 h-28 bg-aesthetic-rose/15 rounded-full blur-2xl pointer-events-none" />
         
         <div className="flex items-center gap-4">
           <Greeting name={config.agentName} />
@@ -64,7 +64,7 @@ export default async function Home() {
         
         <div className="flex items-center justify-between sm:justify-end gap-3.5">
           {/* Brand/Role Subtitle */}
-          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-black dark:text-rose-400 bg-rose-500/10 px-3.5 py-1.5 rounded-full border border-rose-500/25 shadow-sm">
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-black dark:text-aesthetic-rose bg-aesthetic-rose/10 px-3.5 py-1.5 rounded-full border border-aesthetic-rose/25 shadow-sm">
             LoanTrack Pro
           </span>
           
