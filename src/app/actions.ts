@@ -149,3 +149,108 @@ export async function markInstallmentPaid(installmentId: string) {
   
   return { success: true };
 }
+
+export async function addCustomerNote(customerId: string, note: string) {
+  const { data, error } = await supabase
+    .from("customer_notes")
+    .insert({
+      customer_id: customerId,
+      note: note
+    });
+
+  if (error) {
+    console.error("Error adding customer note:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath(`/customers/${customerId}`);
+  return { success: true };
+}
+
+export async function postponeInstallments(loanId: string, weeksToShift: number) {
+  // Get all unpaid installments (PENDING or MISSED)
+  const { data: installments, error: instError } = await supabase
+    .from("installments")
+    .select("*")
+    .eq("loan_id", loanId)
+    .in("status", ["PENDING", "MISSED"]);
+
+  if (instError || !installments) {
+    return { success: false, error: "No pending installments found" };
+  }
+
+  // Shift each due_date forward by weeksToShift * 7 days
+  const shiftDays = weeksToShift * 7;
+  for (const inst of installments) {
+    const originalDate = new Date(inst.due_date);
+    originalDate.setDate(originalDate.getDate() + shiftDays);
+    const newDueDate = originalDate.toISOString().split("T")[0];
+
+    await supabase
+      .from("installments")
+      .update({ due_date: newDueDate })
+      .eq("id", inst.id);
+  }
+
+  // Find loan to log customer note
+  const { data: loan } = await supabase
+    .from("loans")
+    .select("customer_id")
+    .eq("id", loanId)
+    .single();
+
+  if (loan) {
+    await supabase.from("customer_notes").insert({
+      customer_id: loan.customer_id,
+      note: `Payment Holiday: Postponed all remaining installments by ${weeksToShift} week(s).`
+    });
+    revalidatePath(`/customers/${loan.customer_id}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/customers");
+  return { success: true };
+}
+
+export async function restructureWeeklyInstallment(loanId: string, newAmount: number) {
+  // Update loan weekly installment amount
+  const { error: loanError } = await supabase
+    .from("loans")
+    .update({ weekly_installment: newAmount })
+    .eq("id", loanId);
+
+  if (loanError) {
+    return { success: false, error: `Failed to update loan: ${loanError.message}` };
+  }
+
+  // Update amount for all pending/missed installments
+  const { error: instError } = await supabase
+    .from("installments")
+    .update({ amount: newAmount })
+    .eq("loan_id", loanId)
+    .in("status", ["PENDING", "MISSED"]);
+
+  if (instError) {
+    return { success: false, error: `Failed to update installments: ${instError.message}` };
+  }
+
+  // Find loan to log note
+  const { data: loan } = await supabase
+    .from("loans")
+    .select("customer_id")
+    .eq("id", loanId)
+    .single();
+
+  if (loan) {
+    await supabase.from("customer_notes").insert({
+      customer_id: loan.customer_id,
+      note: `Restructured Loan: Adjusted weekly installment amount to $${newAmount.toFixed(2)}.`
+    });
+    revalidatePath(`/customers/${loan.customer_id}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/customers");
+  return { success: true };
+}
+

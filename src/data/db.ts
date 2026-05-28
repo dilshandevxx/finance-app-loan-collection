@@ -66,6 +66,14 @@ export type Installment = {
   createdAt: string;
 };
 
+export type CustomerNote = {
+  id: string;
+  customerId: string;
+  note: string;
+  createdAt: string;
+};
+
+
 export async function getCustomers(): Promise<Customer[]> {
   const { data, error } = await supabase.from("customers").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching customers:", error);
@@ -169,4 +177,25 @@ export async function getInstallmentsByLoanId(loanId: string): Promise<Installme
     createdAt: row.created_at
   }));
 }
+
+export async function getCustomerNotes(customerId: string): Promise<CustomerNote[]> {
+  const { data, error } = await supabase
+    .from("customer_notes")
+    .select("*")
+    .eq("customer_id", customerId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(`Error fetching notes for customer ${customerId}:`, error);
+    return [];
+  }
+
+  return (data || []).map(row => ({
+    id: row.id,
+    customerId: row.customer_id,
+    note: row.note,
+    createdAt: row.created_at
+  }));
+}
+
 

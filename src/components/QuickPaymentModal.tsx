@@ -61,6 +61,7 @@ export function QuickPaymentModal({
           timestamp: Date.now()
         });
         localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+        window.dispatchEvent(new CustomEvent("offline-queue-updated"));
         setIsOfflineSaved(true);
         setIsSuccess(true);
       } else {

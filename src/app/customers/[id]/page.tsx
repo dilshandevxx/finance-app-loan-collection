@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId } from "@/data/db";
+import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId, getCustomerNotes } from "@/data/db";
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
+import { CustomerOperations } from "@/components/CustomerOperations";
 
 export const dynamic = 'force-dynamic';
 
@@ -58,6 +59,7 @@ export default async function CustomerDetails({ params }: Props) {
   }
 
   const installments = await getInstallmentsByLoanId(loan.id);
+  const notes = await getCustomerNotes(customerId);
   
   const paidCount = installments.filter(i => i.status === "PAID").length;
   const progressPercent = Math.round((paidCount / installments.length) * 100) || 0;
@@ -220,6 +222,9 @@ export default async function CustomerDetails({ params }: Props) {
               </CardContent>
             </Card>
           </section>
+
+          {/* Customer Operations (Notes, restructuring, holidays) */}
+          <CustomerOperations customer={customer} loan={loan} notes={notes} />
         </div>
       </div>
 

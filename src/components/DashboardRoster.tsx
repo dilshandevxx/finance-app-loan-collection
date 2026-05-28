@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, AlertCircle, CheckCircle2, ArrowRight } from "lucide-react";
+import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/db";
@@ -131,6 +131,28 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     });
   };
 
+  const handleWhatsAppReminder = (e: React.MouseEvent, customer: Customer, amount: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const loan = loans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
+    const remaining = loan ? loan.remainingBalance : amount;
+    const phone = customer.phone.replace(/[^0-9]/g, '');
+    const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
+    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of $${amount.toFixed(2)} is due today. Your remaining balance is $${remaining.toFixed(2)}. Please coordinate with your collection agent. Thank you!`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const handleSmsReminder = (e: React.MouseEvent, customer: Customer, amount: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const loan = loans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
+    const remaining = loan ? loan.remainingBalance : amount;
+    const phone = customer.phone.replace(/[^0-9]/g, '');
+    const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
+    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of $${amount.toFixed(2)} is due today. Your remaining balance is $${remaining.toFixed(2)}. Please coordinate with your collection agent. Thank you!`;
+    window.open(`sms:${phone}?body=${encodeURIComponent(text)}`, '_blank');
+  };
+
   return (
     <section className="flex flex-col h-full w-full max-w-full">
       <div className="flex items-center justify-between mb-4 gap-4">
@@ -194,19 +216,36 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
                         <div className="flex flex-col items-end">
                           <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
                             ${totalAmount.toFixed(2)}
                           </span>
                         </div>
-                        <Button 
-                          onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
-                          disabled={isPending}
-                          className="h-8 px-3.5 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
-                        >
-                          Pay
-                        </Button>
+                        
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
+                            title="Send WhatsApp Reminder"
+                            className="h-8 w-8 flex items-center justify-center rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all active:scale-95 shrink-0"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
+                            title="Send SMS Reminder"
+                            className="h-8 w-8 flex items-center justify-center rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition-all active:scale-95 shrink-0"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                          </button>
+                          <Button 
+                            onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
+                            disabled={isPending}
+                            className="h-8 px-3 text-xs font-medium bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-lg shadow-sm shrink-0"
+                          >
+                            Pay
+                          </Button>
+                        </div>
                       </div>
 
                     </div>
