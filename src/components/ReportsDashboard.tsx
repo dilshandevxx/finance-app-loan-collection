@@ -166,8 +166,8 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
           <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
             <Table className="w-4 h-4 shrink-0" /> Excel
           </Button>
-          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-500/20 border border-green-200 dark:border-green-500/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
-            <Download className="w-4 h-4 shrink-0" /> CSV
+          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-neon-lime/10 text-black dark:text-neon-lime hover:bg-neon-lime/25 border border-neon-lime/20 dark:border-neon-lime/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm font-bold">
+            <Download className="w-4 h-4 shrink-0 text-black dark:text-neon-lime" /> CSV
           </Button>
           <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
             <Printer className="w-4 h-4 shrink-0" /> PDF
@@ -193,7 +193,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
             <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Actually Collected</span>
-            <div className="text-3xl font-bold mt-2 text-green-600 dark:text-green-400 print:text-green-700 tracking-tight">${totalCollected.toFixed(2)}</div>
+            <div className="text-3xl font-extrabold mt-2 text-black dark:text-neon-lime print:text-black tracking-tight">${totalCollected.toFixed(2)}</div>
           </CardContent>
         </Card>
         <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
@@ -214,8 +214,8 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#e2ff3b" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#e2ff3b" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1}/>
@@ -261,7 +261,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                   <Area 
                     type="monotone" 
                     dataKey="collected" 
-                    stroke="#10b981" 
+                    stroke="#e2ff3b" 
                     strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#colorCollected)" 
@@ -312,8 +312,8 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                         <td className="p-4 text-gray-500 dark:text-white/60 print:text-black/70 text-xs">{inst.dueDate}</td>
                         <td className="p-4 text-right font-medium text-sm">${inst.amount.toFixed(2)}</td>
                         <td className="p-4 px-6 text-right">
-                          <span className={`inline-block px-3 py-1 rounded-md text-xs font-semibold ${
-                            inst.status === "PAID" ? "bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400 print:bg-transparent print:text-green-700" :
+                          <span className={`inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wide ${
+                            inst.status === "PAID" ? "bg-neon-lime/20 text-black dark:bg-neon-lime/10 dark:text-neon-lime print:bg-transparent print:text-black" :
                             inst.status === "PENDING" ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400 print:bg-transparent print:text-yellow-700" :
                             "bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400 print:bg-transparent print:text-red-700"
                           }`}>

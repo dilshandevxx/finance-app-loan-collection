@@ -44,11 +44,11 @@ export function CollectionGoalCard({
   const strokeDashoffset = circumference - (animatedProgress / 100) * circumference;
 
   return (
-    <div className="w-full rounded-[2rem] p-6 sm:p-8 relative overflow-hidden flex flex-col shadow-xl bg-gradient-to-br from-emerald-950 via-[#062419] to-black border border-emerald-900/30 text-white min-h-[220px]">
+    <div className="w-full rounded-[2rem] p-6 sm:p-8 relative overflow-hidden flex flex-col shadow-2xl bg-gradient-to-br from-[#121214] via-[#0b0b0c] to-black border border-neutral-800 text-white min-h-[220px]">
       
       {/* Background Decorative Blur Gradients */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-56 h-56 rounded-full bg-emerald-500 blur-[80px] opacity-25 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-56 h-56 rounded-full bg-teal-500 blur-[80px] opacity-20 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-56 h-56 rounded-full bg-neon-lime blur-[80px] opacity-15 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-56 h-56 rounded-full bg-violet-600 blur-[80px] opacity-15 pointer-events-none"></div>
 
       {/* Confetti Celebration Particle Layer */}
       {showConfetti && (
@@ -58,9 +58,9 @@ export function CollectionGoalCard({
             const delay = Math.random() * 2;
             const size = Math.random() * 8 + 6;
             const colorClass = [
-              "bg-yellow-400",
-              "bg-emerald-400",
-              "bg-teal-400",
+              "bg-neon-lime",
+              "bg-violet-400",
+              "bg-blue-400",
               "bg-amber-400",
               "bg-white"
             ][Math.floor(Math.random() * 5)];
@@ -87,7 +87,7 @@ export function CollectionGoalCard({
         
         {/* Left Side: Amounts & Labels */}
         <div className="col-span-8 flex flex-col gap-1.5">
-          <h2 className="text-emerald-400/80 font-bold uppercase tracking-widest text-[10px] sm:text-xs">
+          <h2 className="text-neon-lime/80 font-bold uppercase tracking-widest text-[10px] sm:text-xs">
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "🏆 Today's Goal Achieved!" : "📅 No Due Collections Today") 
               : "Remaining Today"}
@@ -95,7 +95,7 @@ export function CollectionGoalCard({
           
           <div className="text-4xl sm:text-5xl font-black tracking-tight text-white drop-shadow-sm leading-none">
             ${(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[0]}
-            <span className="text-emerald-400 text-2xl sm:text-3xl">
+            <span className="text-neon-lime text-2xl sm:text-3xl font-black">
               .{(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[1]}
             </span>
           </div>
@@ -104,17 +104,17 @@ export function CollectionGoalCard({
           {totalClientsToday > 0 && (
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold self-start mt-1 shadow-sm transition-all duration-300 ${
               progressPercent >= 100 
-                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" 
-                : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/10"
+                ? "bg-neon-lime/20 text-neon-lime border border-neon-lime/30" 
+                : "bg-white/5 text-gray-300 border border-white/10"
             }`}>
-              <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+              <CheckCircle className="w-3.5 h-3.5 shrink-0 text-neon-lime" />
               <span>{collectedClientsToday} of {totalClientsToday} clients settled today</span>
             </div>
           )}
 
           <div className="mt-1 text-[11px] sm:text-xs text-gray-400 font-medium">
             {progressPercent >= 100 && totalTargetToday > 0 ? (
-              <span className="text-emerald-400/90 font-medium">
+              <span className="text-neon-lime/90 font-medium">
                 Outstanding work! 100% of scheduled targets are cleared.
               </span>
             ) : (
@@ -131,7 +131,7 @@ export function CollectionGoalCard({
             {/* Background Circle */}
             <svg width={size} height={size} className="transform -rotate-90">
               <circle
-                stroke="rgba(16, 185, 129, 0.1)"
+                stroke="rgba(255, 255, 255, 0.04)"
                 fill="transparent"
                 strokeWidth={strokeWidth}
                 r={radius}
@@ -141,7 +141,7 @@ export function CollectionGoalCard({
               
               {/* Animated Glowing Progress Ring */}
               <circle
-                stroke="url(#emeraldGradient)"
+                stroke="url(#progressMultiGradient)"
                 fill="transparent"
                 strokeWidth={strokeWidth}
                 strokeDasharray={circumference}
@@ -150,14 +150,15 @@ export function CollectionGoalCard({
                 r={radius}
                 cx={size / 2}
                 cy={size / 2}
-                className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(226,255,59,0.3)]"
               />
               
-              {/* Gradients definition */}
+              {/* Gradients definition - Blue to Purple to Lime */}
               <defs>
-                <linearGradient id="emeraldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#34d399" />
-                  <stop offset="100%" stopColor="#059669" />
+                <linearGradient id="progressMultiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#3b82f6" />
+                  <stop offset="50%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#e2ff3b" />
                 </linearGradient>
               </defs>
             </svg>
@@ -165,13 +166,13 @@ export function CollectionGoalCard({
             {/* Inner Ring Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               {progressPercent >= 100 ? (
-                <CheckCircle className="w-6 h-6 text-emerald-400 animate-bounce" />
+                <CheckCircle className="w-6 h-6 text-neon-lime animate-bounce" />
               ) : (
                 <>
                   <span className="text-lg font-black tracking-tight text-white leading-none">
                     {animatedProgress}%
                   </span>
-                  <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wider mt-0.5">
+                  <span className="text-[9px] text-neon-lime font-bold uppercase tracking-wider mt-0.5">
                     Paid
                   </span>
                 </>
@@ -184,8 +185,8 @@ export function CollectionGoalCard({
       {/* Bottom Actions */}
       <div className="flex items-center gap-3 relative z-10 mt-auto">
         <Link href="/new" className="flex-1">
-          <Button className="w-full bg-white hover:bg-emerald-50 text-emerald-950 rounded-2xl h-12 flex items-center justify-center gap-2 font-bold shadow-lg transition-all active:scale-95 border-none">
-            <Plus className="w-5 h-5 shrink-0" /> New Loan
+          <Button className="w-full bg-neon-lime hover:bg-[#d4f02a] text-black rounded-2xl h-12 flex items-center justify-center gap-2 font-black shadow-[0_4px_20px_rgba(226,255,59,0.25)] transition-all active:scale-95 border-none">
+            <Plus className="w-5 h-5 shrink-0 stroke-[3]" /> New Loan
           </Button>
         </Link>
         <Link href="/reports" className="flex-1">

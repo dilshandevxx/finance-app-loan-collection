@@ -51,14 +51,14 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
       {/* Search Field */}
       <div className="relative mb-1 group">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
+          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-neon-lime transition-colors" />
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by name, ID, or phone..."
-          className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all shadow-sm"
+          className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-neon-lime/10 focus:border-neon-lime transition-all shadow-sm"
         />
       </div>
 
@@ -76,7 +76,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
           Active Clients
           <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
             activeTab === "active"
-              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              ? "bg-neon-lime text-black dark:text-neon-lime"
               : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
           }`}>
             {allActiveCustomers.length}
@@ -94,7 +94,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
           Settled
           <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
             activeTab === "settled"
-              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              ? "bg-neon-lime text-black dark:text-neon-lime"
               : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
           }`}>
             {allSettledCustomers.length}
@@ -149,7 +149,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             {isOverdue ? (
                               <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-red-200 dark:border-red-500/20">Overdue</span>
                             ) : activeLoan ? (
-                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-emerald-200 dark:border-emerald-500/20">Active</span>
+                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-neon-lime/20 dark:bg-neon-lime/10 text-black dark:text-neon-lime text-[9px] sm:text-[10px] uppercase font-black tracking-wider shrink-0 border border-neon-lime/25">Active</span>
                             ) : (
                               <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
                             )}
@@ -175,7 +175,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                                 <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
                               </>
                             ) : (
-                              <span className="text-sm font-semibold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full flex items-center gap-1 select-none">
+                              <span className="text-xs font-bold text-black dark:text-neon-lime bg-neon-lime/10 border border-neon-lime/20 px-2.5 py-1 rounded-full flex items-center gap-1 select-none">
                                 Paid ✅
                               </span>
                             )}

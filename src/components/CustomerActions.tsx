@@ -56,7 +56,7 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
         <Button 
           onClick={() => setIsModalOpen(true)}
           disabled={!nextInstallment || isPending}
-          className="flex-1 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl font-medium h-12 md:h-14 shadow-sm disabled:opacity-50"
+          className="flex-1 bg-neon-lime text-black hover:bg-neon-lime/90 rounded-xl font-bold h-12 md:h-14 shadow-md disabled:opacity-50 transition-colors"
         >
           {isPending ? "Processing..." : "Mark Paid"}
         </Button>

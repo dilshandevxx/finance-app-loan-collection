@@ -24,9 +24,9 @@ export function Greeting({ name }: { name: string }) {
   return (
     <div className="flex items-center gap-3.5">
       {/* Dynamic Time-based Icon Indicator with animated background pulse */}
-      <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-orange-500/10 dark:bg-emerald-500/10 border border-orange-500/20 dark:border-emerald-500/20 shrink-0">
-        <div className="absolute inset-0 rounded-2xl bg-orange-500/5 dark:bg-emerald-500/5 animate-ping opacity-40 duration-1000" />
-        <Icon className="w-5 h-5 text-orange-500 dark:text-emerald-400 relative z-10" />
+      <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-orange-500/10 dark:bg-neon-lime/10 border border-orange-500/20 dark:border-neon-lime/20 shrink-0">
+        <div className="absolute inset-0 rounded-2xl bg-orange-500/5 dark:bg-neon-lime/5 animate-ping opacity-40 duration-1000" />
+        <Icon className="w-5 h-5 text-orange-500 dark:text-neon-lime relative z-10" />
       </div>
       
       <div className="flex flex-col justify-center">

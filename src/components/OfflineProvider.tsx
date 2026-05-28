@@ -110,16 +110,16 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
         
         {/* Syncing Banner */}
         {isSyncing && (
-          <div className="bg-emerald-600 dark:bg-emerald-500 border border-emerald-500/20 text-white px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
-            <Loader2 className="w-4 h-4 animate-spin" />
+          <div className="bg-neon-lime text-black border border-neon-lime/20 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2.5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
+            <Loader2 className="w-4 h-4 animate-spin text-black" />
             <span>Syncing {queueLength > 0 ? `${queueLength} payment(s)...` : "database..."}</span>
           </div>
         )}
 
         {/* Synced Success Banner */}
         {showSyncedSuccess && !isOffline && !isSyncing && (
-          <div className="bg-emerald-550 dark:bg-emerald-600 border border-emerald-500/30 text-white px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 shadow-2xl animate-in slide-in-from-top-4 fade-in duration-300 pointer-events-auto">
-            <CheckCircle className="w-4 h-4 text-white" />
+          <div className="bg-neon-lime text-black border border-neon-lime/20 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2.5 shadow-2xl animate-in slide-in-from-top-4 fade-in duration-300 pointer-events-auto">
+            <CheckCircle className="w-4 h-4 text-black" />
             <span>All payments synced online successfully!</span>
           </div>
         )}

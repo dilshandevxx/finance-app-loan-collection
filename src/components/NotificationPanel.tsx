@@ -95,7 +95,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
         className="relative w-12 h-12 rounded-2xl bg-gray-50 hover:bg-gray-100 dark:bg-muted border border-gray-200/60 dark:border-border flex items-center justify-center text-black dark:text-white dark:hover:bg-[#222] transition-all active:scale-95 shadow-sm group cursor-pointer"
         aria-label="Open notifications"
       >
-        <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors" />
+        <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-neon-lime dark:group-hover:text-neon-lime transition-colors" />
         {totalCount > 0 && (
           <span className="absolute top-3 right-3 w-5 h-5 bg-red-500 text-white text-[10px] font-extrabold rounded-full flex items-center justify-center border-2 border-white dark:border-[#141414] animate-pulse">
             {totalCount}
@@ -119,7 +119,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
               {/* Header */}
               <div className="px-5 py-4 border-b border-gray-100 dark:border-border flex items-center justify-between bg-gray-50/50 dark:bg-muted/30">
                 <div className="flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-emerald-500" />
+                  <Bell className="w-5 h-5 text-black dark:text-neon-lime" />
                   <h2 className="font-extrabold text-lg text-black dark:text-white tracking-tight">Today's Schedule & Tasks</h2>
                 </div>
                 <button 
@@ -175,7 +175,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-neon-lime transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />
@@ -184,7 +184,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-neon-lime transition-colors"
                                 title="WhatsApp Customer"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />
@@ -207,8 +207,8 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
 
                 {/* 2. TODAY'S TASKS SECTION */}
                 <div className="flex flex-col gap-2.5">
-                  <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider px-1">
-                    <Clock className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-2 text-black dark:text-neon-lime font-black text-xs uppercase tracking-wider px-1">
+                    <Clock className="w-3.5 h-3.5 text-black dark:text-neon-lime" />
                     <span>Today's Tasks ({todayTasks.length})</span>
                   </div>
                   
@@ -234,18 +234,18 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
                               </div>
                             </div>
-                            <span className="text-sm font-black text-emerald-600 dark:text-emerald-400">${inst.amount.toFixed(2)}</span>
+                            <span className="text-sm font-black text-black dark:text-neon-lime">${inst.amount.toFixed(2)}</span>
                           </div>
 
                           <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-border/50">
-                            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                            <span className="text-xs text-black dark:text-neon-lime font-bold bg-neon-lime/15 border border-neon-lime/20 px-2 py-0.5 rounded-md">
                               Due Today
                             </span>
                             
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-neon-lime transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />
@@ -254,7 +254,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-neon-lime transition-colors"
                                 title="WhatsApp Customer"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />
@@ -262,10 +262,10 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                               <Link 
                                 href={`/customers/${customer?.id}`}
                                 onClick={() => setIsOpen(false)}
-                                className="px-2.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1 transition-colors"
+                                className="px-2.5 py-1.5 rounded-lg bg-neon-lime hover:bg-neon-lime/90 text-black text-xs font-black flex items-center gap-1 transition-colors"
                               >
                                 Collect
-                                <ArrowRight className="w-3 h-3" />
+                                <ArrowRight className="w-3 h-3 text-black" />
                               </Link>
                             </div>
                           </div>
@@ -320,7 +320,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-neon-lime transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />

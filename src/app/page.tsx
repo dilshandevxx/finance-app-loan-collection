@@ -53,10 +53,10 @@ export default async function Home() {
   return (
     <div className="w-full flex flex-col gap-6 sm:gap-8 pb-24 max-w-5xl mx-auto px-1.5 sm:px-6 pt-4 sm:pt-8 overflow-hidden">
       {/* Premium Header */}
-      <header className="w-full flex flex-col sm:flex-row sm:items-center justify-between bg-gradient-to-br from-emerald-50/90 via-white to-emerald-50/50 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] backdrop-blur-2xl p-5 sm:p-6 rounded-[2.25rem] border-2 border-emerald-500/10 dark:border-emerald-500/20 shadow-[0_8px_32px_rgba(16,185,129,0.05)] animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden gap-4 sm:gap-0">
+      <header className="w-full flex flex-col sm:flex-row sm:items-center justify-between bg-gradient-to-br from-neutral-50/90 via-white to-neutral-100/50 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] backdrop-blur-2xl p-5 sm:p-6 rounded-[2.25rem] border-2 border-neutral-200 dark:border-neutral-800/60 shadow-[0_8px_32px_rgba(0,0,0,0.15)] animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden gap-4 sm:gap-0">
         {/* Subtle decorative top border glow */}
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-550/40 to-transparent dark:via-emerald-400/50" />
-        <div className="absolute -right-10 -top-10 w-28 h-28 bg-emerald-500/15 dark:bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-neon-lime/40 to-transparent" />
+        <div className="absolute -right-10 -top-10 w-28 h-28 bg-neon-lime/15 rounded-full blur-2xl pointer-events-none" />
         
         <div className="flex items-center gap-4">
           <Greeting name={config.agentName} />
@@ -64,7 +64,7 @@ export default async function Home() {
         
         <div className="flex items-center justify-between sm:justify-end gap-3.5">
           {/* Brand/Role Subtitle */}
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10 px-3.5 py-1.5 rounded-full border border-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+          <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-black dark:text-neon-lime bg-neon-lime/10 px-3.5 py-1.5 rounded-full border border-neon-lime/25 shadow-sm">
             LoanTrack Pro
           </span>
           

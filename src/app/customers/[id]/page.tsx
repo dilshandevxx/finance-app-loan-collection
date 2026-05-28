@@ -28,7 +28,7 @@ export default async function CustomerDetails({ params }: Props) {
     return (
       <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
         {/* Header */}
-        <header className="w-full flex items-center justify-between bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] p-4 rounded-[1.75rem] border border-emerald-500/10 dark:border-emerald-500/20 shadow-sm relative overflow-hidden mb-2">
+        <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-2">
           <Link href="/customers">
             <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer relative z-10">
               <ChevronLeft className="w-5 h-5" />
@@ -74,7 +74,7 @@ export default async function CustomerDetails({ params }: Props) {
   return (
     <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
       {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] p-4 rounded-[1.75rem] border border-emerald-500/10 dark:border-emerald-500/20 shadow-sm relative overflow-hidden mb-2">
+      <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-2">
         <Link href="/">
           <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer relative z-10">
             <ChevronLeft className="w-5 h-5" />
@@ -91,7 +91,7 @@ export default async function CustomerDetails({ params }: Props) {
           {/* Profile Card */}
           <div className="flex flex-col items-center bg-white dark:bg-card border border-gray-200 dark:border-border rounded-[2rem] p-8 shadow-sm relative">
             
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-500/20">
+            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neon-lime/20 dark:bg-neon-lime/10 text-black dark:text-neon-lime text-xs font-black border border-neon-lime/25">
               <TrendingUp className="w-3.5 h-3.5" />
               {reliabilityScore}
             </div>
@@ -166,8 +166,8 @@ export default async function CustomerDetails({ params }: Props) {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500 dark:text-white/50 text-sm">Status</span>
-                  <span className="font-medium text-green-600 dark:text-green-400 text-sm flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400" />
+                  <span className="font-bold text-black dark:text-neon-lime bg-neon-lime/10 border border-neon-lime/20 px-2 py-0.5 rounded-full text-xs flex items-center gap-1.5 uppercase tracking-wide">
+                    <div className="w-1.5 h-1.5 rounded-full bg-neon-lime" />
                     {loan.status}
                   </span>
                 </div>
@@ -193,7 +193,7 @@ export default async function CustomerDetails({ params }: Props) {
                         <div className="flex items-center gap-4 relative z-10">
                           <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
                             {inst.status === "PAID" ? (
-                              <CheckCircle2 className="w-6 h-6 text-black dark:text-white" />
+                              <CheckCircle2 className="w-6 h-6 text-black dark:text-neon-lime" />
                             ) : isOverdue ? (
                               <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400" />
                             ) : (

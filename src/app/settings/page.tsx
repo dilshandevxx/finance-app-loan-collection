@@ -105,14 +105,14 @@ export default function SettingsPage() {
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-black dark:bg-white text-white dark:text-black px-4 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2 shadow-xl animate-in slide-in-from-top-4">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 dark:text-emerald-500" /> {showToast}
+          <CheckCircle2 className="w-4 h-4 text-neon-lime" /> {showToast}
         </div>
       )}
 
       {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] p-5 rounded-[1.75rem] border border-emerald-500/10 dark:border-emerald-500/20 shadow-sm relative overflow-hidden mb-2">
+      <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-5 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-2">
         <h1 className="text-xl font-bold text-black dark:text-white tracking-tight">Settings</h1>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/10 shadow-sm">
+        <span className="text-[10px] font-black uppercase tracking-widest text-black dark:text-neon-lime bg-neon-lime/10 px-3 py-1 rounded-full border border-neon-lime/25 shadow-sm">
           Agent Profile
         </span>
       </header>
@@ -120,8 +120,8 @@ export default function SettingsPage() {
       {/* Profile Section */}
       <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm relative">
         <div className="absolute top-0 right-0 p-4">
-          <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/20">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="flex items-center gap-1.5 text-black dark:text-neon-lime text-xs font-black uppercase tracking-wider bg-neon-lime/15 px-3 py-1 rounded-full border border-neon-lime/25">
+            <div className="w-2 h-2 rounded-full bg-neon-lime animate-pulse" />
             Active
           </span>
         </div>
@@ -157,7 +157,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   {isInstalled ? (
-                    <span className="text-xs font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">Installed ✅</span>
+                    <span className="text-xs font-bold text-black dark:text-neon-lime bg-neon-lime/15 border border-neon-lime/20 px-3 py-1 rounded-full">Installed ✅</span>
                   ) : (
                     <span className="text-xs font-bold text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full">Not Installed</span>
                   )}
@@ -168,7 +168,7 @@ export default function SettingsPage() {
               {!isInstalled && deferredPrompt && (
                 <button
                   onClick={handleInstallApp}
-                  className="w-full h-11 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all mt-2"
+                  className="w-full h-11 bg-neon-lime hover:bg-neon-lime/90 active:scale-[0.99] text-black font-extrabold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all mt-2"
                 >
                   <Download className="w-4 h-4" /> Install {config.appShortName} App Now
                 </button>
@@ -278,7 +278,7 @@ export default function SettingsPage() {
                     <span className="text-gray-400 dark:text-white/40 text-xs">Download data for field collection</span>
                   </div>
                 </div>
-                <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${offlineSyncEnabled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-[#222]'}`}>
+                <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${offlineSyncEnabled ? 'bg-neon-lime' : 'bg-gray-200 dark:bg-[#222]'}`}>
                   <div className={`w-4 h-4 bg-white rounded-full absolute top-1 shadow-md transition-all ${offlineSyncEnabled ? 'left-7' : 'left-1 dark:bg-[#666]'}`} />
                 </div>
               </div>

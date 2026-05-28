@@ -13,7 +13,7 @@ export default function NotificationsSettingsPage() {
   return (
     <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full min-h-screen">
       {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] p-4 rounded-[1.75rem] border border-emerald-500/10 dark:border-emerald-500/20 shadow-sm relative overflow-hidden mb-4">
+      <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-4">
         <Link href="/settings">
           <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
@@ -49,7 +49,7 @@ export default function NotificationsSettingsPage() {
                   <span className="text-gray-400 dark:text-white/40 text-xs mt-0.5">Alerts sent directly to your device</span>
                 </div>
               </div>
-              <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${pushEnabled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-[#222]'}`}>
+              <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${pushEnabled ? 'bg-neon-lime' : 'bg-gray-200 dark:bg-[#222]'}`}>
                 <div className={`w-4 h-4 bg-white rounded-full absolute top-1 shadow-md transition-all ${pushEnabled ? 'left-7' : 'left-1 dark:bg-[#666]'}`} />
               </div>
             </div>
@@ -67,7 +67,7 @@ export default function NotificationsSettingsPage() {
                   <span className="text-gray-400 dark:text-white/40 text-xs mt-0.5">Text alerts for important updates</span>
                 </div>
               </div>
-              <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${smsEnabled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-[#222]'}`}>
+              <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${smsEnabled ? 'bg-neon-lime' : 'bg-gray-200 dark:bg-[#222]'}`}>
                 <div className={`w-4 h-4 bg-white rounded-full absolute top-1 shadow-md transition-all ${smsEnabled ? 'left-7' : 'left-1 dark:bg-[#666]'}`} />
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function NotificationsSettingsPage() {
                   <span className="text-gray-400 dark:text-white/40 text-xs mt-0.5">Daily collection reports via email</span>
                 </div>
               </div>
-              <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${emailEnabled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-[#222]'}`}>
+              <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${emailEnabled ? 'bg-neon-lime' : 'bg-gray-200 dark:bg-[#222]'}`}>
                 <div className={`w-4 h-4 bg-white rounded-full absolute top-1 shadow-md transition-all ${emailEnabled ? 'left-7' : 'left-1 dark:bg-[#666]'}`} />
               </div>
             </div>

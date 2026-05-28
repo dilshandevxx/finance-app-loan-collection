@@ -73,7 +73,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
           <h3 className="text-lg font-semibold text-black dark:text-white tracking-tight">Loan Operations</h3>
           <button
             onClick={() => setIsRestructureOpen(true)}
-            className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10 px-3.5 py-1.5 rounded-xl border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
+            className="text-xs font-bold uppercase tracking-wider text-black dark:text-neon-lime bg-neon-lime/15 px-3.5 py-1.5 rounded-xl border border-neon-lime/25 hover:bg-neon-lime/25 transition-all"
           >
             Restructure or Pause Loan
           </button>
@@ -116,7 +116,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                   return (
                     <div key={note.id} className="relative flex flex-col gap-1">
                       {/* Timeline Dot */}
-                      <div className={`absolute -left-[31px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${isSystem ? 'bg-emerald-500 border-white dark:border-[#0a0a0a]' : 'bg-gray-400 border-white dark:border-[#0a0a0a]'}`} />
+                      <div className={`absolute -left-[31px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${isSystem ? 'bg-neon-lime border-white dark:border-[#0a0a0a]' : 'bg-gray-400 border-white dark:border-[#0a0a0a]'}`} />
                       
                       <div className="flex items-center justify-between text-xs text-gray-400 dark:text-white/40">
                         <span className="font-semibold tracking-wide uppercase flex items-center gap-1.5">
@@ -205,10 +205,10 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
 
               <div className="border-t border-gray-100 dark:border-border/60" />
 
-              {/* Option B: Restructure Payment Amount */}
+               {/* Option B: Restructure Payment Amount */}
               <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                  <DollarSign className="w-5 h-5" />
+                <div className="flex items-center gap-2 text-black dark:text-neon-lime font-bold">
+                  <DollarSign className="w-5 h-5 text-neon-lime" />
                   <h4 className="font-bold text-sm uppercase tracking-wide">Restructure Weekly Installment</h4>
                 </div>
                 <p className="text-xs text-gray-500 dark:text-white/40">
@@ -229,7 +229,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                   <Button
                     onClick={handleRestructurePayment}
                     disabled={isPendingRestructure}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm px-6 h-11 shrink-0 transition-all active:scale-[0.98]"
+                    className="bg-neon-lime hover:bg-neon-lime/95 text-black rounded-xl font-bold text-sm px-6 h-11 shrink-0 transition-all active:scale-[0.98]"
                   >
                     {isPendingRestructure ? "Updating..." : "Restructure Amount"}
                   </Button>

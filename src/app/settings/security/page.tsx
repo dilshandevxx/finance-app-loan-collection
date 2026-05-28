@@ -59,7 +59,7 @@ export default function SecuritySettingsPage() {
   return (
     <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full min-h-screen px-2 sm:px-4">
       {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 dark:from-[#16201a] dark:via-[#1f1f21] dark:to-[#121815] p-4 rounded-[1.75rem] border border-emerald-500/10 dark:border-emerald-500/20 shadow-sm relative overflow-hidden mb-4">
+      <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-4">
         <Link href="/settings">
           <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
@@ -95,7 +95,7 @@ export default function SecuritySettingsPage() {
                   <button
                     type="button"
                     onClick={() => setShowPins(!showPins)}
-                    className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 flex items-center gap-1.5 transition-colors cursor-pointer select-none"
+                    className="text-xs font-bold text-black dark:text-neon-lime hover:opacity-80 flex items-center gap-1.5 transition-colors cursor-pointer select-none"
                   >
                     {showPins ? (
                       <>
@@ -119,8 +119,8 @@ export default function SecuritySettingsPage() {
                 )}
 
                 {success && (
-                  <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <div className="p-4 rounded-2xl bg-neon-lime/10 border border-neon-lime/20 text-black dark:text-neon-lime text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-neon-lime" />
                     <span>{success}</span>
                   </div>
                 )}
@@ -136,7 +136,7 @@ export default function SecuritySettingsPage() {
                       value={currentPin}
                       onChange={(e) => handleNumericInput(e.target.value, setCurrentPin)}
                       placeholder={showPins ? "0000" : "••••"}
-                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-colors tracking-widest text-lg font-bold"
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/20 transition-colors tracking-widest text-lg font-bold"
                     />
                   </div>
 
@@ -151,7 +151,7 @@ export default function SecuritySettingsPage() {
                         value={newPin}
                         onChange={(e) => handleNumericInput(e.target.value, setNewPin)}
                         placeholder={showPins ? "0000" : "••••"}
-                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-colors tracking-widest text-lg font-bold"
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/20 transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -164,7 +164,7 @@ export default function SecuritySettingsPage() {
                         value={confirmPin}
                         onChange={(e) => handleNumericInput(e.target.value, setConfirmPin)}
                         placeholder={showPins ? "0000" : "••••"}
-                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-colors tracking-widest text-lg font-bold"
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/20 transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                   </div>
@@ -173,10 +173,10 @@ export default function SecuritySettingsPage() {
                 <Button
                   type="submit"
                   disabled={isPending || currentPin.length < 4 || newPin.length < 4 || confirmPin.length < 4}
-                  className="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white rounded-2xl h-14 font-bold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+                  className="w-full mt-4 bg-neon-lime hover:bg-neon-lime/90 text-black rounded-2xl h-14 font-extrabold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
                 >
                   {isPending ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                   ) : (
                     "Update Agent PIN"
                   )}
