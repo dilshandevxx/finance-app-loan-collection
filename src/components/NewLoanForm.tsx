@@ -3,7 +3,7 @@
 import { useState, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { createLoan } from "@/app/actions";
-import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle } from "lucide-react";
+import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
 
 type Customer = {
   id: string;
@@ -37,11 +37,11 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
   const installmentAmount = calculateInstallment();
 
   return (
-    <form action={formAction} className="flex flex-col gap-8">
+    <form action={formAction} className="flex flex-col gap-6 sm:gap-8">
       
       {/* Error Banner */}
       {state?.error && (
-        <div className="flex items-start gap-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-4 text-red-700 dark:text-red-400">
+        <div className="flex items-start gap-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-4 text-red-700 dark:text-red-400 animate-in fade-in duration-300">
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
           <p className="text-sm font-medium">{state.error}</p>
         </div>
@@ -69,24 +69,24 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
         </button>
       </div>
 
-      <div className="space-y-5">
-        <h3 className="text-lg font-bold text-black dark:text-white tracking-tight flex items-center gap-2">
+      <div className="space-y-4 sm:space-y-5">
+        <h3 className="text-base sm:text-lg font-bold text-black dark:text-white tracking-tight flex items-center gap-2">
           Customer Information
         </h3>
 
         {isExisting ? (
           <div className="space-y-2">
-            <label htmlFor="existingCustomerId" className="text-sm font-medium text-gray-700 dark:text-white/70">Select Customer</label>
-            <div className="relative">
+            <label htmlFor="existingCustomerId" className="text-sm font-semibold text-gray-750 dark:text-white/70">Select Customer</label>
+            <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-gray-400 dark:text-white/40" />
+                <User className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
               </div>
               <select
                 id="existingCustomerId"
                 name="existingCustomerId"
                 value={selectedCustomerId}
                 onChange={(e) => setSelectedCustomerId(e.target.value)}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-white/20 transition shadow-sm dark:shadow-none appearance-none font-medium"
+                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm dark:shadow-none appearance-none font-medium"
                 required
               >
                 <option value="" disabled>Select a customer...</option>
@@ -94,15 +94,18 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   <option key={c.id} value={c.id}>{c.name} (ID: {c.memberId || c.id.slice(0, 8)})</option>
                 ))}
               </select>
+              <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                <ChevronDown className="h-5 w-5 text-gray-400 dark:text-white/45 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
+              </div>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2 col-span-2">
-              <label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-white/70">Full Name</label>
-              <div className="relative">
+              <label htmlFor="name" className="text-sm font-semibold text-gray-750 dark:text-white/70">Full Name</label>
+              <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400 dark:text-white/40" />
+                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
                 </div>
                 <input 
                   type="text" 
@@ -110,30 +113,30 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   name="name"
                   required
                   placeholder="e.g. John Doe" 
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-450 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <label htmlFor="memberId" className="text-sm font-medium text-gray-700 dark:text-white/70">Member ID <span className="text-gray-400">(optional)</span></label>
-              <div className="relative">
+              <label htmlFor="memberId" className="text-sm font-semibold text-gray-750 dark:text-white/70">Member ID <span className="text-gray-400 font-normal">(optional)</span></label>
+              <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Hash className="h-5 w-5 text-gray-400 dark:text-white/40" />
+                  <Hash className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
                 </div>
                 <input 
                   type="text" 
                   id="memberId"
                   name="memberId"
                   placeholder="e.g. M-1004" 
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
             <div className="space-y-2 col-span-2 sm:col-span-1">
-              <label htmlFor="phone" className="text-sm font-medium text-gray-700 dark:text-white/70">Phone Number</label>
-              <div className="relative">
+              <label htmlFor="phone" className="text-sm font-semibold text-gray-750 dark:text-white/70">Phone Number</label>
+              <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Phone className="h-5 w-5 text-gray-400 dark:text-white/40" />
+                  <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
                 </div>
                 <input 
                   type="tel" 
@@ -141,7 +144,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   name="phone"
                   required
                   placeholder="e.g. 555-0199" 
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
@@ -151,16 +154,16 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
 
       <div className="w-full h-px bg-gray-100 dark:bg-[#222]" />
 
-      <div className="space-y-5">
-        <h3 className="text-lg font-bold text-black dark:text-white tracking-tight flex items-center gap-2">
+      <div className="space-y-4 sm:space-y-5">
+        <h3 className="text-base sm:text-lg font-bold text-black dark:text-white tracking-tight flex items-center gap-2">
           Loan Details
         </h3>
         
         <div className="space-y-2">
-          <label htmlFor="principal" className="text-sm font-medium text-gray-700 dark:text-white/70">Principal Amount</label>
-          <div className="relative">
+          <label htmlFor="principal" className="text-sm font-semibold text-gray-750 dark:text-white/70">Principal Amount</label>
+          <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <DollarSign className="h-5 w-5 text-black dark:text-white" />
+              <DollarSign className="h-5 w-5 text-black dark:text-white group-focus-within:text-emerald-500 dark:group-focus-within:text-emerald-400 transition-colors" />
             </div>
             <input 
               type="number" 
@@ -172,17 +175,17 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
               value={principal || ""}
               onChange={(e) => setPrincipal(parseFloat(e.target.value) || 0)}
               placeholder="0.00" 
-              className="w-full bg-white dark:bg-[#0a0a0a] border-2 border-gray-200 dark:border-[#222] focus:border-black dark:focus:border-white rounded-2xl pl-11 pr-4 py-4 text-2xl font-bold text-black dark:text-white placeholder:text-gray-300 dark:placeholder:text-white/20 focus:outline-none transition-colors shadow-sm"
+              className="w-full bg-white dark:bg-[#0a0a0a] border-2 border-gray-200 dark:border-[#222] focus:border-black dark:focus:border-white rounded-2xl pl-11 pr-4 py-4 text-2xl font-bold text-black dark:text-white placeholder:text-gray-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm"
             />
           </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label htmlFor="interest" className="text-sm font-medium text-gray-700 dark:text-white/70">Interest Rate</label>
-            <div className="relative">
+            <label htmlFor="interest" className="text-sm font-semibold text-gray-750 dark:text-white/70">Interest Rate</label>
+            <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Percent className="h-5 w-5 text-gray-400 dark:text-white/40" />
+                <Percent className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
               </div>
               <input 
                 type="number" 
@@ -194,15 +197,15 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 value={interest || ""}
                 onChange={(e) => setInterest(parseFloat(e.target.value) || 0)}
                 placeholder="10" 
-                className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm font-medium"
+                className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
               />
             </div>
           </div>
           <div className="space-y-2">
-            <label htmlFor="weeks" className="text-sm font-medium text-gray-700 dark:text-white/70">Duration (Weeks)</label>
-            <div className="relative">
+            <label htmlFor="weeks" className="text-sm font-semibold text-gray-750 dark:text-white/70">Duration (Weeks)</label>
+            <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <CalendarDays className="h-5 w-5 text-gray-400 dark:text-white/40" />
+                <CalendarDays className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
               </div>
               <input 
                 type="number" 
@@ -213,7 +216,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 value={weeks || ""}
                 onChange={(e) => setWeeks(parseInt(e.target.value) || 0)}
                 placeholder="10" 
-                className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition shadow-sm font-medium"
+                className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
               />
             </div>
           </div>
@@ -221,15 +224,15 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
       </div>
 
       {/* Calculated Installment Summary */}
-      <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl p-6 flex justify-between items-center mt-2 shadow-sm">
-        <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Calculated Installment</span>
-          <span className="text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 tracking-tight">
-            ${installmentAmount.toFixed(2)} <span className="text-base text-emerald-600 dark:text-emerald-500 font-medium">/ week</span>
+      <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl p-4 sm:p-6 flex items-center justify-between gap-3 mt-2 shadow-sm">
+        <div className="flex flex-col gap-1 min-w-0">
+          <span className="text-[11px] sm:text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider truncate">Calculated Installment</span>
+          <span className="text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 tracking-tight flex items-baseline gap-1 flex-wrap">
+            ${installmentAmount.toFixed(2)} <span className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-500 font-medium">/ week</span>
           </span>
         </div>
-        <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
-          <CheckCircle2 className="w-6 h-6" />
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 dark:bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+          <CheckCircle2 className="w-5.5 h-5.5 sm:w-6 sm:h-6" />
         </div>
       </div>
 
