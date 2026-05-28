@@ -38,13 +38,13 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by name, ID, or phone..."
-          className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/10 dark:focus:border-blue-500 transition-all shadow-sm"
+          className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-[#333] rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:ring-blue-500/10 dark:focus:border-blue-500 transition-all shadow-sm"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredCustomers.length === 0 ? (
-          <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a]">
+          <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-card">
             <p className="text-gray-500 dark:text-white/50 mb-1">No customers found matching "{searchQuery}"</p>
             <p className="text-sm text-gray-400 dark:text-white/30">Try a different name or member ID</p>
           </div>
@@ -68,11 +68,11 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
 
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
-                <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-[#444] transition-all cursor-pointer group transform hover:-translate-y-0.5">
+                <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-[#444] transition-all cursor-pointer group transform hover:-translate-y-0.5">
                   <CardContent className="p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
                     
                     {/* Avatar */}
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 bg-gray-50 dark:bg-[#111]">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-border overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 bg-gray-50 dark:bg-muted">
                       <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                     </div>
                     
@@ -117,7 +117,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                               <span className="text-sm font-medium text-gray-400 dark:text-white/40">Settled</span>
                             )}
                           </div>
-                          <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-[#222] items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
+                          <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-muted border border-gray-100 dark:border-border items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
                             <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
                           </div>
                         </div>

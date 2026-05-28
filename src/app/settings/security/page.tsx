@@ -60,7 +60,7 @@ export default function SecuritySettingsPage() {
       {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <Link href="/settings">
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -68,7 +68,7 @@ export default function SecuritySettingsPage() {
         <div className="w-10" /> {/* Spacer */}
       </header>
 
-      <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm">
+      <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
         <CardContent className="p-0">
           <div className="p-8 border-b border-gray-100 dark:border-[#111] flex flex-col items-center justify-center gap-4 text-center">
             <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-2">
@@ -114,7 +114,7 @@ export default function SecuritySettingsPage() {
                       value={currentPin}
                       onChange={(e) => handleNumericInput(e.target.value, setCurrentPin)}
                       placeholder="••••"
-                      className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
                     />
                   </div>
 
@@ -129,7 +129,7 @@ export default function SecuritySettingsPage() {
                         value={newPin}
                         onChange={(e) => handleNumericInput(e.target.value, setNewPin)}
                         placeholder="••••"
-                        className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -142,7 +142,7 @@ export default function SecuritySettingsPage() {
                         value={confirmPin}
                         onChange={(e) => handleNumericInput(e.target.value, setConfirmPin)}
                         placeholder="••••"
-                        className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                   </div>

@@ -15,7 +15,7 @@ export default function NotificationsSettingsPage() {
       {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <Link href="/settings">
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -23,7 +23,7 @@ export default function NotificationsSettingsPage() {
         <div className="w-10" /> {/* Spacer */}
       </header>
 
-      <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm">
+      <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
         <CardContent className="p-0">
           <div className="p-8 border-b border-gray-100 dark:border-[#111] flex flex-col items-center justify-center gap-4 text-center">
             <div className="w-16 h-16 rounded-full bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center mb-2">
@@ -41,7 +41,7 @@ export default function NotificationsSettingsPage() {
               onClick={() => setPushEnabled(!pushEnabled)}
             >
               <div className="flex items-center gap-4">
-                <div className={`border p-2.5 rounded-xl transition-colors ${pushEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-[#111] border-gray-200 dark:border-[#222] text-gray-500 dark:text-white/50'}`}>
+                <div className={`border p-2.5 rounded-xl transition-colors ${pushEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-muted border-gray-200 dark:border-border text-gray-500 dark:text-white/50'}`}>
                   <Smartphone className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col text-left">
@@ -59,7 +59,7 @@ export default function NotificationsSettingsPage() {
               onClick={() => setSmsEnabled(!smsEnabled)}
             >
               <div className="flex items-center gap-4">
-                <div className={`border p-2.5 rounded-xl transition-colors ${smsEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-[#111] border-gray-200 dark:border-[#222] text-gray-500 dark:text-white/50'}`}>
+                <div className={`border p-2.5 rounded-xl transition-colors ${smsEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-muted border-gray-200 dark:border-border text-gray-500 dark:text-white/50'}`}>
                   <MessageSquare className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col text-left">
@@ -77,7 +77,7 @@ export default function NotificationsSettingsPage() {
               onClick={() => setEmailEnabled(!emailEnabled)}
             >
               <div className="flex items-center gap-4">
-                <div className={`border p-2.5 rounded-xl transition-colors ${emailEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-[#111] border-gray-200 dark:border-[#222] text-gray-500 dark:text-white/50'}`}>
+                <div className={`border p-2.5 rounded-xl transition-colors ${emailEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-muted border-gray-200 dark:border-border text-gray-500 dark:text-white/50'}`}>
                   <Mail className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col text-left">

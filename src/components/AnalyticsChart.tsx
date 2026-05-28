@@ -30,7 +30,7 @@ export function AnalyticsChart() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <div className="h-[250px] w-full animate-pulse bg-gray-100 dark:bg-[#111] rounded-xl"></div>;
+  if (!mounted) return <div className="h-[250px] w-full animate-pulse bg-gray-100 dark:bg-muted rounded-xl"></div>;
 
   const isDark = resolvedTheme === "dark";
   const gridColor = isDark ? "#222222" : "#f0f0f0";

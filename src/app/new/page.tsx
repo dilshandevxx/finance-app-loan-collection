@@ -14,7 +14,7 @@ export default async function NewLoan() {
       {/* Header */}
       <header className="w-full flex items-center justify-between mb-2">
         <Link href="/">
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -23,7 +23,7 @@ export default async function NewLoan() {
       </header>
 
       <div className="max-w-2xl mx-auto w-full">
-        <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm">
+        <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
           <CardContent className="p-4 sm:p-8 flex flex-col gap-6">
             <NewLoanForm customers={customers} />
           </CardContent>

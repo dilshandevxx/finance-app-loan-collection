@@ -103,7 +103,7 @@ export default function SettingsPage() {
       </header>
 
       {/* Profile Section */}
-      <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm relative">
+      <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm relative">
         <div className="absolute top-0 right-0 p-4">
           <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/20">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -111,7 +111,7 @@ export default function SettingsPage() {
           </span>
         </div>
         <CardContent className="p-8 flex items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border-4 border-white dark:border-[#0a0a0a] shadow-xl shrink-0">
+          <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-muted overflow-hidden relative border-4 border-white dark:border-[#0a0a0a] shadow-xl shrink-0">
             <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Agent Profile" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -126,13 +126,13 @@ export default function SettingsPage() {
         {/* App Installation Section */}
         <section>
           <h3 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-3 uppercase tracking-wider px-2">Mobile Application</h3>
-          <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+          <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-5 flex flex-col gap-4">
               
               {/* Status Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] p-2 rounded-xl text-black dark:text-white">
+                  <div className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border p-2 rounded-xl text-black dark:text-white">
                     <Smartphone className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
@@ -161,16 +161,16 @@ export default function SettingsPage() {
 
               {/* Reset Banner Button & Troubleshooting Toggle */}
               {!isInstalled && (
-                <div className="flex gap-2.5 mt-2 border-t border-gray-100 dark:border-[#1a1a1a] pt-4">
+                <div className="flex gap-2.5 mt-2 border-t border-gray-100 dark:border-border/60 pt-4">
                   <button
                     onClick={handleResetBanner}
-                    className="flex-1 h-9 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:hover:bg-[#1c1c1c] text-xs font-semibold text-gray-600 dark:text-neutral-400 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-gray-200 dark:border-[#222]"
+                    className="flex-1 h-9 bg-gray-50 dark:bg-muted hover:bg-gray-100 dark:hover:bg-[#1c1c1c] text-xs font-semibold text-gray-600 dark:text-neutral-400 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-gray-200 dark:border-border"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> Reset Install Popups
                   </button>
                   <button
                     onClick={() => setShowTroubleshooting(!showTroubleshooting)}
-                    className="flex-1 h-9 bg-gray-50 dark:bg-[#111] hover:bg-gray-100 dark:hover:bg-[#1c1c1c] text-xs font-semibold text-gray-600 dark:text-neutral-400 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-gray-200 dark:border-[#222]"
+                    className="flex-1 h-9 bg-gray-50 dark:bg-muted hover:bg-gray-100 dark:hover:bg-[#1c1c1c] text-xs font-semibold text-gray-600 dark:text-neutral-400 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-gray-200 dark:border-border"
                   >
                     <HelpCircle className="w-3.5 h-3.5" /> Can't Install?
                   </button>
@@ -206,14 +206,14 @@ export default function SettingsPage() {
         {/* Account Settings */}
         <section>
           <h3 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-3 uppercase tracking-wider px-2">Account</h3>
-          <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+          <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-0 flex flex-col">
               <Link 
                 href="/settings/security"
-                className="flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-[#111] transition-colors border-b border-gray-200 dark:border-[#222] group"
+                className="flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-[#111] transition-colors border-b border-gray-200 dark:border-border group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] p-2 rounded-xl text-black dark:text-white group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                  <div className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border p-2 rounded-xl text-black dark:text-white group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
                     <Shield className="w-5 h-5" />
                   </div>
                   <span className="text-black dark:text-white font-medium text-sm">Security & Password</span>
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                 className="flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-[#111] transition-colors group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] p-2 rounded-xl text-black dark:text-white group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                  <div className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border p-2 rounded-xl text-black dark:text-white group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
                     <Bell className="w-5 h-5" />
                   </div>
                   <span className="text-black dark:text-white font-medium text-sm">Notifications</span>
@@ -239,11 +239,11 @@ export default function SettingsPage() {
         {/* Preferences */}
         <section>
           <h3 className="text-gray-500 dark:text-white/50 text-sm font-medium mb-3 uppercase tracking-wider px-2">App Preferences</h3>
-          <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+          <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-0 flex flex-col">
-              <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-[#222]">
+              <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-border">
                 <div className="flex items-center gap-4">
-                  <div className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] p-2 rounded-xl text-black dark:text-white">
+                  <div className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border p-2 rounded-xl text-black dark:text-white">
                     <Moon className="w-5 h-5" />
                   </div>
                   <span className="text-black dark:text-white font-medium text-sm">Dark Mode</span>
@@ -255,7 +255,7 @@ export default function SettingsPage() {
                 onClick={() => setOfflineSyncEnabled(!offlineSyncEnabled)}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`border p-2 rounded-xl transition-colors ${offlineSyncEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-[#111] border-gray-200 dark:border-[#222] text-black dark:text-white'}`}>
+                  <div className={`border p-2 rounded-xl transition-colors ${offlineSyncEnabled ? 'bg-black border-black text-white dark:bg-white dark:border-white dark:text-black' : 'bg-gray-50 dark:bg-muted border-gray-200 dark:border-border text-black dark:text-white'}`}>
                     <DownloadCloud className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col text-left">
@@ -276,7 +276,7 @@ export default function SettingsPage() {
           <button 
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl bg-white dark:bg-[#0a0a0a] text-red-600 dark:text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors border border-gray-200 dark:border-[#222] shadow-sm disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl bg-white dark:bg-card text-red-600 dark:text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors border border-gray-200 dark:border-border shadow-sm disabled:opacity-50"
           >
             {isSigningOut ? (
               <div className="w-5 h-5 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin" />

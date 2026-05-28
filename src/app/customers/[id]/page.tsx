@@ -30,7 +30,7 @@ export default async function CustomerDetails({ params }: Props) {
         {/* Header */}
         <header className="flex items-center justify-between mb-2">
           <Link href="/customers">
-            <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+            <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
               <ChevronLeft className="w-5 h-5" />
             </button>
           </Link>
@@ -39,8 +39,8 @@ export default async function CustomerDetails({ params }: Props) {
         </header>
 
         <div className="max-w-md mx-auto w-full">
-          <div className="flex flex-col items-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-[2rem] p-8 shadow-sm">
-            <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-[#222]">
+          <div className="flex flex-col items-center bg-white dark:bg-card border border-gray-200 dark:border-border rounded-[2rem] p-8 shadow-sm">
+            <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-muted overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-border">
               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
             </div>
             
@@ -76,7 +76,7 @@ export default async function CustomerDetails({ params }: Props) {
       {/* Header */}
       <header className="flex items-center justify-between mb-2">
         <Link href="/">
-          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#111] transition-colors shadow-sm">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
@@ -89,14 +89,14 @@ export default async function CustomerDetails({ params }: Props) {
         <div className="md:col-span-5 flex flex-col gap-4">
           
           {/* Profile Card */}
-          <div className="flex flex-col items-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-[2rem] p-8 shadow-sm relative">
+          <div className="flex flex-col items-center bg-white dark:bg-card border border-gray-200 dark:border-border rounded-[2rem] p-8 shadow-sm relative">
             
             <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-100 dark:border-emerald-500/20">
               <TrendingUp className="w-3.5 h-3.5" />
               {reliabilityScore}
             </div>
 
-            <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-[#222]">
+            <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-muted overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-border">
               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
             </div>
             
@@ -134,9 +134,9 @@ export default async function CustomerDetails({ params }: Props) {
 
           {/* Map/Address */}
           {customer.address && (
-            <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+            <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-0">
-                <div className="h-24 bg-gray-100 dark:bg-[#111] w-full relative flex items-center justify-center overflow-hidden">
+                <div className="h-24 bg-gray-100 dark:bg-muted w-full relative flex items-center justify-center overflow-hidden">
                   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-black dark:from-white to-transparent mix-blend-overlay" />
                   <MapPin className="w-6 h-6 text-gray-400 dark:text-white/30 relative z-10" />
                 </div>
@@ -154,7 +154,7 @@ export default async function CustomerDetails({ params }: Props) {
           {/* Details List */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-black dark:text-white tracking-tight">Loan Details</h3>
-            <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+            <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-5 flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500 dark:text-white/50 text-sm">Total Amount</span>
@@ -178,7 +178,7 @@ export default async function CustomerDetails({ params }: Props) {
           {/* Installments Timeline */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-black dark:text-white tracking-tight">Timeline</h3>
-            <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm p-2">
+            <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm p-2">
               <CardContent className="p-0 relative">
                 {/* Vertical Timeline Line */}
                 <div className="absolute left-[39px] top-8 bottom-8 w-px bg-gray-200 dark:bg-[#222]" />
@@ -191,13 +191,13 @@ export default async function CustomerDetails({ params }: Props) {
                       <div key={inst.id} className={`flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-[#111] transition-colors rounded-xl ${i === 0 ? 'mt-2' : ''} ${i === installments.length - 1 ? 'mb-2' : ''}`}>
                         
                         <div className="flex items-center gap-4 relative z-10">
-                          <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-[#0a0a0a] rounded-full">
+                          <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
                             {inst.status === "PAID" ? (
                               <CheckCircle2 className="w-6 h-6 text-black dark:text-white" />
                             ) : isOverdue ? (
                               <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400" />
                             ) : (
-                              <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-[#444] bg-white dark:bg-[#0a0a0a]" />
+                              <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-[#444] bg-white dark:bg-card" />
                             )}
                           </div>
                           <div className="flex flex-col">
@@ -230,7 +230,7 @@ export default async function CustomerDetails({ params }: Props) {
 
       {/* Sticky Mobile Action Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-black dark:via-black to-transparent z-50">
-        <div className="bg-white dark:bg-[#111] p-2 rounded-2xl border border-gray-200 dark:border-[#222] shadow-2xl backdrop-blur-xl">
+        <div className="bg-white dark:bg-muted p-2 rounded-2xl border border-gray-200 dark:border-border shadow-2xl backdrop-blur-xl">
           <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
         </div>
       </div>

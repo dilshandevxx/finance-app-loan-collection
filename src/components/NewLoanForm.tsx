@@ -48,7 +48,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
       )}
 
       {/* Segmented Control for Customer Type */}
-      <div className="bg-gray-100/80 dark:bg-[#111] p-1.5 rounded-2xl flex items-center relative overflow-hidden">
+      <div className="bg-gray-100/80 dark:bg-muted p-1.5 rounded-2xl flex items-center relative overflow-hidden">
         <div 
           className="absolute inset-y-1.5 w-[calc(50%-6px)] bg-white dark:bg-[#222] rounded-xl shadow-sm transition-all duration-300 ease-out" 
           style={{ left: isExisting ? 'calc(50% + 3px)' : '6px' }}
@@ -86,7 +86,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 name="existingCustomerId"
                 value={selectedCustomerId}
                 onChange={(e) => setSelectedCustomerId(e.target.value)}
-                className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm dark:shadow-none appearance-none font-medium"
+                className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm dark:shadow-none appearance-none font-medium"
                 required
               >
                 <option value="" disabled>Select a customer...</option>
@@ -113,7 +113,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   name="name"
                   required
                   placeholder="e.g. John Doe" 
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-450 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-450 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
@@ -128,7 +128,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   id="memberId"
                   name="memberId"
                   placeholder="e.g. M-1004" 
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
@@ -144,7 +144,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   name="phone"
                   required
                   placeholder="e.g. 555-0199" 
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
@@ -158,7 +158,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   id="gender"
                   name="gender"
                   defaultValue="male"
-                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm appearance-none font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm appearance-none font-medium"
                   required
                 >
                   <option value="male">Male</option>
@@ -199,7 +199,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
               value={principal || ""}
               onChange={(e) => setPrincipal(parseFloat(e.target.value) || 0)}
               placeholder="0.00" 
-              className="w-full bg-white dark:bg-[#0a0a0a] border-2 border-gray-200 dark:border-[#222] focus:border-black dark:focus:border-white rounded-2xl pl-11 pr-4 py-4 text-2xl font-bold text-black dark:text-white placeholder:text-gray-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm"
+              className="w-full bg-white dark:bg-card border-2 border-gray-200 dark:border-border focus:border-black dark:focus:border-white rounded-2xl pl-11 pr-4 py-4 text-2xl font-bold text-black dark:text-white placeholder:text-gray-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm"
             />
           </div>
           <div className="pt-1 px-1">
@@ -240,7 +240,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 value={interest || ""}
                 onChange={(e) => setInterest(parseFloat(e.target.value) || 0)}
                 placeholder="10" 
-                className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
+                className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
               />
             </div>
             <div className="pt-1 px-1">
@@ -278,7 +278,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 value={weeks || ""}
                 onChange={(e) => setWeeks(parseInt(e.target.value) || 0)}
                 placeholder="10" 
-                className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
+                className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
               />
             </div>
             <div className="pt-1 px-1">
@@ -336,7 +336,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
 
       {/* Mobile Sticky Action */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-black dark:via-black to-transparent z-50">
-        <div className="bg-white dark:bg-[#111] p-2 rounded-2xl border border-gray-200 dark:border-[#222] shadow-2xl backdrop-blur-xl">
+        <div className="bg-white dark:bg-muted p-2 rounded-2xl border border-gray-200 dark:border-border shadow-2xl backdrop-blur-xl">
           <Button 
             type="submit" 
             disabled={isPending}

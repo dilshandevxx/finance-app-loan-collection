@@ -131,7 +131,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
     <div className="flex flex-col gap-8 w-full max-w-5xl mx-auto">
       
       {/* Filters Area (Hidden during print) */}
-      <section className="print:hidden bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-6">
+      <section className="print:hidden bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-6">
         
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <div className="flex flex-col gap-2">
@@ -141,7 +141,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                 type="date" 
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-10 py-3 text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition w-full sm:w-auto"
+                className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-4 pr-10 py-3 text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition w-full sm:w-auto"
                 style={{ colorScheme: "dark" }}
               />
               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30 pointer-events-none" />
@@ -154,7 +154,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                 type="date" 
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-10 py-3 text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition w-full sm:w-auto"
+                className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-4 pr-10 py-3 text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition w-full sm:w-auto"
                 style={{ colorScheme: "dark" }}
               />
               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30 pointer-events-none" />
@@ -184,19 +184,19 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
 
       {/* Summary Metrics */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-white dark:bg-[#0a0a0a] print:bg-white print:border-black/20 border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
             <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Expected Collections</span>
             <div className="text-3xl font-bold mt-2 text-black dark:text-white print:text-black tracking-tight">${totalExpected.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-[#0a0a0a] print:bg-white print:border-black/20 border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
             <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Actually Collected</span>
             <div className="text-3xl font-bold mt-2 text-green-600 dark:text-green-400 print:text-green-700 tracking-tight">${totalCollected.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-[#0a0a0a] print:bg-white print:border-black/20 border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6">
             <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Pending / Missed</span>
             <div className="text-3xl font-bold mt-2 text-red-600 dark:text-red-400 print:text-red-700 tracking-tight">${totalPending.toFixed(2)}</div>
@@ -207,7 +207,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       {/* Chart Section */}
       <section className="print:hidden">
         <h3 className="text-lg font-semibold text-black dark:text-white mb-4 tracking-tight">Collection Trends</h3>
-        <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-3xl overflow-hidden shadow-sm pt-6">
+        <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm pt-6">
           <div className="h-[300px] w-full px-4 sm:px-6">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -281,10 +281,10 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       {/* Detailed Table */}
       <section>
         <h3 className="text-lg font-semibold text-black dark:text-white print:text-black mb-4 tracking-tight">Transaction Details</h3>
-        <Card className="bg-white dark:bg-[#0a0a0a] print:bg-white print:border-black/20 print:shadow-none border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 print:shadow-none border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-0 overflow-x-auto">
             <table className="w-full text-left text-sm print:text-black whitespace-nowrap">
-              <thead className="bg-gray-50 dark:bg-[#111] print:bg-black/5 text-gray-500 dark:text-white/50 print:text-black/60 uppercase tracking-wider text-xs font-medium">
+              <thead className="bg-gray-50 dark:bg-muted print:bg-black/5 text-gray-500 dark:text-white/50 print:text-black/60 uppercase tracking-wider text-xs font-medium">
                 <tr>
                   <th className="p-4 px-6 font-medium">Customer</th>
                   <th className="p-4 font-medium">Member ID</th>

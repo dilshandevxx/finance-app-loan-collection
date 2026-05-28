@@ -87,9 +87,9 @@ export function QuickPaymentModal({
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-md bg-white dark:bg-[#0a0a0a] rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-[#222] transform transition-all translate-y-0 sm:scale-100 animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md bg-white dark:bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-border transform transition-all translate-y-0 sm:scale-100 animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
         
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-[#1a1a1a]">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-border/60">
           <h3 className="text-xl font-bold tracking-tight text-black dark:text-white">
             {isSuccess ? "Payment Recorded" : "Record Payment"}
           </h3>
@@ -127,7 +127,7 @@ export function QuickPaymentModal({
               </button>
               <button
                 onClick={onClose}
-                className="w-full h-14 bg-gray-100 hover:bg-gray-200 dark:bg-[#111] dark:hover:bg-[#222] text-black dark:text-white rounded-2xl font-bold text-lg transition-all"
+                className="w-full h-14 bg-gray-100 hover:bg-gray-200 dark:bg-muted dark:hover:bg-[#222] text-black dark:text-white rounded-2xl font-bold text-lg transition-all"
               >
                 Done
               </button>
@@ -136,7 +136,7 @@ export function QuickPaymentModal({
         ) : (
           <>
             <div className="p-4 sm:p-6 flex flex-col gap-6">
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-[#222]">
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-muted border border-gray-100 dark:border-border">
                 <div className="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-lg font-bold shrink-0">
                   {customer.name.charAt(0)}
                 </div>
@@ -156,7 +156,7 @@ export function QuickPaymentModal({
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full bg-white dark:bg-[#0a0a0a] border-2 border-gray-200 focus:border-black dark:border-[#333] dark:focus:border-white rounded-2xl pl-12 pr-4 py-4 text-3xl font-bold text-black dark:text-white focus:outline-none transition-colors"
+                    className="w-full bg-white dark:bg-card border-2 border-gray-200 focus:border-black dark:border-[#333] dark:focus:border-white rounded-2xl pl-12 pr-4 py-4 text-3xl font-bold text-black dark:text-white focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -169,7 +169,7 @@ export function QuickPaymentModal({
                     className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-colors border ${
                       amount === preset.toString()
                         ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white"
-                        : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-[#111] dark:text-white dark:border-[#333] dark:hover:bg-[#222]"
+                        : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-muted dark:text-white dark:border-[#333] dark:hover:bg-[#222]"
                     }`}
                   >
                     ${preset}
@@ -196,7 +196,7 @@ export function QuickPaymentModal({
           </>
         )}
         
-        <div className="h-[env(safe-area-inset-bottom)] bg-white dark:bg-[#0a0a0a]" />
+        <div className="h-[env(safe-area-inset-bottom)] bg-white dark:bg-card" />
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white shadow-sm">
+      <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white shadow-sm">
         <span className="w-4 h-4" />
       </button>
     );
@@ -23,7 +23,7 @@ export function ThemeToggle() {
   return (
     <button 
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] flex items-center justify-center text-black dark:text-white dark:hover:bg-[#111] transition-colors shadow-sm"
+      className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white dark:hover:bg-[#111] transition-colors shadow-sm"
       title="Toggle Theme"
     >
       {theme === "dark" ? (

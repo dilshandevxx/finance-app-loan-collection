@@ -92,7 +92,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
             onChange={(e) => setNoteText(e.target.value)}
             disabled={isPendingNote}
             placeholder="Add note (e.g. promised payment Friday, client out of town...)"
-            className="flex-1 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3 text-sm text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition"
+            className="flex-1 bg-white dark:bg-card border border-gray-200 dark:border-border rounded-xl px-4 py-3 text-sm text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition"
           />
           <Button
             type="submit"
@@ -103,14 +103,14 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
           </Button>
         </form>
 
-        <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+        <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-4 sm:p-5 flex flex-col gap-4">
             {notes.length === 0 ? (
               <div className="py-6 text-center text-gray-500 dark:text-white/40 text-sm">
                 No activity logs or agent notes yet for this customer.
               </div>
             ) : (
-              <div className="relative pl-6 border-l border-gray-150 dark:border-[#222] flex flex-col gap-6 my-2">
+              <div className="relative pl-6 border-l border-gray-150 dark:border-border flex flex-col gap-6 my-2">
                 {notes.map((note) => {
                   const isSystem = note.note.startsWith("Payment Holiday") || note.note.startsWith("Restructured Loan") || note.note.startsWith("Payment of");
                   return (
@@ -151,8 +151,8 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
             onClick={() => setIsRestructureOpen(false)}
           />
           
-          <div className="relative w-full max-w-lg bg-white dark:bg-[#0a0a0a] rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-[#222] transform transition-all animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-[#1a1a1a]">
+          <div className="relative w-full max-w-lg bg-white dark:bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-border transform transition-all animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-border/60">
               <h3 className="text-xl font-bold tracking-tight text-black dark:text-white">
                 Loan Restructure & Pause Settings
               </h3>
@@ -186,7 +186,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                   <select
                     value={holidayWeeks}
                     onChange={(e) => setHolidayWeeks(Number(e.target.value))}
-                    className="flex-1 bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3 text-sm text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40"
+                    className="flex-1 bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3 text-sm text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40"
                   >
                     <option value={1}>1 Week Pause</option>
                     <option value={2}>2 Weeks Pause</option>
@@ -203,7 +203,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 dark:border-[#1a1a1a]" />
+              <div className="border-t border-gray-100 dark:border-border/60" />
 
               {/* Option B: Restructure Payment Amount */}
               <div className="flex flex-col gap-3">
@@ -223,7 +223,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                       value={newWeeklyAmount}
                       onChange={(e) => setNewWeeklyAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl pl-8 pr-4 py-3 text-sm text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40"
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-8 pr-4 py-3 text-sm text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40"
                     />
                   </div>
                   <Button
@@ -236,10 +236,10 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-[#1a1a1a]">
+              <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-border/60">
                 <button
                   onClick={() => setIsRestructureOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-[#111] dark:hover:bg-[#222] text-black dark:text-white transition-all"
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-muted dark:hover:bg-[#222] text-black dark:text-white transition-all"
                 >
                   Cancel
                 </button>

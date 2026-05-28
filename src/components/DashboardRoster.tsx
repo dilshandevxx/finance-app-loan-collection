@@ -174,15 +174,15 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by Name or Member ID..."
-          className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl pl-11 pr-4 py-3.5 text-sm text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition"
+          className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-11 pr-4 py-3.5 text-sm text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition"
         />
       </div>
       
-      <Card className="bg-white dark:bg-[#0a0a0a] border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+      <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
         <CardContent className="p-0">
           {sortedCustomerGroups.length === 0 ? (
             <div className="p-12 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-[#111] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-muted flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-6 h-6 text-gray-300 dark:text-white/30" />
               </div>
               <h4 className="text-black dark:text-white font-medium mb-1">No pending collections</h4>
