@@ -49,10 +49,10 @@ export default async function Home() {
 
       {/* ── Header ───────────────────────────────────────── */}
       <header className="flex items-center justify-between py-2">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[13px] font-bold text-[#9e99c8]">Hello,</span>
-          <h1 className="text-3xl font-black tracking-tight text-white flex items-center gap-2">
-            {config.agentName} <span className="text-2xl">👋</span>
+        <div className="flex flex-col">
+          <span className="text-sm font-semibold text-[#9e99c8]">Hello,</span>
+          <h1 className="text-[32px] font-extrabold text-white flex items-center gap-2.5 mt-0.5">
+            {config.agentName} <span className="text-[26px]">👋</span>
           </h1>
         </div>
         <div className="flex items-center">
