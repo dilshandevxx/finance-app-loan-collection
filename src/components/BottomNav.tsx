@@ -16,16 +16,16 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-2 px-4 md:pb-0 md:left-4 md:right-auto md:top-1/2 md:-translate-y-1/2 md:flex-col">
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center md:pb-0 md:left-4 md:right-auto md:top-1/2 md:-translate-y-1/2 md:flex-col">
       <nav className="
         flex md:flex-col items-center
-        bg-card/90 dark:bg-[#1e1a36]/90
+        bg-card/95 dark:bg-[#1e1a36]/95
         backdrop-blur-2xl
-        border border-border
-        rounded-[2rem]
-        px-2 py-2 md:px-2 md:py-4
+        border-t md:border border-border
+        rounded-t-3xl md:rounded-[2rem]
+        px-2 pt-3 pb-4 md:px-2 md:py-4
         gap-1 md:gap-2
-        shadow-xl
+        shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.3)]
         w-full md:w-auto
       ">
         {/* Desktop logo */}
