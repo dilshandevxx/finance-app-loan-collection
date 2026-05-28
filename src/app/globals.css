@@ -23,24 +23,24 @@
 }
 
 .dark {
-  --background: #161617; /* Sleek warm charcoal gray from reference image */
+  --background: #141414; /* Low black background */
   --foreground: #fafafa;
-  --card: #202023; /* Matching lighter charcoal gray for cards */
+  --card: #1f1f21; /* Match card backgrounds in reference image */
   --card-foreground: #fafafa;
-  --popover: #202023;
+  --popover: #1f1f21;
   --popover-foreground: #fafafa;
   --primary: #fafafa;
-  --primary-foreground: #18181b;
-  --secondary: #27272a;
+  --primary-foreground: #141414;
+  --secondary: #252528;
   --secondary-foreground: #fafafa;
-  --muted: #27272a;
+  --muted: #252528;
   --muted-foreground: #a1a1aa;
-  --accent: #27272a;
+  --accent: #252528;
   --accent-foreground: #fafafa;
   --destructive: #7f1d1d;
   --destructive-foreground: #fca5a5;
-  --border: #2d2d30; /* Smooth border outline matching the image */
-  --input: #2d2d30;
+  --border: #28282b; /* Subtle low black border outline */
+  --input: #1f1f21;
   --ring: #d4d4d8;
 }
 
