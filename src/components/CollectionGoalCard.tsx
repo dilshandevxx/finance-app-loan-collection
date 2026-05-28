@@ -81,18 +81,28 @@ export function CollectionGoalCard({ expectedToday, collectedToday }: Collection
         {/* Left Side: Amounts & Labels */}
         <div className="col-span-8 flex flex-col gap-1">
           <h2 className="text-emerald-400/80 font-bold uppercase tracking-widest text-[10px] sm:text-xs">
-            {progressPercent >= 100 ? "🎉 Collection Complete" : "Expected Today"}
+            {progressPercent >= 100 
+              ? (totalTargetToday > 0 ? "🏆 Today's Goal Achieved!" : "📅 No Due Collections Today") 
+              : "Remaining Today"}
           </h2>
           
           <div className="text-4xl sm:text-5xl font-black tracking-tight text-white drop-shadow-sm">
-            ${expectedToday.toFixed(2).split('.')[0]}
+            ${(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[0]}
             <span className="text-emerald-400 text-2xl sm:text-3xl">
-              .{expectedToday.toFixed(2).split('.')[1]}
+              .{(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[1]}
             </span>
           </div>
 
           <div className="mt-2 text-xs text-gray-400 font-medium">
-            Collected: <span className="text-white font-bold">${collectedToday.toFixed(2)}</span> / ${totalTargetToday.toFixed(2)}
+            {progressPercent >= 100 && totalTargetToday > 0 ? (
+              <span className="text-emerald-400 font-semibold">
+                Successfully collected all <span className="text-white font-bold">${collectedToday.toFixed(2)}</span> targets!
+              </span>
+            ) : (
+              <>
+                Collected: <span className="text-white font-bold">${collectedToday.toFixed(2)}</span> / ${totalTargetToday.toFixed(2)}
+              </>
+            )}
           </div>
         </div>
 
