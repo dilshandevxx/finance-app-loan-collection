@@ -35,21 +35,23 @@ export default async function Home() {
   return (
     <div className="w-full flex flex-col gap-6 sm:gap-8 pb-24 max-w-5xl mx-auto px-1.5 sm:px-6 pt-4 sm:pt-8 overflow-hidden">
       {/* Premium Header */}
-      <header className="w-full flex items-center justify-between bg-white/70 dark:bg-[#111]/70 backdrop-blur-2xl p-3 sm:p-4 rounded-3xl border border-gray-200/60 dark:border-[#333]/60 shadow-sm animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-[#222] dark:to-[#111] overflow-hidden relative border-2 border-white dark:border-[#333] shadow-lg p-0.5 shrink-0">
-            <div className="w-full h-full rounded-[14px] overflow-hidden relative">
-              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Profile" className="w-full h-full object-cover" />
-            </div>
-          </div>
+      <header className="w-full flex items-center justify-between bg-gradient-to-r from-white/90 via-white/80 to-white/90 dark:from-[#0d0d0d]/90 dark:via-[#121212]/80 dark:to-[#0d0d0d]/90 backdrop-blur-2xl p-4 sm:p-5 rounded-[2rem] border border-gray-200/50 dark:border-[#222]/50 shadow-md animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden">
+        {/* Subtle decorative top border glow */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent dark:via-emerald-500/30" />
+        
+        <div className="flex flex-col gap-1">
+          {/* Brand/Role Subtitle */}
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10 px-2.5 py-1 rounded-full w-max border border-emerald-500/10 mb-1">
+            LoanTrack Pro
+          </span>
           <Greeting name={config.agentName} />
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <button className="relative shrink-0 w-11 h-11 rounded-2xl bg-gray-100 hover:bg-gray-200 dark:bg-[#222] border border-gray-200 dark:border-[#333] flex items-center justify-center text-black dark:text-white dark:hover:bg-[#333] transition-all active:scale-95 shadow-sm">
-            <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-[#222] animate-pulse"></span>
+        
+        <div className="flex items-center gap-3 shrink-0">
+          <button className="relative w-12 h-12 rounded-2xl bg-gray-50 hover:bg-gray-100 dark:bg-[#161616] border border-gray-200/60 dark:border-[#2b2b2b] flex items-center justify-center text-black dark:text-white dark:hover:bg-[#222] transition-all active:scale-95 shadow-sm group">
+            <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors" />
+            <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-[#161616] animate-pulse"></span>
           </button>
-          <LogoutButton />
         </div>
       </header>
 
