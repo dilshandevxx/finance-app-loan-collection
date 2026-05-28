@@ -53,7 +53,13 @@ export default async function Home() {
   return (
     <div className="w-full flex flex-col gap-6 sm:gap-8 pb-24 max-w-5xl mx-auto px-1.5 sm:px-6 pt-4 sm:pt-8 overflow-hidden">
       {/* Premium Header */}
-      <header className="w-full flex flex-col sm:flex-row sm:items-center justify-between bg-gradient-to-br from-neutral-50/90 via-white to-neutral-100/50 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] backdrop-blur-2xl p-5 sm:p-6 rounded-[2.25rem] border-2 border-neutral-200 dark:border-neutral-800/60 shadow-[0_8px_32px_rgba(0,0,0,0.15)] animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden gap-4 sm:gap-0">
+      <header 
+        className="w-full flex flex-col sm:flex-row sm:items-center justify-between backdrop-blur-2xl p-5 sm:p-6 rounded-[2.25rem] border border-white/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] animate-in slide-in-from-top-4 duration-700 ease-out fill-mode-forwards relative overflow-hidden gap-4 sm:gap-0"
+        style={{
+          background: 'linear-gradient(145deg, #121214 0%, #0d0d0f 100%)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+        }}
+      >
         {/* Subtle decorative top border glow */}
         <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-aesthetic-purple/40 to-transparent" />
         <div className="absolute -right-10 -top-10 w-28 h-28 bg-aesthetic-purple/15 rounded-full blur-2xl pointer-events-none" />
@@ -64,7 +70,12 @@ export default async function Home() {
         
         <div className="flex items-center justify-between sm:justify-end gap-3.5">
           {/* Brand/Role Subtitle */}
-          <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-white bg-gradient-to-r from-aesthetic-purple via-aesthetic-violet to-aesthetic-pink px-3.5 py-1.5 rounded-full shadow-[0_2px_10px_rgba(139,92,246,0.25)] border-none">
+          <span 
+            className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white px-3.5 py-1.5 rounded-full shadow-[0_4px_12px_rgba(139,92,246,0.3)] border-none"
+            style={{
+              background: 'linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%)'
+            }}
+          >
             LoanTrack Pro
           </span>
           

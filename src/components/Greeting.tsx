@@ -22,20 +22,22 @@ export function Greeting({ name }: { name: string }) {
   }, []);
 
   return (
-    <div className="flex items-center gap-3.5">
-      {/* Dynamic Time-based Icon Indicator with animated background pulse */}
-      <div className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-orange-500/10 dark:bg-aesthetic-purple/10 border border-orange-500/20 dark:border-aesthetic-purple/20 shrink-0">
-        <div className="absolute inset-0 rounded-2xl bg-orange-500/5 dark:bg-aesthetic-purple/5 animate-ping opacity-40 duration-1000" />
-        <Icon className="w-5 h-5 text-orange-500 dark:text-aesthetic-purple relative z-10" />
+    <div className="flex items-center gap-4">
+      {/* Dynamic Time-based Icon Indicator with glassmorphism */}
+      <div 
+        className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 shrink-0 shadow-lg"
+      >
+        <Icon className="w-5 h-5 text-aesthetic-pink relative z-10 animate-pulse" />
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-aesthetic-purple/20 to-aesthetic-pink/20 blur-sm pointer-events-none" />
       </div>
       
-      <div className="flex flex-col justify-center">
-        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-450 dark:text-white/40 leading-none mb-1">
+      <div className="flex flex-col justify-center text-left">
+        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-white/40 leading-none mb-1.5">
           {greeting}
         </span>
-        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-black dark:text-white leading-none flex items-center gap-1.5">
+        <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white leading-none flex items-center gap-2">
           {name}
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-aesthetic-pink animate-pulse inline-block shrink-0" />
+          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-aesthetic-pink animate-bounce inline-block shrink-0" />
         </h1>
       </div>
     </div>
