@@ -66,9 +66,11 @@
   --color-ring: var(--ring);
   --color-neon-lime: #e2ff3b;
   --color-neon-dark: #0f1400;
-  --color-aesthetic-pink: #ec4899;
-  --color-aesthetic-purple: #8b5cf6;
-  --color-aesthetic-violet: #7c3aed;
+  --color-fintech-purple: #8b5cf6;
+  --color-fintech-pink: #ff758f;
+  --color-fintech-emerald: #34d399;
+  --color-fintech-crimson: #f43f5e;
+  --color-fintech-dark: #131316;
   --radius: 0.85rem;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

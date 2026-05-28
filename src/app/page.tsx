@@ -61,8 +61,8 @@ export default async function Home() {
         }}
       >
         {/* Subtle decorative top border glow */}
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-aesthetic-purple/40 to-transparent" />
-        <div className="absolute -right-10 -top-10 w-28 h-28 bg-aesthetic-purple/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-fintech-purple/40 to-transparent" />
+        <div className="absolute -right-10 -top-10 w-28 h-28 bg-fintech-purple/15 rounded-full blur-2xl pointer-events-none" />
         
         <div className="flex items-center gap-4">
           <Greeting name={config.agentName} />
@@ -73,7 +73,7 @@ export default async function Home() {
           <span 
             className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white px-3.5 py-1.5 rounded-full shadow-[0_4px_12px_rgba(139,92,246,0.3)] border-none"
             style={{
-              background: 'linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%)'
+              background: 'linear-gradient(90deg, var(--color-fintech-purple) 0%, var(--color-fintech-pink) 100%)'
             }}
           >
             LoanTrack Pro
@@ -100,20 +100,32 @@ export default async function Home() {
 
           {/* Secondary Metric Cards */}
           <div className="w-full grid grid-cols-2 gap-2.5 sm:gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-100 dark:border-blue-900/30 rounded-3xl p-3.5 sm:p-5 shadow-sm overflow-hidden">
-              <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 mb-3 bg-blue-100/50 dark:bg-blue-900/30 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
+            <div 
+              className="rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-white/5 overflow-hidden flex flex-col relative"
+              style={{
+                background: 'linear-gradient(145deg, #121214 0%, #0d0d0f 100%)',
+                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+              }}
+            >
+              <div className="flex items-center gap-1.5 text-fintech-purple mb-3 bg-fintech-purple/10 border border-fintech-purple/20 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
                 <Users className="w-3.5 h-3.5 shrink-0" />
-                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Active</span>
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider">Active</span>
               </div>
-              <div className="text-[17px] min-[360px]:text-xl sm:text-3xl font-black text-blue-950 dark:text-blue-100 tracking-tight truncate">{activeLoans}</div>
+              <div className="text-[17px] min-[360px]:text-xl sm:text-3xl font-black text-white tracking-tight truncate">{activeLoans}</div>
             </div>
             
-            <div className="bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/20 dark:to-orange-950/20 border border-rose-100 dark:border-rose-900/30 rounded-3xl p-3.5 sm:p-5 shadow-sm overflow-hidden">
-              <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 mb-3 bg-rose-100/50 dark:bg-rose-900/30 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
+            <div 
+              className="rounded-3xl p-3.5 sm:p-5 shadow-2xl border border-white/5 overflow-hidden flex flex-col relative"
+              style={{
+                background: 'linear-gradient(145deg, #121214 0%, #0d0d0f 100%)',
+                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+              }}
+            >
+              <div className="flex items-center gap-1.5 text-fintech-crimson mb-3 bg-fintech-crimson/10 border border-fintech-crimson/20 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Overdue</span>
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider">Overdue</span>
               </div>
-              <div className="text-[17px] min-[360px]:text-xl sm:text-3xl font-black text-rose-950 dark:text-rose-100 tracking-tight truncate" title={`$${overdueAmount.toFixed(2)}`}>
+              <div className="text-[17px] min-[360px]:text-xl sm:text-3xl font-black text-white tracking-tight truncate" title={`$${overdueAmount.toFixed(2)}`}>
                 ${overdueAmount.toFixed(2)}
               </div>
             </div>

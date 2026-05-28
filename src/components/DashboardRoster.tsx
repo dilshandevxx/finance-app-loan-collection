@@ -167,50 +167,56 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
       <div className="relative mb-6">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-gray-400 dark:text-white/40" />
+          <Search className="h-4 w-4 text-white/30" />
         </div>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by Name or Member ID..."
-          className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-11 pr-4 py-3.5 text-sm text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition"
+          className="w-full bg-white/[0.02] border border-white/5 focus:border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder:text-white/30 focus:outline-none transition-all duration-300 shadow-inner"
         />
       </div>
       
-      <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
+      <Card 
+        className="rounded-2xl overflow-hidden shadow-2xl border border-white/5"
+        style={{
+          background: 'linear-gradient(145deg, #121214 0%, #0d0d0f 100%)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+        }}
+      >
         <CardContent className="p-0">
           {sortedCustomerGroups.length === 0 ? (
             <div className="p-12 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-muted flex items-center justify-center mb-4">
-                <CheckCircle2 className="w-6 h-6 text-gray-300 dark:text-white/30" />
+              <div className="w-12 h-12 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-6 h-6 text-white/20" />
               </div>
-              <h4 className="text-black dark:text-white font-medium mb-1">No pending collections</h4>
-              <p className="text-gray-500 dark:text-white/40 text-sm">You're all caught up for the day.</p>
+              <h4 className="text-white font-medium mb-1">No pending collections</h4>
+              <p className="text-white/40 text-sm">You're all caught up for the day.</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100 dark:divide-[#222]">
+            <div className="divide-y divide-white/5">
               {sortedCustomerGroups.map((group) => {
                 const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
                 
                 return (
-                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-gray-50 dark:hover:bg-[#111] transition-colors">
+                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-white/[0.02] transition-colors">
                     <div className="flex items-center justify-between p-2.5 sm:p-4 px-2 sm:px-5 gap-2">
                       
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-[#222] overflow-hidden relative shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/5 overflow-hidden relative shrink-0">
                           <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full flex-wrap">
-                            <span className="font-medium text-black dark:text-white text-sm break-words">{customer.name}</span>
+                            <span className="font-semibold text-white text-sm break-words">{customer.name}</span>
                             {isOverdue && (
-                              <span className="flex shrink-0 items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-400/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+                              <span className="flex shrink-0 items-center gap-1 text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-fintech-crimson bg-fintech-crimson/10 border border-fintech-crimson/20 px-1.5 sm:px-2 py-0.5 rounded-full">
                                 <AlertCircle className="w-3 h-3" /> Overdue
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-gray-500 dark:text-white/40 mt-0.5 break-words">
+                          <span className="text-xs text-white/40 mt-0.5 break-words">
                             ID: {customer.memberId || customer.id.slice(0, 8)} • {installments.length > 1 ? `${installments.length} weeks due (oldest: ${oldestInstallment.dueDate})` : `Due ${oldestInstallment.dueDate}`}
                           </span>
                         </div>
@@ -218,7 +224,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
                       <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
                         <div className="flex flex-col items-end">
-                          <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
+                          <span className={`font-semibold text-sm ${isOverdue ? 'text-fintech-crimson' : 'text-white'}`}>
                             ${totalAmount.toFixed(2)}
                           </span>
                         </div>
@@ -227,21 +233,21 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           <button
                             onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
                             title="Send WhatsApp Reminder"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-neon-lime/10 hover:bg-neon-lime/20 text-black dark:text-neon-lime border border-neon-lime/20 transition-all active:scale-95 shrink-0"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-purple/10 hover:bg-fintech-purple/20 text-fintech-purple border border-fintech-purple/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageCircle className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
                             title="Send SMS Reminder"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition-all active:scale-95 shrink-0"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-fintech-pink/10 hover:bg-fintech-pink/20 text-fintech-pink border border-fintech-pink/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageSquare className="w-4 h-4" />
                           </button>
                           <Button 
                             onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
                             disabled={isPending}
-                            className="h-8 px-3 text-xs font-black bg-neon-lime hover:bg-[#d4f02a] text-black rounded-lg shadow-sm shrink-0 border-none"
+                            className="h-8 px-3 text-xs font-black bg-fintech-purple hover:bg-fintech-purple/90 text-white rounded-lg shadow-sm shrink-0 border-none cursor-pointer"
                           >
                             Pay
                           </Button>

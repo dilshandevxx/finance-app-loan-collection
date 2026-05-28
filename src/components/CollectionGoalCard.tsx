@@ -50,13 +50,13 @@ export function CollectionGoalCard({
       <div 
         className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full blur-[80px] opacity-25 pointer-events-none transition-all duration-500"
         style={{
-          background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, rgba(236,72,153,0.1) 70%, transparent 100%)'
+          background: 'radial-gradient(circle, rgba(139,92,246,0.2) 0%, rgba(255,117,143,0.05) 70%, transparent 100%)'
         }}
       />
       <div 
         className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full blur-[80px] opacity-20 pointer-events-none transition-all duration-500"
         style={{
-          background: 'radial-gradient(circle, rgba(7c,3a,ed,0.2) 0%, transparent 80%)'
+          background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 80%)'
         }}
       />
 
@@ -66,7 +66,7 @@ export function CollectionGoalCard({
         {/* Left Side: Amounts & Labels */}
         <div className="col-span-8 flex flex-col gap-2">
           <h2 
-            className="font-extrabold uppercase tracking-widest text-[10px] sm:text-xs text-transparent bg-clip-text bg-gradient-to-r from-aesthetic-pink via-purple-400 to-aesthetic-purple"
+            className="font-extrabold uppercase tracking-widest text-[10px] sm:text-xs text-transparent bg-clip-text bg-gradient-to-r from-fintech-pink via-purple-400 to-fintech-purple"
           >
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "🏆 Today's Goal Achieved!" : "📅 No Due Collections Today") 
@@ -85,7 +85,7 @@ export function CollectionGoalCard({
             <div 
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] sm:text-xs font-bold self-start mt-2 shadow-sm transition-all duration-300 border border-white/5 bg-white/[0.03] text-white/95"
             >
-              <CheckCircle className="w-3.5 h-3.5 shrink-0 text-aesthetic-purple" />
+              <CheckCircle className="w-3.5 h-3.5 shrink-0 text-fintech-purple" />
               <span>{collectedClientsToday} of {totalClientsToday} clients settled today</span>
             </div>
           )}
@@ -128,15 +128,14 @@ export function CollectionGoalCard({
                 r={radius}
                 cx={size / 2}
                 cy={size / 2}
-                className="transition-all duration-1000 ease-out drop-shadow-[0_0_12px_rgba(139,92,246,0.45)]"
+                className="transition-all duration-1000 ease-out drop-shadow-[0_0_12px_rgba(139,92,246,0.35)]"
               />
               
-              {/* Gradients definition - Pink to Violet to Purple */}
+              {/* Gradients definition - Violet/Purple to Champagne Pink */}
               <defs>
                 <linearGradient id="progressMultiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ec4899" />
-                  <stop offset="50%" stopColor="#7c3aed" />
-                  <stop offset="100%" stopColor="#8b5cf6" />
+                  <stop offset="0%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#ff758f" />
                 </linearGradient>
               </defs>
             </svg>
@@ -144,7 +143,7 @@ export function CollectionGoalCard({
             {/* Inner Ring Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               {progressPercent >= 100 ? (
-                <CheckCircle className="w-7 h-7 text-aesthetic-pink animate-pulse" />
+                <CheckCircle className="w-7 h-7 text-fintech-emerald animate-pulse" />
               ) : (
                 <>
                   <span className="text-lg font-black tracking-tight text-white leading-none">
@@ -166,7 +165,7 @@ export function CollectionGoalCard({
           <Button 
             className="w-full text-white rounded-2xl h-12 flex items-center justify-center gap-2 font-black transition-all active:scale-95 border-none cursor-pointer"
             style={{
-              background: 'linear-gradient(90deg, #8b5cf6 0%, #7c3aed 50%, #ec4899 100%)',
+              background: 'linear-gradient(90deg, var(--color-fintech-purple) 0%, var(--color-fintech-pink) 100%)',
               boxShadow: '0 8px 24px -6px rgba(139, 92, 246, 0.4)'
             }}
           >
