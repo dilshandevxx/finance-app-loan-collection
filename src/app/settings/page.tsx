@@ -9,6 +9,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
+import { config } from "@/lib/config";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -54,10 +55,10 @@ export default function SettingsPage() {
         </div>
         <CardContent className="p-8 flex items-center gap-6">
           <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative border-4 border-white dark:border-[#0a0a0a] shadow-xl shrink-0">
-            <Image src="https://i.pravatar.cc/150?u=dilshan" alt="Agent Profile" fill className="object-cover" />
+            <Image src={`https://i.pravatar.cc/150?u=${config.agentName}`} alt="Agent Profile" fill className="object-cover" />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Greeting name="Dilshan" />
+            <Greeting name={config.agentName} />
             <span className="text-gray-400 dark:text-white/40 text-sm font-semibold tracking-wide uppercase mt-1">ID: AGT-84729</span>
           </div>
         </CardContent>

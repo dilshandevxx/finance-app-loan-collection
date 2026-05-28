@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { LogoutButton } from "@/components/LogoutButton";
 import Link from "next/link";
+import { config } from "@/lib/config";
 
 export const dynamic = 'force-dynamic';
 
@@ -38,10 +39,10 @@ export default async function Home() {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-[#222] dark:to-[#111] overflow-hidden relative border-2 border-white dark:border-[#333] shadow-lg p-0.5 shrink-0">
             <div className="w-full h-full rounded-[14px] overflow-hidden relative">
-              <Image src="https://i.pravatar.cc/150?u=dilshan" alt="Profile" fill className="object-cover" />
+              <Image src={`https://i.pravatar.cc/150?u=${config.agentName}`} alt="Profile" fill className="object-cover" />
             </div>
           </div>
-          <Greeting name="Dilshan" />
+          <Greeting name={config.agentName} />
         </div>
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button className="relative shrink-0 w-11 h-11 rounded-2xl bg-gray-100 hover:bg-gray-200 dark:bg-[#222] border border-gray-200 dark:border-[#333] flex items-center justify-center text-black dark:text-white dark:hover:bg-[#333] transition-all active:scale-95 shadow-sm">
