@@ -1,13 +1,62 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import { ChevronLeft, Shield, KeyRound, Smartphone } from "lucide-react";
+import { ChevronLeft, Shield, KeyRound, CheckCircle2, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { updateAgentPin } from "@/app/auth-actions";
 
 export default function SecuritySettingsPage() {
+  const [currentPin, setCurrentPin] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [confirmPin, setConfirmPin] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const handleUpdatePin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    if (currentPin.length !== 4 || !/^\d{4}$/.test(currentPin)) {
+      setError("Current PIN must be a 4-digit number.");
+      return;
+    }
+    if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
+      setError("New PIN must be a 4-digit number.");
+      return;
+    }
+    if (newPin !== confirmPin) {
+      setError("New PIN and confirmation do not match.");
+      return;
+    }
+    if (currentPin === newPin) {
+      setError("New PIN cannot be the same as the current PIN.");
+      return;
+    }
+
+    startTransition(async () => {
+      const res = await updateAgentPin(currentPin, newPin);
+      if (res.success) {
+        setSuccess("Agent PIN updated successfully!");
+        setCurrentPin("");
+        setNewPin("");
+        setConfirmPin("");
+      } else {
+        setError(res.error || "Failed to update PIN.");
+      }
+    });
+  };
+
+  const handleNumericInput = (val: string, setter: (v: string) => void) => {
+    const cleaned = val.replace(/[^0-9]/g, "").slice(0, 4);
+    setter(cleaned);
+  };
+
   return (
-    <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full min-h-screen">
+    <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full min-h-screen px-2 sm:px-4">
       {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <Link href="/settings">
@@ -15,7 +64,7 @@ export default function SecuritySettingsPage() {
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
-        <span className="text-gray-600 dark:text-white/70 font-medium tracking-tight">Security & Password</span>
+        <span className="text-gray-600 dark:text-white/70 font-medium tracking-tight">Security & PIN Settings</span>
         <div className="w-10" /> {/* Spacer */}
       </header>
 
@@ -26,55 +75,92 @@ export default function SecuritySettingsPage() {
               <Shield className="w-8 h-8 text-blue-500" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-black dark:text-white">Account Security</h2>
-              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">Manage your password and security preferences to keep your account safe.</p>
+              <h2 className="text-xl font-bold text-black dark:text-white">Agent Security</h2>
+              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
+                Manage your Agent Login PIN to keep your collection dashboard secure.
+              </p>
             </div>
           </div>
 
-          <div className="p-6 md:p-8 space-y-6">
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-black dark:text-white flex items-center gap-2">
-                <KeyRound className="w-4 h-4 text-gray-400" /> Password
-              </h3>
-              <div className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-gray-500 dark:text-white/50">Current Password</label>
-                  <input 
-                    type="password" 
-                    placeholder="••••••••" 
-                    className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors"
-                  />
+          <div className="p-6 md:p-8">
+            <form onSubmit={handleUpdatePin} className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-black dark:text-white flex items-center gap-2">
+                  <KeyRound className="w-4 h-4 text-gray-400" /> Update Agent PIN
+                </h3>
+
+                {error && (
+                  <div className="p-4 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                {success && (
+                  <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>{success}</span>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-gray-500 dark:text-white/50">Current 4-Digit PIN</label>
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={4}
+                      value={currentPin}
+                      onChange={(e) => handleNumericInput(e.target.value, setCurrentPin)}
+                      placeholder="••••"
+                      className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-gray-500 dark:text-white/50">New 4-Digit PIN</label>
+                      <input
+                        type="password"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={4}
+                        value={newPin}
+                        onChange={(e) => handleNumericInput(e.target.value, setNewPin)}
+                        placeholder="••••"
+                        className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-gray-500 dark:text-white/50">Confirm New PIN</label>
+                      <input
+                        type="password"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={4}
+                        value={confirmPin}
+                        onChange={(e) => handleNumericInput(e.target.value, setConfirmPin)}
+                        placeholder="••••"
+                        className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors tracking-widest text-lg font-bold"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-gray-500 dark:text-white/50">New Password</label>
-                  <input 
-                    type="password" 
-                    placeholder="Enter new password" 
-                    className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-3 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors"
-                  />
-                </div>
-                <Button className="w-full mt-2 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl h-12">
-                  Update Password
+
+                <Button
+                  type="submit"
+                  disabled={isPending || currentPin.length < 4 || newPin.length < 4 || confirmPin.length < 4}
+                  className="w-full mt-4 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-2xl h-14 font-bold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+                >
+                  {isPending ? (
+                    <div className="w-5 h-5 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin" />
+                  ) : (
+                    "Update Agent PIN"
+                  )}
                 </Button>
               </div>
-            </div>
-
-            <div className="w-full h-px bg-gray-100 dark:bg-[#111]" />
-
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-black dark:text-white flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-gray-400" /> Two-Factor Authentication
-              </h3>
-              <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#111]">
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-black dark:text-white">Authenticator App</span>
-                  <span className="text-xs text-gray-500 dark:text-white/50">Not configured</span>
-                </div>
-                <Button variant="outline" className="rounded-lg h-9 border-gray-300 dark:border-[#333]">
-                  Enable
-                </Button>
-              </div>
-            </div>
+            </form>
           </div>
         </CardContent>
       </Card>
