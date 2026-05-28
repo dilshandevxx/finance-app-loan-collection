@@ -227,14 +227,14 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           <button
                             onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
                             title="Send WhatsApp Reminder"
-                            className="h-8 w-8 flex items-center justify-center rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all active:scale-95 shrink-0"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all active:scale-95 shrink-0"
                           >
                             <MessageCircle className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
                             title="Send SMS Reminder"
-                            className="h-8 w-8 flex items-center justify-center rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition-all active:scale-95 shrink-0"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition-all active:scale-95 shrink-0"
                           >
                             <MessageSquare className="w-4 h-4" />
                           </button>
