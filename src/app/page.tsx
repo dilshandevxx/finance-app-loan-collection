@@ -84,21 +84,23 @@ export default async function Home() {
           </div>
 
           {/* Secondary Metric Cards */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-100 dark:border-blue-900/30 rounded-3xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 mb-3 bg-blue-100/50 dark:bg-blue-900/30 w-fit px-3 py-1.5 rounded-xl">
-                <Users className="w-4 h-4 shrink-0" />
-                <span className="text-xs font-bold uppercase tracking-wider">Active</span>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-100 dark:border-blue-900/30 rounded-3xl p-4 sm:p-5 shadow-sm overflow-hidden">
+              <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 mb-3 bg-blue-100/50 dark:bg-blue-900/30 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
+                <Users className="w-3.5 h-3.5 shrink-0" />
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Active</span>
               </div>
-              <div className="text-3xl font-black text-blue-950 dark:text-blue-100 tracking-tight">{activeLoans}</div>
+              <div className="text-xl min-[370px]:text-2xl sm:text-3xl font-black text-blue-950 dark:text-blue-100 tracking-tight truncate">{activeLoans}</div>
             </div>
             
-            <div className="bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/20 dark:to-orange-950/20 border border-rose-100 dark:border-rose-900/30 rounded-3xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 mb-3 bg-rose-100/50 dark:bg-rose-900/30 w-fit px-3 py-1.5 rounded-xl">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span className="text-xs font-bold uppercase tracking-wider">Overdue</span>
+            <div className="bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/20 dark:to-orange-950/20 border border-rose-100 dark:border-rose-900/30 rounded-3xl p-4 sm:p-5 shadow-sm overflow-hidden">
+              <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 mb-3 bg-rose-100/50 dark:bg-rose-900/30 w-fit px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Overdue</span>
               </div>
-              <div className="text-3xl font-black text-rose-950 dark:text-rose-100 tracking-tight">${overdueAmount.toFixed(2)}</div>
+              <div className="text-xl min-[370px]:text-2xl sm:text-3xl font-black text-rose-950 dark:text-rose-100 tracking-tight truncate" title={`$${overdueAmount.toFixed(2)}`}>
+                ${overdueAmount.toFixed(2)}
+              </div>
             </div>
           </div>
         </section>
