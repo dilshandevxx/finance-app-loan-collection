@@ -10,6 +10,7 @@ import { Greeting } from "@/components/Greeting";
 import { LogoutButton } from "@/components/LogoutButton";
 import Link from "next/link";
 import { config } from "@/lib/config";
+import { CollectionGoalCard } from "@/components/CollectionGoalCard";
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +31,10 @@ export default async function Home() {
   
   const overdueAmount = pendingInstallments
     .filter(i => i.status === "MISSED" || new Date(i.dueDate) < new Date(new Date().toDateString()))
+    .reduce((sum, inst) => sum + inst.amount, 0);
+
+  const collectedToday = installments
+    .filter(i => i.status === "PAID" && i.paidDate && new Date(i.paidDate).toDateString() === new Date().toDateString())
     .reduce((sum, inst) => sum + inst.amount, 0);
   
   return (
@@ -59,33 +64,11 @@ export default async function Home() {
       <div className="w-full grid lg:grid-cols-2 gap-6 sm:gap-8 items-start">
         {/* Left Column: Metrics & Actions */}
         <section className="w-full flex flex-col gap-5">
-          {/* Main Balance Card */}
-          <div className="w-full rounded-3xl p-6 sm:p-8 relative overflow-hidden flex flex-col shadow-xl bg-gradient-to-br from-emerald-900 to-teal-950 dark:from-emerald-950 dark:to-black">
-            
-            {/* Background Decoration */}
-            <div className="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 rounded-full bg-emerald-500 blur-3xl opacity-20 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 -ml-12 -mb-12 w-48 h-48 rounded-full bg-teal-500 blur-3xl opacity-20 pointer-events-none"></div>
-            
-            <h2 className="text-emerald-100/70 font-semibold mb-2 relative z-10 flex items-center gap-2 uppercase tracking-widest text-xs">
-              Expected Collection
-            </h2>
-            <div className="text-5xl sm:text-6xl font-black tracking-tighter mb-8 text-white relative z-10 drop-shadow-sm">
-              ${expectedToday.toFixed(2).split('.')[0]}<span className="text-emerald-400 text-3xl sm:text-4xl">.{expectedToday.toFixed(2).split('.')[1]}</span>
-            </div>
-            
-            <div className="flex items-center gap-3 relative z-10">
-              <Link href="/new" className="flex-1">
-                <Button className="w-full bg-white text-emerald-950 hover:bg-emerald-50 rounded-2xl h-14 flex items-center justify-center gap-2 font-bold shadow-lg transition-all active:scale-95">
-                  <Plus className="w-5 h-5" /> New Loan
-                </Button>
-              </Link>
-              <Link href="/reports" className="flex-1">
-                <Button variant="outline" className="w-full h-14 rounded-2xl border-white/20 text-white hover:bg-white/10 flex items-center justify-center gap-2 backdrop-blur-md bg-white/5 transition-all active:scale-95 font-semibold">
-                  <ArrowUpRight className="w-5 h-5" /> Reports
-                </Button>
-              </Link>
-            </div>
-          </div>
+          {/* Main Balance / Collection Goal Card */}
+          <CollectionGoalCard 
+            expectedToday={expectedToday} 
+            collectedToday={collectedToday} 
+          />
 
           {/* Secondary Metric Cards */}
           <div className="w-full grid grid-cols-2 gap-2.5 sm:gap-4">
