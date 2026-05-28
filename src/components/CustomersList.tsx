@@ -42,7 +42,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
         />
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredCustomers.length === 0 ? (
           <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-[#333] bg-gray-50 dark:bg-[#0a0a0a]">
             <p className="text-gray-500 dark:text-white/50 mb-1">No customers found matching "{searchQuery}"</p>
