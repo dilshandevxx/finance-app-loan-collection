@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import * as XLSX from "xlsx";
-import { Download, FileText, Printer, Calendar, Table } from "lucide-react";
+import { Download, Printer, Calendar, Table } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,13 +15,10 @@ type ReportsDashboardProps = {
 };
 
 export function ReportsDashboard({ installments, loans, customers }: ReportsDashboardProps) {
-  // Default to a 30-day window around the mock dates to ensure data shows up easily
   const [startDate, setStartDate] = useState("2024-07-01");
   const [endDate, setEndDate] = useState("2024-07-31");
 
-  // Filter installments by selected date range
   const filteredInstallments = installments.filter((inst) => {
-    // If no dates selected, show all
     if (!startDate && !endDate) return true;
     
     const instDate = new Date(inst.dueDate);
@@ -31,7 +28,6 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
     return instDate >= start && instDate <= end;
   });
 
-  // Calculate summaries
   const totalExpected = filteredInstallments.reduce((sum, inst) => sum + inst.amount, 0);
   const totalCollected = filteredInstallments
     .filter(inst => inst.status === "PAID")
@@ -39,7 +35,6 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
   
   const totalPending = totalExpected - totalCollected;
 
-  // Generate chart data
   const chartDataMap = new Map<string, { date: string, expected: number, collected: number }>();
   
   filteredInstallments.forEach(inst => {
@@ -57,15 +52,8 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
   const chartData = Array.from(chartDataMap.values()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const exportCSV = () => {
-    if (filteredInstallments.length === 0) {
-      alert("No data to export for this period.");
-      return;
-    }
-
-    // Prepare CSV header
+    if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const headers = ["ID", "Customer Name", "Member ID", "Due Date", "Status", "Amount"];
-    
-    // Prepare rows
     const rows = filteredInstallments.map(inst => {
       const loan = loans.find(l => l.id === inst.loanId);
       const customer = customers.find(c => c.id === loan?.customerId);
@@ -78,14 +66,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         inst.amount.toFixed(2)
       ];
     });
-
-    // Create CSV content
-    const csvContent = [
-      headers.join(","),
-      ...rows.map(row => row.join(","))
-    ].join("\n");
-
-    // Create Blob and trigger download
+    const csvContent = [headers.join(","), ...rows.map(row => row.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -97,11 +78,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
   };
 
   const exportExcel = () => {
-    if (filteredInstallments.length === 0) {
-      alert("No data to export for this period.");
-      return;
-    }
-
+    if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const headers = ["ID", "Customer Name", "Member ID", "Due Date", "Status", "Amount"];
     const rows = filteredInstallments.map(inst => {
       const loan = loans.find(l => l.id === inst.loanId);
@@ -115,67 +92,70 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         inst.amount
       ];
     });
-
     const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
     XLSX.writeFile(workbook, `Loan_Report_${startDate}_to_${endDate}.xlsx`);
   };
 
-  const exportPDF = () => {
-    // We rely on CSS @media print rules to hide the UI and format the table cleanly
-    window.print();
-  };
+  const exportPDF = () => window.print();
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-5xl mx-auto">
+    <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto pb-28">
       
-      {/* Filters Area (Hidden during print) */}
-      <section className="print:hidden bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-6">
+      {/* Header Info */}
+      <div className="flex flex-col gap-1 px-1">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Analytics</h1>
+        <p className="text-sm text-muted-foreground">Portfolio performance & exports</p>
+      </div>
+
+      {/* Filters Area */}
+      <section className="print:hidden bg-card border border-border rounded-3xl p-5 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-5 relative overflow-hidden">
+        {/* Subtle glow */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#7c6dbf]/5 rounded-full blur-[50px] pointer-events-none -z-0" />
         
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <div className="flex flex-col gap-2">
-            <label className="text-xs text-gray-500 dark:text-white/50 uppercase font-medium tracking-wider">Start Date</label>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-10">
+          <div className="flex flex-col gap-2 flex-1">
+            <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Start Date</label>
             <div className="relative">
               <input 
                 type="date" 
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-4 pr-10 py-3 text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition w-full sm:w-auto"
+                className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
                 style={{ colorScheme: "dark" }}
               />
-              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30 pointer-events-none" />
+              <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-xs text-gray-500 dark:text-white/50 uppercase font-medium tracking-wider">End Date</label>
+          <div className="flex flex-col gap-2 flex-1">
+            <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">End Date</label>
             <div className="relative">
               <input 
                 type="date" 
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl pl-4 pr-10 py-3 text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40 transition w-full sm:w-auto"
+                className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
                 style={{ colorScheme: "dark" }}
               />
-              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30 pointer-events-none" />
+              <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto relative z-10 mt-2 sm:mt-0">
+          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-[#7c6dbf]/10 text-[#7c6dbf] hover:bg-[#7c6dbf]/20 border border-[#7c6dbf]/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all">
             <Table className="w-4 h-4 shrink-0" /> Excel
           </Button>
-          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-neon-lime/10 text-black dark:text-neon-lime hover:bg-neon-lime/25 border border-neon-lime/20 dark:border-neon-lime/20 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm font-bold">
-            <Download className="w-4 h-4 shrink-0 text-black dark:text-neon-lime" /> CSV
+          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-[#6ab4e8]/10 text-[#6ab4e8] hover:bg-[#6ab4e8]/20 border border-[#6ab4e8]/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all">
+            <Download className="w-4 h-4 shrink-0" /> CSV
           </Button>
-          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 rounded-xl px-2 sm:px-6 h-12 gap-1 sm:gap-2 shadow-sm text-xs sm:text-sm">
+          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-secondary text-foreground hover:bg-border/50 border border-border rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all">
             <Printer className="w-4 h-4 shrink-0" /> PDF
           </Button>
         </div>
       </section>
 
-      {/* Printable Report Title (Only visible during print) */}
       <div className="hidden print:block text-black mb-8 text-center border-b border-black/20 pb-4">
         <h1 className="text-3xl font-bold">Loan Collection Report</h1>
         <p className="text-sm mt-2">Period: {startDate || "All Time"} to {endDate || "All Time"}</p>
@@ -184,49 +164,52 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
 
       {/* Summary Metrics */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
-          <CardContent className="p-6">
-            <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Expected Collections</span>
-            <div className="text-3xl font-bold mt-2 text-black dark:text-white print:text-black tracking-tight">${totalExpected.toFixed(2)}</div>
+        <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#7c6dbf]/10 rounded-full blur-[30px] -z-0" />
+          <CardContent className="p-6 relative z-10">
+            <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Expected</span>
+            <div className="text-3xl font-black mt-1 text-foreground tracking-tight">${totalExpected.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
-          <CardContent className="p-6">
-            <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Actually Collected</span>
-            <div className="text-3xl font-extrabold mt-2 text-black dark:text-neon-lime print:text-black tracking-tight">${totalCollected.toFixed(2)}</div>
+        <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#6ab4e8]/10 rounded-full blur-[30px] -z-0" />
+          <CardContent className="p-6 relative z-10">
+            <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Collected</span>
+            <div className="text-3xl font-black mt-1 text-[#6ab4e8] tracking-tight">${totalCollected.toFixed(2)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
-          <CardContent className="p-6">
-            <span className="text-gray-500 dark:text-white/50 print:text-black/60 text-sm font-medium">Pending / Missed</span>
-            <div className="text-3xl font-bold mt-2 text-red-600 dark:text-red-400 print:text-red-700 tracking-tight">${totalPending.toFixed(2)}</div>
+        <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#e05470]/10 rounded-full blur-[30px] -z-0" />
+          <CardContent className="p-6 relative z-10">
+            <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Pending</span>
+            <div className="text-3xl font-black mt-1 text-[#e05470] tracking-tight">${totalPending.toFixed(2)}</div>
           </CardContent>
         </Card>
       </section>
 
       {/* Chart Section */}
-      <section className="print:hidden">
-        <h3 className="text-lg font-semibold text-black dark:text-white mb-4 tracking-tight">Collection Trends</h3>
-        <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm pt-6">
-          <div className="h-[300px] w-full px-4 sm:px-6">
+      <section className="print:hidden mt-2">
+        <h3 className="text-sm font-bold text-foreground mb-3 px-1 uppercase tracking-widest">Collection Trends</h3>
+        <Card className="bg-card border-border rounded-[2rem] overflow-hidden shadow-sm pt-6 pb-2">
+          <div className="h-[280px] w-full px-2 sm:px-6">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#e2ff3b" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#e2ff3b" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#6ab4e8" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#6ab4e8" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#7c6dbf" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#7c6dbf" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <XAxis 
                     dataKey="date" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fontSize: 12, fill: '#888' }} 
+                    tick={{ fontSize: 11, fill: '#6b6899' }} 
                     dy={10}
                     tickFormatter={(val) => {
                       const d = new Date(val);
@@ -236,22 +219,20 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fontSize: 12, fill: '#888' }}
+                    tick={{ fontSize: 11, fill: '#6b6899' }}
                     tickFormatter={(value) => `$${value}`}
                   />
                   <Tooltip 
-                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-                    itemStyle={{ color: '#000', fontWeight: 'bold' }}
-                    labelStyle={{ color: '#888', marginBottom: '8px' }}
-                    formatter={(value: any) => {
-                      const num = Number(value) || 0;
-                      return [`$${num.toFixed(2)}`, undefined];
-                    }}
+                    contentStyle={{ backgroundColor: '#1e1a36', borderRadius: '16px', border: '1px solid #2e2a4a', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2)', color: '#f0eeff' }}
+                    itemStyle={{ fontWeight: 'bold' }}
+                    labelStyle={{ color: '#9e99c8', marginBottom: '8px', fontSize: '12px' }}
+                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, undefined]}
+                    cursor={{ stroke: 'rgba(255,255,255,0.05)', strokeWidth: 2 }}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="expected" 
-                    stroke="#94a3b8" 
+                    stroke="#7c6dbf" 
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     fillOpacity={1} 
@@ -261,7 +242,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                   <Area 
                     type="monotone" 
                     dataKey="collected" 
-                    stroke="#e2ff3b" 
+                    stroke="#6ab4e8" 
                     strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#colorCollected)" 
@@ -270,8 +251,8 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-white/40">
-                No data available for this date range
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm font-medium">
+                No data available for this range
               </div>
             )}
           </div>
@@ -279,24 +260,24 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       </section>
 
       {/* Detailed Table */}
-      <section>
-        <h3 className="text-lg font-semibold text-black dark:text-white print:text-black mb-4 tracking-tight">Transaction Details</h3>
-        <Card className="bg-white dark:bg-card print:bg-white print:border-black/20 print:shadow-none border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
+      <section className="mt-2">
+        <h3 className="text-sm font-bold text-foreground print:text-black mb-3 px-1 uppercase tracking-widest">Transactions</h3>
+        <Card className="bg-card print:bg-white print:border-black/20 print:shadow-none border-border rounded-[2rem] overflow-hidden shadow-sm">
           <CardContent className="p-0 overflow-x-auto">
             <table className="w-full text-left text-sm print:text-black whitespace-nowrap">
-              <thead className="bg-gray-50 dark:bg-muted print:bg-black/5 text-gray-500 dark:text-white/50 print:text-black/60 uppercase tracking-wider text-xs font-medium">
+              <thead className="bg-secondary/50 print:bg-black/5 text-muted-foreground print:text-black/60 uppercase tracking-widest text-[10px] font-bold">
                 <tr>
-                  <th className="p-4 px-6 font-medium">Customer</th>
-                  <th className="p-4 font-medium">Member ID</th>
-                  <th className="p-4 font-medium">Due Date</th>
-                  <th className="p-4 font-medium text-right">Amount</th>
-                  <th className="p-4 px-6 font-medium text-right">Status</th>
+                  <th className="p-4 px-6">Customer</th>
+                  <th className="p-4">Member ID</th>
+                  <th className="p-4">Due Date</th>
+                  <th className="p-4 text-right">Amount</th>
+                  <th className="p-4 px-6 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-[#222] print:divide-black/10">
+              <tbody className="divide-y divide-border print:divide-black/10">
                 {filteredInstallments.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-gray-400 dark:text-white/40 print:text-black/50">
+                    <td colSpan={5} className="p-8 text-center text-muted-foreground print:text-black/50 text-sm">
                       No transactions found for the selected period.
                     </td>
                   </tr>
@@ -306,16 +287,16 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
                     const customer = customers.find(c => c.id === loan?.customerId);
                     
                     return (
-                      <tr key={inst.id} className="hover:bg-gray-50 dark:hover:bg-[#111] print:hover:bg-transparent transition-colors text-black dark:text-white print:text-black">
-                        <td className="p-4 px-6 font-medium text-sm">{customer?.name || "Unknown"}</td>
-                        <td className="p-4 text-gray-500 dark:text-white/60 print:text-black/70 text-xs">{customer?.memberId || customer?.id || "N/A"}</td>
-                        <td className="p-4 text-gray-500 dark:text-white/60 print:text-black/70 text-xs">{inst.dueDate}</td>
-                        <td className="p-4 text-right font-medium text-sm">${inst.amount.toFixed(2)}</td>
-                        <td className="p-4 px-6 text-right">
-                          <span className={`inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wide ${
-                            inst.status === "PAID" ? "bg-neon-lime/20 text-black dark:bg-neon-lime/10 dark:text-neon-lime print:bg-transparent print:text-black" :
-                            inst.status === "PENDING" ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400 print:bg-transparent print:text-yellow-700" :
-                            "bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400 print:bg-transparent print:text-red-700"
+                      <tr key={inst.id} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
+                        <td className="p-4 px-6 font-semibold text-sm">{customer?.name || "Unknown"}</td>
+                        <td className="p-4 text-muted-foreground print:text-black/70 text-xs font-mono">{customer?.memberId || customer?.id.slice(0,8) || "N/A"}</td>
+                        <td className="p-4 text-muted-foreground print:text-black/70 text-xs">{inst.dueDate}</td>
+                        <td className="p-4 text-right font-bold text-sm">${inst.amount.toFixed(2)}</td>
+                        <td className="p-4 px-6 text-right flex justify-end">
+                          <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                            inst.status === "PAID" ? "bg-[#9dedc8]/10 text-[#9dedc8] border border-[#9dedc8]/20 print:bg-transparent print:text-black" :
+                            inst.status === "PENDING" ? "bg-[#e8849a]/10 text-[#e8849a] border border-[#e8849a]/20 print:bg-transparent print:text-yellow-700" :
+                            "bg-[#e05470]/10 text-[#e05470] border border-[#e05470]/20 print:bg-transparent print:text-red-700"
                           }`}>
                             {inst.status}
                           </span>
