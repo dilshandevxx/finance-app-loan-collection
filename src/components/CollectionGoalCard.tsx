@@ -9,9 +9,16 @@ import { config } from "@/lib/config";
 interface CollectionGoalCardProps {
   expectedToday: number;
   collectedToday: number;
+  totalClientsToday?: number;
+  collectedClientsToday?: number;
 }
 
-export function CollectionGoalCard({ expectedToday, collectedToday }: CollectionGoalCardProps) {
+export function CollectionGoalCard({ 
+  expectedToday, 
+  collectedToday,
+  totalClientsToday = 0,
+  collectedClientsToday = 0
+}: CollectionGoalCardProps) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -79,24 +86,36 @@ export function CollectionGoalCard({ expectedToday, collectedToday }: Collection
       <div className="grid grid-cols-12 gap-4 items-center mb-6 relative z-10">
         
         {/* Left Side: Amounts & Labels */}
-        <div className="col-span-8 flex flex-col gap-1">
+        <div className="col-span-8 flex flex-col gap-1.5">
           <h2 className="text-emerald-400/80 font-bold uppercase tracking-widest text-[10px] sm:text-xs">
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "🏆 Today's Goal Achieved!" : "📅 No Due Collections Today") 
               : "Remaining Today"}
           </h2>
           
-          <div className="text-4xl sm:text-5xl font-black tracking-tight text-white drop-shadow-sm">
+          <div className="text-4xl sm:text-5xl font-black tracking-tight text-white drop-shadow-sm leading-none">
             ${(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[0]}
             <span className="text-emerald-400 text-2xl sm:text-3xl">
               .{(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[1]}
             </span>
           </div>
 
-          <div className="mt-2 text-xs text-gray-400 font-medium">
+          {/* Client Settlement Progress Badge */}
+          {totalClientsToday > 0 && (
+            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold self-start mt-1 shadow-sm transition-all duration-300 ${
+              progressPercent >= 100 
+                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" 
+                : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/10"
+            }`}>
+              <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{collectedClientsToday} of {totalClientsToday} clients settled today</span>
+            </div>
+          )}
+
+          <div className="mt-1 text-[11px] sm:text-xs text-gray-400 font-medium">
             {progressPercent >= 100 && totalTargetToday > 0 ? (
-              <span className="text-emerald-400 font-semibold">
-                Successfully collected all <span className="text-white font-bold">${collectedToday.toFixed(2)}</span> targets!
+              <span className="text-emerald-400/90 font-medium">
+                Outstanding work! 100% of scheduled targets are cleared.
               </span>
             ) : (
               <>

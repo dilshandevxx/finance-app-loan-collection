@@ -37,6 +37,18 @@ export default async function Home() {
   const collectedToday = installments
     .filter(i => i.status === "PAID" && i.paidDate && new Date(i.paidDate).toDateString() === new Date().toDateString())
     .reduce((sum, inst) => sum + inst.amount, 0);
+
+  // Compute stats for today's collection targets
+  const todayInstallmentsList = installments.filter(i => {
+    const isPendingTodayOrMissed = (i.status === "PENDING" || i.status === "MISSED") && 
+      (new Date(i.dueDate).toDateString() === new Date().toDateString() || i.status === "MISSED");
+    const isPaidToday = i.status === "PAID" && i.paidDate && 
+      new Date(i.paidDate).toDateString() === new Date().toDateString();
+    return isPendingTodayOrMissed || isPaidToday;
+  });
+
+  const totalClientsToday = todayInstallmentsList.length;
+  const collectedClientsToday = todayInstallmentsList.filter(i => i.status === "PAID").length;
   
   return (
     <div className="w-full flex flex-col gap-6 sm:gap-8 pb-24 max-w-5xl mx-auto px-1.5 sm:px-6 pt-4 sm:pt-8 overflow-hidden">
@@ -63,7 +75,7 @@ export default async function Home() {
           />
         </div>
       </header>
-
+ 
       <div className="w-full grid lg:grid-cols-2 gap-6 sm:gap-8 items-start">
         {/* Left Column: Metrics & Actions */}
         <section className="w-full flex flex-col gap-5">
@@ -71,6 +83,8 @@ export default async function Home() {
           <CollectionGoalCard 
             expectedToday={expectedToday} 
             collectedToday={collectedToday} 
+            totalClientsToday={totalClientsToday}
+            collectedClientsToday={collectedClientsToday}
           />
 
           {/* Secondary Metric Cards */}

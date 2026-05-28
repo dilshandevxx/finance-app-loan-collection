@@ -7,20 +7,34 @@ import { supabase } from "@/lib/supabase";
 const AGENT_PIN = process.env.AGENT_PIN || "1234";
 
 export async function getAgentPin(): Promise<string> {
+  const envPin = process.env.AGENT_PIN || "1234";
   try {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("system_settings")
       .select("value")
       .eq("key", "agent_pin")
       .maybeSingle();
 
     if (data?.value) {
+      // If the database is still using the default '1234' but Vercel has a custom AGENT_PIN,
+      // sync the database to the custom environment variable value
+      if (data.value === "1234" && envPin !== "1234") {
+        await supabase
+          .from("system_settings")
+          .upsert({ key: "agent_pin", value: envPin }, { onConflict: "key" });
+        return envPin;
+      }
       return data.value;
+    } else {
+      // If no row exists, initialize the database with the envPin
+      await supabase
+        .from("system_settings")
+        .upsert({ key: "agent_pin", value: envPin }, { onConflict: "key" });
     }
   } catch (err) {
     console.error("Failed to fetch agent pin from DB, using fallback", err);
   }
-  return AGENT_PIN;
+  return envPin;
 }
 
 export async function loginWithPin(pin: string) {
