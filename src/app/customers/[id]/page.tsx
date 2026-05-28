@@ -40,13 +40,7 @@ export default async function CustomerDetails({ params }: Props) {
         <div className="max-w-md mx-auto w-full">
           <div className="flex flex-col items-center bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-[2rem] p-8 shadow-sm">
             <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-[#222]">
-              {customer.avatarUrl ? (
-                <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-white/50 font-bold text-2xl">
-                  {customer.name.charAt(0)}
-                </div>
-              )}
+              <Image src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} fill className="object-cover" />
             </div>
             
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white text-center">{customer.name}</h1>
@@ -101,13 +95,7 @@ export default async function CustomerDetails({ params }: Props) {
             </div>
 
             <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-[#111] overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-[#222]">
-              {customer.avatarUrl ? (
-                <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-white/50 font-bold text-2xl">
-                  {customer.name.charAt(0)}
-                </div>
-              )}
+              <Image src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} fill className="object-cover" />
             </div>
             
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white text-center">{customer.name}</h1>

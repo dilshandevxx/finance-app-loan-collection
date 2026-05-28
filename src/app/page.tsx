@@ -39,7 +39,7 @@ export default async function Home() {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-gray-100 to-gray-50 dark:from-[#222] dark:to-[#111] overflow-hidden relative border-2 border-white dark:border-[#333] shadow-lg p-0.5 shrink-0">
             <div className="w-full h-full rounded-[14px] overflow-hidden relative">
-              <Image src={`https://i.pravatar.cc/150?u=${config.agentName}`} alt="Profile" fill className="object-cover" />
+              <Image src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Profile" fill className="object-cover" />
             </div>
           </div>
           <Greeting name={config.agentName} />

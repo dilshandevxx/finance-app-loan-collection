@@ -177,13 +177,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                       
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-[#222] overflow-hidden relative shrink-0">
-                          {customer.avatarUrl ? (
-                            <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-white/50 font-semibold text-sm">
-                              {customer.name.charAt(0)}
-                            </div>
-                          )}
+                          <Image src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} fill className="object-cover" />
                         </div>
                         <div className="flex flex-col min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full flex-wrap">

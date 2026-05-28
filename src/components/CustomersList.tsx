@@ -72,14 +72,8 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                   <CardContent className="p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
                     
                     {/* Avatar */}
-                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 ${!customer.avatarUrl ? `bg-gradient-to-br ${gradient}` : ''}`}>
-                      {customer.avatarUrl ? (
-                        <Image src={customer.avatarUrl} alt={customer.name} fill className="object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-inner">
-                          {customer.name.charAt(0)}
-                        </div>
-                      )}
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-[#222] overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 bg-gray-50 dark:bg-[#111]">
+                      <Image src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} fill className="object-cover" />
                     </div>
                     
                     {/* Right Side: Info & Balance Column */}
