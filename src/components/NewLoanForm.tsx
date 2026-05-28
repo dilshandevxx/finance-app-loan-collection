@@ -160,7 +160,10 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
         </h3>
         
         <div className="space-y-2">
-          <label htmlFor="principal" className="text-sm font-semibold text-gray-750 dark:text-white/70">Principal Amount</label>
+          <div className="flex justify-between items-center">
+            <label htmlFor="principal" className="text-sm font-semibold text-gray-750 dark:text-white/70">Principal Amount</label>
+            <span className="text-xs font-bold text-black/50 dark:text-white/50 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-md">${principal.toFixed(2)}</span>
+          </div>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <DollarSign className="h-5 w-5 text-black dark:text-white group-focus-within:text-emerald-500 dark:group-focus-within:text-emerald-400 transition-colors" />
@@ -178,11 +181,30 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
               className="w-full bg-white dark:bg-[#0a0a0a] border-2 border-gray-200 dark:border-[#222] focus:border-black dark:focus:border-white rounded-2xl pl-11 pr-4 py-4 text-2xl font-bold text-black dark:text-white placeholder:text-gray-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm"
             />
           </div>
+          <div className="pt-1 px-1">
+            <input
+              type="range"
+              min="0"
+              max="5000"
+              step="50"
+              value={principal}
+              onChange={(e) => setPrincipal(parseFloat(e.target.value) || 0)}
+              className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
+            />
+            <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
+              <span>$0</span>
+              <span>$2,500</span>
+              <span>$5,000</span>
+            </div>
+          </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="interest" className="text-sm font-semibold text-gray-750 dark:text-white/70">Interest Rate</label>
+          <div className="space-y-2 col-span-2 sm:col-span-1">
+            <div className="flex justify-between items-center">
+              <label htmlFor="interest" className="text-sm font-semibold text-gray-750 dark:text-white/70">Interest Rate</label>
+              <span className="text-xs font-bold text-black/50 dark:text-white/50 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-md">{interest}%</span>
+            </div>
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Percent className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
@@ -200,9 +222,28 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
               />
             </div>
+            <div className="pt-1 px-1">
+              <input
+                type="range"
+                min="0"
+                max="50"
+                step="0.5"
+                value={interest}
+                onChange={(e) => setInterest(parseFloat(e.target.value) || 0)}
+                className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
+              />
+              <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
+                <span>0%</span>
+                <span>25%</span>
+                <span>50%</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="weeks" className="text-sm font-semibold text-gray-750 dark:text-white/70">Duration (Weeks)</label>
+          <div className="space-y-2 col-span-2 sm:col-span-1">
+            <div className="flex justify-between items-center">
+              <label htmlFor="weeks" className="text-sm font-semibold text-gray-750 dark:text-white/70">Duration (Weeks)</label>
+              <span className="text-xs font-bold text-black/50 dark:text-white/50 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-md">{weeks} weeks</span>
+            </div>
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <CalendarDays className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
@@ -219,21 +260,57 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm font-medium"
               />
             </div>
+            <div className="pt-1 px-1">
+              <input
+                type="range"
+                min="1"
+                max="52"
+                step="1"
+                value={weeks}
+                onChange={(e) => setWeeks(parseInt(e.target.value) || 0)}
+                className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
+              />
+              <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
+                <span>1 wk</span>
+                <span>26 wks</span>
+                <span>52 wks</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Calculated Installment Summary */}
-      <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl p-4 sm:p-6 flex items-center justify-between gap-3 mt-2 shadow-sm">
-        <div className="flex flex-col gap-1 min-w-0">
-          <span className="text-[11px] sm:text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider truncate">Calculated Installment</span>
-          <span className="text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 tracking-tight flex items-baseline gap-1 flex-wrap">
-            ${installmentAmount.toFixed(2)} <span className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-500 font-medium">/ week</span>
-          </span>
+      <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl p-4 sm:p-6 flex flex-col gap-4 mt-2 shadow-sm">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-1 min-w-0">
+            <span className="text-[11px] sm:text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider truncate">Calculated Installment</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 tracking-tight flex items-baseline gap-1 flex-wrap">
+              ${installmentAmount.toFixed(2)} <span className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-500 font-medium">/ week</span>
+            </span>
+          </div>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 dark:bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+            <CheckCircle2 className="w-5.5 h-5.5 sm:w-6 sm:h-6" />
+          </div>
         </div>
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 dark:bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
-          <CheckCircle2 className="w-5.5 h-5.5 sm:w-6 sm:h-6" />
-        </div>
+        
+        {/* Breakdown details */}
+        {principal > 0 && (
+          <div className="border-t border-emerald-100 dark:border-emerald-500/10 pt-3 grid grid-cols-3 gap-2 text-center text-xs">
+            <div className="flex flex-col">
+              <span className="text-emerald-700/70 dark:text-emerald-450/60 font-medium">Principal</span>
+              <span className="text-emerald-950 dark:text-emerald-200 font-bold">${principal.toFixed(2)}</span>
+            </div>
+            <div className="flex flex-col border-x border-emerald-100 dark:border-emerald-500/10">
+              <span className="text-emerald-700/70 dark:text-emerald-450/60 font-medium">Interest ({interest}%)</span>
+              <span className="text-emerald-950 dark:text-emerald-200 font-bold">+${((principal * interest) / 100).toFixed(2)}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-emerald-700/70 dark:text-emerald-450/60 font-medium">Total Repay</span>
+              <span className="text-emerald-950 dark:text-emerald-200 font-bold">${(principal * (1 + interest / 100)).toFixed(2)}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile Sticky Action */}
