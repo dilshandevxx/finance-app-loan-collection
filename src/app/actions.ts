@@ -41,7 +41,7 @@ export async function createLoan(formData: FormData) {
         name: name.trim(),
         phone: phone.trim(),
         member_id: memberId?.trim() || null,
-        avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name.trim())}`
+        avatar_url: `https://i.pravatar.cc/150?u=${encodeURIComponent(name.trim())}`
       })
       .select()
       .single();
