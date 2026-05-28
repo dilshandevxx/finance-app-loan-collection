@@ -148,6 +148,27 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                 />
               </div>
             </div>
+            <div className="space-y-2 col-span-2">
+              <label htmlFor="gender" className="text-sm font-semibold text-gray-750 dark:text-white/70">Gender</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
+                </div>
+                <select
+                  id="gender"
+                  name="gender"
+                  defaultValue="male"
+                  className="w-full bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white focus:ring-2 focus:ring-black/5 dark:focus:ring-white/5 transition shadow-sm appearance-none font-medium"
+                  required
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                  <ChevronDown className="h-5 w-5 text-gray-400 dark:text-white/45 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

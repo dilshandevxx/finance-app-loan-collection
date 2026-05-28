@@ -11,6 +11,7 @@ export async function createLoan(formData: FormData) {
   const principalStr = formData.get("principal") as string;
   const interestStr = formData.get("interest") as string;
   const weeksStr = formData.get("weeks") as string;
+  const gender = formData.get("gender") as string || "male";
 
   const principalAmount = parseFloat(principalStr);
   const interest = parseFloat(interestStr);
@@ -35,13 +36,17 @@ export async function createLoan(formData: FormData) {
       return { error: "Name and phone number are required for a new customer." };
     }
     
+    const avatarUrl = gender === "female"
+      ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=bigHair,bob,bun,curly,curvy,dreads01,dreads02,frida,froAndBand,frizzle,miaWallace,longButNotTooLong,straight01,straight02,straightAndStrand&facialHairProbability=0`
+      : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`;
+
     const { data: newCustomer, error: customerError } = await supabase
       .from("customers")
       .insert({
         name: name.trim(),
         phone: phone.trim(),
         member_id: memberId?.trim() || null,
-        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}`
+        avatar_url: avatarUrl
       })
       .select()
       .single();
