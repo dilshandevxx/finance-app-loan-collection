@@ -12,9 +12,11 @@ type ReportsDashboardProps = {
   installments: Installment[];
   loans: Loan[];
   customers: Customer[];
+  companyName?: string;
+  companyLogo?: string;
 };
 
-export function ReportsDashboard({ installments, loans, customers }: ReportsDashboardProps) {
+export function ReportsDashboard({ installments, loans, customers, companyName, companyLogo }: ReportsDashboardProps) {
   const [startDate, setStartDate] = useState(() => {
     if (installments.length === 0) {
       const now = new Date();
@@ -101,6 +103,16 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
   const exportCSV = () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
+    
+    // Standard Report metadata
+    const metadata = [
+      `"${companyName || "Loan Collection App"}"`,
+      `"LOAN COLLECTION LEDGER REPORT"`,
+      `"Period: ${startDate} to ${endDate}"`,
+      `"Generated: ${new Date().toLocaleDateString()}"`,
+      "" // empty spacer row
+    ];
+
     const headers = [
       "Customer Name", 
       "ID / NIC Number", 
@@ -138,7 +150,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       ];
     });
 
-    const csvContent = [headers.join(","), ...rows.map(row => row.join(","))].join("\n");
+    const csvContent = [...metadata, headers.join(","), ...rows.map(row => row.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -152,6 +164,16 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
   const exportExcel = () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
+    
+    // Standard Report metadata block
+    const metadata = [
+      [companyName || "Loan Collection App"],
+      ["LOAN COLLECTION LEDGER REPORT"],
+      [`Period: ${startDate} to ${endDate}`],
+      [`Generated: ${new Date().toLocaleDateString()}`],
+      [] // Empty spacer row
+    ];
+
     const headers = [
       "Customer Name", 
       "ID / NIC Number", 
@@ -189,7 +211,7 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       ];
     });
 
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const worksheet = XLSX.utils.aoa_to_sheet([...metadata, headers, ...rows]);
     
     // Set auto-fit columns for gorgeous readable Excel files
     worksheet["!cols"] = [
@@ -202,6 +224,14 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
       { wch: 14 }, // Loan Amount
       { wch: 16 }, // Loan Start Date
       { wch: 16 }  // Loan End Date
+    ];
+
+    // Merging company name, title, and range across all columns (A-I is 0 to 8)
+    worksheet["!merges"] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 8 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 8 } },
+      { s: { r: 3, c: 0 }, e: { r: 3, c: 8 } }
     ];
 
     const workbook = XLSX.utils.book_new();
@@ -294,10 +324,27 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         </div>
       </section>
 
-      <div className="hidden print:block text-black mb-8 text-center border-b border-black/20 pb-4">
-        <h1 className="text-3xl font-bold">Loan Collection Report</h1>
-        <p className="text-sm mt-2">Period: {startDate || "All Time"} to {endDate || "All Time"}</p>
-        <p className="text-xs mt-1 text-black/50" suppressHydrationWarning>Generated on: {new Date().toLocaleString()}</p>
+      <div className="hidden print:block text-black mb-8 border-b-2 border-black/25 pb-5">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col text-left">
+            {companyName ? (
+              <h1 className="text-2xl font-black tracking-tight">{companyName}</h1>
+            ) : (
+              <h1 className="text-2xl font-black tracking-tight">Loan Collection Report</h1>
+            )}
+            <p className="text-xs font-bold text-black/60 uppercase tracking-widest mt-1">Loan Collection Ledger Report</p>
+            <p className="text-xs text-black/50 mt-1 font-semibold">Period: {startDate || "All Time"} to {endDate || "All Time"}</p>
+          </div>
+          {companyLogo && (
+            <div className="h-16 w-32 relative flex items-center justify-end">
+              <img src={companyLogo} alt="Company Logo" className="max-h-16 max-w-full object-contain" />
+            </div>
+          )}
+        </div>
+        <div className="flex justify-between items-center mt-3 text-[10px] text-black/40 font-bold uppercase tracking-wider">
+          <span>Official Statement</span>
+          <span suppressHydrationWarning>Generated: {new Date().toLocaleString()}</span>
+        </div>
       </div>
 
       {/* Summary Metrics */}

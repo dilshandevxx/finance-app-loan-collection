@@ -24,7 +24,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
 import { logout } from "@/app/auth-actions";
-import { clearAllData, fetchSystemVillages, createSystemVillage } from "@/app/actions";
+import { clearAllData, fetchSystemVillages, createSystemVillage, fetchCompanySettings, saveCompanySettings } from "@/app/actions";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -36,9 +36,12 @@ export default function SettingsPage() {
 
   // Villages state & actions
   const [villages, setVillages] = useState<string[]>([]);
-  const [newVillageName, setNewVillageName] = useState("");
-  const [isAddingVillage, setIsAddingVillage] = useState(false);
-  const [villageError, setVillageError] = useState<string | null>(null);
+
+  // Company settings state
+  const [companyName, setCompanyName] = useState("");
+  const [companyLogo, setCompanyLogo] = useState("");
+  const [companyLogoPreview, setCompanyLogoPreview] = useState("");
+  const [isSavingCompany, setIsSavingCompany] = useState(false);
 
   const loadVillages = async () => {
     try {
@@ -49,29 +52,82 @@ export default function SettingsPage() {
     }
   };
 
+  const loadCompanySettings = async () => {
+    try {
+      const res = await fetchCompanySettings();
+      setCompanyName(res.name);
+      setCompanyLogo(res.logo);
+      setCompanyLogoPreview(res.logo);
+    } catch (e) {
+      console.error("Error loading company settings:", e);
+    }
+  };
+
   useEffect(() => {
     loadVillages();
+    loadCompanySettings();
   }, []);
 
-  const handleAddVillage = async (e: React.FormEvent) => {
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setCompanyLogoPreview(previewUrl);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const maxDim = 400;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        setCompanyLogo(dataUrl);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveCompanySettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newVillageName.trim()) return;
-    setIsAddingVillage(true);
-    setVillageError(null);
+    setIsSavingCompany(true);
     try {
-      const res = await createSystemVillage(newVillageName);
+      const res = await saveCompanySettings(companyName, companyLogo);
       if (res.success) {
-        setNewVillageName("");
-        setShowToast("New village added successfully!");
+        setShowToast("Company profile updated successfully!");
         setTimeout(() => setShowToast(null), 3000);
-        loadVillages();
       } else {
-        setVillageError(res.error || "Failed to add village");
+        setShowToast(res.error || "Failed to save company profile");
+        setTimeout(() => setShowToast(null), 4000);
       }
     } catch (err) {
-      setVillageError("An unexpected error occurred.");
+      console.error(err);
+      setShowToast("An unexpected error occurred");
+      setTimeout(() => setShowToast(null), 4000);
     } finally {
-      setIsAddingVillage(false);
+      setIsSavingCompany(false);
     }
   };
 
@@ -313,54 +369,100 @@ export default function SettingsPage() {
           </Card>
         </section>
 
-        {/* Villages Management */}
+        {/* Company Profile Settings */}
         <section>
-          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Villages & Route Areas</h3>
+          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Company Profile</h3>
           <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-5 flex flex-col gap-4">
-              
-              {/* Add Village Form */}
-              <form onSubmit={handleAddVillage} className="flex gap-2 w-full">
-                <input
-                  type="text"
-                  value={newVillageName}
-                  onChange={(e) => setNewVillageName(e.target.value)}
-                  placeholder="Enter new village name..."
-                  className="flex-1 bg-secondary border border-border focus:border-ring/40 rounded-xl px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
-                  required
-                />
+              <form onSubmit={handleSaveCompanySettings} className="flex flex-col gap-4">
+                
+                {/* Logo Uploader */}
+                <div className="flex flex-col items-center justify-center gap-3 border-b border-border/50 pb-4">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide self-start">Company Logo</span>
+                  
+                  <div className="relative group">
+                    <div 
+                      onClick={() => document.getElementById("logo-input")?.click()}
+                      className="w-32 h-16 rounded-xl border border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-secondary/35 flex items-center justify-center transition-all shadow-inner group-hover:scale-[1.02] cursor-pointer"
+                    >
+                      {companyLogoPreview ? (
+                        <img src={companyLogoPreview} alt="Company Logo" className="w-full h-full object-contain p-1" />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary transition-colors text-center p-2">
+                          <span className="text-[10px] font-black uppercase tracking-wider">No Logo Selected</span>
+                          <span className="text-[8px] text-muted-foreground/80 mt-0.5">Click to Upload</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <input 
+                    type="file" 
+                    id="logo-input"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+
+                  {companyLogoPreview && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCompanyLogoPreview("");
+                        setCompanyLogo("");
+                      }}
+                      className="text-xs text-red-500 hover:underline font-bold transition-colors cursor-pointer"
+                    >
+                      Remove Logo
+                    </button>
+                  )}
+                </div>
+
+                {/* Company Name Input */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="company-name" className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Company Name</label>
+                  <input
+                    type="text"
+                    id="company-name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    placeholder="Enter Loan Company Name..."
+                    className="bg-secondary border border-border focus:border-ring/40 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
+                  />
+                </div>
+
                 <button
                   type="submit"
-                  disabled={isAddingVillage}
-                  className="h-10 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl text-xs transition-all active:scale-95 shrink-0 flex items-center justify-center cursor-pointer disabled:opacity-50 border-none"
+                  disabled={isSavingCompany}
+                  className="h-10 w-full bg-primary hover:bg-primary/95 text-primary-foreground font-black rounded-xl text-xs transition-all active:scale-95 flex items-center justify-center cursor-pointer border-none"
                 >
-                  {isAddingVillage ? "Adding..." : "Add"}
+                  {isSavingCompany ? "Saving Company Profile..." : "Save Company Profile"}
                 </button>
               </form>
+            </CardContent>
+          </Card>
+        </section>
 
-              {villageError && (
-                <p className="text-xs text-destructive-foreground font-medium px-1">{villageError}</p>
-              )}
-
-              {/* Villages List */}
-              <div className="border-t border-border pt-4">
-                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block mb-2 px-1">Registered Villages</span>
-                {villages.length === 0 ? (
-                  <p className="text-xs text-muted-foreground italic px-1">No villages registered yet.</p>
-                ) : (
-                  <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1">
-                    {villages.map((v) => (
-                      <span
-                        key={v}
-                        className="px-3 py-1.5 text-xs font-bold bg-secondary hover:bg-border/30 text-foreground rounded-full border border-border transition-colors flex items-center gap-1 select-none"
-                      >
-                        📍 {v}
-                      </span>
-                    ))}
+        {/* Villages Management */}
+        <section>
+          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Villages & Routes</h3>
+          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-0 flex flex-col">
+              <Link 
+                href="/villages"
+                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors text-xs">
+                    📍
                   </div>
-                )}
-              </div>
-
+                  <div className="flex flex-col text-left">
+                    <span className="text-foreground font-semibold text-sm">Route Villages Registry</span>
+                    <span className="text-muted-foreground text-xs mt-0.5">Manage ({villages.length}) collection villages</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+              </Link>
             </CardContent>
           </Card>
         </section>

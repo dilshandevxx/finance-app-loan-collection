@@ -81,8 +81,8 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
         </div>
 
         {/* Village Filter Selector */}
-        {villages.length > 0 && (
-          <div className="relative min-w-[200px] shrink-0">
+        <div className="flex flex-col gap-1.5 min-w-[200px] shrink-0">
+          <div className="relative">
             <select
               value={selectedVillage}
               onChange={(e) => setSelectedVillage(e.target.value)}
@@ -93,11 +93,14 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                 <option key={v} value={v}>📍 {v}</option>
               ))}
             </select>
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-450 dark:text-white/40">
+            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-455 dark:text-white/40">
               <ChevronDown className="w-5 h-5" />
             </div>
           </div>
-        )}
+          <Link href="/villages" className="text-right text-[11px] font-bold text-primary hover:underline px-1 flex items-center justify-end gap-1">
+            <span>Manage Villages</span> ⚙️
+          </Link>
+        </div>
       </div>
 
       {/* Segmented Tab Switcher */}

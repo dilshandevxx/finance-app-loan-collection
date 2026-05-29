@@ -300,4 +300,110 @@ export async function addSystemVillage(villageName: string): Promise<{ success: 
   return { success: true };
 }
 
+export async function removeSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
+  const trimmedName = villageName.trim();
+  if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
+
+  // Check if any customer is using this village
+  const { data: customerData, error: custError } = await supabase.from("customers").select("address");
+  if (!custError && customerData) {
+    const isUsed = customerData.some(row => {
+      if (row.address && row.address.trim().startsWith("{")) {
+        try {
+          const parsed = JSON.parse(row.address);
+          if (parsed.state && parsed.state.trim().toLowerCase() === trimmedName.toLowerCase()) {
+            return true;
+          }
+        } catch {}
+      }
+      return false;
+    });
+    if (isUsed) {
+      return { success: false, error: "Cannot delete village because it is assigned to one or more clients." };
+    }
+  }
+
+  // Get current villages from system_settings
+  const { data, error: selectError } = await supabase
+    .from("system_settings")
+    .select("value")
+    .eq("key", "villages")
+    .maybeSingle();
+
+  if (selectError) {
+    return { success: false, error: selectError.message };
+  }
+
+  let settingsVillages: string[] = [];
+  if (data?.value) {
+    try {
+      settingsVillages = JSON.parse(data.value);
+    } catch {}
+  }
+
+  const updatedVillages = settingsVillages.filter(v => v.trim().toLowerCase() !== trimmedName.toLowerCase());
+
+  const { error: upsertError } = await supabase
+    .from("system_settings")
+    .upsert({
+      key: "villages",
+      value: JSON.stringify(updatedVillages),
+      updated_at: new Date().toISOString()
+    });
+
+  if (upsertError) {
+    return { success: false, error: upsertError.message };
+  }
+
+  return { success: true };
+}
+
+export async function getCompanySettings(): Promise<{ name: string; logo: string }> {
+  const { data: nameData } = await supabase
+    .from("system_settings")
+    .select("value")
+    .eq("key", "company_name")
+    .maybeSingle();
+
+  const { data: logoData } = await supabase
+    .from("system_settings")
+    .select("value")
+    .eq("key", "company_logo")
+    .maybeSingle();
+
+  return {
+    name: nameData?.value || "",
+    logo: logoData?.value || ""
+  };
+}
+
+export async function updateCompanySettings(name: string, logo: string): Promise<{ success: boolean; error?: string }> {
+  const { error: nameError } = await supabase
+    .from("system_settings")
+    .upsert({
+      key: "company_name",
+      value: name.trim(),
+      updated_at: new Date().toISOString()
+    });
+
+  if (nameError) {
+    return { success: false, error: nameError.message };
+  }
+
+  const { error: logoError } = await supabase
+    .from("system_settings")
+    .upsert({
+      key: "company_logo",
+      value: logo,
+      updated_at: new Date().toISOString()
+    });
+
+  if (logoError) {
+    return { success: false, error: logoError.message };
+  }
+
+  return { success: true };
+}
+
+
 

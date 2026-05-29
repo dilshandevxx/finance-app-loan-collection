@@ -1,14 +1,15 @@
 import { ReportsDashboard } from "@/components/ReportsDashboard";
 import { BottomNav } from "@/components/BottomNav";
-import { getCustomers, getInstallments, getLoans } from "@/data/db";
+import { getCustomers, getInstallments, getLoans, getCompanySettings } from "@/data/db";
 
 export const dynamic = 'force-dynamic';
 
 export default async function ReportsPage() {
-  const [customers, loans, installments] = await Promise.all([
+  const [customers, loans, installments, companySettings] = await Promise.all([
     getCustomers(),
     getLoans(),
     getInstallments(),
+    getCompanySettings(),
   ]);
 
   return (
@@ -24,6 +25,8 @@ export default async function ReportsPage() {
         installments={installments} 
         loans={loans} 
         customers={customers} 
+        companyName={companySettings.name}
+        companyLogo={companySettings.logo}
       />
       
       <div className="print:hidden">

@@ -299,7 +299,7 @@ export async function clearAllData() {
   }
 }
 
-import { getSystemVillages, addSystemVillage } from "@/data/db";
+import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySettings, updateCompanySettings } from "@/data/db";
 
 export async function fetchSystemVillages() {
   return await getSystemVillages();
@@ -309,6 +309,28 @@ export async function createSystemVillage(villageName: string) {
   const res = await addSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
+  revalidatePath("/villages");
   return res;
 }
+
+export async function deleteSystemVillage(villageName: string) {
+  const res = await removeSystemVillage(villageName);
+  revalidatePath("/settings");
+  revalidatePath("/new");
+  revalidatePath("/villages");
+  revalidatePath("/customers");
+  return res;
+}
+
+export async function fetchCompanySettings() {
+  return await getCompanySettings();
+}
+
+export async function saveCompanySettings(name: string, logo: string) {
+  const res = await updateCompanySettings(name, logo);
+  revalidatePath("/settings");
+  revalidatePath("/reports");
+  return res;
+}
+
 

@@ -9,7 +9,7 @@ const NAV = [
   { href: "/",         Icon: Home,     label: "Home"    },
   { href: "/customers",Icon: Users,    label: "Clients" },
   { href: "/reports",  Icon: FileText, label: "Reports" },
-  { href: "/settings", Icon: Settings, label: "Profile" },
+  { href: "/settings", Icon: Settings, label: "Settings" },
 ];
 
 export function BottomNav() {

@@ -78,6 +78,22 @@ export default async function Home() {
         </div>
       </div>
 
+      {/* ── Quick Navigation ─────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-3 print:hidden">
+        <Link
+          href="/new"
+          className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
+        >
+          ➕ New Account
+        </Link>
+        <Link
+          href="/villages"
+          className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
+        >
+          📍 Manage Villages
+        </Link>
+      </div>
+
       {/* ── Portfolio Status Card ─────────────────────────── */}
       <CollectionGoalCard
         expectedToday={expectedToday}

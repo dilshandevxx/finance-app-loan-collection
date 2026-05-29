@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useActionState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { createLoan } from "@/app/actions";
+import { createLoan, createSystemVillage } from "@/app/actions";
 import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
 
 type Customer = {
@@ -34,11 +35,48 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
 
   const [clientName, setClientName] = useState("");
   const [clientState, setClientState] = useState("");
-  const [selectedVillageOption, setSelectedVillageOption] = useState("");
-  const [villageSelectMode, setVillageSelectMode] = useState<"select" | "new">("select");
   const [memberId, setMemberId] = useState("");
   const [isMemberIdEdited, setIsMemberIdEdited] = useState(false);
   const [randomSuffix] = useState(() => Math.floor(100 + Math.random() * 900));
+
+  // Local villages list state to allow dynamic addition
+  const [localVillages, setLocalVillages] = useState<string[]>(villages);
+
+  // Modal state
+  const [isAddVillageModalOpen, setIsAddVillageModalOpen] = useState(false);
+  const [modalVillageName, setModalVillageName] = useState("");
+  const [modalIsAdding, setModalIsAdding] = useState(false);
+  const [modalError, setModalError] = useState<string | null>(null);
+
+  const handleModalAddVillage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const nameVal = modalVillageName.trim();
+    if (!nameVal) return;
+
+    if (localVillages.map(v => v.toLowerCase()).includes(nameVal.toLowerCase())) {
+      setModalError("Village already exists.");
+      return;
+    }
+
+    setModalIsAdding(true);
+    setModalError(null);
+    try {
+      const res = await createSystemVillage(nameVal);
+      if (res.success) {
+        setLocalVillages(prev => [...prev, nameVal].sort());
+        setClientState(nameVal);
+        generateAndSetMemberId(clientName, nameVal);
+        setModalVillageName("");
+        setIsAddVillageModalOpen(false);
+      } else {
+        setModalError(res.error || "Failed to add village.");
+      }
+    } catch (err) {
+      setModalError("An unexpected error occurred.");
+    } finally {
+      setModalIsAdding(false);
+    }
+  };
 
   const generateAndSetMemberId = (nameVal: string, stateVal: string) => {
     if (isMemberIdEdited) return;
@@ -110,7 +148,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
     reader.readAsDataURL(file);
   };
 
-  const existingStates = villages;
+  const existingStates = localVillages;
 
   const calculateInstallment = () => {
     if (weeks <= 0) return 0;
@@ -355,84 +393,47 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
 
             {/* State/Village Collection Area Dropdown */}
             <div className="space-y-2 col-span-2">
-              <label htmlFor="village-select" className="text-sm font-semibold text-gray-750 dark:text-white/70">Collection Area (Village)</label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="village-select" className="text-sm font-semibold text-gray-750 dark:text-white/70">Collection Area (Village)</label>
+                <button
+                  type="button"
+                  onClick={() => setIsAddVillageModalOpen(true)}
+                  className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none outline-none"
+                >
+                  ➕ Add New Village
+                </button>
+              </div>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
                 <select
                   id="village-select"
-                  value={selectedVillageOption}
+                  name="state"
+                  value={clientState}
                   onChange={(e) => {
                     const val = e.target.value;
-                    if (val === "new") {
-                      setSelectedVillageOption("new");
-                      setVillageSelectMode("new");
-                      setClientState("");
-                      generateAndSetMemberId(clientName, "");
-                    } else {
-                      setSelectedVillageOption(val);
-                      setVillageSelectMode("select");
-                      setClientState(val);
-                      generateAndSetMemberId(clientName, val);
-                    }
+                    setClientState(val);
+                    generateAndSetMemberId(clientName, val);
                   }}
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm appearance-none font-medium cursor-pointer"
-                  required={villageSelectMode === "select"}
+                  required
                 >
                   <option value="" disabled>Select a village...</option>
                   {existingStates.map(state => (
                     <option key={state} value={state}>📍 {state}</option>
                   ))}
-                  <option value="new" className="text-primary font-bold">+ Add New Village...</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400">
                   <ChevronDown className="h-5 w-5" />
                 </div>
               </div>
+              {existingStates.length === 0 && (
+                <p className="text-xs text-destructive-foreground font-semibold mt-1">
+                  ⚠️ No villages registered. Please add a village first.
+                </p>
+              )}
             </div>
-
-            {/* Hidden Input for Form Submission */}
-            <input type="hidden" name="state" value={clientState} />
-
-            {/* Conditionally Rendered New Village Text Input */}
-            {villageSelectMode === "new" && (
-              <div className="space-y-2 col-span-2 animate-in slide-in-from-top-2 duration-205">
-                <div className="flex justify-between items-center">
-                  <label htmlFor="new-village" className="text-sm font-semibold text-gray-750 dark:text-white/70">New Village Name</label>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setVillageSelectMode("select");
-                      setSelectedVillageOption("");
-                      setClientState("");
-                      generateAndSetMemberId(clientName, "");
-                    }}
-                    className="text-xs text-primary font-bold hover:underline cursor-pointer"
-                  >
-                    Back to selection
-                  </button>
-                </div>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
-                  </div>
-                  <input 
-                    type="text" 
-                    id="new-village"
-                    required
-                    value={clientState}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setClientState(val);
-                      generateAndSetMemberId(clientName, val);
-                    }}
-                    placeholder="Enter new village name (e.g. Village West, Ward 4)" 
-                    className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
-                  />
-                </div>
-              </div>
-            )}
 
             {/* Landmark/Address */}
             <div className="space-y-2 col-span-2">
@@ -637,6 +638,63 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
       >
         {isPending ? "Creating Loan..." : "Create Loan Account"}
       </Button>
+      {/* Inline Add Village Modal */}
+      {isAddVillageModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop with blur */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+            onClick={() => setIsAddVillageModalOpen(false)}
+          />
+          
+          {/* Modal Container */}
+          <div className="bg-white dark:bg-card border border-border rounded-3xl w-full max-w-sm p-6 shadow-2xl relative z-10 animate-in zoom-in-95 duration-200 text-left">
+            <h4 className="text-base font-bold text-foreground">Add New Village</h4>
+            <p className="text-xs text-muted-foreground mt-1">This village will be added to the system settings and auto-selected for this client.</p>
+            
+            {modalError && (
+              <div className="mt-3 p-2.5 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400 rounded-xl text-xs font-semibold">
+                ⚠️ {modalError}
+              </div>
+            )}
+            
+            <form onSubmit={handleModalAddVillage} className="mt-4 flex flex-col gap-3">
+              <input
+                type="text"
+                value={modalVillageName}
+                onChange={(e) => setModalVillageName(e.target.value)}
+                placeholder="Enter village name..."
+                className="w-full bg-secondary border border-border focus:border-primary rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                disabled={modalIsAdding}
+                required
+                autoFocus
+              />
+              
+              <div className="flex gap-2 justify-end mt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsAddVillageModalOpen(false)}
+                  className="px-4 py-2 bg-transparent text-foreground hover:bg-secondary text-xs font-bold rounded-lg border border-border cursor-pointer transition-colors"
+                  disabled={modalIsAdding}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-primary text-primary-foreground font-black text-xs rounded-lg flex items-center justify-center gap-1 cursor-pointer border-none"
+                  disabled={modalIsAdding}
+                >
+                  {modalIsAdding ? (
+                    <div className="w-3.5 h-3.5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  ) : (
+                    "Save Village"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

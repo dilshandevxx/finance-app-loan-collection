@@ -1,0 +1,48 @@
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import { getCustomers, getSystemVillages } from "@/data/db";
+import { BottomNav } from "@/components/BottomNav";
+import { Card, CardContent } from "@/components/ui/card";
+import VillagesClientManager from "./VillagesClientManager";
+
+export const dynamic = 'force-dynamic';
+
+export default async function VillagesPage() {
+  const [customers, villages] = await Promise.all([
+    getCustomers(),
+    getSystemVillages()
+  ]);
+
+  // Compute client counts per village
+  const villageStats = villages.map(v => {
+    const count = customers.filter(c => c.state?.trim().toLowerCase() === v.trim().toLowerCase()).length;
+    return { name: v, clientCount: count };
+  });
+
+  return (
+    <div className="w-full flex flex-col gap-6 sm:gap-8 pb-32 md:pb-12 max-w-4xl mx-auto px-2 sm:px-4 pt-4 sm:pt-8 min-h-screen">
+      {/* Header */}
+      <header className="w-full flex items-center justify-between bg-card p-4 rounded-[1.75rem] border border-border shadow-sm relative overflow-hidden mb-2">
+        <Link href="/settings">
+          <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer relative z-10">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        </Link>
+        <span className="text-sm font-semibold tracking-tight text-foreground">Manage Route Villages</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm">
+          Settings
+        </span>
+      </header>
+
+      <div className="max-w-2xl mx-auto w-full">
+        <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
+          <CardContent className="p-4 sm:p-8">
+            <VillagesClientManager initialStats={villageStats} />
+          </CardContent>
+        </Card>
+      </div>
+
+      <BottomNav />
+    </div>
+  );
+}
