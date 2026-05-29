@@ -88,6 +88,13 @@ export default async function Home() {
         overdueAmount={overdueAmount}
       />
 
+      {/* ── Due Today Roster ─────────────────────────────── */}
+      <DashboardRoster
+        pendingInstallments={pendingInstallments}
+        customers={customers}
+        loans={loans}
+      />
+
       {/* ── Weekly Chart ─────────────────────────────────── */}
       <div className="rounded-2xl bg-card border border-border p-5 shadow-sm">
         <div className="flex items-center justify-between mb-3">
@@ -99,13 +106,6 @@ export default async function Home() {
         </div>
         <AnalyticsChart />
       </div>
-
-      {/* ── Due Today Roster ─────────────────────────────── */}
-      <DashboardRoster
-        pendingInstallments={pendingInstallments}
-        customers={customers}
-        loans={loans}
-      />
 
       <BottomNav />
     </div>
