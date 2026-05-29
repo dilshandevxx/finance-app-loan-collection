@@ -1,79 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Enterprise B2B (Stripe/Linear style) ─────────── */
+/* ─── Light Mode: Pitch Black Dark Neon (forced) ─────────── */
 :root {
-  --background: #FAFAFA; /* Zinc 50 */
-  --foreground: #09090B; /* Zinc 950 */
-  --card: #FFFFFF;
-  --card-foreground: #09090B;
-  --popover: #FFFFFF;
-  --popover-foreground: #09090B;
-  --primary: #2563EB; /* Trust Blue 600 */
-  --primary-foreground: #FFFFFF;
-  --secondary: #F4F4F5; /* Zinc 100 */
-  --secondary-foreground: #09090B;
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A; /* Zinc 500 */
-  --accent: #F4F4F5;
-  --accent-foreground: #09090B;
-  --destructive: #FEF2F2;
-  --destructive-foreground: #DC2626; /* Red 600 */
-  --border: #E4E4E7; /* Zinc 200 */
-  --input: #FFFFFF;
-  --ring: #2563EB;
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #0A0A0A;
+  --card-foreground: #FFFFFF;
+  --popover: #0A0A0A;
+  --popover-foreground: #FFFFFF;
+  --primary: #00FFFF; /* Neon Cyan */
+  --primary-foreground: #000000;
+  --secondary: #111111;
+  --secondary-foreground: #FFFFFF;
+  --muted: #111111;
+  --muted-foreground: #A1A1AA;
+  --accent: #111111;
+  --accent-foreground: #FF00FF; /* Neon Magenta */
+  --destructive: #220000;
+  --destructive-foreground: #FF00FF;
+  --border: #222222;
+  --input: #0A0A0A;
+  --ring: #00FFFF;
 
   /* Custom chart variables */
-  --chart-collected: #059669; /* Emerald 600 */
-  --chart-expected: #2563EB;  /* Blue 600 */
+  --chart-collected: #00FFFF; /* Cyan */
+  --chart-expected: #FF00FF;  /* Magenta */
 
   /* Custom vibe accent colors */
-  --vibe-coral: #DC2626; /* Red */
-  --vibe-pink: #D97706;  /* Amber */
-  --vibe-violet: #7C3AED; /* Violet */
-  --vibe-sky: #2563EB; /* Blue */
+  --vibe-coral: #FF00FF;
+  --vibe-pink: #FF00FF;
+  --vibe-violet: #8B5CF6;
+  --vibe-sky: #00FFFF;
 
-  --vibe-coral-lt: #FEF2F2;
-  --vibe-pink-lt: #FFFBEB;
-  --vibe-violet-lt: #F5F3FF;
-  --vibe-sky-lt: #EFF6FF;
+  --vibe-coral-lt: #220000;
+  --vibe-pink-lt: #220022;
+  --vibe-violet-lt: #1A0033;
+  --vibe-sky-lt: #002222;
 }
 
-/* ─── Dark Mode: Enterprise B2B Dark ──────────────── */
+/* ─── Dark Mode: Pitch Black Dark Neon ──────────────── */
 .dark {
-  --background: #09090B; /* Zinc 950 */
-  --foreground: #FAFAFA;
-  --card: #18181B; /* Zinc 900 */
-  --card-foreground: #FAFAFA;
-  --popover: #18181B;
-  --popover-foreground: #FAFAFA;
-  --primary: #3B82F6; /* Blue 500 */
-  --primary-foreground: #FFFFFF;
-  --secondary: #27272A; /* Zinc 800 */
-  --secondary-foreground: #FAFAFA;
-  --muted: #27272A;
-  --muted-foreground: #A1A1AA; /* Zinc 400 */
-  --accent: #27272A;
-  --accent-foreground: #FAFAFA;
-  --destructive: #450A0A;
-  --destructive-foreground: #EF4444; /* Red 500 */
-  --border: #27272A;
-  --input: #18181B;
-  --ring: #3B82F6;
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #0A0A0A;
+  --card-foreground: #FFFFFF;
+  --popover: #0A0A0A;
+  --popover-foreground: #FFFFFF;
+  --primary: #00FFFF; /* Neon Cyan */
+  --primary-foreground: #000000;
+  --secondary: #111111;
+  --secondary-foreground: #FFFFFF;
+  --muted: #111111;
+  --muted-foreground: #A1A1AA;
+  --accent: #111111;
+  --accent-foreground: #FF00FF; /* Neon Magenta */
+  --destructive: #220000;
+  --destructive-foreground: #FF00FF;
+  --border: #222222;
+  --input: #0A0A0A;
+  --ring: #00FFFF;
 
   /* Custom chart variables */
-  --chart-collected: #10B981; /* Emerald 500 */
-  --chart-expected: #3B82F6;  /* Blue 500 */
+  --chart-collected: #00FFFF; /* Cyan */
+  --chart-expected: #FF00FF;  /* Magenta */
 
   /* Custom vibe accent colors */
-  --vibe-coral: #EF4444; /* Red */
-  --vibe-pink: #F59E0B;  /* Amber */
-  --vibe-violet: #8B5CF6; /* Violet */
-  --vibe-sky: #3B82F6; /* Blue */
+  --vibe-coral: #FF00FF; /* Magenta */
+  --vibe-pink: #FF00FF;
+  --vibe-violet: #E81CFF;
+  --vibe-sky: #00FFFF; /* Cyan */
 
-  --vibe-coral-lt: #450A0A;
-  --vibe-pink-lt: #78350F;
-  --vibe-violet-lt: #2E1065;
-  --vibe-sky-lt: #1E3A8A;
+  --vibe-coral-lt: #220022;
+  --vibe-pink-lt: #220022;
+  --vibe-violet-lt: #1A0033;
+  --vibe-sky-lt: #002222;
 }
 
 @theme inline {

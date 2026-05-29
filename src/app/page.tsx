@@ -95,23 +95,23 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm">
-              <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-500 text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3 h-3" /> Active Loans
+            <div className="rounded-xl p-5 flex flex-col gap-1 bg-[#0A0A0A] border border-[#00FFFF]/30 shadow-[0_0_20px_rgba(0,255,255,0.15)] text-[#FFFFFF]">
+              <div className="flex items-center gap-1.5 text-[#00FFFF] text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3 text-[#00FFFF]" /> Active Loans
               </div>
-              <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">loans running</span>
+              <span className="text-4xl font-black tracking-tight text-white">{activeLoans}</span>
+              <span className="text-[10px] text-[#00FFFF]/70 font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm">
-              <div className="flex items-center gap-1.5 text-red-600 dark:text-red-500 text-[10px] font-bold uppercase tracking-wider">
-                <AlertCircle className="w-3 h-3" /> Overdue
+            <div className="rounded-xl p-5 flex flex-col gap-1 bg-[#0A0A0A] border border-[#FF00FF]/30 shadow-[0_0_20px_rgba(255,0,255,0.15)] text-[#FFFFFF]">
+              <div className="flex items-center gap-1.5 text-[#FF00FF] text-[10px] font-bold uppercase tracking-wider">
+                <AlertCircle className="w-3 h-3 text-[#FF00FF]" /> Overdue
               </div>
-              <span className="text-4xl font-black tracking-tight truncate text-red-600 dark:text-red-500" title={formatLKR(overdueAmount)}>
+              <span className="text-4xl font-black tracking-tight truncate text-white" title={formatLKR(overdueAmount)}>
                 {formatLKR(overdueAmount)}
               </span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">total overdue amount</span>
+              <span className="text-[10px] text-[#FF00FF]/70 font-medium">total overdue amount</span>
             </div>
           </div>
 
