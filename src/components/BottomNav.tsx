@@ -51,9 +51,8 @@ export function BottomNav() {
           {/* Center FAB */}
           <Link href="/new" className="flex flex-col items-center gap-0.5 group shrink-0 mx-1">
             <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary to-vibe-violet blur-md scale-125 group-hover:scale-150 transition-all duration-500 opacity-60" />
-              <div className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-vibe-violet border border-white/20 flex items-center justify-center shadow-[0_4px_15px_rgba(99,102,241,0.5)] group-hover:scale-110 transition-transform duration-300">
-                <Plus className="w-5 h-5 text-white stroke-[2.5]" />
+              <div className="relative w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Plus className="w-6 h-6" strokeWidth={2.5} />
               </div>
             </div>
             <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground mt-1">New</span>
@@ -82,26 +81,22 @@ export function BottomNav() {
           DESKTOP: Fixed full-height left sidebar
           ───────────────────────────────────────────── */}
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-20 flex-col items-center z-50
-        bg-card/80 dark:bg-card/70 backdrop-blur-xl
-        border-r border-border/50
+        bg-card
+        border-r border-border
         py-5 gap-1
       ">
         {/* Brand logo */}
         <div className="mb-4 flex flex-col items-center gap-1">
-          <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center font-black text-sm text-primary-foreground shadow-md shadow-primary/30">
+          <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center font-black text-sm text-primary-foreground">
             LT
           </div>
         </div>
 
         {/* New Loan Button */}
         <Link href="/new" className="group flex flex-col items-center gap-1 mb-3 w-full px-3">
-          <div className="w-full py-2.5 rounded-2xl bg-gradient-to-tr from-primary to-indigo-500 hover:brightness-110 active:scale-95
-            flex flex-col items-center justify-center gap-0.5
-            shadow-[0_4px_15px_rgba(99,102,241,0.4)] transition-all duration-300 border border-white/10 relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-            <Plus className="w-4 h-4 text-white stroke-[2.5] relative z-10" />
-            <span className="text-[9px] font-black text-white uppercase tracking-wider relative z-10">New</span>
+          <div className="w-full py-2.5 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 active:scale-95 transition-all duration-200 shadow-sm flex flex-col items-center">
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span className="text-[9px] font-black uppercase tracking-wider mt-0.5">New</span>
           </div>
         </Link>
 

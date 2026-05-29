@@ -78,7 +78,7 @@ export function DashboardHeader({
               Active
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/70 leading-tight tracking-tight mt-0.5 flex items-center gap-1.5">
+          <h1 className="text-xl sm:text-2xl font-black text-foreground leading-tight tracking-tight mt-0.5 flex items-center gap-1.5">
             {agentName}
             <span className="animate-[wave_2.5s_infinite] origin-[70%_70%] inline-block text-xl select-none cursor-default text-foreground">👋</span>
           </h1>

@@ -104,17 +104,17 @@ export default function NotificationsPage() {
         ) : (
           <>
             {/* Summary Banner */}
-            <div className="rounded-2xl bg-gradient-to-r from-[#3D6DFF] to-[#6A4AFF] p-4 mb-4 flex items-center justify-between text-white shadow-[0_4px_20px_rgba(61,109,255,0.3)]">
+            <div className="rounded-2xl bg-card border border-border p-4 mb-4 flex items-center justify-between shadow-sm">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/70">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                   {formatDate(tomorrowDate)}
                 </p>
-                <p className="text-2xl font-black mt-0.5">{groups.reduce((s, g) => s + g.customers.length, 0)} customers</p>
-                <p className="text-xs text-white/80 mt-0.5">across {groups.length} village{groups.length > 1 ? "s" : ""}</p>
+                <p className="text-2xl font-black mt-0.5 text-foreground">{groups.reduce((s, g) => s + g.customers.length, 0)} customers</p>
+                <p className="text-xs text-muted-foreground mt-0.5">across {groups.length} village{groups.length > 1 ? "s" : ""}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/70">Expected</p>
-                <p className="text-xl font-black mt-0.5">{formatLKR(totalAmount)}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Expected</p>
+                <p className="text-xl font-black mt-0.5 text-primary">{formatLKR(totalAmount)}</p>
               </div>
             </div>
 

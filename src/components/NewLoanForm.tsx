@@ -618,8 +618,8 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
         )}
       </div>
 
-      {/* Mobile Sticky Action */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-black dark:via-black to-transparent z-50">
+      {/* Sticky Bottom Actions for Mobile */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border z-50">
         <div className="bg-white dark:bg-muted p-2 rounded-2xl border border-gray-200 dark:border-border shadow-2xl backdrop-blur-xl">
           <Button 
             type="submit" 

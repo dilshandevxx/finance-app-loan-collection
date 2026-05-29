@@ -42,15 +42,12 @@ export function CollectionGoalCard({
   return (
     <div className="w-full rounded-[2rem] bg-card border border-white/5 dark:border-white/10 p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden">
       
-      {/* Background glow accent */}
-      <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-primary/20 to-vibe-violet/20 rounded-full blur-[50px] pointer-events-none" />
-
       {/* Main Grid: Info + Ring */}
       <div className="grid grid-cols-12 gap-4 items-center relative z-10">
         
         {/* Left Side: Goal & Amounts */}
         <div className="col-span-8 flex flex-col gap-1.5">
-          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-primary to-vibe-violet">
+          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-foreground">
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "Goal Achieved" : "No Collections Due") 
               : "Remaining Today"}
