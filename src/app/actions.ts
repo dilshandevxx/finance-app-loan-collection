@@ -436,4 +436,74 @@ export async function saveCompanySettings(name: string, logo: string) {
   return res;
 }
 
+export async function fetchTomorrowsWork() {
+  const supabase = await createClient();
 
+  // Calculate tomorrow's date in local YYYY-MM-DD format
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("installments")
+    .select(`
+      id,
+      amount,
+      due_date,
+      status,
+      loans (
+        id,
+        weekly_installment,
+        remaining_balance,
+        customers (
+          id,
+          name,
+          phone,
+          address
+        )
+      )
+    `)
+    .eq("due_date", tomorrowStr)
+    .in("status", ["PENDING", "MISSED"])
+    .order("due_date", { ascending: true });
+
+  if (error) {
+    console.error("fetchTomorrowsWork error:", error);
+    return { success: false, error: error.message, groups: [] };
+  }
+
+  // Group by village (extracted from customer address JSON field "state")
+  const villageMap: Record<string, {
+    village: string;
+    customers: { id: string; name: string; phone: string; amount: number; status: string }[]
+  }> = {};
+
+  for (const inst of data || []) {
+    const loan = Array.isArray(inst.loans) ? inst.loans[0] : inst.loans;
+    const customer = loan ? (Array.isArray(loan.customers) ? loan.customers[0] : loan.customers) : null;
+    if (!customer) continue;
+
+    let village = "Unknown Village";
+    try {
+      const addr = typeof customer.address === "string" ? JSON.parse(customer.address) : customer.address;
+      if (addr?.state) village = addr.state;
+    } catch {}
+
+    if (!villageMap[village]) {
+      villageMap[village] = { village, customers: [] };
+    }
+    villageMap[village].customers.push({
+      id: customer.id,
+      name: customer.name,
+      phone: customer.phone || "",
+      amount: Number(inst.amount),
+      status: inst.status,
+    });
+  }
+
+  const groups = Object.values(villageMap).sort((a, b) =>
+    a.village.localeCompare(b.village)
+  );
+
+  return { success: true, tomorrowDate: tomorrowStr, groups };
+}
