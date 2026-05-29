@@ -55,11 +55,10 @@ export async function logout() {
 // PIN Logic (Secondary Lock)
 // ==========================================
 
-export async function getAgentPin(): Promise<string> {
+export async function getAgentPin(): Promise<string | null> {
   const supabase = await createClient();
-  // Fetch from user_profiles instead of system_settings for multi-tenant
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return "1234";
+  if (!user) return null;
 
   const { data, error } = await supabase
     .from("user_profiles")
@@ -71,11 +70,52 @@ export async function getAgentPin(): Promise<string> {
     return data.hashed_pin;
   }
   
-  return "1234"; // Default if not set
+  return null;
+}
+
+export async function hasAgentPinSetup(): Promise<boolean> {
+  const pin = await getAgentPin();
+  return pin !== null;
+}
+
+export async function setupAgentPin(newPin: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not logged in" };
+
+  if (!/^\d{4}$/.test(newPin)) {
+    return { success: false, error: "New PIN must be exactly 4 digits" };
+  }
+
+  const { error } = await supabase
+    .from("user_profiles")
+    .update({ 
+      hashed_pin: newPin 
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    return { success: false, error: `Failed to save PIN: ${error.message}` };
+  }
+  
+  // Also log them in automatically
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: "agent_session",
+    value: "authenticated",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+
+  return { success: true };
 }
 
 export async function loginWithPin(pin: string) {
   const activePin = await getAgentPin();
+  if (!activePin) return { success: false, error: "PIN not set up" };
+  
   if (pin === activePin) {
     const cookieStore = await cookies();
     cookieStore.set({
@@ -97,7 +137,7 @@ export async function updateAgentPin(currentPin: string, newPin: string) {
   if (!user) return { success: false, error: "Not logged in" };
 
   const activePin = await getAgentPin();
-  if (currentPin !== activePin) {
+  if (activePin && currentPin !== activePin) {
     return { success: false, error: "Current PIN is incorrect" };
   }
   
@@ -107,10 +147,10 @@ export async function updateAgentPin(currentPin: string, newPin: string) {
 
   const { error } = await supabase
     .from("user_profiles")
-    .upsert({ 
-      id: user.id,
+    .update({ 
       hashed_pin: newPin 
-    });
+    })
+    .eq("id", user.id);
 
   if (error) {
     return { success: false, error: `Failed to save new PIN: ${error.message}` };
