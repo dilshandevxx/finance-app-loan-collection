@@ -12,6 +12,9 @@ export async function createLoan(formData: FormData) {
   const interestStr = formData.get("interest") as string;
   const weeksStr = formData.get("weeks") as string;
   const gender = formData.get("gender") as string || "male";
+  const stateVal = formData.get("state") as string || "";
+  const addressVal = formData.get("address") as string || "";
+  const avatarDataUrl = formData.get("avatarDataUrl") as string || "";
 
   const principalAmount = parseFloat(principalStr);
   const interest = parseFloat(interestStr);
@@ -36,9 +39,17 @@ export async function createLoan(formData: FormData) {
       return { error: "Name and phone number are required for a new customer." };
     }
     
-    const avatarUrl = gender === "female"
+    const avatarUrl = avatarDataUrl || (gender === "female"
       ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=bigHair,bob,bun,curly,curvy,dreads01,dreads02,frida,froAndBand,frizzle,miaWallace,longButNotTooLong,straight01,straight02,straightAndStrand&facialHairProbability=0`
-      : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`;
+      : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`);
+
+    let serializedAddress = null;
+    if (stateVal.trim() || addressVal.trim()) {
+      serializedAddress = JSON.stringify({
+        state: stateVal.trim(),
+        address: addressVal.trim()
+      });
+    }
 
     const { data: newCustomer, error: customerError } = await supabase
       .from("customers")
@@ -46,7 +57,8 @@ export async function createLoan(formData: FormData) {
         name: name.trim(),
         phone: phone.trim(),
         member_id: memberId?.trim() || null,
-        avatar_url: avatarUrl
+        avatar_url: avatarUrl,
+        address: serializedAddress
       })
       .select()
       .single();

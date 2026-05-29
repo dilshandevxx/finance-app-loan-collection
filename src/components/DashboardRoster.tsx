@@ -210,8 +210,15 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-muted-foreground mt-0.5 break-words">
-                            {customer.memberId || customer.id.slice(0, 8)} · {installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}
+                          <span className="text-xs text-muted-foreground mt-0.5 break-words flex items-center gap-1.5 flex-wrap">
+                            {customer.state && (
+                              <span className="flex items-center gap-0.5 text-primary dark:text-white/70 font-semibold uppercase bg-primary/10 dark:bg-white/10 px-1.5 py-0.5 rounded text-[10px] shrink-0">
+                                📍 {customer.state}
+                              </span>
+                            )}
+                            <span className="shrink-0">{customer.memberId || customer.id.slice(0, 8)}</span>
+                            <span className="shrink-0">•</span>
+                            <span className="shrink-0">{installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}</span>
                           </span>
                         </div>
                       </div>

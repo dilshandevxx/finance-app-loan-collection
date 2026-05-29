@@ -3,12 +3,13 @@
 import { useState, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { createLoan } from "@/app/actions";
-import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown } from "lucide-react";
+import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera } from "lucide-react";
 
 type Customer = {
   id: string;
   name: string;
   memberId?: string;
+  state?: string;
 };
 
 const initialState = { error: undefined as string | undefined };
@@ -27,6 +28,58 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
   const [principal, setPrincipal] = useState<number>(0);
   const [interest, setInterest] = useState<number>(10);
   const [weeks, setWeeks] = useState<number>(10);
+
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [compressedPhoto, setCompressedPhoto] = useState<string>("");
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setPhotoPreview(previewUrl);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const size = 150;
+        canvas.width = size;
+        canvas.height = size;
+
+        let sx = 0;
+        let sy = 0;
+        let sWidth = img.width;
+        let sHeight = img.height;
+
+        if (img.width > img.height) {
+          sx = (img.width - img.height) / 2;
+          sWidth = img.height;
+        } else {
+          sy = (img.height - img.width) / 2;
+          sHeight = img.width;
+        }
+
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, size, size);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.75);
+        setCompressedPhoto(dataUrl);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const existingStates = Array.from(
+    new Set(
+      customers
+        .map(c => c.state)
+        .filter((s): s is string => !!s && s.trim() !== "")
+    )
+  ).sort();
 
   const calculateInstallment = () => {
     if (weeks <= 0) return 0;
@@ -101,11 +154,62 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
+            {/* Profile Photo Uploader */}
+            <div className="col-span-2 flex flex-col items-center justify-center gap-3 py-2">
+              <div className="relative group">
+                <div 
+                  onClick={() => document.getElementById("photo-input")?.click()}
+                  className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-gray-50 dark:bg-[#1C1B1A] flex items-center justify-center transition-all shadow-inner group-hover:scale-105 cursor-pointer relative"
+                >
+                  {photoPreview ? (
+                    <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary transition-colors">
+                      <Camera className="w-8 h-8 stroke-[1.5]" />
+                      <span className="text-[9px] font-black mt-1 uppercase tracking-wider">Add Photo</span>
+                    </div>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => document.getElementById("photo-input")?.click()}
+                  className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-primary-foreground border border-white dark:border-[#252322] flex items-center justify-center shadow-md hover:bg-primary/95 active:scale-90 transition-all cursor-pointer"
+                  title="Upload / Capture Photo"
+                >
+                  <Camera className="w-4 h-4 stroke-[2]" />
+                </button>
+              </div>
+              <input 
+                type="file" 
+                id="photo-input"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="hidden"
+              />
+              <input 
+                type="hidden" 
+                name="avatarDataUrl" 
+                value={compressedPhoto} 
+              />
+              {photoPreview && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotoPreview(null);
+                    setCompressedPhoto("");
+                  }}
+                  className="text-xs text-red-500 hover:text-red-650 font-bold transition-colors cursor-pointer"
+                >
+                  Remove Photo
+                </button>
+              )}
+            </div>
+
             <div className="space-y-2 col-span-2">
               <label htmlFor="name" className="text-sm font-semibold text-gray-750 dark:text-white/70">Full Name</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-neon-lime dark:group-focus-within:text-neon-lime transition-colors" />
+                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
                 <input 
                   type="text" 
@@ -113,30 +217,32 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   name="name"
                   required
                   placeholder="e.g. John Doe" 
-                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-450 dark:placeholder:text-white/30 focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/5 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
+            
             <div className="space-y-2 col-span-2 sm:col-span-1">
               <label htmlFor="memberId" className="text-sm font-semibold text-gray-750 dark:text-white/70">Member ID <span className="text-gray-400 font-normal">(optional)</span></label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Hash className="h-5 w-5 text-gray-400 group-focus-within:text-neon-lime dark:group-focus-within:text-neon-lime transition-colors" />
+                  <Hash className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
                 <input 
                   type="text" 
                   id="memberId"
                   name="memberId"
                   placeholder="e.g. M-1004" 
-                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/5 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
+            
             <div className="space-y-2 col-span-2 sm:col-span-1">
               <label htmlFor="phone" className="text-sm font-semibold text-gray-750 dark:text-white/70">Phone Number</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-neon-lime dark:group-focus-within:text-neon-lime transition-colors" />
+                  <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
                 <input 
                   type="tel" 
@@ -144,31 +250,73 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   name="phone"
                   required
                   placeholder="e.g. 555-0199" 
-                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/5 transition shadow-sm font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
+            
             <div className="space-y-2 col-span-2">
               <label htmlFor="gender" className="text-sm font-semibold text-gray-750 dark:text-white/70">Gender</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-neon-lime dark:group-focus-within:text-neon-lime transition-colors" />
+                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
                 <select
                   id="gender"
                   name="gender"
                   defaultValue="male"
-                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/5 transition shadow-sm appearance-none font-medium"
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm appearance-none font-medium"
                   required
                 >
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                  <ChevronDown className="h-5 w-5 text-gray-400 dark:text-white/45 group-focus-within:text-neon-lime dark:group-focus-within:text-neon-lime transition-colors" />
+                  <ChevronDown className="h-5 w-5 text-gray-400 dark:text-white/45 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
             </div>
+
+            {/* State/Village Collection Area */}
+            <div className="space-y-2 col-span-2">
+              <label htmlFor="state" className="text-sm font-semibold text-gray-750 dark:text-white/70">Collection Area (State/Village)</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
+                </div>
+                <input 
+                  type="text" 
+                  id="state"
+                  name="state"
+                  list="states-list"
+                  placeholder="Search or enter area (e.g. Village West, Ward 4)" 
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
+                />
+                <datalist id="states-list">
+                  {existingStates.map(state => (
+                    <option key={state} value={state} />
+                  ))}
+                </datalist>
+              </div>
+            </div>
+
+            {/* Landmark/Address */}
+            <div className="space-y-2 col-span-2">
+              <label htmlFor="address" className="text-sm font-semibold text-gray-750 dark:text-white/70">Street Address / Landmark <span className="text-gray-400 font-normal">(optional)</span></label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
+                </div>
+                <input 
+                  type="text" 
+                  id="address"
+                  name="address"
+                  placeholder="e.g. Near the temple, House #12" 
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
+                />
+              </div>
+            </div>
+
           </div>
         )}
       </div>

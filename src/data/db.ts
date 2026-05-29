@@ -41,6 +41,7 @@ export type Customer = {
   phone: string;
   avatarUrl?: string;
   address?: string;
+  state?: string;
   createdAt: string;
 };
 
@@ -73,20 +74,42 @@ export type CustomerNote = {
   createdAt: string;
 };
 
+function parseAddressField(rawAddress: string | undefined | null) {
+  let address = "";
+  let state = "";
+  if (rawAddress) {
+    if (rawAddress.trim().startsWith("{")) {
+      try {
+        const parsed = JSON.parse(rawAddress);
+        address = parsed.address || "";
+        state = parsed.state || "";
+      } catch {
+        address = rawAddress;
+      }
+    } else {
+      address = rawAddress;
+    }
+  }
+  return { address, state };
+}
 
 export async function getCustomers(): Promise<Customer[]> {
   const { data, error } = await supabase.from("customers").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching customers:", error);
   
-  return (data || []).map(row => ({
-    id: row.id,
-    memberId: row.member_id,
-    name: row.name,
-    phone: row.phone,
-    avatarUrl: row.avatar_url,
-    address: row.address,
-    createdAt: row.created_at
-  }));
+  return (data || []).map(row => {
+    const { address, state } = parseAddressField(row.address);
+    return {
+      id: row.id,
+      memberId: row.member_id,
+      name: row.name,
+      phone: row.phone,
+      avatarUrl: row.avatar_url,
+      address,
+      state,
+      createdAt: row.created_at
+    };
+  });
 }
 
 export async function getCustomerById(id: string): Promise<Customer | null> {
@@ -97,13 +120,15 @@ export async function getCustomerById(id: string): Promise<Customer | null> {
   }
   if (!data) return null;
   
+  const { address, state } = parseAddressField(data.address);
   return {
     id: data.id,
     memberId: data.member_id,
     name: data.name,
     phone: data.phone,
     avatarUrl: data.avatar_url,
-    address: data.address,
+    address,
+    state,
     createdAt: data.created_at
   };
 }

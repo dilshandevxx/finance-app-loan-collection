@@ -156,6 +156,14 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                           </div>
                           
                           <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-gray-500 dark:text-white/50 min-w-0 flex-wrap font-medium">
+                            {customer.state && (
+                              <>
+                                <span className="flex items-center gap-0.5 text-primary dark:text-white/70 font-semibold uppercase bg-primary/10 dark:bg-white/10 px-1.5 py-0.5 rounded text-[10px] shrink-0">
+                                  📍 {customer.state}
+                                </span>
+                                <span className="shrink-0 text-gray-300 dark:text-white/20 hidden sm:block">•</span>
+                              </>
+                            )}
                             <span className="shrink-0 text-gray-400 dark:text-white/40">ID: {customer.memberId || customer.id}</span>
                             <span className="shrink-0 text-gray-300 dark:text-white/20 hidden sm:block">•</span>
                             <span className="flex items-center gap-1 shrink-0">

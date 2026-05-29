@@ -46,6 +46,11 @@ export default async function CustomerDetails({ params }: Props) {
             
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
             <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            {customer.state && (
+              <span className="mt-2 px-3 py-1 text-xs font-black bg-primary/10 dark:bg-white/10 text-primary dark:text-white/80 rounded-full flex items-center gap-1 select-none">
+                📍 {customer.state}
+              </span>
+            )}
             
             <CustomerContactActions customer={customer} />
 
@@ -102,6 +107,11 @@ export default async function CustomerDetails({ params }: Props) {
             
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
             <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            {customer.state && (
+              <span className="mt-2 px-3 py-1 text-xs font-black bg-primary/10 dark:bg-white/10 text-primary dark:text-white/80 rounded-full flex items-center gap-1 select-none">
+                📍 {customer.state}
+              </span>
+            )}
             
             <CustomerContactActions customer={customer} />
 
@@ -133,7 +143,7 @@ export default async function CustomerDetails({ params }: Props) {
           </div>
 
           {/* Map/Address */}
-          {customer.address && (
+          {(customer.state || customer.address) && (
             <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-0">
                 <div className="h-24 bg-secondary w-full relative flex items-center justify-center overflow-hidden">
@@ -141,7 +151,11 @@ export default async function CustomerDetails({ params }: Props) {
                   <MapPin className="w-6 h-6 text-muted-foreground relative z-10" />
                 </div>
                 <div className="p-4 px-5 text-sm text-gray-600 dark:text-white/70 flex items-center gap-3">
-                  <span className="truncate">{customer.address}</span>
+                  <span className="truncate">
+                    {customer.state && <strong className="font-extrabold text-foreground mr-1">{customer.state}</strong>}
+                    {customer.state && customer.address && " • "}
+                    {customer.address}
+                  </span>
                 </div>
               </CardContent>
             </Card>
