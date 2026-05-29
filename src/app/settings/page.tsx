@@ -25,7 +25,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
-import { logout } from "@/app/auth-actions";
+import { logout, getUserProfile } from "@/app/auth-actions";
 import { clearAllData, fetchSystemVillages, createSystemVillage, fetchCompanySettings, saveCompanySettings } from "@/app/actions";
 
 export default function SettingsPage() {
@@ -46,6 +46,9 @@ export default function SettingsPage() {
   const [companyLogo, setCompanyLogo] = useState("");
   const [companyLogoPreview, setCompanyLogoPreview] = useState("");
   const [isSavingCompany, setIsSavingCompany] = useState(false);
+
+  // User Profile state
+  const [userProfile, setUserProfile] = useState<{name: string, email: string, pin: string} | null>(null);
 
   const loadVillages = async () => {
     try {
@@ -70,6 +73,11 @@ export default function SettingsPage() {
   useEffect(() => {
     loadVillages();
     loadCompanySettings();
+    getUserProfile().then(res => {
+      if (res) {
+        setUserProfile(res);
+      }
+    });
     setThemeMounted(true);
   }, []);
 
@@ -262,9 +270,18 @@ export default function SettingsPage() {
               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Agent Profile" className="w-full h-full object-cover" />
             </div>
           </div>
-          <div className="flex flex-col gap-1 z-10">
-            <Greeting name={config.agentName} />
-            <span className="text-muted-foreground text-xs sm:text-sm font-semibold tracking-widest uppercase mt-0.5">ID: AGT-84729</span>
+          <div className="flex flex-col gap-1 z-10 w-full overflow-hidden">
+            <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight truncate">
+              {userProfile?.name || config.agentName}
+            </h2>
+            <div className="flex flex-col gap-0.5 mt-1">
+              <span className="text-muted-foreground text-xs sm:text-sm font-medium truncate">
+                {userProfile?.email || "Loading email..."}
+              </span>
+              <span className="text-muted-foreground text-[10px] sm:text-xs font-semibold tracking-widest uppercase opacity-70">
+                PIN: {userProfile?.pin ? "••••" : "Not Set"}
+              </span>
+            </div>
           </div>
         </CardContent>
       </Card>

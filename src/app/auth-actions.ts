@@ -157,3 +157,35 @@ export async function updateAgentPin(currentPin: string, newPin: string) {
   }
   return { success: true };
 }
+
+export async function getUserProfile() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("full_name, email, hashed_pin")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  let displayName = "Agent";
+  if (profile?.full_name) {
+    displayName = profile.full_name;
+  } else if (user.user_metadata?.full_name) {
+    displayName = user.user_metadata.full_name;
+  } else if (profile?.email) {
+    displayName = profile.email.split('@')[0];
+    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+  } else if (user.email) {
+    displayName = user.email.split('@')[0];
+    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+  }
+
+  return {
+    id: user.id,
+    name: displayName,
+    email: profile?.email || user.email || "No email",
+    pin: profile?.hashed_pin || "Not set"
+  };
+}
