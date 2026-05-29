@@ -23,27 +23,27 @@
   --ring: #3A5A40;
 }
 
-/* ─── Dark Mode: deep warm charcoal & linen ──────────────── */
+/* ─── Dark Mode: Deep Obsidian Sage & Olive ──────────────── */
 .dark {
-  --background: #1C1B1A;
-  --foreground: #EFECE6;
-  --card: #252322;
-  --card-foreground: #EFECE6;
-  --popover: #252322;
-  --popover-foreground: #EFECE6;
-  --primary: #EFECE6;
-  --primary-foreground: #1C1B1A;
-  --secondary: #33302E;
-  --secondary-foreground: #EFECE6;
-  --muted: #33302E;
-  --muted-foreground: #95918B;
-  --accent: #33302E;
-  --accent-foreground: #EFECE6;
-  --destructive: #421D1A;
-  --destructive-foreground: #EC9D93;
-  --border: #33302E;
-  --input: #252322;
-  --ring: #EFECE6;
+  --background: #111512;
+  --foreground: #E2E8E4;
+  --card: #181E19;
+  --card-foreground: #E2E8E4;
+  --popover: #181E19;
+  --popover-foreground: #E2E8E4;
+  --primary: #8AB89E;
+  --primary-foreground: #0D120F;
+  --secondary: #222B24;
+  --secondary-foreground: #E2E8E4;
+  --muted: #222B24;
+  --muted-foreground: #7D8F82;
+  --accent: #222B24;
+  --accent-foreground: #E2E8E4;
+  --destructive: #3D1F1C;
+  --destructive-foreground: #EEA097;
+  --border: #222B24;
+  --input: #181E19;
+  --ring: #8AB89E;
 }
 
 @theme inline {
