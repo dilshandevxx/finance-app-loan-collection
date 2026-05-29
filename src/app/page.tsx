@@ -95,23 +95,27 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 relative overflow-hidden">
-              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3 h-3 text-zinc-900 dark:text-zinc-50" /> Active Loans
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-[0_4px_30px_rgba(139,92,246,0.4)] relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3 text-white" /> Active Loans
               </div>
               <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
-              <span className="text-[10px] text-zinc-500 font-medium">loans running</span>
+              <span className="text-[10px] text-white/70 font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-900 dark:text-red-50 relative overflow-hidden">
-              <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400 text-[10px] font-bold uppercase tracking-wider">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-rose-500 to-orange-500 text-white shadow-[0_4px_30px_rgba(244,63,94,0.4)] relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3" /> Overdue
               </div>
               <span className="text-4xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
                 {formatLKR(overdueAmount)}
               </span>
-              <span className="text-[10px] text-red-600/70 dark:text-red-400/70 font-medium">total overdue amount</span>
+              <span className="text-[10px] text-white/70 font-medium">total overdue amount</span>
             </div>
           </div>
 
