@@ -24,7 +24,7 @@ const data = [
 ];
 
 // Vibrant bar colors cycling through the vibe palette
-const COLORS = ["#7c6dbf", "#e05470", "#6ab4e8", "#e8849a", "#7c6dbf", "#e05470", "#6ab4e8"];
+const COLORS = ["#3A5A40", "#C25946", "#D4A373", "#588157", "#E76F51", "#344E41", "#E9C46A"];
 
 export function AnalyticsChart() {
   const { resolvedTheme } = useTheme();
@@ -35,10 +35,10 @@ export function AnalyticsChart() {
   if (!mounted) return <div className="h-[200px] w-full animate-pulse bg-secondary rounded-2xl" />;
 
   const isDark = resolvedTheme === "dark";
-  const textColor  = isDark ? "#9e99c8" : "#6b6899";
-  const gridColor  = isDark ? "#2e2a4a" : "#e2dff5";
-  const tooltipBg  = isDark ? "#1e1a36" : "#ffffff";
-  const tooltipBdr = isDark ? "#2e2a4a" : "#e2dff5";
+  const textColor  = isDark ? "#95918B" : "#797672";
+  const gridColor  = isDark ? "#33302E" : "#E6E2D8";
+  const tooltipBg  = isDark ? "#252322" : "#ffffff";
+  const tooltipBdr = isDark ? "#33302E" : "#E6E2D8";
 
   return (
     <div className="h-[200px] w-full">
@@ -64,14 +64,14 @@ export function AnalyticsChart() {
               borderRadius: "16px",
               border: `1px solid ${tooltipBdr}`,
               boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-              color: isDark ? "#f0eeff" : "#13102a",
+              color: isDark ? "#EFECE6" : "#2D2B2A",
               fontSize: 12,
             }}
-            itemStyle={{ color: isDark ? "#f0eeff" : "#13102a" }}
+            itemStyle={{ color: isDark ? "#EFECE6" : "#2D2B2A" }}
             cursor={{ fill: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
           />
           {/* Expected – muted tint */}
-          <Bar dataKey="expected" name="Expected" radius={[8, 8, 4, 4]} fill={isDark ? "#2a2548" : "#ede9fc"} />
+          <Bar dataKey="expected" name="Expected" radius={[8, 8, 4, 4]} fill={isDark ? "#33302E" : "#E6E2D8"} />
           {/* Collected – vibrant cycling colors */}
           <Bar dataKey="collected" name="Collected" radius={[8, 8, 4, 4]}>
             {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}

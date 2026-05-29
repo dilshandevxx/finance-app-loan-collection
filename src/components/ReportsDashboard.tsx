@@ -253,7 +253,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       {/* Filters Area */}
       <section className="print:hidden bg-card border border-border rounded-3xl p-5 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-5 relative overflow-hidden">
         {/* Subtle glow */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#7c6dbf]/5 rounded-full blur-[50px] pointer-events-none -z-0" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[50px] pointer-events-none -z-0" />
         
         <div className="flex flex-col gap-3.5 w-full sm:w-auto relative z-10">
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -264,7 +264,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   type="date" 
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
+                  className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-primary/50 transition w-full"
                   style={{ colorScheme: "dark" }}
                 />
                 <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
@@ -277,7 +277,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   type="date" 
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
+                  className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-primary/50 transition w-full"
                   style={{ colorScheme: "dark" }}
                 />
                 <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
@@ -312,13 +312,13 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto relative z-10 mt-2 sm:mt-0">
-          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-[#7c6dbf]/10 text-[#7c6dbf] hover:bg-[#7c6dbf]/20 border border-[#7c6dbf]/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all">
+          <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
             <Table className="w-4 h-4 shrink-0" /> Excel
           </Button>
-          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-[#6ab4e8]/10 text-[#6ab4e8] hover:bg-[#6ab4e8]/20 border border-[#6ab4e8]/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all">
+          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-[#C25946]/10 text-[#C25946] hover:bg-[#C25946]/20 border border-[#C25946]/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
             <Download className="w-4 h-4 shrink-0" /> CSV
           </Button>
-          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-secondary text-foreground hover:bg-border/50 border border-border rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all">
+          <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-secondary text-foreground hover:bg-border/50 border border-border rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
             <Printer className="w-4 h-4 shrink-0" /> PDF
           </Button>
         </div>
@@ -350,24 +350,24 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       {/* Summary Metrics */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#7c6dbf]/10 rounded-full blur-[30px] -z-0" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[30px] -z-0" />
           <CardContent className="p-6 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Expected</span>
             <div className="text-3xl font-black mt-1 text-foreground tracking-tight">${totalExpected.toFixed(2)}</div>
           </CardContent>
         </Card>
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#6ab4e8]/10 rounded-full blur-[30px] -z-0" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-green-600/10 dark:bg-green-500/10 rounded-full blur-[30px] -z-0" />
           <CardContent className="p-6 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Collected</span>
-            <div className="text-3xl font-black mt-1 text-[#6ab4e8] tracking-tight">${totalCollected.toFixed(2)}</div>
+            <div className="text-3xl font-black mt-1 text-green-600 dark:text-green-400 tracking-tight">${totalCollected.toFixed(2)}</div>
           </CardContent>
         </Card>
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#e05470]/10 rounded-full blur-[30px] -z-0" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[30px] -z-0" />
           <CardContent className="p-6 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Pending</span>
-            <div className="text-3xl font-black mt-1 text-[#e05470] tracking-tight">${totalPending.toFixed(2)}</div>
+            <div className="text-3xl font-black mt-1 text-red-500 dark:text-red-400 tracking-tight">${totalPending.toFixed(2)}</div>
           </CardContent>
         </Card>
       </section>
@@ -382,19 +382,19 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6ab4e8" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#6ab4e8" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#3A5A40" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#3A5A40" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#7c6dbf" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#7c6dbf" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#D4A373" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#D4A373" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <XAxis 
                     dataKey="date" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fontSize: 11, fill: '#6b6899' }} 
+                    tick={{ fontSize: 11, fill: '#888888' }} 
                     dy={10}
                     tickFormatter={(val) => {
                       const d = new Date(val);
@@ -404,20 +404,20 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fontSize: 11, fill: '#6b6899' }}
+                    tick={{ fontSize: 11, fill: '#888888' }}
                     tickFormatter={(value) => `$${value}`}
                   />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#1e1a36', borderRadius: '16px', border: '1px solid #2e2a4a', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2)', color: '#f0eeff' }}
+                    contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', color: 'var(--foreground)' }}
                     itemStyle={{ fontWeight: 'bold' }}
-                    labelStyle={{ color: '#9e99c8', marginBottom: '8px', fontSize: '12px' }}
+                    labelStyle={{ color: 'var(--muted-foreground)', marginBottom: '8px', fontSize: '12px' }}
                     formatter={(value: any) => [`$${Number(value).toFixed(2)}`, undefined]}
-                    cursor={{ stroke: 'rgba(255,255,255,0.05)', strokeWidth: 2 }}
+                    cursor={{ stroke: 'var(--border)', strokeWidth: 1.5 }}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="expected" 
-                    stroke="#7c6dbf" 
+                    stroke="#D4A373" 
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     fillOpacity={1} 
@@ -427,7 +427,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   <Area 
                     type="monotone" 
                     dataKey="collected" 
-                    stroke="#6ab4e8" 
+                    stroke="#3A5A40" 
                     strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#colorCollected)" 

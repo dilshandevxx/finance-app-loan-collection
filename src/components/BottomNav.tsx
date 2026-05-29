@@ -19,7 +19,7 @@ export function BottomNav() {
     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center md:pb-0 md:left-4 md:right-auto md:top-1/2 md:-translate-y-1/2 md:flex-col">
       <nav className="
         flex md:flex-col items-center
-        bg-card/95 dark:bg-[#1e1a36]/95
+        bg-card/95
         backdrop-blur-2xl
         border-t md:border border-border
         rounded-t-3xl md:rounded-[2rem]
