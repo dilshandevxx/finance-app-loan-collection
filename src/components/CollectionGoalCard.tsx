@@ -42,14 +42,14 @@ export function CollectionGoalCard({
     <div className="w-full rounded-[2rem] bg-card border border-border p-6 flex flex-col gap-6 shadow-sm relative overflow-hidden">
       
       {/* Background glow accent */}
-      <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#7c6dbf]/10 rounded-full blur-[40px] pointer-events-none" />
+      <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-[40px] pointer-events-none" />
 
       {/* Main Grid: Info + Ring */}
       <div className="grid grid-cols-12 gap-4 items-center relative z-10">
         
         {/* Left Side: Goal & Amounts */}
         <div className="col-span-8 flex flex-col gap-1.5">
-          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#7c6dbf]">
+          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary">
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "Goal Achieved" : "No Collections Due") 
               : "Remaining Today"}
@@ -67,7 +67,7 @@ export function CollectionGoalCard({
           {/* Settlement Badge */}
           {totalClientsToday > 0 && (
             <div className="inline-flex items-center gap-1.5 mt-2 bg-secondary border border-border text-foreground text-[10px] font-bold px-2.5 py-1.5 rounded-full w-fit shadow-sm">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#7c6dbf]" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
               <span>{collectedClientsToday} / {totalClientsToday} clients settled</span>
             </div>
           )}
@@ -87,7 +87,7 @@ export function CollectionGoalCard({
                 cy={size / 2}
               />
               <circle
-                className="text-[#7c6dbf] transition-all duration-1000 ease-out"
+                className="text-primary transition-all duration-1000 ease-out"
                 strokeWidth={strokeWidth}
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
@@ -110,7 +110,7 @@ export function CollectionGoalCard({
       {/* Bottom CTA Buttons */}
       <div className="flex gap-3 relative z-10 pt-2 border-t border-border">
         <Link href="/new" className="flex-1">
-          <button className="w-full h-11 rounded-2xl bg-[#7c6dbf] hover:bg-[#6a5caa] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-[#7c6dbf]/30 cursor-pointer">
+          <button className="w-full h-11 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20 cursor-pointer">
             <Plus className="w-4 h-4 stroke-[2.5]" /> New Loan
           </button>
         </Link>

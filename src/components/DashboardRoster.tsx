@@ -205,7 +205,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
                             <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
                             {isOverdue && (
-                              <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-white bg-[#e05470] px-2 py-0.5 rounded-full">
+                              <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-white bg-destructive-foreground px-2 py-0.5 rounded-full">
                                 <AlertCircle className="w-2.5 h-2.5" /> Overdue
                               </span>
                             )}
@@ -217,28 +217,28 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className={`font-bold text-sm ${isOverdue ? 'text-[#e05470]' : 'text-foreground'}`}>
+                        <span className={`font-bold text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
                           ${totalAmount.toFixed(2)}
                         </span>
                         <div className="flex items-center gap-1.5">
                           <button
                             onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
                             title="WhatsApp"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-[#7c6dbf]/10 hover:bg-[#7c6dbf]/20 text-[#7c6dbf] border border-[#7c6dbf]/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageCircle className="w-4 h-4" />
                           </button>
                           <button
                             onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
                             title="SMS"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-[#6ab4e8]/10 hover:bg-[#6ab4e8]/20 text-[#6ab4e8] border border-[#6ab4e8]/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-secondary hover:bg-border/50 text-foreground border border-border transition-all active:scale-95 shrink-0 cursor-pointer"
                           >
                             <MessageSquare className="w-4 h-4" />
                           </button>
                           <Button 
                             onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
                             disabled={isPending}
-                            className="h-8 px-3 text-xs font-bold bg-[#7c6dbf] hover:bg-[#6a5caa] text-white rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-[#7c6dbf]/20"
+                            className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
                           >
                             Pay
                           </Button>

@@ -48,11 +48,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 md:pb-0 relative overflow-x-hidden">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <OfflineProvider>
             {/* Ambient background glows for premium desktop look */}
-            <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-neon-lime/5 dark:bg-neon-lime/10 blur-[120px] pointer-events-none z-0" />
-            <div className="hidden md:block absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-500/5 dark:bg-blue-500/10 blur-[150px] pointer-events-none z-0" />
+            <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/3 dark:bg-primary/5 blur-[120px] pointer-events-none z-0" />
 
             <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-2.5 sm:px-4 md:px-8 pt-8 md:pl-32 relative z-10">
               {children}

@@ -57,24 +57,24 @@ export default async function Home() {
 
       {/* ── Metric Pills ─────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3">
-        {/* Active Loans – violet */}
-        <div className="rounded-2xl p-4 flex flex-col gap-1 bg-[#7c6dbf] text-white shadow-lg shadow-[#7c6dbf]/30">
-          <div className="flex items-center gap-1.5 text-white/70 text-[10px] font-bold uppercase tracking-wider">
+        {/* Active Loans – Forest Green */}
+        <div className="rounded-2xl p-4 flex flex-col gap-1 bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+          <div className="flex items-center gap-1.5 text-primary-foreground/70 text-[10px] font-bold uppercase tracking-wider">
             <Users className="w-3 h-3" /> Active
           </div>
           <span className="text-3xl font-black tracking-tight">{activeLoans}</span>
-          <span className="text-[10px] text-white/60 font-medium">loans running</span>
+          <span className="text-[10px] text-primary-foreground/60 font-medium">loans running</span>
         </div>
 
-        {/* Overdue – coral */}
-        <div className="rounded-2xl p-4 flex flex-col gap-1 bg-[#e05470] text-white shadow-lg shadow-[#e05470]/30">
-          <div className="flex items-center gap-1.5 text-white/70 text-[10px] font-bold uppercase tracking-wider">
+        {/* Overdue – Terracotta */}
+        <div className="rounded-2xl p-4 flex flex-col gap-1 bg-destructive-foreground text-white shadow-lg shadow-destructive-foreground/20">
+          <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
             <AlertCircle className="w-3 h-3" /> Overdue
           </div>
           <span className="text-3xl font-black tracking-tight truncate" title={`$${overdueAmount.toFixed(2)}`}>
             ${overdueAmount.toFixed(0)}
           </span>
-          <span className="text-[10px] text-white/60 font-medium">amount due</span>
+          <span className="text-[10px] text-white/70 font-medium">amount due</span>
         </div>
       </div>
 

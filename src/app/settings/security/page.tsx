@@ -58,26 +58,25 @@ export default function SecuritySettingsPage() {
 
   return (
     <div className="flex flex-col gap-6 pb-24 max-w-4xl mx-auto w-full min-h-screen px-2 sm:px-4">
-      {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-4">
+      <header className="w-full flex items-center justify-between bg-card p-4 rounded-[1.75rem] border border-border shadow-sm relative overflow-hidden mb-4">
         <Link href="/settings">
           <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
-        <span className="text-sm font-semibold tracking-tight text-black dark:text-white">Security & PIN Settings</span>
+        <span className="text-sm font-semibold tracking-tight text-foreground">Security & PIN Settings</span>
         <div className="w-10" /> {/* Spacer */}
       </header>
 
       <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
         <CardContent className="p-0">
-          <div className="p-8 border-b border-gray-100 dark:border-border/60 flex flex-col items-center justify-center gap-4 text-center">
-            <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-2">
-              <Shield className="w-8 h-8 text-blue-500" />
+          <div className="p-8 border-b border-gray-100 dark:border-border/30 flex flex-col items-center justify-center gap-4 text-center">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              <Shield className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-black dark:text-white">Agent Security PIN</h2>
-              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
+              <h2 className="text-xl font-bold text-foreground">Agent Security PIN</h2>
+              <p className="text-sm text-muted-foreground mt-1">
                 Manage your Agent Login PIN to keep your collection dashboard secure.
               </p>
             </div>
@@ -87,7 +86,7 @@ export default function SecuritySettingsPage() {
             <form onSubmit={handleUpdatePin} className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-black dark:text-white flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <KeyRound className="w-4 h-4 text-gray-400" /> Update Agent PIN
                   </h3>
                   
@@ -95,7 +94,7 @@ export default function SecuritySettingsPage() {
                   <button
                     type="button"
                     onClick={() => setShowPins(!showPins)}
-                    className="text-xs font-bold text-black dark:text-neon-lime hover:opacity-80 flex items-center gap-1.5 transition-colors cursor-pointer select-none"
+                    className="text-xs font-bold text-primary hover:opacity-80 flex items-center gap-1.5 transition-colors cursor-pointer select-none"
                   >
                     {showPins ? (
                       <>
@@ -119,8 +118,8 @@ export default function SecuritySettingsPage() {
                 )}
 
                 {success && (
-                  <div className="p-4 rounded-2xl bg-neon-lime/10 border border-neon-lime/20 text-black dark:text-neon-lime text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-neon-lime" />
+                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary text-sm font-medium flex items-center gap-2 animate-in fade-in duration-200">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-primary" />
                     <span>{success}</span>
                   </div>
                 )}
@@ -136,7 +135,7 @@ export default function SecuritySettingsPage() {
                       value={currentPin}
                       onChange={(e) => handleNumericInput(e.target.value, setCurrentPin)}
                       placeholder={showPins ? "0000" : "••••"}
-                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/20 transition-colors tracking-widest text-lg font-bold"
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-foreground focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors tracking-widest text-lg font-bold"
                     />
                   </div>
 
@@ -151,7 +150,7 @@ export default function SecuritySettingsPage() {
                         value={newPin}
                         onChange={(e) => handleNumericInput(e.target.value, setNewPin)}
                         placeholder={showPins ? "0000" : "••••"}
-                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/20 transition-colors tracking-widest text-lg font-bold"
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-foreground focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -164,7 +163,7 @@ export default function SecuritySettingsPage() {
                         value={confirmPin}
                         onChange={(e) => handleNumericInput(e.target.value, setConfirmPin)}
                         placeholder={showPins ? "0000" : "••••"}
-                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-black dark:text-white focus:outline-none focus:border-neon-lime dark:focus:border-neon-lime focus:ring-2 focus:ring-neon-lime/20 transition-colors tracking-widest text-lg font-bold"
+                        className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3.5 text-foreground focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors tracking-widest text-lg font-bold"
                       />
                     </div>
                   </div>
@@ -173,10 +172,10 @@ export default function SecuritySettingsPage() {
                 <Button
                   type="submit"
                   disabled={isPending || currentPin.length < 4 || newPin.length < 4 || confirmPin.length < 4}
-                  className="w-full mt-4 bg-neon-lime hover:bg-neon-lime/90 text-black rounded-2xl h-14 font-extrabold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+                  className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl h-14 font-extrabold text-base transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50 border-none"
                 >
                   {isPending ? (
-                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                   ) : (
                     "Update Agent PIN"
                   )}

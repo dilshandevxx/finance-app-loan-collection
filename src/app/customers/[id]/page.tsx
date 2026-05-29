@@ -28,13 +28,13 @@ export default async function CustomerDetails({ params }: Props) {
     return (
       <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
         {/* Header */}
-        <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-2">
+        <header className="w-full flex items-center justify-between bg-card p-4 rounded-[1.75rem] border border-border shadow-sm relative overflow-hidden mb-2">
           <Link href="/customers">
             <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer relative z-10">
               <ChevronLeft className="w-5 h-5" />
             </button>
           </Link>
-          <span className="text-sm font-semibold tracking-tight text-black dark:text-white">Customer Profile</span>
+          <span className="text-sm font-semibold tracking-tight text-foreground">Customer Profile</span>
           <div className="w-10" /> {/* Spacer */}
         </header>
 
@@ -44,8 +44,8 @@ export default async function CustomerDetails({ params }: Props) {
               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
             </div>
             
-            <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white text-center">{customer.name}</h1>
-            <span className="text-gray-500 dark:text-white/50 text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
+            <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
             
             <CustomerContactActions customer={customer} />
 
@@ -74,13 +74,13 @@ export default async function CustomerDetails({ params }: Props) {
   return (
     <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
       {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-br from-neutral-50/60 via-white to-neutral-100/40 dark:from-[#1a1a1c] dark:via-[#141416] dark:to-[#0c0c0d] p-4 rounded-[1.75rem] border border-neutral-200 dark:border-neutral-800/60 shadow-sm relative overflow-hidden mb-2">
+      <header className="w-full flex items-center justify-between bg-card p-4 rounded-[1.75rem] border border-border shadow-sm relative overflow-hidden mb-2">
         <Link href="/">
           <button className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-muted border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white hover:bg-gray-200 dark:hover:bg-[#1f1f21] transition-colors shadow-sm cursor-pointer relative z-10">
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
-        <span className="text-sm font-semibold tracking-tight text-black dark:text-white">Customer Profile</span>
+        <span className="text-sm font-semibold tracking-tight text-foreground">Customer Profile</span>
         <div className="w-10" /> {/* Spacer */}
       </header>
 
@@ -91,7 +91,7 @@ export default async function CustomerDetails({ params }: Props) {
           {/* Profile Card */}
           <div className="flex flex-col items-center bg-white dark:bg-card border border-gray-200 dark:border-border rounded-[2rem] p-8 shadow-sm relative">
             
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neon-lime/20 dark:bg-neon-lime/10 text-black dark:text-neon-lime text-xs font-black border border-neon-lime/25">
+            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black border border-primary/20">
               <TrendingUp className="w-3.5 h-3.5" />
               {reliabilityScore}
             </div>
@@ -100,27 +100,27 @@ export default async function CustomerDetails({ params }: Props) {
               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
             </div>
             
-            <h1 className="text-2xl font-bold tracking-tight mb-1 text-black dark:text-white text-center">{customer.name}</h1>
-            <span className="text-gray-500 dark:text-white/50 text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
+            <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
             
             <CustomerContactActions customer={customer} />
 
             <div className="mt-8 text-center w-full">
-              <span className="text-gray-500 dark:text-white/50 text-sm font-medium">Remaining Balance</span>
-              <div className="text-5xl font-bold tracking-tighter mt-1 text-black dark:text-white">
-                ${Math.floor(loan.remainingBalance)}<span className="text-gray-400 dark:text-white/40 text-3xl">.{(loan.remainingBalance % 1).toFixed(2).substring(2)}</span>
+              <span className="text-muted-foreground text-sm font-medium">Remaining Balance</span>
+              <div className="text-5xl font-bold tracking-tighter mt-1 text-foreground">
+                ${Math.floor(loan.remainingBalance)}<span className="text-muted-foreground text-3xl">.{(loan.remainingBalance % 1).toFixed(2).substring(2)}</span>
               </div>
             </div>
 
             {/* Progress Bar */}
             <div className="w-full mt-8">
-              <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-white/50 mb-2">
+              <div className="flex justify-between text-xs font-medium text-muted-foreground mb-2">
                 <span>{paidCount} of {installments.length} Paid</span>
                 <span>{progressPercent}%</span>
               </div>
               <div className="w-full h-2 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-black dark:bg-white rounded-full transition-all duration-500 ease-out" 
+                  className="h-full bg-primary rounded-full transition-all duration-500 ease-out" 
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -136,9 +136,9 @@ export default async function CustomerDetails({ params }: Props) {
           {customer.address && (
             <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-0">
-                <div className="h-24 bg-gray-100 dark:bg-muted w-full relative flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-black dark:from-white to-transparent mix-blend-overlay" />
-                  <MapPin className="w-6 h-6 text-gray-400 dark:text-white/30 relative z-10" />
+                <div className="h-24 bg-secondary w-full relative flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 opacity-10 bg-primary/20 mix-blend-overlay" />
+                  <MapPin className="w-6 h-6 text-muted-foreground relative z-10" />
                 </div>
                 <div className="p-4 px-5 text-sm text-gray-600 dark:text-white/70 flex items-center gap-3">
                   <span className="truncate">{customer.address}</span>
@@ -153,21 +153,21 @@ export default async function CustomerDetails({ params }: Props) {
           
           {/* Details List */}
           <section>
-            <h3 className="text-lg font-semibold mb-4 text-black dark:text-white tracking-tight">Loan Details</h3>
+            <h3 className="text-lg font-semibold mb-4 text-foreground tracking-tight">Loan Details</h3>
             <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-5 flex flex-col gap-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 dark:text-white/50 text-sm">Total Amount</span>
-                  <span className="font-medium text-black dark:text-white">${loan.principalAmount.toFixed(2)}</span>
+                  <span className="text-muted-foreground text-sm">Total Amount</span>
+                  <span className="font-medium text-foreground">${loan.principalAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 dark:text-white/50 text-sm">Weekly Installment</span>
-                  <span className="font-medium text-black dark:text-white">${loan.weeklyInstallment.toFixed(2)}</span>
+                  <span className="text-muted-foreground text-sm">Weekly Installment</span>
+                  <span className="font-medium text-foreground">${loan.weeklyInstallment.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500 dark:text-white/50 text-sm">Status</span>
-                  <span className="font-bold text-black dark:text-neon-lime bg-neon-lime/10 border border-neon-lime/20 px-2 py-0.5 rounded-full text-xs flex items-center gap-1.5 uppercase tracking-wide">
-                    <div className="w-1.5 h-1.5 rounded-full bg-neon-lime" />
+                  <span className="text-muted-foreground text-sm">Status</span>
+                  <span className="font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full text-xs flex items-center gap-1.5 uppercase tracking-wide">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                     {loan.status}
                   </span>
                 </div>
@@ -177,41 +177,41 @@ export default async function CustomerDetails({ params }: Props) {
 
           {/* Installments Timeline */}
           <section>
-            <h3 className="text-lg font-semibold mb-4 text-black dark:text-white tracking-tight">Timeline</h3>
+            <h3 className="text-lg font-semibold mb-4 text-foreground tracking-tight">Timeline</h3>
             <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm p-2">
               <CardContent className="p-0 relative">
                 {/* Vertical Timeline Line */}
-                <div className="absolute left-[39px] top-8 bottom-8 w-px bg-gray-200 dark:bg-[#222]" />
+                <div className="absolute left-[39px] top-8 bottom-8 w-px bg-gray-200 dark:bg-border" />
 
                 <div className="flex flex-col">
                   {installments.map((inst, i) => {
                     const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
                     
                     return (
-                      <div key={inst.id} className={`flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-[#111] transition-colors rounded-xl ${i === 0 ? 'mt-2' : ''} ${i === installments.length - 1 ? 'mb-2' : ''}`}>
+                      <div key={inst.id} className={`flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl ${i === 0 ? 'mt-2' : ''} ${i === installments.length - 1 ? 'mb-2' : ''}`}>
                         
                         <div className="flex items-center gap-4 relative z-10">
                           <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
                             {inst.status === "PAID" ? (
-                              <CheckCircle2 className="w-6 h-6 text-black dark:text-neon-lime" />
+                              <CheckCircle2 className="w-6 h-6 text-primary" />
                             ) : isOverdue ? (
-                              <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400" />
+                              <AlertCircle className="w-6 h-6 text-destructive-foreground" />
                             ) : (
-                              <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-[#444] bg-white dark:bg-card" />
+                              <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-border bg-white dark:bg-card" />
                             )}
                           </div>
                           <div className="flex flex-col">
-                            <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>Week {i + 1}</span>
-                            <span className="text-xs text-gray-400 dark:text-white/40">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>Week {i + 1}</span>
+                            <span className="text-xs text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                           </div>
                         </div>
 
                         <div className="flex flex-col items-end">
-                          <span className={`font-medium text-sm ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
+                          <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
                             ${inst.amount.toFixed(2)}
                           </span>
                           {inst.paidDate && (
-                            <span className="text-xs text-gray-400 dark:text-white/40">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                            <span className="text-xs text-muted-foreground">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                           )}
                         </div>
 
@@ -229,8 +229,8 @@ export default async function CustomerDetails({ params }: Props) {
       </div>
 
       {/* Sticky Mobile Action Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-black dark:via-black to-transparent z-50">
-        <div className="bg-white dark:bg-muted p-2 rounded-2xl border border-gray-200 dark:border-border shadow-2xl backdrop-blur-xl">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
+        <div className="bg-card p-2 rounded-2xl border border-border shadow-2xl backdrop-blur-xl">
           <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
         </div>
       </div>

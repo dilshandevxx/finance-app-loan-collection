@@ -133,14 +133,14 @@ export default function SettingsPage() {
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-foreground text-background px-4 py-3 rounded-2xl text-sm font-semibold flex items-center gap-2 shadow-xl animate-in slide-in-from-top-4">
-          <CheckCircle2 className="w-4 h-4 text-[#7c6dbf]" /> {showToast}
+          <CheckCircle2 className="w-4 h-4 text-primary" /> {showToast}
         </div>
       )}
 
       {/* Header */}
       <header className="flex items-center justify-between mb-2 mt-4">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Settings</h1>
-        <span className="text-[10px] font-black uppercase tracking-widest text-[#7c6dbf] bg-[#7c6dbf]/10 px-3 py-1.5 rounded-full border border-[#7c6dbf]/20 shadow-sm">
+        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm">
           Agent Profile
         </span>
       </header>
@@ -148,14 +148,14 @@ export default function SettingsPage() {
       {/* Profile Section */}
       <Card className="border-border bg-card rounded-3xl overflow-hidden shadow-sm relative">
         <div className="absolute top-0 right-0 p-4">
-          <span className="flex items-center gap-1.5 text-[#9dedc8] text-[10px] font-bold uppercase tracking-wider bg-[#9dedc8]/10 px-3 py-1 rounded-full border border-[#9dedc8]/20">
-            <div className="w-2 h-2 rounded-full bg-[#9dedc8] animate-pulse" />
+          <span className="flex items-center gap-1.5 text-primary text-[10px] font-bold uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             Active
           </span>
         </div>
         <CardContent className="p-6 sm:p-8 flex items-center gap-5 sm:gap-6">
           <div className="relative">
-            <div className="absolute -inset-[3px] bg-gradient-to-tr from-[#e05470] via-[#7c6dbf] to-[#6ab4e8] rounded-full blur-sm opacity-60" />
+            <div className="absolute -inset-[3px] bg-primary/20 rounded-full blur-xs opacity-60" />
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-secondary overflow-hidden relative border-2 border-card shadow-xl shrink-0 z-10">
               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Agent Profile" className="w-full h-full object-cover" />
             </div>
@@ -176,7 +176,7 @@ export default function SettingsPage() {
             <CardContent className="p-5 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="bg-[#6ab4e8]/10 border border-[#6ab4e8]/20 p-2.5 rounded-xl text-[#6ab4e8]">
+                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary">
                     <Smartphone className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
@@ -186,9 +186,9 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   {isInstalled ? (
-                    <span className="text-[10px] font-bold text-[#9dedc8] bg-[#9dedc8]/10 border border-[#9dedc8]/20 px-3 py-1.5 rounded-full uppercase tracking-wider">Installed</span>
+                    <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-full uppercase tracking-wider">Installed</span>
                   ) : (
-                    <span className="text-[10px] font-bold text-[#e05470] bg-[#e05470]/10 px-3 py-1.5 rounded-full uppercase tracking-wider">Not Installed</span>
+                    <span className="text-[10px] font-bold text-destructive-foreground bg-destructive px-3 py-1.5 rounded-full uppercase tracking-wider">Not Installed</span>
                   )}
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function SettingsPage() {
               {!isInstalled && deferredPrompt && (
                 <button
                   onClick={handleInstallApp}
-                  className="w-full h-11 bg-[#6ab4e8] hover:bg-[#5aa4d8] text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all mt-2 active:scale-95"
+                  className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all mt-2 active:scale-95"
                 >
                   <Download className="w-4 h-4" /> Install {config.appShortName} Now
                 </button>
@@ -220,8 +220,8 @@ export default function SettingsPage() {
               )}
 
               {!isInstalled && showTroubleshooting && (
-                <div className="bg-[#e8849a]/10 border border-[#e8849a]/20 rounded-xl p-4 mt-2 text-left flex flex-col gap-3 animate-in fade-in slide-in-from-top-2">
-                  <div className="flex items-center gap-2 text-[#e8849a] text-xs font-bold uppercase tracking-widest">
+                <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mt-2 text-left flex flex-col gap-3 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-widest">
                     <Info className="w-4 h-4" /> Why is "Install" hidden?
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
@@ -249,7 +249,7 @@ export default function SettingsPage() {
                 className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors border-b border-border group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-[#7c6dbf]/10 border border-[#7c6dbf]/20 p-2.5 rounded-xl text-[#7c6dbf] group-hover:bg-[#7c6dbf] group-hover:text-white transition-colors">
+                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <Shield className="w-5 h-5" />
                   </div>
                   <span className="text-foreground font-semibold text-sm">Security & PIN</span>
@@ -261,7 +261,7 @@ export default function SettingsPage() {
                 className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-[#e8849a]/10 border border-[#e8849a]/20 p-2.5 rounded-xl text-[#e8849a] group-hover:bg-[#e8849a] group-hover:text-white transition-colors">
+                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <Bell className="w-5 h-5" />
                   </div>
                   <span className="text-foreground font-semibold text-sm">Notifications</span>
@@ -291,7 +291,7 @@ export default function SettingsPage() {
                 onClick={() => setOfflineSyncEnabled(!offlineSyncEnabled)}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`p-2.5 rounded-xl border transition-colors ${offlineSyncEnabled ? 'bg-[#7c6dbf] border-[#7c6dbf] text-white shadow-md shadow-[#7c6dbf]/20' : 'bg-secondary border-border text-muted-foreground'}`}>
+                  <div className={`p-2.5 rounded-xl border transition-colors ${offlineSyncEnabled ? 'bg-primary border-primary text-primary-foreground shadow-md shadow-primary/20' : 'bg-secondary border-border text-muted-foreground'}`}>
                     <DownloadCloud className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col text-left">
@@ -299,7 +299,7 @@ export default function SettingsPage() {
                     <span className="text-muted-foreground text-[11px] mt-0.5">Download data for field</span>
                   </div>
                 </div>
-                <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${offlineSyncEnabled ? 'bg-[#7c6dbf]' : 'bg-secondary border border-border'}`}>
+                <div className={`w-12 h-6 rounded-full relative shadow-inner transition-colors ${offlineSyncEnabled ? 'bg-primary' : 'bg-secondary border border-border'}`}>
                   <div className={`w-4 h-4 bg-white rounded-full absolute top-1 shadow-md transition-all ${offlineSyncEnabled ? 'left-7' : 'left-1'}`} />
                 </div>
               </div>
@@ -309,8 +309,8 @@ export default function SettingsPage() {
         
         {/* Danger Zone */}
         <section className="mt-2">
-          <h3 className="text-[#e05470] text-xs font-bold mb-3 uppercase tracking-widest px-2">Danger Zone</h3>
-          <Card className="border-[#e05470]/30 bg-[#e05470]/5 rounded-2xl overflow-hidden shadow-sm">
+          <h3 className="text-destructive-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Danger Zone</h3>
+          <Card className="border-destructive-foreground/30 bg-destructive rounded-2xl overflow-hidden shadow-sm">
             <CardContent className="p-5 flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex flex-col text-left">
@@ -320,7 +320,7 @@ export default function SettingsPage() {
                 {!showClearConfirm ? (
                   <button
                     onClick={() => setShowClearConfirm(true)}
-                    className="px-4 h-10 bg-[#e05470] hover:bg-[#d0435f] text-white font-bold rounded-xl text-xs transition-all active:scale-95 shrink-0 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#e05470]/20"
+                    className="px-4 h-10 bg-destructive-foreground hover:bg-destructive-foreground/90 text-white font-bold rounded-xl text-xs transition-all active:scale-95 shrink-0 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-destructive-foreground/20"
                   >
                     <Trash2 className="w-4 h-4" /> Clear Data
                   </button>
@@ -329,7 +329,7 @@ export default function SettingsPage() {
                     <button
                       onClick={handleClearAllData}
                       disabled={isClearing}
-                      className="px-4 h-10 bg-[#e05470] hover:bg-[#d0435f] text-white font-bold rounded-xl text-xs transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#e05470]/20"
+                      className="px-4 h-10 bg-destructive-foreground hover:bg-destructive-foreground/90 text-white font-bold rounded-xl text-xs transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-destructive-foreground/20"
                     >
                       {isClearing ? (
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -355,10 +355,10 @@ export default function SettingsPage() {
           <button 
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="w-full flex items-center justify-center gap-2 h-12 rounded-2xl bg-card hover:bg-secondary text-[#e05470] font-bold transition-colors border border-border shadow-sm disabled:opacity-50 active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 h-12 rounded-2xl bg-card hover:bg-secondary text-destructive-foreground font-bold transition-colors border border-border shadow-sm disabled:opacity-50 active:scale-[0.98]"
           >
             {isSigningOut ? (
-              <div className="w-5 h-5 border-2 border-[#e05470]/30 border-t-[#e05470] rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
             ) : (
               <>
                 <LogOut className="w-5 h-5" />

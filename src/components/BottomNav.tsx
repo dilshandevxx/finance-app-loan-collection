@@ -30,7 +30,7 @@ export function BottomNav() {
       ">
         {/* Desktop logo */}
         <div className="hidden md:flex items-center justify-center mb-2 w-11 h-11">
-          <div className="w-10 h-10 rounded-full bg-[#7c6dbf]/20 border border-[#7c6dbf]/30 flex items-center justify-center font-bold text-sm text-[#7c6dbf]">
+          <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-sm text-primary">
             LT
           </div>
         </div>
@@ -48,7 +48,7 @@ export function BottomNav() {
                 rounded-2xl
                 transition-all duration-200
                 ${active
-                  ? "bg-[#7c6dbf] text-white shadow-md shadow-[#7c6dbf]/30"
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }
               `}
@@ -60,10 +60,10 @@ export function BottomNav() {
           );
         })}
 
-        {/* Center new-loan rainbow ring button (mobile only) */}
+        {/* Center new-loan solid green button (mobile only) */}
         <Link href="/new" className="flex flex-col items-center gap-0.5 group shrink-0 mx-1">
-          <div className="p-[2.5px] rounded-full bg-gradient-to-tr from-[#e05470] via-[#7c6dbf] to-[#6ab4e8] shadow-lg">
-            <div className="bg-card dark:bg-[#1e1a36] rounded-full p-2.5 flex items-center justify-center">
+          <div className="p-[2.5px] rounded-full bg-primary shadow-lg shadow-primary/15">
+            <div className="bg-card rounded-full p-2.5 flex items-center justify-center">
               <Plus className="w-5 h-5 text-foreground stroke-[2.5]" />
             </div>
           </div>
@@ -83,7 +83,7 @@ export function BottomNav() {
                 rounded-2xl
                 transition-all duration-200
                 ${active
-                  ? "bg-[#7c6dbf] text-white shadow-md shadow-[#7c6dbf]/30"
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }
               `}

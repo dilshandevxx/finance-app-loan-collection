@@ -1,49 +1,49 @@
 @import "tailwindcss";
 
-/* ─── Light Mode ─────────────────────────────────────────── */
+/* ─── Light Mode: soft warm cream & forest green ─────────── */
 :root {
-  --background: #f5f4ff;
-  --foreground: #13102a;
+  --background: #FAF8F5;
+  --foreground: #2D2B2A;
   --card: #ffffff;
-  --card-foreground: #13102a;
+  --card-foreground: #2D2B2A;
   --popover: #ffffff;
-  --popover-foreground: #13102a;
-  --primary: #7c6dbf;
-  --primary-foreground: #ffffff;
-  --secondary: #ede9fc;
-  --secondary-foreground: #13102a;
-  --muted: #ede9fc;
-  --muted-foreground: #6b6899;
-  --accent: #ede9fc;
-  --accent-foreground: #13102a;
-  --destructive: #fde8ed;
-  --destructive-foreground: #e05470;
-  --border: #e2dff5;
-  --input: #e2dff5;
-  --ring: #7c6dbf;
+  --popover-foreground: #2D2B2A;
+  --primary: #3A5A40;
+  --primary-foreground: #FAF8F5;
+  --secondary: #F0EDE6;
+  --secondary-foreground: #2D2B2A;
+  --muted: #F0EDE6;
+  --muted-foreground: #797672;
+  --accent: #F0EDE6;
+  --accent-foreground: #2D2B2A;
+  --destructive: #FDF3F1;
+  --destructive-foreground: #C25946;
+  --border: #E6E2D8;
+  --input: #FAF8F5;
+  --ring: #3A5A40;
 }
 
-/* ─── Dark Mode: deep navy-purple ────────────────────────── */
+/* ─── Dark Mode: deep warm charcoal & linen ──────────────── */
 .dark {
-  --background: #13102a;
-  --foreground: #f0eeff;
-  --card: #1e1a36;
-  --card-foreground: #f0eeff;
-  --popover: #1e1a36;
-  --popover-foreground: #f0eeff;
-  --primary: #f0eeff;
-  --primary-foreground: #13102a;
-  --secondary: #2a2548;
-  --secondary-foreground: #f0eeff;
-  --muted: #2a2548;
-  --muted-foreground: #9e99c8;
-  --accent: #2a2548;
-  --accent-foreground: #f0eeff;
-  --destructive: #4a1020;
-  --destructive-foreground: #f28ba0;
-  --border: #2e2a4a;
-  --input: #1e1a36;
-  --ring: #7c6dbf;
+  --background: #1C1B1A;
+  --foreground: #EFECE6;
+  --card: #252322;
+  --card-foreground: #EFECE6;
+  --popover: #252322;
+  --popover-foreground: #EFECE6;
+  --primary: #EFECE6;
+  --primary-foreground: #1C1B1A;
+  --secondary: #33302E;
+  --secondary-foreground: #EFECE6;
+  --muted: #33302E;
+  --muted-foreground: #95918B;
+  --accent: #33302E;
+  --accent-foreground: #EFECE6;
+  --destructive: #421D1A;
+  --destructive-foreground: #EC9D93;
+  --border: #33302E;
+  --input: #252322;
+  --ring: #EFECE6;
 }
 
 @theme inline {
@@ -67,32 +67,32 @@
   --color-input:                var(--input);
   --color-ring:                 var(--ring);
 
-  /* ─── Vibrant App Palette (from reference screenshots) ── */
-  /* Coral-red card  */ --color-vibe-coral:      #e05470;
-  /* Soft-pink card  */ --color-vibe-pink:       #e8849a;
-  /* Purple-violet   */ --color-vibe-violet:     #7c6dbf;
-  /* Sky-blue card   */ --color-vibe-sky:        #6ab4e8;
+  /* ─── Vibrant App Palette (Warm Soft Earthy Palette) ── */
+  /* Terracotta/Rust */ --color-vibe-coral:      var(--destructive-foreground);
+  /* Warm Ochre/Clay */ --color-vibe-pink:       #DDA15E;
+  /* Forest Green    */ --color-vibe-violet:     var(--primary);
+  /* Earth Brown     */ --color-vibe-sky:        #8C7864;
 
-  /* Light-mode pastel tints */
-  --color-vibe-coral-lt:   #fde8ed;
-  --color-vibe-pink-lt:    #fce9f0;
-  --color-vibe-violet-lt:  #ede9fc;
-  --color-vibe-sky-lt:     #e3f4fd;
+  /* Pastel tints for light background containers */
+  --color-vibe-coral-lt:   #FDF5F3;
+  --color-vibe-pink-lt:    #FEF9F0;
+  --color-vibe-violet-lt:  #F4F6F4;
+  --color-vibe-sky-lt:     #F7F5F2;
 
-  /* App surface layers (dark navy) */
-  --color-app-bg:       #13102a;
-  --color-app-surface:  #1e1a36;
-  --color-app-surface2: #2a2548;
+  /* App surface layers */
+  --color-app-bg:       var(--background);
+  --color-app-surface:  var(--card);
+  --color-app-surface2: var(--secondary);
 
   /* Mood-face palette (for CollectionGoalCard SVG faces) */
-  --color-mood-pink:        #fbb7db;
-  --color-mood-pink-light:  #fae6f0;
-  --color-mood-mint:        #9dedc8;
-  --color-mood-mint-light:  #e6f9f0;
-  --color-mood-blue:        #a3e0f5;
-  --color-mood-blue-light:  #d5f2fc;
-  --color-mood-charcoal:    #1e1a36;
-  --color-mood-gray:        #2a2548;
+  --color-mood-pink:        #E9C46A;
+  --color-mood-pink-light:  #FEF9E7;
+  --color-mood-mint:        #81A483;
+  --color-mood-mint-light:  #F2F6F3;
+  --color-mood-blue:        #D5C3B3;
+  --color-mood-blue-light:  #FAF8F5;
+  --color-mood-charcoal:    #4A4540;
+  --color-mood-gray:        #7C756E;
 
   --radius:    1.5rem;
   --font-sans: var(--font-geist-sans);
