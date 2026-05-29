@@ -1,79 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Soft Rose & Violet ─────────── */
+/* ─── Light Mode: Slate & Sapphire ─────────── */
 :root {
-  --background: #FCFAFF;
-  --foreground: #2A1A32;
+  --background: #F8FAFC; /* Slate 50 */
+  --foreground: #0F172A; /* Slate 900 */
   --card: #FFFFFF;
-  --card-foreground: #2A1A32;
+  --card-foreground: #0F172A;
   --popover: #FFFFFF;
-  --popover-foreground: #2A1A32;
-  --primary: #8B5CF6; /* Violet 500 */
+  --popover-foreground: #0F172A;
+  --primary: #3B82F6; /* Blue 500 */
   --primary-foreground: #FFFFFF;
-  --secondary: #F3E8FF;
-  --secondary-foreground: #2A1A32;
-  --muted: #F3E8FF;
-  --muted-foreground: #7E5F8C;
-  --accent: #FDF2F8; /* Pink 50 */
-  --accent-foreground: #8B5CF6;
-  --destructive: #FFF1F2;
-  --destructive-foreground: #E11D48;
-  --border: #E9D8F5;
+  --secondary: #F1F5F9; /* Slate 100 */
+  --secondary-foreground: #0F172A;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B; /* Slate 500 */
+  --accent: #EFF6FF; /* Blue 50 */
+  --accent-foreground: #3B82F6;
+  --destructive: #FEF2F2;
+  --destructive-foreground: #E11D48; /* Rose 600 */
+  --border: #E2E8F0; /* Slate 200 */
   --input: #FFFFFF;
-  --ring: #8B5CF6;
+  --ring: #3B82F6;
 
   /* Custom chart variables */
-  --chart-collected: #8B5CF6;
-  --chart-expected: #F43F5E; /* Rose */
+  --chart-collected: #3B82F6;
+  --chart-expected: #E11D48;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #E11D48;
-  --vibe-pink: #F43F5E;
+  --vibe-coral: #E11D48; /* Rose */
+  --vibe-pink: #F43F5E;  /* Rose lighter */
   --vibe-violet: #8B5CF6;
-  --vibe-sky: #A78BFA;
+  --vibe-sky: #3B82F6;
 
   --vibe-coral-lt: #FFF1F2;
   --vibe-pink-lt: #FFF1F2;
   --vibe-violet-lt: #F5F3FF;
-  --vibe-sky-lt: #EDE9FE;
+  --vibe-sky-lt: #EFF6FF;
 }
 
-/* ─── Dark Mode: Deep Amethyst (Beautiful Violet/Rose) ──────────────── */
+/* ─── Dark Mode: Beautiful Midnight Slate ──────────────── */
 .dark {
-  --background: #0D0614; /* Extremely dark violet/plum */
-  --foreground: #FDFBFF;
-  --card: #180F22; /* Dark glass violet */
-  --card-foreground: #FDFBFF;
-  --popover: #180F22;
-  --popover-foreground: #FDFBFF;
-  --primary: #A78BFA; /* Bright Violet */
-  --primary-foreground: #1A1025;
-  --secondary: #2C1D3D;
-  --secondary-foreground: #FDFBFF;
-  --muted: #2C1D3D;
-  --muted-foreground: #9A89AB;
-  --accent: #2C1D3D;
-  --accent-foreground: #F472B6; /* Pink */
-  --destructive: #4C0519;
-  --destructive-foreground: #FDA4AF;
-  --border: #2C1D3D;
-  --input: #180F22;
-  --ring: #A78BFA;
+  --background: #0B1120; /* Very dark slate/navy */
+  --foreground: #F8FAFC;
+  --card: #141E33; /* Dark glass slate */
+  --card-foreground: #F8FAFC;
+  --popover: #141E33;
+  --popover-foreground: #F8FAFC;
+  --primary: #60A5FA; /* Blue 400 */
+  --primary-foreground: #0B1120;
+  --secondary: #1E293B; /* Slate 800 */
+  --secondary-foreground: #F8FAFC;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8; /* Slate 400 */
+  --accent: #1E293B;
+  --accent-foreground: #60A5FA;
+  --destructive: #4C0519; /* Rose 950 */
+  --destructive-foreground: #FB7185; /* Rose 400 */
+  --border: #1E293B;
+  --input: #141E33;
+  --ring: #60A5FA;
 
   /* Custom chart variables */
-  --chart-collected: #A78BFA; /* Violet */
-  --chart-expected: #F472B6;  /* Pink */
+  --chart-collected: #60A5FA; /* Blue */
+  --chart-expected: #FB7185;  /* Rose */
 
   /* Custom vibe accent colors */
-  --vibe-coral: #FDA4AF;
-  --vibe-pink: #F472B6;
-  --vibe-violet: #C084FC;
-  --vibe-sky: #E879F9; /* Fuchsia */
+  --vibe-coral: #FB7185; /* Rose */
+  --vibe-pink: #F472B6;  /* Pink */
+  --vibe-violet: #A78BFA;
+  --vibe-sky: #60A5FA;   /* Blue */
 
   --vibe-coral-lt: #4C0519;
   --vibe-pink-lt: #500724;
   --vibe-violet-lt: #2E1065;
-  --vibe-sky-lt: #4A044E;
+  --vibe-sky-lt: #172554;
 }
 
 @theme inline {
