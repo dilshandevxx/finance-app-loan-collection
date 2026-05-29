@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Bell, X, Phone, MessageSquare, Calendar, AlertTriangle, ArrowRight, Inbox, Clock } from "lucide-react";
 import Link from "next/link";
 import { Customer, Loan, Installment } from "@/data/db";
-import { formatLKR } from "@/lib/format";
+import { formatLKR, phoneToDial } from "@/lib/format";
 
 type NotificationPanelProps = {
   customers: Customer[];
@@ -180,7 +180,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <Phone className="w-3.5 h-3.5" />
                               </a>
                               <a 
-                                href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
+                                href={`https://wa.me/${phoneToDial(customer?.phone || '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
@@ -250,7 +250,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <Phone className="w-3.5 h-3.5" />
                               </a>
                               <a 
-                                href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
+                                href={`https://wa.me/${phoneToDial(customer?.phone || '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
@@ -325,7 +325,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <Phone className="w-3.5 h-3.5" />
                               </a>
                               <a 
-                                href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${customer?.name}, this is a gentle reminder that your installment payment of ${formatLKR(inst.amount)} is scheduled for tomorrow. Thank you!`)}`}
+                                href={`https://wa.me/${phoneToDial(customer?.phone || '')}?text=${encodeURIComponent(`Hello ${customer?.name}, this is a gentle reminder that your installment payment of ${formatLKR(inst.amount)} is scheduled for tomorrow. Thank you!`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-colors"

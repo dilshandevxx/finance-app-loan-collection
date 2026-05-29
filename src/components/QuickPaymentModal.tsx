@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { X, CheckCircle2, MessageCircle } from "lucide-react";
 import { Customer } from "@/data/db";
 import { config } from "@/lib/config";
-import { formatLKR } from "@/lib/format";
+import { formatLKR, phoneToDial } from "@/lib/format";
 
 type QuickPaymentModalProps = {
   customer: Customer;
@@ -76,9 +76,30 @@ export function QuickPaymentModal({
 
   const handleWhatsAppShare = () => {
     const finalAmount = parseFloat(amount) || expectedAmount;
-    const phone = customer.phone.replace(/[^0-9]/g, '');
-    const message = `Receipt: Payment of ${formatLKR(finalAmount)} received on ${new Date().toLocaleDateString()}. Thank you! - ${config.appName}`;
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    const formattedPhone = phoneToDial(customer.phone);
+    const dateStr = new Date().toLocaleString("en-LK", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+    const receiptId = `REC-${installmentId.slice(0, 8).toUpperCase()}`;
+
+    const message = `🧾 *PAYMENT RECEIPT* 🧾\n` +
+      `------------------------------------------\n` +
+      `*Receipt No:* ${receiptId}\n` +
+      `*Date:* ${dateStr}\n` +
+      `------------------------------------------\n` +
+      `*Client Details:*\n` +
+      `• *Name:* ${customer.name}\n` +
+      `• *Member ID:* ${customer.memberId || 'N/A'}\n` +
+      `• *Phone:* ${customer.phone}\n\n` +
+      `*Payment Details:*\n` +
+      `• *Amount Paid:* ${formatLKR(finalAmount)}\n` +
+      `• *Status:* PAID SUCCESSFUL ✅\n` +
+      `------------------------------------------\n` +
+      `Thank you for your payment!\n` +
+      `- *${config.appName}*`;
+
+    window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (

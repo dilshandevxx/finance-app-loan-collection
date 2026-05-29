@@ -36,9 +36,13 @@ export function formatLKPhone(phone: string): string {
 // Strip to digits-only for tel:/wa.me links
 export function phoneToDial(phone: string): string {
   const digits = phone.replace(/\D/g, "");
-  // Convert local 0XX to +94 for international dialling
+  // Convert local 0XX to 94 for international dialling / WhatsApp
   if (digits.startsWith("0") && digits.length === 10) {
     return "94" + digits.slice(1);
+  }
+  // If 9 digits (e.g. 775944600), prepend 94 country code
+  if (digits.length === 9) {
+    return "94" + digits;
   }
   return digits;
 }

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 import { markInstallmentPaid } from "@/app/actions";
 import { Customer, Loan, Installment } from "@/data/db";
+import { phoneToDial } from "@/lib/format";
 
 export function CustomerContactActions({ customer }: { customer: Customer }) {
   const phone = customer.phone.replace(/[^0-9]/g, '');
@@ -18,7 +19,7 @@ export function CustomerContactActions({ customer }: { customer: Customer }) {
       <a href={`sms:${phone}`} className="w-12 h-12 rounded-full bg-purple-50 dark:bg-purple-500/10 text-purple-500 flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-colors">
         <MessageSquare className="w-5 h-5" />
       </a>
-      <a href={`https://wa.me/${phone}`} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[#25D366]/10 text-[#25D366] flex items-center justify-center hover:bg-[#25D366]/20 transition-colors">
+      <a href={`https://wa.me/${phoneToDial(customer.phone)}`} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[#25D366]/10 text-[#25D366] flex items-center justify-center hover:bg-[#25D366]/20 transition-colors">
         <MessageCircle className="w-5 h-5" />
       </a>
     </div>
