@@ -1,36 +1,36 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Minimal Monochrome ─────────── */
+/* ─── Light Mode: Ultra-Minimal Flat ─────────── */
 :root {
-  --background: #FFFFFF;
-  --foreground: #09090B;
-  --card: #FFFFFF;
-  --card-foreground: #09090B;
+  --background: #F4F4F5; /* Light gray background */
+  --foreground: #000000;
+  --card: #FFFFFF; /* Pure white cards */
+  --card-foreground: #000000;
   --popover: #FFFFFF;
-  --popover-foreground: #09090B;
-  --primary: #09090B;
-  --primary-foreground: #FAFAFA;
-  --secondary: #F4F4F5;
-  --secondary-foreground: #09090B;
+  --popover-foreground: #000000;
+  --primary: #000000; /* Black buttons */
+  --primary-foreground: #FFFFFF;
+  --secondary: #E4E4E7;
+  --secondary-foreground: #000000;
   --muted: #F4F4F5;
   --muted-foreground: #71717A;
   --accent: #F4F4F5;
-  --accent-foreground: #09090B;
-  --destructive: #FEF2F2;
-  --destructive-foreground: #EF4444;
+  --accent-foreground: #000000;
+  --destructive: #FEE2E2;
+  --destructive-foreground: #DC2626;
   --border: #E4E4E7;
-  --input: #E4E4E7;
-  --ring: #09090B;
+  --input: #FFFFFF;
+  --ring: #000000;
 
   /* Custom chart variables */
-  --chart-collected: #09090B; /* Minimal Black */
-  --chart-expected: #E4E4E7;  /* Minimal Gray */
+  --chart-collected: #10B981; /* Emerald */
+  --chart-expected: #000000;
 
-  /* Custom vibe accent colors - muted/minimal */
-  --vibe-coral: #EF4444;
-  --vibe-pink: #F59E0B;
-  --vibe-violet: #8B5CF6;
-  --vibe-sky: #3B82F6;
+  /* Custom vibe accent colors */
+  --vibe-coral: #DC2626;
+  --vibe-pink: #D97706;
+  --vibe-violet: #7C3AED;
+  --vibe-sky: #2563EB;
 
   --vibe-coral-lt: #FEF2F2;
   --vibe-pink-lt: #FFFBEB;
@@ -38,40 +38,40 @@
   --vibe-sky-lt: #EFF6FF;
 }
 
-/* ─── Dark Mode: Minimal Monochrome ──────────────── */
+/* ─── Dark Mode: Reference App (Pitch Black & Dark Gray) ──────────────── */
 .dark {
-  --background: #000000;
-  --foreground: #FAFAFA;
-  --card: #000000;
-  --card-foreground: #FAFAFA;
-  --popover: #000000;
-  --popover-foreground: #FAFAFA;
-  --primary: #FAFAFA;
-  --primary-foreground: #09090B;
-  --secondary: #27272A;
-  --secondary-foreground: #FAFAFA;
-  --muted: #27272A;
-  --muted-foreground: #A1A1AA;
-  --accent: #27272A;
-  --accent-foreground: #FAFAFA;
-  --destructive: #7F1D1D;
-  --destructive-foreground: #FEF2F2;
-  --border: #27272A;
-  --input: #27272A;
-  --ring: #D4D4D8;
+  --background: #000000; /* Pitch Black */
+  --foreground: #FFFFFF; /* Pure White text */
+  --card: #161616; /* Very dark gray cards */
+  --card-foreground: #FFFFFF;
+  --popover: #161616;
+  --popover-foreground: #FFFFFF;
+  --primary: #FFFFFF; /* White buttons (like 'Edit Job') */
+  --primary-foreground: #000000; /* Black text on white buttons */
+  --secondary: #262626;
+  --secondary-foreground: #FFFFFF;
+  --muted: #262626;
+  --muted-foreground: #A1A1AA; /* Light gray text for secondary info */
+  --accent: #262626;
+  --accent-foreground: #FFFFFF;
+  --destructive: #450A0A;
+  --destructive-foreground: #EF4444; /* Standard Red */
+  --border: #262626; /* Faint gray borders */
+  --input: #161616;
+  --ring: #FFFFFF;
 
   /* Custom chart variables */
-  --chart-collected: #FAFAFA; /* Minimal White */
-  --chart-expected: #27272A;  /* Minimal Gray */
+  --chart-collected: #10B981; /* Flat Emerald */
+  --chart-expected: #3F3F46;  /* Muted Gray */
 
-  /* Custom vibe accent colors - muted/minimal */
-  --vibe-coral: #F87171;
-  --vibe-pink: #FBBF24;
-  --vibe-violet: #A78BFA;
-  --vibe-sky: #60A5FA;
+  /* Custom vibe accent colors */
+  --vibe-coral: #EF4444;
+  --vibe-pink: #F59E0B;
+  --vibe-violet: #8B5CF6;
+  --vibe-sky: #3B82F6;
 
   --vibe-coral-lt: #450A0A;
-  --vibe-pink-lt: #422006;
+  --vibe-pink-lt: #45290A;
   --vibe-violet-lt: #2E1065;
   --vibe-sky-lt: #172554;
 }

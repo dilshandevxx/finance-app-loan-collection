@@ -95,23 +95,23 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50">
-              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3 h-3 text-blue-500" /> Active Loans
+            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-[#161616] border border-zinc-200 dark:border-[#262626] text-zinc-900 dark:text-white">
+              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-[#A1A1AA] text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3 text-[#10B981]" /> Active Loans
               </div>
               <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">loans running</span>
+              <span className="text-[10px] text-zinc-500 dark:text-[#A1A1AA] font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50">
-              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 text-[10px] font-bold uppercase tracking-wider">
+            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-[#161616] border border-zinc-200 dark:border-[#262626] text-zinc-900 dark:text-white">
+              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-[#A1A1AA] text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3 text-red-500" /> Overdue
               </div>
               <span className="text-4xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
                 {formatLKR(overdueAmount)}
               </span>
-              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">total overdue amount</span>
+              <span className="text-[10px] text-zinc-500 dark:text-[#A1A1AA] font-medium">total overdue amount</span>
             </div>
           </div>
 
