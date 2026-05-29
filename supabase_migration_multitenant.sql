@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
   hashed_pin TEXT,
+  full_name TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -28,7 +29,13 @@ VALUES ('00000000-0000-0000-0000-000000000001', 'Default Organization', 'ACTIVE'
 ON CONFLICT DO NOTHING;
 
 -- ==========================================
--- 3. Add tenant_id to Existing Tables
+-- 3. Add Columns to Existing user_profiles
+-- ==========================================
+
+ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS full_name TEXT;
+
+-- ==========================================
+-- 4. Add tenant_id to Existing Tables
 -- ==========================================
 
 -- Alter customers
