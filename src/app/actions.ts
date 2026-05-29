@@ -228,7 +228,7 @@ export async function markInstallmentPaid(installmentId: string) {
     .from("installments")
     .update({ 
       status: "PAID", 
-      paid_date: new Date().toISOString().split('T')[0] 
+      paid_date: new Date().toISOString() 
     })
     .eq("id", installmentId);
 

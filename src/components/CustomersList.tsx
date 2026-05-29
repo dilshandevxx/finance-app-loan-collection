@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
@@ -15,31 +15,78 @@ type CustomersListProps = {
 };
 
 export function CustomersList({ customers, loans, installments }: CustomersListProps) {
+  const [localCustomers, setLocalCustomers] = useState<Customer[]>(customers);
+  const [localLoans, setLocalLoans] = useState<Loan[]>(loans);
+  const [localInstallments, setLocalInstallments] = useState<Installment[]>(installments);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"active" | "settled">("active");
   const [selectedVillage, setSelectedVillage] = useState<string>("");
 
+  const loadFromCache = async () => {
+    try {
+      const { getCacheItem } = await import("@/lib/idb");
+      const cachedCustomers = await getCacheItem<Customer[]>("customers");
+      const cachedLoans = await getCacheItem<Loan[]>("loans");
+      const cachedInstallments = await getCacheItem<Installment[]>("installments");
+
+      if (cachedCustomers) setLocalCustomers(cachedCustomers);
+      if (cachedLoans) setLocalLoans(cachedLoans);
+      if (cachedInstallments) setLocalInstallments(cachedInstallments);
+    } catch (err) {
+      console.error("Failed to load customer list cache:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadFromCache();
+
+    const handleCacheUpdated = () => {
+      loadFromCache();
+    };
+    window.addEventListener("local-cache-updated", handleCacheUpdated);
+    return () => {
+      window.removeEventListener("local-cache-updated", handleCacheUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
+    setLocalCustomers(customers);
+    setLocalLoans(loans);
+    setLocalInstallments(installments);
+  }, [customers, loans, installments]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && navigator.onLine) {
+      import("@/lib/idb").then(({ setCacheItem }) => {
+        setCacheItem("customers", customers);
+        setCacheItem("loans", loans);
+        setCacheItem("installments", installments);
+      }).catch(err => console.error("Error setting IndexedDB cache in customers list:", err));
+    }
+  }, [customers, loans, installments]);
+
   const villages = Array.from(
     new Set(
-      customers
+      localCustomers
         .map(c => c.state)
         .filter((s): s is string => !!s && s.trim() !== "")
     )
   ).sort();
 
   // Determine all active customers (have at least one active loan)
-  const allActiveCustomers = customers.filter(customer => {
-    const customerLoans = loans.filter(l => l.customerId === customer.id);
+  const allActiveCustomers = localCustomers.filter(customer => {
+    const customerLoans = localLoans.filter(l => l.customerId === customer.id);
     return customerLoans.some(l => l.status === "ACTIVE");
   });
 
   // Determine all settled customers (no loans, or all loans paid off/not active)
-  const allSettledCustomers = customers.filter(customer => {
-    const customerLoans = loans.filter(l => l.customerId === customer.id);
+  const allSettledCustomers = localCustomers.filter(customer => {
+    const customerLoans = localLoans.filter(l => l.customerId === customer.id);
     return customerLoans.length === 0 || customerLoans.every(l => l.status !== "ACTIVE");
   });
 
-  const filteredCustomers = customers.filter((customer) => {
+  const filteredCustomers = localCustomers.filter((customer) => {
     // 1. Village filter match
     if (selectedVillage && customer.state !== selectedVillage) {
       return false;
@@ -162,11 +209,11 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
           </div>
         ) : (
           displayCustomers.map((customer, i) => {
-            const customerLoans = loans.filter(l => l.customerId === customer.id);
+            const customerLoans = localLoans.filter(l => l.customerId === customer.id);
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
             const isOverdue = customerLoans.some(l => 
-              installments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+              localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
             );
 
             return (

@@ -49,6 +49,16 @@ export function DashboardHeader({
     setFormattedDate(new Date().toLocaleDateString("en-US", options));
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && navigator.onLine) {
+      import("@/lib/idb").then(({ setCacheItem }) => {
+        setCacheItem("customers", customers);
+        setCacheItem("loans", loans);
+        setCacheItem("installments", installments);
+      }).catch(err => console.error("Error setting IndexedDB cache in header:", err));
+    }
+  }, [customers, loans, installments]);
+
   return (
     <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-card/45 border border-border/40 backdrop-blur-md mb-4 shadow-xs">
       <div className="flex items-center gap-3.5">

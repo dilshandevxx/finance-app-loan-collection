@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown } from "lucide-react";
@@ -18,6 +18,10 @@ type DashboardRosterProps = {
 };
 
 export function DashboardRoster({ pendingInstallments, loans, customers }: DashboardRosterProps) {
+  const [localCustomers, setLocalCustomers] = useState<Customer[]>(customers);
+  const [localLoans, setLocalLoans] = useState<Loan[]>(loans);
+  const [localInstallments, setLocalInstallments] = useState<Installment[]>(pendingInstallments);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [isPending, startTransition] = useTransition();
   const [selectedPayment, setSelectedPayment] = useState<{
@@ -27,17 +31,53 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   } | null>(null);
   const [selectedVillage, setSelectedVillage] = useState<string>("");
 
+  const loadFromCache = async () => {
+    try {
+      const { getCacheItem } = await import("@/lib/idb");
+      const cachedCustomers = await getCacheItem<Customer[]>("customers");
+      const cachedLoans = await getCacheItem<Loan[]>("loans");
+      const cachedInstallments = await getCacheItem<Installment[]>("installments");
+
+      if (cachedCustomers) setLocalCustomers(cachedCustomers);
+      if (cachedLoans) setLocalLoans(cachedLoans);
+      if (cachedInstallments) {
+        const pending = cachedInstallments.filter(i => i.status === "PENDING" || i.status === "MISSED");
+        setLocalInstallments(pending);
+      }
+    } catch (err) {
+      console.error("Failed to load roster cache:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadFromCache();
+
+    const handleCacheUpdated = () => {
+      loadFromCache();
+    };
+    window.addEventListener("local-cache-updated", handleCacheUpdated);
+    return () => {
+      window.removeEventListener("local-cache-updated", handleCacheUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
+    setLocalCustomers(customers);
+    setLocalLoans(loans);
+    setLocalInstallments(pendingInstallments);
+  }, [customers, loans, pendingInstallments]);
+
   const villages = Array.from(
     new Set(
-      customers
+      localCustomers
         .map(c => c.state)
         .filter((s): s is string => !!s && s.trim() !== "")
     )
   ).sort();
 
-  const filteredInstallments = pendingInstallments.filter((inst) => {
-    const loan = loans.find(l => l.id === inst.loanId);
-    const customer = customers.find(c => c.id === loan?.customerId);
+  const filteredInstallments = localInstallments.filter((inst) => {
+    const loan = localLoans.find(l => l.id === inst.loanId);
+    const customer = localCustomers.find(c => c.id === loan?.customerId);
     
     if (!customer) return false;
 
@@ -58,8 +98,8 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
   // Group the filtered installments by customer
   const customerGroups = filteredInstallments.reduce((acc, inst) => {
-    const loan = loans.find(l => l.id === inst.loanId);
-    const customer = customers.find(c => c.id === loan?.customerId);
+    const loan = localLoans.find(l => l.id === inst.loanId);
+    const customer = localCustomers.find(c => c.id === loan?.customerId);
     
     if (!customer) return acc;
     
@@ -150,7 +190,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   const handleWhatsAppReminder = (e: React.MouseEvent, customer: Customer, amount: number) => {
     e.preventDefault();
     e.stopPropagation();
-    const loan = loans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
+    const loan = localLoans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
     const remaining = loan ? loan.remainingBalance : amount;
     const phone = phoneToDial(customer.phone);
     const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
@@ -161,7 +201,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   const handleSmsReminder = (e: React.MouseEvent, customer: Customer, amount: number) => {
     e.preventDefault();
     e.stopPropagation();
-    const loan = loans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
+    const loan = localLoans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
     const remaining = loan ? loan.remainingBalance : amount;
     const phone = customer.phone.replace(/[^0-9]/g, '');
     const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";

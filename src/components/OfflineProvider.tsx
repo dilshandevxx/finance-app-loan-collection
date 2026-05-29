@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { markInstallmentPaid } from "@/app/actions";
 import { Wifi, WifiOff, Loader2, CheckCircle } from "lucide-react";
 
 export function OfflineProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [isOffline, setIsOffline] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [queueLength, setQueueLength] = useState(0);
@@ -78,6 +80,8 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
         // Show success alert if all synced successfully
         if (failedItems.length === 0) {
           setShowSyncedSuccess(true);
+          router.refresh();
+          window.dispatchEvent(new CustomEvent("local-cache-updated"));
           setTimeout(() => {
             setShowSyncedSuccess(false);
           }, 4000);

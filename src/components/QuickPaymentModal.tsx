@@ -55,6 +55,16 @@ export function QuickPaymentModal({
       }
       
       await onConfirm(finalAmount);
+      
+      // Update local IndexedDB cache instantly
+      try {
+        const { updateLocalInstallmentPaid } = await import("@/lib/idb");
+        await updateLocalInstallmentPaid(installmentId, finalAmount);
+        window.dispatchEvent(new CustomEvent("local-cache-updated"));
+      } catch (err) {
+        console.error("Failed to update IndexedDB in online path:", err);
+      }
+
       setIsSuccess(true);
       
       // Load detailed receipt details
@@ -77,6 +87,16 @@ export function QuickPaymentModal({
           timestamp: Date.now()
         });
         localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+        
+        // Update local IndexedDB cache instantly
+        try {
+          const { updateLocalInstallmentPaid } = await import("@/lib/idb");
+          await updateLocalInstallmentPaid(installmentId, finalAmount);
+          window.dispatchEvent(new CustomEvent("local-cache-updated"));
+        } catch (err) {
+          console.error("Failed to update IndexedDB in offline path:", err);
+        }
+
         window.dispatchEvent(new CustomEvent("offline-queue-updated"));
         setIsOfflineSaved(true);
         setIsSuccess(true);

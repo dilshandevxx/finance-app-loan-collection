@@ -17,6 +17,27 @@ type ReportsDashboardProps = {
   companyLogo?: string;
 };
 
+function formatPaidDate(paidDateStr?: string): string {
+  if (!paidDateStr) return "PAID";
+  try {
+    const d = new Date(paidDateStr);
+    if (isNaN(d.getTime())) return "PAID";
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    
+    const hasTime = paidDateStr.includes('T') || paidDateStr.includes(':') || paidDateStr.includes(' ');
+    if (hasTime) {
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      return `PAID (${month}/${day} ${hours}:${minutes})`;
+    } else {
+      return `PAID (${month}/${day})`;
+    }
+  } catch (e) {
+    return "PAID";
+  }
+}
+
 export function ReportsDashboard({ installments, loans, customers, companyName, companyLogo }: ReportsDashboardProps) {
   const [startDate, setStartDate] = useState(() => {
     if (installments.length === 0) {
@@ -188,6 +209,9 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         if (idx < sortedLoanInsts.length) {
           const inst = sortedLoanInsts[idx];
           const isOverdue = inst.status === "PENDING" && new Date(inst.dueDate) < new Date(new Date().toDateString());
+          if (inst.status === "PAID") {
+            return formatPaidDate(inst.paidDate);
+          }
           return isOverdue ? "OVERDUE" : inst.status;
         }
         return "";
@@ -316,6 +340,9 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         if (idx < sortedLoanInsts.length) {
           const inst = sortedLoanInsts[idx];
           const isOverdue = inst.status === "PENDING" && new Date(inst.dueDate) < new Date(new Date().toDateString());
+          if (inst.status === "PAID") {
+            return formatPaidDate(inst.paidDate);
+          }
           return isOverdue ? "OVERDUE" : inst.status;
         }
         return "";
@@ -368,7 +395,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       { wch: 14 }  // Loan Status
     ];
 
-    const instCols = Array.from({ length: maxInstallments }, () => ({ wch: 15 }));
+    const instCols = Array.from({ length: maxInstallments }, () => ({ wch: 18 }));
     worksheet["!cols"] = [...baseCols, ...instCols];
 
     // Merging company name, title, and range across all columns
