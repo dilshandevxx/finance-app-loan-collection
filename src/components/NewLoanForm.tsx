@@ -173,7 +173,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
       {/* Segmented Control for Customer Type */}
       <div className="bg-gray-100/80 dark:bg-muted p-1.5 rounded-2xl flex items-center relative overflow-hidden">
         <div 
-          className="absolute inset-y-1.5 w-[calc(50%-6px)] bg-white dark:bg-[#222] rounded-xl shadow-sm transition-all duration-300 ease-out" 
+          className="absolute inset-y-1.5 w-[calc(50%-6px)] bg-white dark:bg-secondary rounded-xl shadow-sm transition-all duration-300 ease-out" 
           style={{ left: isExisting ? 'calc(50% + 3px)' : '6px' }}
         />
         <button
@@ -229,7 +229,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
               <div className="relative group">
                 <div 
                   onClick={() => document.getElementById("photo-input")?.click()}
-                  className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-gray-50 dark:bg-[#1C1B1A] flex items-center justify-center transition-all shadow-inner group-hover:scale-105 cursor-pointer relative"
+                  className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-gray-50 dark:bg-secondary flex items-center justify-center transition-all shadow-inner group-hover:scale-105 cursor-pointer relative"
                 >
                   {photoPreview ? (
                     <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
@@ -243,7 +243,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                 <button
                   type="button"
                   onClick={() => document.getElementById("photo-input")?.click()}
-                  className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-primary-foreground border border-white dark:border-[#252322] flex items-center justify-center shadow-md hover:bg-primary/95 active:scale-90 transition-all cursor-pointer"
+                  className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-primary-foreground border border-white dark:border-card flex items-center justify-center shadow-md hover:bg-primary/95 active:scale-90 transition-all cursor-pointer"
                   title="Upload / Capture Photo"
                 >
                   <Camera className="w-4 h-4 stroke-[2]" />
@@ -457,7 +457,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
         )}
       </div>
 
-      <div className="w-full h-px bg-gray-100 dark:bg-[#222]" />
+      <div className="w-full h-px bg-gray-100 dark:bg-border" />
 
       <div className="space-y-4 sm:space-y-5">
         <h3 className="text-base sm:text-lg font-bold text-black dark:text-white tracking-tight flex items-center gap-2">
@@ -494,7 +494,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
               step="50"
               value={principal}
               onChange={(e) => setPrincipal(parseFloat(e.target.value) || 0)}
-              className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-primary"
+              className="w-full h-1 bg-gray-200 dark:bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
             />
             <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
               <span>Rs. 0</span>
@@ -535,7 +535,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                 step="0.5"
                 value={interest}
                 onChange={(e) => setInterest(parseFloat(e.target.value) || 0)}
-                className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-1 bg-gray-200 dark:bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
               />
               <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
                 <span>0%</span>
@@ -573,7 +573,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                 step="1"
                 value={weeks}
                 onChange={(e) => setWeeks(parseInt(e.target.value) || 0)}
-                className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-1 bg-gray-200 dark:bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
               />
               <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
                 <span>1 wk</span>
@@ -601,12 +601,12 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
         
         {/* Breakdown details */}
         {principal > 0 && (
-          <div className="border-t border-neutral-200 dark:border-[#333] pt-3 grid grid-cols-3 gap-2 text-center text-xs">
+          <div className="border-t border-neutral-200 dark:border-border pt-3 grid grid-cols-3 gap-2 text-center text-xs">
             <div className="flex flex-col">
               <span className="text-gray-500 dark:text-white/40 font-medium">Principal</span>
               <span className="text-black dark:text-white font-bold">{formatLKR(principal)}</span>
             </div>
-            <div className="flex flex-col border-x border-neutral-250 dark:border-[#333]">
+            <div className="flex flex-col border-x border-neutral-200 dark:border-border">
               <span className="text-gray-500 dark:text-white/40 font-medium">Interest ({interest}%)</span>
               <span className="text-black dark:text-white font-bold">+{formatLKR((principal * interest) / 100)}</span>
             </div>

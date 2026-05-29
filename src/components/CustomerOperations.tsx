@@ -116,7 +116,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                   return (
                     <div key={note.id} className="relative flex flex-col gap-1">
                       {/* Timeline Dot */}
-                      <div className={`absolute -left-[31px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${isSystem ? 'bg-primary border-white dark:border-[#0a0a0a]' : 'bg-gray-400 border-white dark:border-[#0a0a0a]'}`} />
+                      <div className={`absolute -left-[31px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${isSystem ? 'bg-primary border-white dark:border-card' : 'bg-gray-400 border-white dark:border-card'}`} />
                       
                       <div className="flex items-center justify-between text-xs text-gray-400 dark:text-white/40">
                         <span className="font-semibold tracking-wide uppercase flex items-center gap-1.5">
@@ -158,7 +158,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
               </h3>
               <button 
                 onClick={() => setIsRestructureOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-[#1a1a1a] dark:hover:bg-[#222] text-gray-500 dark:text-gray-400 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-gray-500 dark:text-gray-400 transition-colors"
               >
                 &times;
               </button>
@@ -239,7 +239,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
               <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-border/60">
                 <button
                   onClick={() => setIsRestructureOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-muted dark:hover:bg-[#222] text-black dark:text-white transition-all"
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-black dark:text-white transition-all"
                 >
                   Cancel
                 </button>

@@ -60,7 +60,7 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
         >
           {isPending ? "Processing..." : "Mark Paid"}
         </Button>
-        <Button variant="outline" className="flex-1 border-gray-200 dark:border-border bg-white dark:bg-card md:bg-transparent rounded-xl hover:bg-gray-50 dark:hover:bg-[#111] md:dark:hover:bg-[#222] text-black dark:text-white h-12 md:h-14 shadow-sm md:shadow-none">
+        <Button variant="outline" className="flex-1 border-gray-200 dark:border-border bg-white dark:bg-card md:bg-transparent rounded-xl hover:bg-gray-50 dark:hover:bg-secondary md:dark:hover:bg-secondary text-black dark:text-white h-12 md:h-14 shadow-sm md:shadow-none">
           Edit
         </Button>
       </div>

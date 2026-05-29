@@ -316,7 +316,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
           <Button onClick={exportExcel} className="flex-1 sm:flex-none bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
             <Table className="w-4 h-4 shrink-0" /> Excel
           </Button>
-          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-[#C25946]/10 text-[#C25946] hover:bg-[#C25946]/20 border border-[#C25946]/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
+          <Button onClick={exportCSV} className="flex-1 sm:flex-none bg-orange-500/10 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 border border-orange-500/20 rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
             <Download className="w-4 h-4 shrink-0" /> CSV
           </Button>
           <Button onClick={exportPDF} className="flex-1 sm:flex-none bg-secondary text-foreground hover:bg-border/50 border border-border rounded-2xl px-2 sm:px-5 h-12 gap-1.5 shadow-sm text-xs sm:text-sm font-bold active:scale-95 transition-all cursor-pointer">
@@ -383,12 +383,12 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3A5A40" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#3A5A40" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--chart-collected)" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="var(--chart-collected)" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#D4A373" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#D4A373" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--chart-expected)" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="var(--chart-expected)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <XAxis 
@@ -418,7 +418,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   <Area 
                     type="monotone" 
                     dataKey="expected" 
-                    stroke="#D4A373" 
+                    stroke="var(--chart-expected)" 
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     fillOpacity={1} 
@@ -428,7 +428,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   <Area 
                     type="monotone" 
                     dataKey="collected" 
-                    stroke="#3A5A40" 
+                    stroke="var(--chart-collected)" 
                     strokeWidth={3}
                     fillOpacity={1} 
                     fill="url(#colorCollected)" 
@@ -480,9 +480,9 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                         <td className="p-4 text-right font-bold text-sm">{formatLKR(inst.amount)}</td>
                         <td className="p-4 px-6 text-right flex justify-end">
                           <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            inst.status === "PAID" ? "bg-[#9dedc8]/10 text-[#9dedc8] border border-[#9dedc8]/20 print:bg-transparent print:text-black" :
-                            inst.status === "PENDING" ? "bg-[#e8849a]/10 text-[#e8849a] border border-[#e8849a]/20 print:bg-transparent print:text-yellow-700" :
-                            "bg-[#e05470]/10 text-[#e05470] border border-[#e05470]/20 print:bg-transparent print:text-red-700"
+                            inst.status === "PAID" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 print:bg-transparent print:text-black" :
+                            inst.status === "PENDING" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 print:bg-transparent print:text-yellow-700" :
+                            "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 print:bg-transparent print:text-red-700"
                           }`}>
                             {inst.status}
                           </span>

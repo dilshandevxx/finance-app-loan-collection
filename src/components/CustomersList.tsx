@@ -171,7 +171,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
 
             return (
               <Link key={customer.id} href={`/customers/${customer.id}`}>
-                <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-[#444] transition-all cursor-pointer group transform hover:-translate-y-0.5">
+                <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-primary/40 transition-all cursor-pointer group transform hover:-translate-y-0.5">
                   <CardContent className="p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
                     
                     {/* Avatar */}
@@ -230,7 +230,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                               </span>
                             )}
                           </div>
-                          <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-muted border border-gray-100 dark:border-border items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-[#222] transition-colors shrink-0">
+                          <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-muted border border-gray-100 dark:border-border items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-secondary transition-colors shrink-0">
                             <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
                           </div>
                         </div>
@@ -244,7 +244,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             <span>Repayment Progress</span>
                             <span>{Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%</span>
                           </div>
-                          <div className="w-full h-1.5 sm:h-2 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
+                          <div className="w-full h-1.5 sm:h-2 bg-gray-100 dark:bg-secondary rounded-full overflow-hidden">
                             <div 
                               className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
                               style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}

@@ -98,7 +98,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
       >
         <Bell className="w-5.5 h-5.5 text-muted-foreground group-hover:text-white transition-colors duration-300 origin-top group-hover:animate-[bell-ring_0.8s_ease-in-out_infinite]" />
         {totalCount > 0 && (
-          <span className="absolute top-2.5 right-2.5 w-3 h-3 bg-[#e05470] rounded-full border-2 border-background animate-pulse shadow-[0_0_8px_#e05470]" />
+          <span className="absolute top-2.5 right-2.5 w-3 h-3 bg-rose-500 rounded-full border-2 border-background animate-pulse shadow-[0_0_8px_var(--vibe-coral)]" />
         )}
       </button>
 
@@ -123,7 +123,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                 </div>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-xl bg-gray-100 dark:bg-muted hover:bg-gray-200 dark:hover:bg-[#2e2e30] flex items-center justify-center text-gray-500 dark:text-white/40 transition-colors"
+                  className="w-8 h-8 rounded-xl bg-gray-100 dark:bg-secondary hover:bg-gray-200 dark:hover:bg-muted flex items-center justify-center text-gray-500 dark:text-white/40 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -174,7 +174,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />
@@ -183,7 +183,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
                                 title="WhatsApp Customer"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />

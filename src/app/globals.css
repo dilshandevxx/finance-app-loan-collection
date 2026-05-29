@@ -1,49 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: soft warm cream & forest green ─────────── */
+/* ─── Light Mode: modern sleek slate & indigo ─────────── */
 :root {
-  --background: #FAF8F5;
-  --foreground: #2D2B2A;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
   --card: #ffffff;
-  --card-foreground: #2D2B2A;
+  --card-foreground: #0F172A;
   --popover: #ffffff;
-  --popover-foreground: #2D2B2A;
-  --primary: #3A5A40;
-  --primary-foreground: #FAF8F5;
-  --secondary: #F0EDE6;
-  --secondary-foreground: #2D2B2A;
-  --muted: #F0EDE6;
-  --muted-foreground: #797672;
-  --accent: #F0EDE6;
-  --accent-foreground: #2D2B2A;
-  --destructive: #FDF3F1;
-  --destructive-foreground: #C25946;
-  --border: #E6E2D8;
-  --input: #FAF8F5;
-  --ring: #3A5A40;
+  --popover-foreground: #0F172A;
+  --primary: #4F46E5;
+  --primary-foreground: #ffffff;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #1E293B;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #EEF2FF;
+  --accent-foreground: #4F46E5;
+  --destructive: #FEF2F2;
+  --destructive-foreground: #EF4444;
+  --border: #E2E8F0;
+  --input: #ffffff;
+  --ring: #6366F1;
+
+  /* Custom chart variables */
+  --chart-collected: #10B981;
+  --chart-expected: #6366F1;
+
+  /* Custom vibe accent colors */
+  --vibe-coral: #EF4444;
+  --vibe-pink: #F59E0B;
+  --vibe-violet: #6366F1;
+  --vibe-sky: #0EA5E9;
+
+  --vibe-coral-lt: #FEF2F2;
+  --vibe-pink-lt: #FFFBEB;
+  --vibe-violet-lt: #EEF2FF;
+  --vibe-sky-lt: #F0F9FF;
 }
 
-/* ─── Dark Mode: Deep Obsidian Sage & Olive ──────────────── */
+/* ─── Dark Mode: Midnight Obsidian & Violet ──────────────── */
 .dark {
-  --background: #111512;
-  --foreground: #E2E8E4;
-  --card: #181E19;
-  --card-foreground: #E2E8E4;
-  --popover: #181E19;
-  --popover-foreground: #E2E8E4;
-  --primary: #8AB89E;
-  --primary-foreground: #0D120F;
-  --secondary: #222B24;
-  --secondary-foreground: #E2E8E4;
-  --muted: #222B24;
-  --muted-foreground: #7D8F82;
-  --accent: #222B24;
-  --accent-foreground: #E2E8E4;
-  --destructive: #3D1F1C;
-  --destructive-foreground: #EEA097;
-  --border: #222B24;
-  --input: #181E19;
-  --ring: #8AB89E;
+  --background: #0B0F19;
+  --foreground: #F8FAFC;
+  --card: #111827;
+  --card-foreground: #F8FAFC;
+  --popover: #111827;
+  --popover-foreground: #F8FAFC;
+  --primary: #6366F1;
+  --primary-foreground: #ffffff;
+  --secondary: #1F2937;
+  --secondary-foreground: #F8FAFC;
+  --muted: #1F2937;
+  --muted-foreground: #9CA3AF;
+  --accent: #1F2937;
+  --accent-foreground: #818CF8;
+  --destructive: #1E1B4B;
+  --destructive-foreground: #FCA5A5;
+  --border: #1F2937;
+  --input: #111827;
+  --ring: #6366F1;
+
+  /* Custom chart variables */
+  --chart-collected: #34D399;
+  --chart-expected: #818CF8;
+
+  /* Custom vibe accent colors */
+  --vibe-coral: #FCA5A5;
+  --vibe-pink: #FBBF24;
+  --vibe-violet: #818CF8;
+  --vibe-sky: #38BDF8;
+
+  --vibe-coral-lt: #450A0A;
+  --vibe-pink-lt: #451A03;
+  --vibe-violet-lt: #1E1B4B;
+  --vibe-sky-lt: #082F49;
 }
 
 @theme inline {
@@ -67,17 +97,19 @@
   --color-input:                var(--input);
   --color-ring:                 var(--ring);
 
-  /* ─── Vibrant App Palette (Warm Soft Earthy Palette) ── */
-  /* Terracotta/Rust */ --color-vibe-coral:      var(--destructive-foreground);
-  /* Warm Ochre/Clay */ --color-vibe-pink:       #DDA15E;
-  /* Forest Green    */ --color-vibe-violet:     var(--primary);
-  /* Earth Brown     */ --color-vibe-sky:        #8C7864;
+  /* ─── Custom Chart and Vibe Palettes ── */
+  --color-chart-collected:      var(--chart-collected);
+  --color-chart-expected:       var(--chart-expected);
 
-  /* Pastel tints for light background containers */
-  --color-vibe-coral-lt:   #FDF5F3;
-  --color-vibe-pink-lt:    #FEF9F0;
-  --color-vibe-violet-lt:  #F4F6F4;
-  --color-vibe-sky-lt:     #F7F5F2;
+  --color-vibe-coral:           var(--vibe-coral);
+  --color-vibe-pink:            var(--vibe-pink);
+  --color-vibe-violet:          var(--vibe-violet);
+  --color-vibe-sky:             var(--vibe-sky);
+
+  --color-vibe-coral-lt:        var(--vibe-coral-lt);
+  --color-vibe-pink-lt:         var(--vibe-pink-lt);
+  --color-vibe-violet-lt:       var(--vibe-violet-lt);
+  --color-vibe-sky-lt:          var(--vibe-sky-lt);
 
   /* App surface layers */
   --color-app-bg:       var(--background);

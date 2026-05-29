@@ -96,7 +96,7 @@ export function QuickPaymentModal({
           </h3>
           <button 
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-[#1a1a1a] dark:hover:bg-[#222] text-gray-500 dark:text-gray-400 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-gray-500 dark:text-gray-400 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -128,7 +128,7 @@ export function QuickPaymentModal({
               </button>
               <button
                 onClick={onClose}
-                className="w-full h-14 bg-gray-100 hover:bg-gray-200 dark:bg-muted dark:hover:bg-[#222] text-black dark:text-white rounded-2xl font-bold text-lg transition-all"
+                className="w-full h-14 bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-black dark:text-white rounded-2xl font-bold text-lg transition-all"
               >
                 Done
               </button>
@@ -157,7 +157,7 @@ export function QuickPaymentModal({
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full bg-white dark:bg-card border-2 border-gray-200 focus:border-primary dark:border-[#333] dark:focus:border-primary rounded-2xl pl-12 pr-4 py-4 text-3xl font-bold text-black dark:text-white focus:outline-none transition-colors"
+                    className="w-full bg-white dark:bg-card border-2 border-gray-200 focus:border-primary dark:border-border dark:focus:border-primary rounded-2xl pl-12 pr-4 py-4 text-3xl font-bold text-black dark:text-white focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -170,7 +170,7 @@ export function QuickPaymentModal({
                     className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-colors border ${
                       amount === preset.toString()
                         ? "bg-primary text-primary-foreground border-primary font-bold"
-                        : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-muted dark:text-white dark:border-[#333] dark:hover:bg-[#222]"
+                        : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-secondary dark:text-white dark:border-border dark:hover:bg-muted"
                     }`}
                   >
                     {preset === expectedAmount ? formatLKR(preset) : `Rs. ${preset.toLocaleString()}`}

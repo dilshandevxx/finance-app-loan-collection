@@ -24,7 +24,7 @@ const data = [
 ];
 
 // Vibrant bar colors cycling through the vibe palette
-const COLORS = ["#3A5A40", "#C25946", "#D4A373", "#588157", "#E76F51", "#344E41", "#E9C46A"];
+const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444", "#06B6D4", "#EC4899", "#8B5CF6"];
 
 export function AnalyticsChart() {
   const { resolvedTheme } = useTheme();
@@ -35,10 +35,10 @@ export function AnalyticsChart() {
   if (!mounted) return <div className="h-[200px] w-full animate-pulse bg-secondary rounded-2xl" />;
 
   const isDark = resolvedTheme === "dark";
-  const textColor  = isDark ? "#95918B" : "#797672";
-  const gridColor  = isDark ? "#33302E" : "#E6E2D8";
-  const tooltipBg  = isDark ? "#252322" : "#ffffff";
-  const tooltipBdr = isDark ? "#33302E" : "#E6E2D8";
+  const textColor  = isDark ? "#9CA3AF" : "#64748B";
+  const gridColor  = "var(--border)";
+  const tooltipBg  = "var(--card)";
+  const tooltipBdr = "var(--border)";
 
   return (
     <div className="h-[200px] w-full">
@@ -71,7 +71,7 @@ export function AnalyticsChart() {
             cursor={{ fill: isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
           />
           {/* Expected – muted tint */}
-          <Bar dataKey="expected" name="Expected" radius={[8, 8, 4, 4]} fill={isDark ? "#33302E" : "#E6E2D8"} />
+          <Bar dataKey="expected" name="Expected" radius={[8, 8, 4, 4]} fill="var(--muted)" />
           {/* Collected – vibrant cycling colors */}
           <Bar dataKey="collected" name="Collected" radius={[8, 8, 4, 4]}>
             {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
