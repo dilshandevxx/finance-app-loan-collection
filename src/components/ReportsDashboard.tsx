@@ -293,7 +293,26 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       ];
     });
 
-    const csvContent = [...metadata, headers.join(","), ...rows.map(row => row.join(","))].join("\n");
+    // Village Breakdown section appended at the end of the CSV
+    const villageSection = [
+      "",
+      "\"VILLAGE BREAKDOWN\"",
+      "\"Village\",\"Total Clients\",\"Active Loans\",\"Total Expected\",\"Total Collected\",\"Collection Rate\",\"Outstanding Balance\"",
+      ...villageBreakdown.map(v => {
+        const vRate = v.totalExpected > 0 ? ((v.totalCollected / v.totalExpected) * 100).toFixed(1) + "%" : "0%";
+        return [
+          `"${v.village}"`,
+          `"${v.totalClients}"`,
+          `"${v.activeLoansCount}"`,
+          `"${formatLKR(v.totalExpected).replace(/"/g, '""')}"`,
+          `"${formatLKR(v.totalCollected).replace(/"/g, '""')}"`,
+          `"${vRate}"`,
+          `"${formatLKR(v.outstandingBalance).replace(/"/g, '""')}"`,
+        ].join(",");
+      }),
+    ];
+
+    const csvContent = [...metadata, headers.join(","), ...rows.map(row => row.join(",")), ...villageSection].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -469,6 +488,36 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Ledger");
+
+    // ── Village Summary Sheet ──────────────────────────────────
+    const villageSummaryData = [
+      [companyName || "Loan Collection App"],
+      ["VILLAGE BREAKDOWN SUMMARY"],
+      [`Period: ${startDate} to ${endDate}`],
+      [],
+      ["Village", "Total Clients", "Active Loans", "Total Expected", "Total Collected", "Collection Rate", "Outstanding Balance"],
+      ...villageBreakdown.map(v => {
+        const vRate = v.totalExpected > 0 ? ((v.totalCollected / v.totalExpected) * 100).toFixed(1) + "%" : "0%";
+        return [v.village, v.totalClients, v.activeLoansCount, formatLKR(v.totalExpected), formatLKR(v.totalCollected), vRate, formatLKR(v.outstandingBalance)];
+      }),
+      // Grand total row
+      (() => {
+        const ge = villageBreakdown.reduce((s, v) => s + v.totalExpected, 0);
+        const gc = villageBreakdown.reduce((s, v) => s + v.totalCollected, 0);
+        const go = villageBreakdown.reduce((s, v) => s + v.outstandingBalance, 0);
+        const gr = ge > 0 ? ((gc / ge) * 100).toFixed(1) + "%" : "0%";
+        return ["TOTAL", villageBreakdown.reduce((s, v) => s + v.totalClients, 0), villageBreakdown.reduce((s, v) => s + v.activeLoansCount, 0), formatLKR(ge), formatLKR(gc), gr, formatLKR(go)];
+      })(),
+    ];
+    const villageSheet = XLSX.utils.aoa_to_sheet(villageSummaryData);
+    villageSheet["!cols"] = [{ wch: 24 }, { wch: 14 }, { wch: 14 }, { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 22 }];
+    villageSheet["!merges"] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 6 } },
+    ];
+    XLSX.utils.book_append_sheet(workbook, villageSheet, "Village Summary");
+
     XLSX.writeFile(workbook, `Loan_Ledger_${startDate}_to_${endDate}.xlsx`);
   };
 
@@ -581,28 +630,47 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       </div>
 
       {/* Summary Metrics */}
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[30px] -z-0" />
-          <CardContent className="p-6 relative z-10">
+          <CardContent className="p-5 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Expected</span>
-            <div className="text-3xl font-black mt-1 text-foreground tracking-tight">{formatLKR(totalExpected)}</div>
+            <div className="text-2xl font-black mt-1 text-foreground tracking-tight">{formatLKR(totalExpected)}</div>
+            <span className="text-[10px] text-muted-foreground font-medium mt-0.5 block">total due</span>
           </CardContent>
         </Card>
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-green-600/10 dark:bg-green-500/10 rounded-full blur-[30px] -z-0" />
-          <CardContent className="p-6 relative z-10">
+          <CardContent className="p-5 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Collected</span>
-            <div className="text-3xl font-black mt-1 text-green-600 dark:text-green-400 tracking-tight">{formatLKR(totalCollected)}</div>
+            <div className="text-2xl font-black mt-1 text-green-600 dark:text-green-400 tracking-tight">{formatLKR(totalCollected)}</div>
+            <span className="text-[10px] text-muted-foreground font-medium mt-0.5 block">amount received</span>
           </CardContent>
         </Card>
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[30px] -z-0" />
-          <CardContent className="p-6 relative z-10">
+          <CardContent className="p-5 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Pending</span>
-            <div className="text-3xl font-black mt-1 text-red-500 dark:text-red-400 tracking-tight">{formatLKR(totalPending)}</div>
+            <div className="text-2xl font-black mt-1 text-red-500 dark:text-red-400 tracking-tight">{formatLKR(totalPending)}</div>
+            <span className="text-[10px] text-muted-foreground font-medium mt-0.5 block">outstanding</span>
           </CardContent>
         </Card>
+        {/* Collection Rate Card */}
+        {(() => {
+          const rate = totalExpected > 0 ? Math.round((totalCollected / totalExpected) * 100) : 0;
+          const rateColor = rate >= 80 ? "text-emerald-600 dark:text-emerald-400" : rate >= 50 ? "text-amber-600 dark:text-amber-400" : "text-red-500 dark:text-red-400";
+          const glowColor = rate >= 80 ? "bg-emerald-500/10" : rate >= 50 ? "bg-amber-500/10" : "bg-red-500/10";
+          return (
+            <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
+              <div className={`absolute top-0 right-0 w-32 h-32 ${glowColor} rounded-full blur-[30px] -z-0`} />
+              <CardContent className="p-5 relative z-10">
+                <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Collection Rate</span>
+                <div className={`text-2xl font-black mt-1 tracking-tight ${rateColor}`}>{rate}%</div>
+                <span className="text-[10px] text-muted-foreground font-medium mt-0.5 block">of target collected</span>
+              </CardContent>
+            </Card>
+          );
+        })()}
       </section>
 
       {/* Chart Section */}
@@ -690,21 +758,48 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   <th className="p-4 text-center">Active Loans</th>
                   <th className="p-4 text-right">Total Expected</th>
                   <th className="p-4 text-right">Total Collected</th>
+                  <th className="p-4 text-right">Collection Rate</th>
                   <th className="p-4 px-6 text-right">Outstanding Balance</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border print:divide-black/10">
-                {villageBreakdown.map((item) => (
-                  <tr key={item.village} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
-                    <td className="p-4 px-6 font-semibold text-sm">📍 {item.village}</td>
-                    <td className="p-4 text-center text-xs font-semibold">{item.totalClients}</td>
-                    <td className="p-4 text-center text-xs font-semibold">{item.activeLoansCount}</td>
-                    <td className="p-4 text-right font-bold text-sm">{formatLKR(item.totalExpected)}</td>
-                    <td className="p-4 text-right font-bold text-sm text-green-600 dark:text-green-400">{formatLKR(item.totalCollected)}</td>
-                    <td className="p-4 px-6 text-right font-bold text-sm text-red-500 dark:text-red-400">{formatLKR(item.outstandingBalance)}</td>
-                  </tr>
-                ))}
+                {villageBreakdown.map((item) => {
+                  const vRate = item.totalExpected > 0 ? Math.round((item.totalCollected / item.totalExpected) * 100) : 0;
+                  const vRateColor = vRate >= 80 ? "text-emerald-600 dark:text-emerald-400" : vRate >= 50 ? "text-amber-600 dark:text-amber-400" : "text-red-500 dark:text-red-400";
+                  return (
+                    <tr key={item.village} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
+                      <td className="p-4 px-6 font-semibold text-sm">📍 {item.village}</td>
+                      <td className="p-4 text-center text-xs font-semibold">{item.totalClients}</td>
+                      <td className="p-4 text-center text-xs font-semibold">{item.activeLoansCount}</td>
+                      <td className="p-4 text-right font-bold text-sm">{formatLKR(item.totalExpected)}</td>
+                      <td className="p-4 text-right font-bold text-sm text-green-600 dark:text-green-400">{formatLKR(item.totalCollected)}</td>
+                      <td className={`p-4 text-right font-black text-sm ${vRateColor}`}>{vRate}%</td>
+                      <td className="p-4 px-6 text-right font-bold text-sm text-red-500 dark:text-red-400">{formatLKR(item.outstandingBalance)}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
+              {/* Village totals footer */}
+              {villageBreakdown.length > 1 && (() => {
+                const grandExpected = villageBreakdown.reduce((s, v) => s + v.totalExpected, 0);
+                const grandCollected = villageBreakdown.reduce((s, v) => s + v.totalCollected, 0);
+                const grandOutstanding = villageBreakdown.reduce((s, v) => s + v.outstandingBalance, 0);
+                const grandRate = grandExpected > 0 ? Math.round((grandCollected / grandExpected) * 100) : 0;
+                const grandRateColor = grandRate >= 80 ? "text-emerald-600 dark:text-emerald-400" : grandRate >= 50 ? "text-amber-600 dark:text-amber-400" : "text-red-500 dark:text-red-400";
+                return (
+                  <tfoot className="bg-secondary/40 border-t-2 border-border print:border-black/20">
+                    <tr className="text-foreground print:text-black font-black">
+                      <td className="p-4 px-6 text-xs uppercase tracking-wider font-black">All Villages</td>
+                      <td className="p-4 text-center text-xs">{villageBreakdown.reduce((s, v) => s + v.totalClients, 0)}</td>
+                      <td className="p-4 text-center text-xs">{villageBreakdown.reduce((s, v) => s + v.activeLoansCount, 0)}</td>
+                      <td className="p-4 text-right text-sm">{formatLKR(grandExpected)}</td>
+                      <td className="p-4 text-right text-sm text-green-600 dark:text-green-400">{formatLKR(grandCollected)}</td>
+                      <td className={`p-4 text-right text-sm ${grandRateColor}`}>{grandRate}%</td>
+                      <td className="p-4 px-6 text-right text-sm text-red-500 dark:text-red-400">{formatLKR(grandOutstanding)}</td>
+                    </tr>
+                  </tfoot>
+                );
+              })()}
             </table>
           </CardContent>
         </Card>
