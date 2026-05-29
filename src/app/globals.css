@@ -1,79 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Pitch Black Dark Neon (forced) ─────────── */
+/* ─── Light Mode: inspired by mobile app reference ─────────── */
 :root {
-  --background: #000000;
-  --foreground: #FFFFFF;
-  --card: #0A0A0A;
-  --card-foreground: #FFFFFF;
-  --popover: #0A0A0A;
-  --popover-foreground: #FFFFFF;
-  --primary: #00FFFF; /* Neon Cyan */
-  --primary-foreground: #000000;
-  --secondary: #111111;
-  --secondary-foreground: #FFFFFF;
-  --muted: #111111;
-  --muted-foreground: #A1A1AA;
-  --accent: #111111;
-  --accent-foreground: #FF00FF; /* Neon Magenta */
-  --destructive: #220000;
-  --destructive-foreground: #FF00FF;
-  --border: #222222;
-  --input: #0A0A0A;
-  --ring: #00FFFF;
+  --background: #EEF1F8;
+  --foreground: #0D1117;
+  --card: #ffffff;
+  --card-foreground: #0D1117;
+  --popover: #ffffff;
+  --popover-foreground: #0D1117;
+  --primary: #3D6DFF;
+  --primary-foreground: #ffffff;
+  --secondary: #E2E7F4;
+  --secondary-foreground: #1A2235;
+  --muted: #E2E7F4;
+  --muted-foreground: #6B7A99;
+  --accent: #E8EEFF;
+  --accent-foreground: #3D6DFF;
+  --destructive: #FEF2F2;
+  --destructive-foreground: #EF4444;
+  --border: #D0D7EC;
+  --input: #ffffff;
+  --ring: #3D6DFF;
 
   /* Custom chart variables */
-  --chart-collected: #00FFFF; /* Cyan */
-  --chart-expected: #FF00FF;  /* Magenta */
+  --chart-collected: #10B981;
+  --chart-expected: #3D6DFF;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #FF00FF;
-  --vibe-pink: #FF00FF;
-  --vibe-violet: #8B5CF6;
-  --vibe-sky: #00FFFF;
+  --vibe-coral: #EF4444;
+  --vibe-pink: #E8A430;
+  --vibe-violet: #A855F7;
+  --vibe-sky: #0EA5E9;
 
-  --vibe-coral-lt: #220000;
-  --vibe-pink-lt: #220022;
-  --vibe-violet-lt: #1A0033;
-  --vibe-sky-lt: #002222;
+  --vibe-coral-lt: #FEF2F2;
+  --vibe-pink-lt: #FFF8EB;
+  --vibe-violet-lt: #F5F0FF;
+  --vibe-sky-lt: #F0F9FF;
 }
 
-/* ─── Dark Mode: Pitch Black Dark Neon ──────────────── */
+/* ─── Dark Mode: Deep Navy (matching mobile app reference) ──────────────── */
 .dark {
-  --background: #000000;
-  --foreground: #FFFFFF;
-  --card: #0A0A0A;
-  --card-foreground: #FFFFFF;
-  --popover: #0A0A0A;
-  --popover-foreground: #FFFFFF;
-  --primary: #00FFFF; /* Neon Cyan */
-  --primary-foreground: #000000;
-  --secondary: #111111;
-  --secondary-foreground: #FFFFFF;
-  --muted: #111111;
-  --muted-foreground: #A1A1AA;
-  --accent: #111111;
-  --accent-foreground: #FF00FF; /* Neon Magenta */
-  --destructive: #220000;
-  --destructive-foreground: #FF00FF;
-  --border: #222222;
-  --input: #0A0A0A;
-  --ring: #00FFFF;
+  --background: #0D1117;
+  --foreground: #E8EDF8;
+  --card: #131929;
+  --card-foreground: #E8EDF8;
+  --popover: #131929;
+  --popover-foreground: #E8EDF8;
+  --primary: #4A7AFF;
+  --primary-foreground: #ffffff;
+  --secondary: #1A2235;
+  --secondary-foreground: #E8EDF8;
+  --muted: #1A2235;
+  --muted-foreground: #8892B0;
+  --accent: #1A2235;
+  --accent-foreground: #7BA4FF;
+  --destructive: #2A0D1A;
+  --destructive-foreground: #FCA5A5;
+  --border: #1E2A45;
+  --input: #131929;
+  --ring: #4A7AFF;
 
   /* Custom chart variables */
-  --chart-collected: #00FFFF; /* Cyan */
-  --chart-expected: #FF00FF;  /* Magenta */
+  --chart-collected: #10B981;
+  --chart-expected: #4A7AFF;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #FF00FF; /* Magenta */
-  --vibe-pink: #FF00FF;
-  --vibe-violet: #E81CFF;
-  --vibe-sky: #00FFFF; /* Cyan */
+  --vibe-coral: #FCA5A5;
+  --vibe-pink: #FBBF24;
+  --vibe-violet: #C084FC;
+  --vibe-sky: #67E8F9;
 
-  --vibe-coral-lt: #220022;
-  --vibe-pink-lt: #220022;
-  --vibe-violet-lt: #1A0033;
-  --vibe-sky-lt: #002222;
+  --vibe-coral-lt: #450A0A;
+  --vibe-pink-lt: #3A2000;
+  --vibe-violet-lt: #2D1B4E;
+  --vibe-sky-lt: #0A2A35;
 }
 
 @theme inline {

@@ -95,23 +95,25 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-xl p-5 flex flex-col gap-1 bg-[#0A0A0A] border border-[#00FFFF]/30 shadow-[0_0_20px_rgba(0,255,255,0.15)] text-[#FFFFFF]">
-              <div className="flex items-center gap-1.5 text-[#00FFFF] text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3 h-3 text-[#00FFFF]" /> Active Loans
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#3D6DFF] to-[#6A4AFF] text-white shadow-[0_4px_20px_rgba(61,109,255,0.35)] relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-primary-foreground/70 text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3" /> Active Loans
               </div>
-              <span className="text-4xl font-black tracking-tight text-white">{activeLoans}</span>
-              <span className="text-[10px] text-[#00FFFF]/70 font-medium">loans running</span>
+              <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
+              <span className="text-[10px] text-primary-foreground/60 font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-xl p-5 flex flex-col gap-1 bg-[#0A0A0A] border border-[#FF00FF]/30 shadow-[0_0_20px_rgba(255,0,255,0.15)] text-[#FFFFFF]">
-              <div className="flex items-center gap-1.5 text-[#FF00FF] text-[10px] font-bold uppercase tracking-wider">
-                <AlertCircle className="w-3 h-3 text-[#FF00FF]" /> Overdue
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-red-500 to-red-700 text-white shadow-[0_4px_20px_rgba(239,68,68,0.3)] relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
+                <AlertCircle className="w-3 h-3" /> Overdue
               </div>
-              <span className="text-4xl font-black tracking-tight truncate text-white" title={formatLKR(overdueAmount)}>
+              <span className="text-4xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
                 {formatLKR(overdueAmount)}
               </span>
-              <span className="text-[10px] text-[#FF00FF]/70 font-medium">total overdue amount</span>
+              <span className="text-[10px] text-white/70 font-medium">total overdue amount</span>
             </div>
           </div>
 
