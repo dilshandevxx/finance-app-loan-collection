@@ -77,34 +77,26 @@ export function CollectionGoalCard({
 
         {/* Right Side: Animated Ring */}
         <div className="col-span-4 flex justify-end items-center relative">
-          <div className="relative w-24 h-24 drop-shadow-[0_0_18px_rgba(192,132,252,0.4)]">
+          <div className="relative w-24 h-24">
             <svg width={size} height={size} className="transform -rotate-90">
-              <defs>
-                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#C084FC" />
-                  <stop offset="100%" stopColor="#F472B6" />
-                </linearGradient>
-              </defs>
               <circle
-                className="text-secondary/50 dark:text-secondary"
-                strokeWidth={strokeWidth}
-                stroke="currentColor"
-                fill="transparent"
-                r={radius}
                 cx={size / 2}
                 cy={size / 2}
+                r={radius}
+                className="stroke-zinc-200 dark:stroke-zinc-800"
+                strokeWidth={strokeWidth}
+                fill="none"
               />
               <circle
-                className="transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                className="stroke-zinc-900 dark:stroke-zinc-100 transition-all duration-1000 ease-out"
                 strokeWidth={strokeWidth}
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                stroke="url(#ringGradient)"
-                fill="transparent"
-                r={radius}
-                cx={size / 2}
-                cy={size / 2}
+                fill="none"
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
