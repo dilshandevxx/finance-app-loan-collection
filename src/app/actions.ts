@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { formatLKR } from "@/lib/format";
+import { formatLKR, normalizePhone } from "@/lib/format";
 
 export async function createLoan(formData: FormData) {
   const name = formData.get("name") as string;
-  const phone = formData.get("phone") as string;
+  const phoneRaw = formData.get("phone") as string;
+  const phone = normalizePhone(phoneRaw);
   const memberId = formData.get("memberId") as string;
   const principalStr = formData.get("principal") as string;
   const interestStr = formData.get("interest") as string;
@@ -60,7 +61,7 @@ export async function createLoan(formData: FormData) {
       .from("customers")
       .insert({
         name: name.trim(),
-        phone: phone.trim(),
+        phone: phone,
         member_id: memberId?.trim() || null,
         avatar_url: avatarUrl,
         address: serializedAddress
@@ -121,6 +122,95 @@ export async function createLoan(formData: FormData) {
 
   revalidatePath("/");
   redirect("/");
+}
+
+export async function getReceiptDetails(installmentId: string) {
+  try {
+    // 1. Fetch installment
+    const { data: installment, error: instError } = await supabase
+      .from("installments")
+      .select("*")
+      .eq("id", installmentId)
+      .single();
+
+    if (instError || !installment) {
+      console.error("Error fetching installment for receipt:", instError);
+      return null;
+    }
+
+    // 2. Fetch loan
+    const { data: loan, error: loanError } = await supabase
+      .from("loans")
+      .select("*")
+      .eq("id", installment.loan_id)
+      .single();
+
+    if (loanError || !loan) {
+      console.error("Error fetching loan for receipt:", loanError);
+      return null;
+    }
+
+    // 3. Fetch customer
+    const { data: customer, error: custError } = await supabase
+      .from("customers")
+      .select("*")
+      .eq("id", loan.customer_id)
+      .single();
+
+    if (custError || !customer) {
+      console.error("Error fetching customer for receipt:", custError);
+      return null;
+    }
+
+    // 4. Fetch all installments of the loan to calculate progress
+    const { data: allInstallments, error: allInstError } = await supabase
+      .from("installments")
+      .select("*")
+      .eq("loan_id", loan.id)
+      .order("due_date", { ascending: true });
+
+    if (allInstError || !allInstallments) {
+      console.error("Error fetching all installments for receipt:", allInstError);
+      return null;
+    }
+
+    // Calculate installment index (1-based)
+    const instIndex = allInstallments.findIndex(i => i.id === installmentId) + 1;
+    const totalInstallmentsCount = allInstallments.length;
+
+    // Calculate total amount paid so far
+    const totalPaid = allInstallments
+      .filter(i => i.status === "PAID")
+      .reduce((sum, i) => sum + Number(i.amount), 0);
+
+    return {
+      installment: {
+        id: installment.id,
+        amount: Number(installment.amount),
+        dueDate: installment.due_date,
+        paidDate: installment.paid_date,
+        status: installment.status,
+        index: instIndex,
+        totalCount: totalInstallmentsCount,
+      },
+      loan: {
+        id: loan.id,
+        principalAmount: Number(loan.principal_amount),
+        totalAmountDue: Number(loan.total_amount_due),
+        remainingBalance: Number(loan.remaining_balance),
+        weeklyInstallment: Number(loan.weekly_installment),
+        totalPaid,
+      },
+      customer: {
+        name: customer.name,
+        phone: customer.phone,
+        memberId: customer.member_id,
+      }
+    };
+  } catch (err) {
+    console.error("Error in getReceiptDetails action:", err);
+    return null;
+  }
 }
 
 export async function markInstallmentPaid(installmentId: string) {

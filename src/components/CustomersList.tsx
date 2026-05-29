@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
-import { formatLKR } from "@/lib/format";
+import { formatLKR, formatLKPhone } from "@/lib/format";
 
 type CustomersListProps = {
   customers: Customer[];
@@ -210,7 +210,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             <span className="shrink-0 text-gray-300 dark:text-white/20 hidden sm:block">•</span>
                             <span className="flex items-center gap-1 shrink-0">
                               <Phone className="w-3 h-3" />
-                              {customer.phone}
+                              {formatLKPhone(customer.phone)}
                             </span>
                           </div>
                         </div>

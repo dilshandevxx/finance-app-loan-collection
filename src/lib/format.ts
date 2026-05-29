@@ -26,11 +26,32 @@ export function formatLKRDecimal(amount: number): string {
 export function formatLKPhone(phone: string): string {
   const digits = phone.replace(/\D/g, "");
   // Handle +94 international prefix → convert to local 0XX
-  const local = digits.startsWith("94") ? "0" + digits.slice(2) : digits;
+  let local = digits.startsWith("94") ? "0" + digits.slice(2) : digits;
+  if (local.length === 9) {
+    local = "0" + local;
+  }
   if (local.length === 10) {
     return `${local.slice(0, 3)} ${local.slice(3, 6)} ${local.slice(6)}`;
   }
   return phone; // return as-is if format is unexpected
+}
+
+// Normalize phone number to standard local 10-digit format: 0775944600
+export function normalizePhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  // If starts with 94 and is 11 digits
+  if (digits.startsWith("94") && digits.length === 11) {
+    return "0" + digits.slice(2);
+  }
+  // If starts with 0 and is 10 digits
+  if (digits.startsWith("0") && digits.length === 10) {
+    return digits;
+  }
+  // If is 9 digits (e.g. 775944600), prepend 0
+  if (digits.length === 9) {
+    return "0" + digits;
+  }
+  return digits || phone.trim();
 }
 
 // Strip to digits-only for tel:/wa.me links

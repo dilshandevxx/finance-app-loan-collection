@@ -330,7 +330,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                   id="phone"
                   name="phone"
                   required
-                  placeholder="e.g. 071 234 5678" 
+                  placeholder="e.g. 0775944600" 
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>

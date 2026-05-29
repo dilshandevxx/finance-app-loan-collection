@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { X, CheckCircle2, MessageCircle } from "lucide-react";
 import { Customer } from "@/data/db";
 import { config } from "@/lib/config";
-import { formatLKR, phoneToDial } from "@/lib/format";
+import { formatLKR, phoneToDial, formatLKPhone } from "@/lib/format";
+import { getReceiptDetails } from "@/app/actions";
 
 type QuickPaymentModalProps = {
   customer: Customer;
@@ -27,6 +28,8 @@ export function QuickPaymentModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isOfflineSaved, setIsOfflineSaved] = useState(false);
+  const [receiptData, setReceiptData] = useState<any>(null);
+  const [isSharingPdf, setIsSharingPdf] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -34,6 +37,8 @@ export function QuickPaymentModal({
       setIsSuccess(false);
       setIsOfflineSaved(false);
       setIsProcessing(false);
+      setReceiptData(null);
+      setIsSharingPdf(false);
     }
   }, [isOpen, expectedAmount]);
 
@@ -51,6 +56,16 @@ export function QuickPaymentModal({
       
       await onConfirm(finalAmount);
       setIsSuccess(true);
+      
+      // Load detailed receipt details
+      try {
+        const details = await getReceiptDetails(installmentId);
+        if (details) {
+          setReceiptData(details);
+        }
+      } catch (err) {
+        console.error("Failed to load receipt details", err);
+      }
     } catch (error) {
       // If offline or network error, save to queue
       if (typeof window !== 'undefined' && (!navigator.onLine || (error as Error).message === "offline")) {
@@ -67,7 +82,6 @@ export function QuickPaymentModal({
         setIsSuccess(true);
       } else {
         console.error("Payment failed", error);
-        // Show generic error or toast (omitted for brevity)
       }
     } finally {
       setIsProcessing(false);
@@ -83,23 +97,108 @@ export function QuickPaymentModal({
     });
     const receiptId = `REC-${installmentId.slice(0, 8).toUpperCase()}`;
 
-    const message = `🧾 *PAYMENT RECEIPT* 🧾\n` +
-      `------------------------------------------\n` +
-      `*Receipt No:* ${receiptId}\n` +
-      `*Date:* ${dateStr}\n` +
-      `------------------------------------------\n` +
-      `*Client Details:*\n` +
-      `• *Name:* ${customer.name}\n` +
-      `• *Member ID:* ${customer.memberId || 'N/A'}\n` +
-      `• *Phone:* ${customer.phone}\n\n` +
-      `*Payment Details:*\n` +
-      `• *Amount Paid:* ${formatLKR(finalAmount)}\n` +
-      `• *Status:* PAID SUCCESSFUL ✅\n` +
-      `------------------------------------------\n` +
-      `Thank you for your payment!\n` +
-      `- *${config.appName}*`;
+    let message = "";
+    if (receiptData) {
+      const instNo = `${receiptData.installment.index} of ${receiptData.installment.totalCount}`;
+      message = `🧾 *PAYMENT RECEIPT* 🧾\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*Receipt No:* ${receiptId}\n` +
+        `*Date:* ${dateStr}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*Client Details:*\n` +
+        `• *Name:* ${receiptData.customer.name}\n` +
+        `• *Member ID:* ${receiptData.customer.memberId || 'N/A'}\n` +
+        `• *Phone:* ${formatLKPhone(receiptData.customer.phone)}\n\n` +
+        `*Payment Details:*\n` +
+        `• *Installment:* ${instNo}\n` +
+        `• *Amount Paid:* ${formatLKR(finalAmount)}\n` +
+        `• *Status:* PAID SUCCESSFUL ✅\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*Loan Balance Summary:*\n` +
+        `• *Principal Amount:* ${formatLKR(receiptData.loan.principalAmount)}\n` +
+        `• *Total Paid So Far:* ${formatLKR(receiptData.loan.totalPaid)}\n` +
+        `• *Remaining Balance:* ${formatLKR(receiptData.loan.remainingBalance)}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `Thank you for your payment!\n` +
+        `- *${config.appName}*`;
+    } else {
+      message = `🧾 *PAYMENT RECEIPT* 🧾\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*Receipt No:* ${receiptId}\n` +
+        `*Date:* ${dateStr}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*Client Details:*\n` +
+        `• *Name:* ${customer.name}\n` +
+        `• *Member ID:* ${customer.memberId || 'N/A'}\n` +
+        `• *Phone:* ${formatLKPhone(customer.phone)}\n\n` +
+        `*Payment Details:*\n` +
+        `• *Amount Paid:* ${formatLKR(finalAmount)}\n` +
+        `• *Status:* PAID SUCCESSFUL ✅${isOfflineSaved ? ' (Offline Sync Pending)' : ''}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `Thank you for your payment!\n` +
+        `- *${config.appName}*`;
+    }
 
     window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  const handlePDFShare = async () => {
+    setIsSharingPdf(true);
+    try {
+      const finalAmount = parseFloat(amount) || expectedAmount;
+      const dateStr = new Date().toLocaleString("en-LK", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+      const receiptId = `REC-${installmentId.slice(0, 8).toUpperCase()}`;
+
+      // Compile receipt details data
+      const pdfData = {
+        receiptId,
+        dateStr,
+        customerName: receiptData?.customer.name || customer.name,
+        memberId: receiptData?.customer.memberId || customer.memberId || "N/A",
+        phone: formatLKPhone(receiptData?.customer.phone || customer.phone),
+        amountPaid: finalAmount,
+        status: isOfflineSaved ? "PAID (OFFLINE)" : "PAID SUCCESSFUL",
+        principal: receiptData?.loan.principalAmount || 0,
+        remainingBalance: receiptData?.loan.remainingBalance || 0,
+        totalPaid: receiptData?.loan.totalPaid || finalAmount,
+        installmentNo: receiptData 
+          ? `${receiptData.installment.index} of ${receiptData.installment.totalCount}`
+          : "1 (Offline)",
+        companyName: config.appName,
+      };
+
+      // Generate PDF
+      const { generateReceiptPDF } = await import("@/lib/pdf");
+      const doc = generateReceiptPDF(pdfData);
+      
+      const fileName = `Receipt-${receiptId}.pdf`;
+
+      // Check Web Share API
+      if (typeof window !== "undefined" && navigator.canShare) {
+        const pdfBlob = doc.output("blob");
+        const file = new File([pdfBlob], fileName, { type: "application/pdf" });
+        
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `Payment Receipt - ${pdfData.customerName}`,
+            text: `Payment Receipt for Rs. ${finalAmount.toLocaleString()}`,
+          });
+          setIsSharingPdf(false);
+          return;
+        }
+      }
+
+      // Fallback: direct download
+      doc.save(fileName);
+    } catch (err) {
+      console.error("Error generating or sharing PDF:", err);
+    } finally {
+      setIsSharingPdf(false);
+    }
   };
 
   return (
@@ -142,14 +241,32 @@ export function QuickPaymentModal({
 
             <div className="flex flex-col gap-3 w-full mt-2">
               <button
-                onClick={handleWhatsAppShare}
-                className="w-full h-14 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm"
+                onClick={handlePDFShare}
+                disabled={isSharingPdf}
+                className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm border-none cursor-pointer disabled:opacity-75"
               >
-                <MessageCircle className="w-5 h-5" /> Share Receipt
+                {isSharingPdf ? (
+                  <div className="w-5 h-5 border-2 border-current/30 border-t-current rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Share / Download PDF
+                  </>
+                )}
               </button>
+
+              <button
+                onClick={handleWhatsAppShare}
+                className="w-full h-14 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm border-none cursor-pointer"
+              >
+                <MessageCircle className="w-5 h-5" /> Share via WhatsApp
+              </button>
+
               <button
                 onClick={onClose}
-                className="w-full h-14 bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-black dark:text-white rounded-2xl font-bold text-lg transition-all"
+                className="w-full h-14 bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-black dark:text-white rounded-2xl font-bold text-lg transition-all border-none cursor-pointer"
               >
                 Done
               </button>
@@ -164,7 +281,7 @@ export function QuickPaymentModal({
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-black dark:text-white">{customer.name}</span>
-                  <span className="text-xs text-gray-500 dark:text-white/50">{customer.phone}</span>
+                  <span className="text-xs text-gray-500 dark:text-white/50">{formatLKPhone(customer.phone)}</span>
                 </div>
               </div>
               
