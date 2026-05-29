@@ -53,7 +53,7 @@ export default function RootLayout({
             {/* Ambient background glows for premium desktop look */}
             <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/3 dark:bg-primary/5 blur-[120px] pointer-events-none z-0" />
 
-            <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-2.5 sm:px-4 md:px-8 pt-4 md:pl-32 relative z-10">
+            <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-2.5 sm:px-4 md:px-8 pt-4 md:pl-24 relative z-10">
               {children}
             </main>
             <InstallPrompt />
