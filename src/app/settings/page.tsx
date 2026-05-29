@@ -18,7 +18,8 @@ import {
   RefreshCw, 
   Info,
   Smartphone,
-  Trash2
+  Trash2,
+  Mail
 } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
@@ -274,8 +275,9 @@ export default function SettingsPage() {
             <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight truncate">
               {userProfile?.name || config.agentName}
             </h2>
-            <div className="flex flex-col gap-0.5 mt-1">
-              <span className="text-muted-foreground text-xs sm:text-sm font-medium truncate">
+            <div className="flex flex-col gap-1.5 mt-1">
+              <span className="flex items-center gap-1.5 text-muted-foreground text-xs sm:text-sm font-medium truncate">
+                <Mail className="w-3.5 h-3.5 shrink-0 text-primary" />
                 {userProfile?.email || "Loading email..."}
               </span>
               <span className="text-muted-foreground text-[10px] sm:text-xs font-semibold tracking-widest uppercase opacity-70">

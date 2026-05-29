@@ -202,10 +202,13 @@ export async function getUserProfile() {
     displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
   }
 
+  // Always prefer the confirmed email from Supabase Auth — it's guaranteed to be set
+  const displayEmail = user.email || profile?.email || "No email";
+
   return {
     id: user.id,
     name: displayName,
-    email: profile?.email || user.email || "No email",
+    email: displayEmail,
     pin: profile?.hashed_pin || "Not set"
   };
 }
