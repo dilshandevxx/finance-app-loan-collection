@@ -42,6 +42,8 @@ export type Customer = {
   avatarUrl?: string;
   address?: string;
   state?: string;
+  companyName?: string;
+  idNumber?: string;
   createdAt: string;
 };
 
@@ -77,12 +79,16 @@ export type CustomerNote = {
 function parseAddressField(rawAddress: string | undefined | null) {
   let address = "";
   let state = "";
+  let companyName = "";
+  let idNumber = "";
   if (rawAddress) {
     if (rawAddress.trim().startsWith("{")) {
       try {
         const parsed = JSON.parse(rawAddress);
         address = parsed.address || "";
         state = parsed.state || "";
+        companyName = parsed.companyName || "";
+        idNumber = parsed.idNumber || "";
       } catch {
         address = rawAddress;
       }
@@ -90,7 +96,7 @@ function parseAddressField(rawAddress: string | undefined | null) {
       address = rawAddress;
     }
   }
-  return { address, state };
+  return { address, state, companyName, idNumber };
 }
 
 export async function getCustomers(): Promise<Customer[]> {
@@ -98,7 +104,7 @@ export async function getCustomers(): Promise<Customer[]> {
   if (error) console.error("Error fetching customers:", error);
   
   return (data || []).map(row => {
-    const { address, state } = parseAddressField(row.address);
+    const { address, state, companyName, idNumber } = parseAddressField(row.address);
     return {
       id: row.id,
       memberId: row.member_id,
@@ -107,6 +113,8 @@ export async function getCustomers(): Promise<Customer[]> {
       avatarUrl: row.avatar_url,
       address,
       state,
+      companyName,
+      idNumber,
       createdAt: row.created_at
     };
   });
@@ -120,7 +128,7 @@ export async function getCustomerById(id: string): Promise<Customer | null> {
   }
   if (!data) return null;
   
-  const { address, state } = parseAddressField(data.address);
+  const { address, state, companyName, idNumber } = parseAddressField(data.address);
   return {
     id: data.id,
     memberId: data.member_id,
@@ -129,6 +137,8 @@ export async function getCustomerById(id: string): Promise<Customer | null> {
     avatarUrl: data.avatar_url,
     address,
     state,
+    companyName,
+    idNumber,
     createdAt: data.created_at
   };
 }

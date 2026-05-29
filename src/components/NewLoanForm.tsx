@@ -3,7 +3,7 @@
 import { useState, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { createLoan } from "@/app/actions";
-import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera } from "lucide-react";
+import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
 
 type Customer = {
   id: string;
@@ -292,6 +292,40 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                   name="phone"
                   required
                   placeholder="e.g. 555-0199" 
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
+                />
+              </div>
+            </div>
+
+            {/* ID Number */}
+            <div className="space-y-2 col-span-2 sm:col-span-1">
+              <label htmlFor="idNumber" className="text-sm font-semibold text-gray-750 dark:text-white/70">ID Number / NIC <span className="text-gray-400 font-normal">(optional)</span></label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Hash className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
+                </div>
+                <input 
+                  type="text" 
+                  id="idNumber"
+                  name="idNumber"
+                  placeholder="e.g. 963829472V" 
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
+                />
+              </div>
+            </div>
+
+            {/* Company Name */}
+            <div className="space-y-2 col-span-2 sm:col-span-1">
+              <label htmlFor="companyName" className="text-sm font-semibold text-gray-750 dark:text-white/70">Company Name <span className="text-gray-400 font-normal">(optional)</span></label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Building className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
+                </div>
+                <input 
+                  type="text" 
+                  id="companyName"
+                  name="companyName"
+                  placeholder="e.g. Acme Corp" 
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>

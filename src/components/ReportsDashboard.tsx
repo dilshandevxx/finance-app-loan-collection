@@ -100,25 +100,50 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
 
   const exportCSV = () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
-    const headers = ["ID", "Customer Name", "Member ID", "Due Date", "Status", "Amount"];
-    const rows = filteredInstallments.map(inst => {
-      const loan = loans.find(l => l.id === inst.loanId);
-      const customer = customers.find(c => c.id === loan?.customerId);
+    const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
+    const headers = [
+      "Customer Name", 
+      "ID / NIC Number", 
+      "Company Name", 
+      "Member ID", 
+      "Phone Number", 
+      "Address / Village", 
+      "Loan Amount", 
+      "Loan Start Date", 
+      "Loan End Date"
+    ];
+
+    const rows = uniqueLoanIds.map(loanId => {
+      const loan = loans.find(l => l.id === loanId);
+      const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
+      
+      const loanInsts = installments.filter(i => i.loanId === loanId);
+      const sortedLoanInsts = [...loanInsts].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+      const endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
+      
+      const fullAddress = customer 
+        ? [customer.state, customer.address].filter(Boolean).join(" • ")
+        : "N/A";
+
       return [
-        inst.id,
-        customer?.name || "Unknown",
-        customer?.memberId || customer?.id || "N/A",
-        inst.dueDate,
-        inst.status,
-        inst.amount.toFixed(2)
+        `"${customer?.name || "Unknown"}"`,
+        `"${customer?.idNumber || "N/A"}"`,
+        `"${customer?.companyName || "N/A"}"`,
+        `"${customer?.memberId || "N/A"}"`,
+        `"${customer?.phone || "N/A"}"`,
+        `"${fullAddress || "N/A"}"`,
+        `"${loan ? `$${loan.principalAmount.toFixed(2)}` : "N/A"}"`,
+        `"${loan?.startDate || "N/A"}"`,
+        `"${endDateVal}"`
       ];
     });
+
     const csvContent = [headers.join(","), ...rows.map(row => row.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `Loan_Report_${startDate}_to_${endDate}.csv`);
+    link.setAttribute("download", `Loan_Ledger_${startDate}_to_${endDate}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -126,23 +151,62 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
 
   const exportExcel = () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
-    const headers = ["ID", "Customer Name", "Member ID", "Due Date", "Status", "Amount"];
-    const rows = filteredInstallments.map(inst => {
-      const loan = loans.find(l => l.id === inst.loanId);
-      const customer = customers.find(c => c.id === loan?.customerId);
+    const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
+    const headers = [
+      "Customer Name", 
+      "ID / NIC Number", 
+      "Company Name", 
+      "Member ID", 
+      "Phone Number", 
+      "Address / Village", 
+      "Loan Amount", 
+      "Loan Start Date", 
+      "Loan End Date"
+    ];
+
+    const rows = uniqueLoanIds.map(loanId => {
+      const loan = loans.find(l => l.id === loanId);
+      const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
+      
+      const loanInsts = installments.filter(i => i.loanId === loanId);
+      const sortedLoanInsts = [...loanInsts].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+      const endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
+      
+      const fullAddress = customer 
+        ? [customer.state, customer.address].filter(Boolean).join(" • ")
+        : "N/A";
+
       return [
-        inst.id,
         customer?.name || "Unknown",
-        customer?.memberId || customer?.id || "N/A",
-        inst.dueDate,
-        inst.status,
-        inst.amount
+        customer?.idNumber || "N/A",
+        customer?.companyName || "N/A",
+        customer?.memberId || "N/A",
+        customer?.phone || "N/A",
+        fullAddress || "N/A",
+        loan ? `$${loan.principalAmount.toFixed(2)}` : "N/A",
+        loan?.startDate || "N/A",
+        endDateVal
       ];
     });
+
     const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    
+    // Set auto-fit columns for gorgeous readable Excel files
+    worksheet["!cols"] = [
+      { wch: 22 }, // Customer Name
+      { wch: 18 }, // ID / NIC Number
+      { wch: 22 }, // Company Name
+      { wch: 14 }, // Member ID
+      { wch: 16 }, // Phone Number
+      { wch: 32 }, // Address / Village
+      { wch: 14 }, // Loan Amount
+      { wch: 16 }, // Loan Start Date
+      { wch: 16 }  // Loan End Date
+    ];
+
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-    XLSX.writeFile(workbook, `Loan_Report_${startDate}_to_${endDate}.xlsx`);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Ledger");
+    XLSX.writeFile(workbook, `Loan_Ledger_${startDate}_to_${endDate}.xlsx`);
   };
 
   const exportPDF = () => window.print();

@@ -15,6 +15,8 @@ export async function createLoan(formData: FormData) {
   const stateVal = formData.get("state") as string || "";
   const addressVal = formData.get("address") as string || "";
   const avatarDataUrl = formData.get("avatarDataUrl") as string || "";
+  const companyNameVal = formData.get("companyName") as string || "";
+  const idNumberVal = formData.get("idNumber") as string || "";
 
   const principalAmount = parseFloat(principalStr);
   const interest = parseFloat(interestStr);
@@ -44,10 +46,12 @@ export async function createLoan(formData: FormData) {
       : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`);
 
     let serializedAddress = null;
-    if (stateVal.trim() || addressVal.trim()) {
+    if (stateVal.trim() || addressVal.trim() || companyNameVal.trim() || idNumberVal.trim()) {
       serializedAddress = JSON.stringify({
         state: stateVal.trim(),
-        address: addressVal.trim()
+        address: addressVal.trim(),
+        companyName: companyNameVal.trim(),
+        idNumber: idNumberVal.trim()
       });
     }
 
