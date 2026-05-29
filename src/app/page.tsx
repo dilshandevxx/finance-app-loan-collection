@@ -19,13 +19,13 @@ export default async function Home() {
   ]);
 
   const pendingInstallments = installments.filter(i => i.status === "PENDING" || i.status === "MISSED");
-  
+
   const expectedToday = pendingInstallments
     .filter(i => new Date(i.dueDate).toDateString() === new Date().toDateString() || i.status === "MISSED")
     .reduce((sum, inst) => sum + inst.amount, 0);
 
   const activeLoans = loans.filter(l => l.status === "ACTIVE").length;
-  
+
   const overdueAmount = pendingInstallments
     .filter(i => i.status === "MISSED" || new Date(i.dueDate) < new Date(new Date().toDateString()))
     .reduce((sum, inst) => sum + inst.amount, 0);
@@ -35,20 +35,22 @@ export default async function Home() {
     .reduce((sum, inst) => sum + inst.amount, 0);
 
   const todayInstallmentsList = installments.filter(i => {
-    const isPendingTodayOrMissed = (i.status === "PENDING" || i.status === "MISSED") && 
+    const isPendingTodayOrMissed =
+      (i.status === "PENDING" || i.status === "MISSED") &&
       (new Date(i.dueDate).toDateString() === new Date().toDateString() || i.status === "MISSED");
-    const isPaidToday = i.status === "PAID" && i.paidDate && 
+    const isPaidToday =
+      i.status === "PAID" && i.paidDate &&
       new Date(i.paidDate).toDateString() === new Date().toDateString();
     return isPendingTodayOrMissed || isPaidToday;
   });
 
   const totalClientsToday = todayInstallmentsList.length;
   const collectedClientsToday = todayInstallmentsList.filter(i => i.status === "PAID").length;
-  
-  return (
-    <div className="w-full flex flex-col gap-5 pb-28 max-w-md mx-auto px-4 pt-2 min-h-screen">
 
-      {/* ── Header ───────────────────────────────────────── */}
+  return (
+    <div className="w-full flex flex-col gap-5 pb-28 md:pb-6 px-4 pt-2 min-h-screen">
+
+      {/* ── Full-width Header ────────────────────────────────── */}
       <DashboardHeader
         agentName={config.agentName}
         customers={customers}
@@ -56,72 +58,110 @@ export default async function Home() {
         installments={installments}
       />
 
-      {/* ── Metric Pills ─────────────────────────────────── */}
-      <div className="grid grid-cols-2 gap-3">
-        {/* Active Loans – Forest Green */}
-        <div className="rounded-2xl p-4 flex flex-col gap-1 bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-          <div className="flex items-center gap-1.5 text-primary-foreground/70 text-[10px] font-bold uppercase tracking-wider">
-            <Users className="w-3 h-3" /> Active
+      {/* ── Desktop: 2-Column Grid │ Mobile: Single Column ───── */}
+      <div className="flex flex-col md:grid md:grid-cols-12 gap-5 items-start">
+
+        {/* ════════════════════════════════════════
+            LEFT PANEL — Metrics, Portfolio, Chart
+            ════════════════════════════════════════ */}
+        <div className="flex flex-col gap-5 md:col-span-7">
+
+          {/* Metric Pills */}
+          <div className="grid grid-cols-2 gap-3">
+
+            {/* Active Loans */}
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary-foreground/5 rounded-full blur-2xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-primary-foreground/70 text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3" /> Active Loans
+              </div>
+              <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
+              <span className="text-[10px] text-primary-foreground/60 font-medium">loans running</span>
+            </div>
+
+            {/* Overdue */}
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-destructive-foreground text-white shadow-lg shadow-destructive-foreground/20 relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
+                <AlertCircle className="w-3 h-3" /> Overdue
+              </div>
+              <span className="text-4xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
+                {formatLKR(overdueAmount)}
+              </span>
+              <span className="text-[10px] text-white/70 font-medium">total overdue amount</span>
+            </div>
           </div>
-          <span className="text-3xl font-black tracking-tight">{activeLoans}</span>
-          <span className="text-[10px] text-primary-foreground/60 font-medium">loans running</span>
+
+          {/* Portfolio Status Card */}
+          <CollectionGoalCard
+            expectedToday={expectedToday}
+            collectedToday={collectedToday}
+            totalClientsToday={totalClientsToday}
+            collectedClientsToday={collectedClientsToday}
+            activeLoans={activeLoans}
+            overdueAmount={overdueAmount}
+          />
+
+          {/* Weekly Collections Chart */}
+          <div className="rounded-2xl bg-card border border-border p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Collections</p>
+                <p className="text-sm font-bold text-foreground">Weekly Performance</p>
+              </div>
+              <span className="text-xs text-muted-foreground font-medium">This Week</span>
+            </div>
+            <AnalyticsChart />
+          </div>
+
+          {/* Quick Nav — Mobile only */}
+          <div className="grid grid-cols-2 gap-3 md:hidden print:hidden">
+            <Link
+              href="/new"
+              className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
+            >
+              ➕ New Account
+            </Link>
+            <Link
+              href="/villages"
+              className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
+            >
+              📍 Manage Villages
+            </Link>
+          </div>
         </div>
 
-        {/* Overdue – Terracotta */}
-        <div className="rounded-2xl p-4 flex flex-col gap-1 bg-destructive-foreground text-white shadow-lg shadow-destructive-foreground/20">
-          <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
-            <AlertCircle className="w-3 h-3" /> Overdue
+        {/* ════════════════════════════════════════
+            RIGHT PANEL — Quick Nav + Roster
+            ════════════════════════════════════════ */}
+        <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4">
+
+          {/* Quick Nav — Desktop only */}
+          <div className="hidden md:grid grid-cols-2 gap-3 print:hidden">
+            <Link
+              href="/new"
+              className="flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl text-xs font-black shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
+            >
+              ➕ New Account
+            </Link>
+            <Link
+              href="/villages"
+              className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
+            >
+              📍 Manage Villages
+            </Link>
           </div>
-          <span className="text-3xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
-            {formatLKR(overdueAmount)}
-          </span>
-          <span className="text-[10px] text-white/70 font-medium">amount due</span>
-        </div>
-      </div>
 
-      {/* ── Quick Navigation ─────────────────────────────── */}
-      <div className="grid grid-cols-2 gap-3 print:hidden">
-        <Link
-          href="/new"
-          className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
-        >
-          ➕ New Account
-        </Link>
-        <Link
-          href="/villages"
-          className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
-        >
-          📍 Manage Villages
-        </Link>
-      </div>
-
-      {/* ── Portfolio Status Card ─────────────────────────── */}
-      <CollectionGoalCard
-        expectedToday={expectedToday}
-        collectedToday={collectedToday}
-        totalClientsToday={totalClientsToday}
-        collectedClientsToday={collectedClientsToday}
-        activeLoans={activeLoans}
-        overdueAmount={overdueAmount}
-      />
-
-      {/* ── Due Today Roster ─────────────────────────────── */}
-      <DashboardRoster
-        pendingInstallments={pendingInstallments}
-        customers={customers}
-        loans={loans}
-      />
-
-      {/* ── Weekly Chart ─────────────────────────────────── */}
-      <div className="rounded-2xl bg-card border border-border p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Collections</p>
-            <p className="text-sm font-bold text-foreground">Weekly Performance</p>
+          {/* Due Today Roster — sticky & scrollable on desktop */}
+          <div className="md:max-h-[calc(100vh-11rem)] md:overflow-y-auto md:rounded-2xl">
+            <DashboardRoster
+              pendingInstallments={pendingInstallments}
+              customers={customers}
+              loans={loans}
+            />
           </div>
-          <span className="text-xs text-muted-foreground font-medium">This Week</span>
         </div>
-        <AnalyticsChart />
+
       </div>
 
       <BottomNav />
