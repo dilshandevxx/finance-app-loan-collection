@@ -24,7 +24,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
 import { logout } from "@/app/auth-actions";
-import { clearAllData } from "@/app/actions";
+import { clearAllData, fetchSystemVillages, createSystemVillage } from "@/app/actions";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -33,6 +33,47 @@ export default function SettingsPage() {
   const [showToast, setShowToast] = useState<string | null>(null);
   const [isClearing, setIsClearing] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+  // Villages state & actions
+  const [villages, setVillages] = useState<string[]>([]);
+  const [newVillageName, setNewVillageName] = useState("");
+  const [isAddingVillage, setIsAddingVillage] = useState(false);
+  const [villageError, setVillageError] = useState<string | null>(null);
+
+  const loadVillages = async () => {
+    try {
+      const res = await fetchSystemVillages();
+      setVillages(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    loadVillages();
+  }, []);
+
+  const handleAddVillage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newVillageName.trim()) return;
+    setIsAddingVillage(true);
+    setVillageError(null);
+    try {
+      const res = await createSystemVillage(newVillageName);
+      if (res.success) {
+        setNewVillageName("");
+        setShowToast("New village added successfully!");
+        setTimeout(() => setShowToast(null), 3000);
+        loadVillages();
+      } else {
+        setVillageError(res.error || "Failed to add village");
+      }
+    } catch (err) {
+      setVillageError("An unexpected error occurred.");
+    } finally {
+      setIsAddingVillage(false);
+    }
+  };
 
   const handleClearAllData = async () => {
     setIsClearing(true);
@@ -268,6 +309,58 @@ export default function SettingsPage() {
                 </div>
                 <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
               </Link>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Villages Management */}
+        <section>
+          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Villages & Route Areas</h3>
+          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-5 flex flex-col gap-4">
+              
+              {/* Add Village Form */}
+              <form onSubmit={handleAddVillage} className="flex gap-2 w-full">
+                <input
+                  type="text"
+                  value={newVillageName}
+                  onChange={(e) => setNewVillageName(e.target.value)}
+                  placeholder="Enter new village name..."
+                  className="flex-1 bg-secondary border border-border focus:border-ring/40 rounded-xl px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={isAddingVillage}
+                  className="h-10 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl text-xs transition-all active:scale-95 shrink-0 flex items-center justify-center cursor-pointer disabled:opacity-50 border-none"
+                >
+                  {isAddingVillage ? "Adding..." : "Add"}
+                </button>
+              </form>
+
+              {villageError && (
+                <p className="text-xs text-destructive-foreground font-medium px-1">{villageError}</p>
+              )}
+
+              {/* Villages List */}
+              <div className="border-t border-border pt-4">
+                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block mb-2 px-1">Registered Villages</span>
+                {villages.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic px-1">No villages registered yet.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1">
+                    {villages.map((v) => (
+                      <span
+                        key={v}
+                        className="px-3 py-1.5 text-xs font-bold bg-secondary hover:bg-border/30 text-foreground rounded-full border border-border transition-colors flex items-center gap-1 select-none"
+                      >
+                        📍 {v}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
             </CardContent>
           </Card>
         </section>

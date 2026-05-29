@@ -14,7 +14,7 @@ type Customer = {
 
 const initialState = { error: undefined as string | undefined };
 
-export function NewLoanForm({ customers }: { customers: Customer[] }) {
+export function NewLoanForm({ customers, villages }: { customers: Customer[]; villages: string[] }) {
   const [state, formAction, isPending] = useActionState(
     async (_prev: typeof initialState, formData: FormData) => {
       const result = await createLoan(formData);
@@ -110,13 +110,7 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
     reader.readAsDataURL(file);
   };
 
-  const existingStates = Array.from(
-    new Set(
-      customers
-        .map(c => c.state)
-        .filter((s): s is string => !!s && s.trim() !== "")
-    )
-  ).sort();
+  const existingStates = villages;
 
   const calculateInstallment = () => {
     if (weeks <= 0) return 0;

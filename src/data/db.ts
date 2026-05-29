@@ -223,4 +223,71 @@ export async function getCustomerNotes(customerId: string): Promise<CustomerNote
   }));
 }
 
+export async function getSystemVillages(): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("system_settings")
+    .select("value")
+    .eq("key", "villages")
+    .maybeSingle();
+
+  let settingsVillages: string[] = [];
+  if (data?.value) {
+    try {
+      settingsVillages = JSON.parse(data.value);
+    } catch (e) {
+      console.error("Error parsing system_settings villages:", e);
+    }
+  }
+
+  const { data: customerData, error: custError } = await supabase.from("customers").select("address");
+  let customerVillages: string[] = [];
+  if (!custError && customerData) {
+    customerData.forEach(row => {
+      if (row.address && row.address.trim().startsWith("{")) {
+        try {
+          const parsed = JSON.parse(row.address);
+          if (parsed.state) {
+            customerVillages.push(parsed.state);
+          }
+        } catch {}
+      }
+    });
+  }
+
+  const allVillages = Array.from(new Set([...settingsVillages, ...customerVillages]))
+    .map(v => v.trim())
+    .filter(Boolean)
+    .sort();
+
+  return allVillages;
+}
+
+export async function addSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
+  const trimmedName = villageName.trim();
+  if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
+
+  const currentVillages = await getSystemVillages();
+  const lowercased = currentVillages.map(v => v.toLowerCase());
+  
+  if (lowercased.includes(trimmedName.toLowerCase())) {
+    return { success: false, error: "Village already exists." };
+  }
+
+  const updatedVillages = [...currentVillages, trimmedName].sort();
+  const { error } = await supabase
+    .from("system_settings")
+    .upsert({
+      key: "villages",
+      value: JSON.stringify(updatedVillages),
+      updated_at: new Date().toISOString()
+    });
+
+  if (error) {
+    console.error("Error adding system village:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
 

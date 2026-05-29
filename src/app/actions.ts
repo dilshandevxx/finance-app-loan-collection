@@ -295,3 +295,16 @@ export async function clearAllData() {
   }
 }
 
+import { getSystemVillages, addSystemVillage } from "@/data/db";
+
+export async function fetchSystemVillages() {
+  return await getSystemVillages();
+}
+
+export async function createSystemVillage(villageName: string) {
+  const res = await addSystemVillage(villageName);
+  revalidatePath("/settings");
+  revalidatePath("/new");
+  return res;
+}
+
