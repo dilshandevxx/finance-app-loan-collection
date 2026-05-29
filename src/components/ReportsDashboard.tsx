@@ -116,6 +116,12 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%" 
       : "0%";
 
+    // Find the maximum installment count of the exported loans to dynamically size headers
+    const maxInstallments = uniqueLoanIds.reduce((max, loanId) => {
+      const count = installments.filter(i => i.loanId === loanId).length;
+      return Math.max(max, count);
+    }, 0);
+
     // Standard Report metadata
     const metadata = [
       `"${companyName || "Loan Collection App"}"`,
@@ -150,7 +156,8 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Remaining Balance",
       "Loan Start Date", 
       "Loan End Date",
-      "Loan Status"
+      "Loan Status",
+      ...Array.from({ length: maxInstallments }, (_, idx) => `Installment ${idx + 1}`)
     ];
 
     const rows = uniqueLoanIds.map(loanId => {
@@ -177,6 +184,15 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const remainingBalance = loan ? loan.remainingBalance : 0;
       const status = loan ? loan.status : "N/A";
 
+      const installmentStatusList = Array.from({ length: maxInstallments }, (_, idx) => {
+        if (idx < sortedLoanInsts.length) {
+          const inst = sortedLoanInsts[idx];
+          const isOverdue = inst.status === "PENDING" && new Date(inst.dueDate) < new Date(new Date().toDateString());
+          return isOverdue ? "OVERDUE" : inst.status;
+        }
+        return "";
+      });
+
       return [
         `"${customer?.name || "Unknown"}"`,
         `"${customer?.idNumber || "N/A"}"`,
@@ -195,7 +211,8 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         `"${formatLKR(remainingBalance).replace(/"/g, '""')}"`,
         `"${loan?.startDate || "N/A"}"`,
         `"${endDateVal}"`,
-        `"${status}"`
+        `"${status}"`,
+        ...installmentStatusList.map(st => st ? `"${st}"` : `""`)
       ];
     });
 
@@ -224,6 +241,14 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     const collectionRate = totalExpectedAmount > 0 
       ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%" 
       : "0%";
+
+    // Find the maximum installment count of the exported loans to dynamically size headers
+    const maxInstallments = uniqueLoanIds.reduce((max, loanId) => {
+      const count = installments.filter(i => i.loanId === loanId).length;
+      return Math.max(max, count);
+    }, 0);
+
+    const totalCols = 18 + maxInstallments;
 
     // Standard Report metadata block
     const metadata = [
@@ -259,7 +284,8 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Remaining Balance",
       "Loan Start Date", 
       "Loan End Date",
-      "Loan Status"
+      "Loan Status",
+      ...Array.from({ length: maxInstallments }, (_, idx) => `Installment ${idx + 1}`)
     ];
 
     const rows = uniqueLoanIds.map(loanId => {
@@ -286,6 +312,15 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const remainingBalance = loan ? loan.remainingBalance : 0;
       const status = loan ? loan.status : "N/A";
 
+      const installmentStatusList = Array.from({ length: maxInstallments }, (_, idx) => {
+        if (idx < sortedLoanInsts.length) {
+          const inst = sortedLoanInsts[idx];
+          const isOverdue = inst.status === "PENDING" && new Date(inst.dueDate) < new Date(new Date().toDateString());
+          return isOverdue ? "OVERDUE" : inst.status;
+        }
+        return "";
+      });
+
       return [
         customer?.name || "Unknown",
         customer?.idNumber || "N/A",
@@ -304,14 +339,15 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         formatLKR(remainingBalance),
         loan?.startDate || "N/A",
         endDateVal,
-        status
+        status,
+        ...installmentStatusList
       ];
     });
 
     const worksheet = XLSX.utils.aoa_to_sheet([...metadata, headers, ...rows]);
     
     // Set auto-fit columns for gorgeous readable Excel files
-    worksheet["!cols"] = [
+    const baseCols = [
       { wch: 22 }, // Customer Name
       { wch: 18 }, // ID / NIC Number
       { wch: 22 }, // Company Name
@@ -332,13 +368,16 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       { wch: 14 }  // Loan Status
     ];
 
-    // Merging company name, title, and range across all columns (A-R is 0 to 17)
+    const instCols = Array.from({ length: maxInstallments }, () => ({ wch: 15 }));
+    worksheet["!cols"] = [...baseCols, ...instCols];
+
+    // Merging company name, title, and range across all columns
     worksheet["!merges"] = [
-      { s: { r: 0, c: 0 }, e: { r: 0, c: 17 } },
-      { s: { r: 1, c: 0 }, e: { r: 1, c: 17 } },
-      { s: { r: 2, c: 0 }, e: { r: 2, c: 17 } },
-      { s: { r: 3, c: 0 }, e: { r: 3, c: 17 } },
-      { s: { r: 5, c: 0 }, e: { r: 5, c: 17 } }
+      { s: { r: 0, c: 0 }, e: { r: 0, c: totalCols - 1 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: totalCols - 1 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: totalCols - 1 } },
+      { s: { r: 3, c: 0 }, e: { r: 3, c: totalCols - 1 } },
+      { s: { r: 5, c: 0 }, e: { r: 5, c: totalCols - 1 } }
     ];
 
     const workbook = XLSX.utils.book_new();
