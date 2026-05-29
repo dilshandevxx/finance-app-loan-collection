@@ -103,7 +103,7 @@ export function QuickPaymentModal({
         
         {isSuccess ? (
           <div className="p-6 flex flex-col items-center gap-6 text-center animate-in fade-in zoom-in-95 duration-300">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-2 ${isOfflineSaved ? 'bg-orange-100 dark:bg-orange-500/10 text-orange-500' : 'bg-neon-lime text-black shadow-[0_0_20px_rgba(226,255,59,0.4)]'}`}>
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-2 ${isOfflineSaved ? 'bg-orange-100 dark:bg-orange-500/10 text-orange-500' : 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'}`}>
               <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
             </div>
             
@@ -156,7 +156,7 @@ export function QuickPaymentModal({
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full bg-white dark:bg-card border-2 border-gray-200 focus:border-neon-lime dark:border-[#333] dark:focus:border-neon-lime rounded-2xl pl-12 pr-4 py-4 text-3xl font-bold text-black dark:text-white focus:outline-none transition-colors"
+                    className="w-full bg-white dark:bg-card border-2 border-gray-200 focus:border-primary dark:border-[#333] dark:focus:border-primary rounded-2xl pl-12 pr-4 py-4 text-3xl font-bold text-black dark:text-white focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -168,7 +168,7 @@ export function QuickPaymentModal({
                     onClick={() => setAmount(preset.toString())}
                     className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-colors border ${
                       amount === preset.toString()
-                        ? "bg-neon-lime text-black border-neon-lime dark:bg-neon-lime dark:text-black dark:border-neon-lime font-bold"
+                        ? "bg-primary text-primary-foreground border-primary font-bold"
                         : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-muted dark:text-white dark:border-[#333] dark:hover:bg-[#222]"
                     }`}
                   >
@@ -182,10 +182,10 @@ export function QuickPaymentModal({
               <button
                 onClick={handleConfirm}
                 disabled={isProcessing}
-                className="w-full h-14 bg-neon-lime hover:bg-[#d4f02a] text-black rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-70 shadow-[0_4px_20px_rgba(226,255,59,0.25)] border-none"
+                className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-70 shadow-lg shadow-primary/20 border-none cursor-pointer"
               >
                 {isProcessing ? (
-                  <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-current/30 border-t-current rounded-full animate-spin" />
                 ) : (
                   <>
                     <CheckCircle2 className="w-5 h-5 stroke-[2.5]" /> Confirm Payment

@@ -80,8 +80,8 @@ export function InstallPrompt() {
       </button>
 
       <div className="flex gap-4 items-start pr-6">
-        <div className="w-12 h-12 bg-neon-lime rounded-xl flex items-center justify-center shrink-0 shadow-lg">
-          <Download className="w-6 h-6 text-black" />
+        <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg">
+          <Download className="w-6 h-6 text-primary-foreground" />
         </div>
         <div className="flex-1">
           <h3 className="font-bold text-sm text-gray-100 mb-1">
@@ -120,7 +120,7 @@ export function InstallPrompt() {
           </button>
           <button
             onClick={handleInstallClick}
-            className="flex-[2] h-10 text-xs font-black bg-neon-lime hover:bg-neon-lime/90 text-black rounded-xl transition-all active:scale-95 shadow-md flex items-center justify-center gap-1.5"
+            className="flex-[2] h-10 text-xs font-black bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-all active:scale-95 shadow-md flex items-center justify-center gap-1.5 border-none cursor-pointer"
           >
             <Download className="w-4 h-4" /> Install Now
           </button>

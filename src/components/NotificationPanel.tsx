@@ -117,7 +117,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
               {/* Header */}
               <div className="px-5 py-4 border-b border-gray-100 dark:border-border flex items-center justify-between bg-gray-50/50 dark:bg-muted/30">
                 <div className="flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-black dark:text-neon-lime" />
+                  <Bell className="w-5 h-5 text-primary" />
                   <h2 className="font-extrabold text-lg text-black dark:text-white tracking-tight">Today's Schedule & Tasks</h2>
                 </div>
                 <button 
@@ -173,7 +173,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-neon-lime transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />
@@ -182,7 +182,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-neon-lime transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-[#141414] border border-red-100 dark:border-red-950/20 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-primary transition-colors"
                                 title="WhatsApp Customer"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />
@@ -205,8 +205,8 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
 
                 {/* 2. TODAY'S TASKS SECTION */}
                 <div className="flex flex-col gap-2.5">
-                  <div className="flex items-center gap-2 text-black dark:text-neon-lime font-black text-xs uppercase tracking-wider px-1">
-                    <Clock className="w-3.5 h-3.5 text-black dark:text-neon-lime" />
+                  <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-wider px-1">
+                    <Clock className="w-3.5 h-3.5 text-primary" />
                     <span>Today's Tasks ({todayTasks.length})</span>
                   </div>
                   
@@ -232,18 +232,18 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
                               </div>
                             </div>
-                            <span className="text-sm font-black text-black dark:text-neon-lime">${inst.amount.toFixed(2)}</span>
+                            <span className="text-sm font-black text-primary">${inst.amount.toFixed(2)}</span>
                           </div>
 
                           <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-border/50">
-                            <span className="text-xs text-black dark:text-neon-lime font-bold bg-neon-lime/15 border border-neon-lime/20 px-2 py-0.5 rounded-md">
+                            <span className="text-xs text-primary font-bold bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md">
                               Due Today
                             </span>
                             
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-neon-lime transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />
@@ -252,7 +252,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-neon-lime transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
                                 title="WhatsApp Customer"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />
@@ -260,10 +260,10 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                               <Link 
                                 href={`/customers/${customer?.id}`}
                                 onClick={() => setIsOpen(false)}
-                                className="px-2.5 py-1.5 rounded-lg bg-neon-lime hover:bg-neon-lime/90 text-black text-xs font-black flex items-center gap-1 transition-colors"
+                                className="px-2.5 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-black flex items-center gap-1 transition-colors"
                               >
                                 Collect
-                                <ArrowRight className="w-3 h-3 text-black" />
+                                <ArrowRight className="w-3 h-3" />
                               </Link>
                             </div>
                           </div>
@@ -318,7 +318,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-neon-lime transition-colors"
+                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
                                 title="Call Customer"
                               >
                                 <Phone className="w-3.5 h-3.5" />

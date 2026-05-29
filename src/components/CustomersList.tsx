@@ -117,7 +117,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
           Active Clients
           <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
             activeTab === "active"
-              ? "bg-neon-lime text-black dark:text-neon-lime"
+              ? "bg-primary/20 text-primary dark:bg-primary/10 dark:text-primary-foreground"
               : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
           }`}>
             {allActiveCustomers.length}
@@ -135,7 +135,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
           Settled
           <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
             activeTab === "settled"
-              ? "bg-neon-lime text-black dark:text-neon-lime"
+              ? "bg-primary/20 text-primary dark:bg-primary/10 dark:text-primary-foreground"
               : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
           }`}>
             {allSettledCustomers.length}
@@ -190,7 +190,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             {isOverdue ? (
                               <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-red-200 dark:border-red-500/20">Overdue</span>
                             ) : activeLoan ? (
-                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-neon-lime/20 dark:bg-neon-lime/10 text-black dark:text-neon-lime text-[9px] sm:text-[10px] uppercase font-black tracking-wider shrink-0 border border-neon-lime/25">Active</span>
+                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[9px] sm:text-[10px] uppercase font-black tracking-wider shrink-0 border border-primary/20">Active</span>
                             ) : (
                               <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
                             )}
@@ -224,7 +224,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                                 <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
                               </>
                             ) : (
-                              <span className="text-xs font-bold text-black dark:text-neon-lime bg-neon-lime/10 border border-neon-lime/20 px-2.5 py-1 rounded-full flex items-center gap-1 select-none">
+                              <span className="text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full flex items-center gap-1 select-none">
                                 Paid ✅
                               </span>
                             )}
