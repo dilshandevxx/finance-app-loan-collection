@@ -20,7 +20,7 @@ export default async function VillagesPage() {
   });
 
   return (
-    <div className="w-full flex flex-col gap-6 sm:gap-8 pb-32 md:pb-12 max-w-4xl mx-auto px-2 sm:px-4 pt-4 sm:pt-8 min-h-screen">
+    <div className="w-full flex flex-col gap-6 sm:gap-8 pb-32 md:pb-12 max-w-4xl mx-auto px-2 sm:px-4 pt-2 sm:pt-4 min-h-screen">
       {/* Header */}
       <header className="w-full flex items-center justify-between bg-card p-4 rounded-[1.75rem] border border-border shadow-sm relative overflow-hidden mb-2">
         <Link href="/settings">

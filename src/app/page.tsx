@@ -46,7 +46,7 @@ export default async function Home() {
   const collectedClientsToday = todayInstallmentsList.filter(i => i.status === "PAID").length;
   
   return (
-    <div className="w-full flex flex-col gap-5 pb-28 max-w-md mx-auto px-4 pt-6 min-h-screen">
+    <div className="w-full flex flex-col gap-5 pb-28 max-w-md mx-auto px-4 pt-2 min-h-screen">
 
       {/* ── Header ───────────────────────────────────────── */}
       <DashboardHeader

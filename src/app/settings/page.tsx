@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { 
   Bell, 
   Shield, 
   Moon, 
+  Sun,
   DownloadCloud, 
   LogOut, 
   ChevronRight, 
@@ -28,6 +30,8 @@ import { clearAllData, fetchSystemVillages, createSystemVillage, fetchCompanySet
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const [themeMounted, setThemeMounted] = useState(false);
   const [offlineSyncEnabled, setOfflineSyncEnabled] = useState(true);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
@@ -66,6 +70,7 @@ export default function SettingsPage() {
   useEffect(() => {
     loadVillages();
     loadCompanySettings();
+    setThemeMounted(true);
   }, []);
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -225,7 +230,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 pb-28 pt-4 max-w-lg mx-auto w-full relative min-h-screen px-4">
+    <div className="flex flex-col gap-6 pb-28 pt-1 max-w-lg mx-auto w-full relative min-h-screen px-4">
       
       {/* Toast Notification */}
       {showToast && (
@@ -235,7 +240,7 @@ export default function SettingsPage() {
       )}
 
       {/* Header */}
-      <header className="flex items-center justify-between mb-2 mt-4">
+      <header className="flex items-center justify-between mb-2 mt-1">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Settings</h1>
         <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm">
           Agent Profile
@@ -475,9 +480,15 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border">
                 <div className="flex items-center gap-4">
                   <div className="bg-secondary border border-border p-2.5 rounded-xl text-foreground">
-                    <Moon className="w-5 h-5" />
+                    {themeMounted && theme === "dark" ? (
+                      <Moon className="w-5 h-5" />
+                    ) : (
+                      <Sun className="w-5 h-5" />
+                    )}
                   </div>
-                  <span className="text-foreground font-semibold text-sm">Dark Mode</span>
+                  <span className="text-foreground font-semibold text-sm">
+                    {themeMounted && theme === "dark" ? "Dark Mode" : "Light Mode"}
+                  </span>
                 </div>
                 <ThemeToggle />
               </div>

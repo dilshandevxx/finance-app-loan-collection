@@ -99,6 +99,53 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     return instDate >= start && instDate <= end;
   });
 
+  const villageBreakdown = (() => {
+    const map = new Map<string, {
+      village: string;
+      customers: Customer[];
+    }>();
+
+    customers.forEach(c => {
+      const village = c.state?.trim() || "Unassigned";
+      if (!map.has(village)) {
+        map.set(village, { village, customers: [] });
+      }
+      map.get(village)!.customers.push(c);
+    });
+
+    const list = Array.from(map.values()).map(({ village, customers: vCustomers }) => {
+      const customerIds = new Set(vCustomers.map(c => c.id));
+      const vLoans = loans.filter(l => customerIds.has(l.customerId));
+      const activeLoans = vLoans.filter(l => l.status === "ACTIVE");
+      const activeLoansCount = activeLoans.length;
+      
+      const vLoanIds = new Set(vLoans.map(l => l.id));
+      const vInstallments = installments.filter(inst => vLoanIds.has(inst.loanId));
+      
+      const totalExpected = vInstallments.reduce((sum, inst) => sum + inst.amount, 0);
+      const totalCollected = vInstallments
+        .filter(inst => inst.status === "PAID")
+        .reduce((sum, inst) => sum + inst.amount, 0);
+        
+      const outstandingBalance = activeLoans.reduce((sum, l) => sum + l.remainingBalance, 0);
+
+      return {
+        village,
+        totalClients: vCustomers.length,
+        activeLoansCount,
+        totalExpected,
+        totalCollected,
+        outstandingBalance,
+      };
+    });
+
+    return list.sort((a, b) => {
+      if (a.village === "Unassigned") return 1;
+      if (b.village === "Unassigned") return -1;
+      return a.village.localeCompare(b.village);
+    });
+  })();
+
   const totalExpected = filteredInstallments.reduce((sum, inst) => sum + inst.amount, 0);
   const totalCollected = filteredInstallments
     .filter(inst => inst.status === "PAID")
@@ -167,6 +214,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Phone Number", 
       "Address / Village", 
       "Loan Principal", 
+      "Interest Rate",
       "Total Repayable",
       "Weekly Installment",
       "Total Installments",
@@ -204,6 +252,10 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const weeklyInstallment = loan ? loan.weeklyInstallment : 0;
       const remainingBalance = loan ? loan.remainingBalance : 0;
       const status = loan ? loan.status : "N/A";
+      
+      const interestRate = principalAmount > 0 
+        ? Math.round(((totalAmountDue / principalAmount) - 1) * 100) 
+        : 0;
 
       const installmentStatusList = Array.from({ length: maxInstallments }, (_, idx) => {
         if (idx < sortedLoanInsts.length) {
@@ -225,6 +277,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         `"${customer?.phone || "N/A"}"`,
         `"${fullAddress || "N/A"}"`,
         `"${formatLKR(principalAmount).replace(/"/g, '""')}"`,
+        `"${interestRate}%"`,
         `"${formatLKR(totalAmountDue).replace(/"/g, '""')}"`,
         `"${formatLKR(weeklyInstallment).replace(/"/g, '""')}"`,
         `"${totalInstCount}"`,
@@ -272,7 +325,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       return Math.max(max, count);
     }, 0);
 
-    const totalCols = 18 + maxInstallments;
+    const totalCols = 19 + maxInstallments;
 
     // Standard Report metadata block
     const metadata = [
@@ -298,6 +351,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Phone Number", 
       "Address / Village", 
       "Loan Principal", 
+      "Interest Rate",
       "Total Repayable",
       "Weekly Installment",
       "Total Installments",
@@ -335,6 +389,10 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const weeklyInstallment = loan ? loan.weeklyInstallment : 0;
       const remainingBalance = loan ? loan.remainingBalance : 0;
       const status = loan ? loan.status : "N/A";
+      
+      const interestRate = principalAmount > 0 
+        ? Math.round(((totalAmountDue / principalAmount) - 1) * 100) 
+        : 0;
 
       const installmentStatusList = Array.from({ length: maxInstallments }, (_, idx) => {
         if (idx < sortedLoanInsts.length) {
@@ -356,6 +414,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         customer?.phone || "N/A",
         fullAddress || "N/A",
         formatLKR(principalAmount),
+        `${interestRate}%`,
         formatLKR(totalAmountDue),
         formatLKR(weeklyInstallment),
         totalInstCount,
@@ -382,6 +441,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       { wch: 16 }, // Phone Number
       { wch: 32 }, // Address / Village
       { wch: 16 }, // Loan Principal
+      { wch: 14 }, // Interest Rate
       { wch: 16 }, // Total Repayable
       { wch: 18 }, // Weekly Installment
       { wch: 16 }, // Total Installments
@@ -614,6 +674,39 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
               </div>
             )}
           </div>
+        </Card>
+      </section>
+
+      {/* Village Breakdown */}
+      <section className="mt-2">
+        <h3 className="text-sm font-bold text-foreground print:text-black mb-3 px-1 uppercase tracking-widest">Village Breakdown</h3>
+        <Card className="bg-card print:bg-white print:border-black/20 print:shadow-none border-border rounded-[2rem] overflow-hidden shadow-sm mb-6">
+          <CardContent className="p-0 overflow-x-auto">
+            <table className="w-full text-left text-sm print:text-black whitespace-nowrap">
+              <thead className="bg-secondary/50 print:bg-black/5 text-muted-foreground print:text-black/60 uppercase tracking-widest text-[10px] font-bold">
+                <tr>
+                  <th className="p-4 px-6">Village</th>
+                  <th className="p-4 text-center">Total Clients</th>
+                  <th className="p-4 text-center">Active Loans</th>
+                  <th className="p-4 text-right">Total Expected</th>
+                  <th className="p-4 text-right">Total Collected</th>
+                  <th className="p-4 px-6 text-right">Outstanding Balance</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border print:divide-black/10">
+                {villageBreakdown.map((item) => (
+                  <tr key={item.village} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
+                    <td className="p-4 px-6 font-semibold text-sm">📍 {item.village}</td>
+                    <td className="p-4 text-center text-xs font-semibold">{item.totalClients}</td>
+                    <td className="p-4 text-center text-xs font-semibold">{item.activeLoansCount}</td>
+                    <td className="p-4 text-right font-bold text-sm">{formatLKR(item.totalExpected)}</td>
+                    <td className="p-4 text-right font-bold text-sm text-green-600 dark:text-green-400">{formatLKR(item.totalCollected)}</td>
+                    <td className="p-4 px-6 text-right font-bold text-sm text-red-500 dark:text-red-400">{formatLKR(item.outstandingBalance)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
         </Card>
       </section>
 
