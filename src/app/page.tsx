@@ -95,18 +95,20 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#3D6DFF] to-[#6A4AFF] text-white shadow-[0_4px_20px_rgba(61,109,255,0.35)] relative overflow-hidden">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#06B6D4] to-[#2563EB] text-white shadow-[0_4px_24px_rgba(6,182,212,0.35)] relative overflow-hidden">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-              <div className="flex items-center gap-1.5 text-primary-foreground/70 text-[10px] font-bold uppercase tracking-wider">
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="flex items-center gap-1.5 text-white/70 text-[10px] font-bold uppercase tracking-wider">
                 <Users className="w-3 h-3" /> Active Loans
               </div>
               <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
-              <span className="text-[10px] text-primary-foreground/60 font-medium">loans running</span>
+              <span className="text-[10px] text-white/60 font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-red-500 to-red-700 text-white shadow-[0_4px_20px_rgba(239,68,68,0.3)] relative overflow-hidden">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#F97316] to-[#DB2777] text-white shadow-[0_4px_24px_rgba(249,115,22,0.35)] relative overflow-hidden">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-3xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3" /> Overdue
               </div>
