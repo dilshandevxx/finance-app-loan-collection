@@ -8,6 +8,9 @@ import { CollectionGoalCard } from "@/components/CollectionGoalCard";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
+import { DueTomorrowCard } from "@/components/DueTomorrowCard";
+import { TopOverdueCard } from "@/components/TopOverdueCard";
+import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 
 export const dynamic = 'force-dynamic';
 
@@ -113,6 +116,27 @@ export default async function Home() {
             </div>
             <AnalyticsChart />
           </div>
+
+          {/* Due Tomorrow Preview */}
+          <DueTomorrowCard
+            installments={installments}
+            loans={loans}
+            customers={customers}
+          />
+
+          {/* Top Overdue Customers */}
+          <TopOverdueCard
+            installments={installments}
+            loans={loans}
+            customers={customers}
+          />
+
+          {/* Village Collection Bars */}
+          <VillageCollectionBars
+            installments={installments}
+            loans={loans}
+            customers={customers}
+          />
 
           {/* Quick Nav — Mobile only */}
           <div className="grid grid-cols-2 gap-3 md:hidden print:hidden">
