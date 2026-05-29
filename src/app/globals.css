@@ -1,79 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: inspired by website reference ─────────── */
+/* ─── Light Mode: Crisp, Trustworthy Fintech ─────────── */
 :root {
-  --background: #fafafa;
-  --foreground: #09090b;
-  --card: #ffffff;
-  --card-foreground: #09090b;
-  --popover: #ffffff;
-  --popover-foreground: #09090b;
-  --primary: #e81cff;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --accent: #fdf4ff;
-  --accent-foreground: #e81cff;
-  --destructive: #fee2e2;
-  --destructive-foreground: #ef4444;
-  --border: #e4e4e7;
-  --input: #ffffff;
-  --ring: #e81cff;
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #0A2540;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #334155;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #F1F5F9;
+  --accent-foreground: #0A2540;
+  --destructive: #FEF2F2;
+  --destructive-foreground: #EF4444;
+  --border: #E2E8F0;
+  --input: #FFFFFF;
+  --ring: #0A2540;
 
   /* Custom chart variables */
-  --chart-collected: #10b981;
-  --chart-expected: #e81cff;
+  --chart-collected: #10B981;
+  --chart-expected: #0A2540;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #ef4444;
-  --vibe-pink: #e81cff;
-  --vibe-violet: #8b5cf6;
-  --vibe-sky: #00f0ff;
+  --vibe-coral: #EF4444;
+  --vibe-pink: #F59E0B;
+  --vibe-violet: #6366F1;
+  --vibe-sky: #0EA5E9;
 
-  --vibe-coral-lt: #fee2e2;
-  --vibe-pink-lt: #fdf4ff;
-  --vibe-violet-lt: #f5f3ff;
-  --vibe-sky-lt: #cffafe;
+  --vibe-coral-lt: #FEF2F2;
+  --vibe-pink-lt: #FFFBEB;
+  --vibe-violet-lt: #EEF2FF;
+  --vibe-sky-lt: #F0F9FF;
 }
 
-/* ─── Dark Mode: Website Reference (Black & Neon) ──────────────── */
+/* ─── Dark Mode: Elegant Deep Navy ──────────────── */
 .dark {
-  --background: #050505;
-  --foreground: #fafafa;
-  --card: #121212;
-  --card-foreground: #fafafa;
-  --popover: #121212;
-  --popover-foreground: #fafafa;
-  --primary: #e81cff;
-  --primary-foreground: #ffffff;
-  --secondary: #1f1f1f;
-  --secondary-foreground: #fafafa;
-  --muted: #1f1f1f;
-  --muted-foreground: #a1a1aa;
-  --accent: #1f1f1f;
-  --accent-foreground: #f0abfc;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #fca5a5;
-  --border: #27272a;
-  --input: #121212;
-  --ring: #e81cff;
+  --background: #020617;
+  --foreground: #F8FAFC;
+  --card: #0F172A;
+  --card-foreground: #F8FAFC;
+  --popover: #0F172A;
+  --popover-foreground: #F8FAFC;
+  --primary: #3B82F6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1E293B;
+  --secondary-foreground: #F8FAFC;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  --accent: #1E293B;
+  --accent-foreground: #60A5FA;
+  --destructive: #450A0A;
+  --destructive-foreground: #F87171;
+  --border: #1E293B;
+  --input: #0F172A;
+  --ring: #3B82F6;
 
   /* Custom chart variables */
-  --chart-collected: #10b981;
-  --chart-expected: #e81cff;
+  --chart-collected: #10B981;
+  --chart-expected: #3B82F6;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #fca5a5;
-  --vibe-pink: #f472b6;
-  --vibe-violet: #e81cff;
-  --vibe-sky: #00f0ff;
+  --vibe-coral: #F87171;
+  --vibe-pink: #FBBF24;
+  --vibe-violet: #818CF8;
+  --vibe-sky: #38BDF8;
 
-  --vibe-coral-lt: #450a0a;
-  --vibe-pink-lt: #500724;
-  --vibe-violet-lt: #4a044e;
-  --vibe-sky-lt: #083344;
+  --vibe-coral-lt: #450A0A;
+  --vibe-pink-lt: #422006;
+  --vibe-violet-lt: #1E1B4B;
+  --vibe-sky-lt: #082F49;
 }
 
 @theme inline {
