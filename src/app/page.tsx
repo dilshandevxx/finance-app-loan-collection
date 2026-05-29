@@ -105,7 +105,7 @@ export default async function Home() {
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-[0_4px_20px_rgba(239,68,68,0.3)] relative overflow-hidden">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-[0_4px_20px_rgba(245,158,11,0.3)] relative overflow-hidden">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3" /> Overdue
