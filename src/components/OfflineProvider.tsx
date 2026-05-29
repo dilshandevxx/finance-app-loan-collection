@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { markInstallmentPaid } from "@/app/actions";
 import { Wifi, WifiOff, Loader2, CheckCircle } from "lucide-react";
 
@@ -9,6 +9,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
   const [isSyncing, setIsSyncing] = useState(false);
   const [queueLength, setQueueLength] = useState(0);
   const [showSyncedSuccess, setShowSyncedSuccess] = useState(false);
+  const syncingRef = useRef(false);
 
   const updateQueueLength = () => {
     if (typeof window !== "undefined") {
@@ -17,13 +18,17 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
         if (queueStr) {
           const queue = JSON.parse(queueStr);
           setQueueLength(queue.length);
+          return queue.length;
         } else {
           setQueueLength(0);
+          return 0;
         }
       } catch (e) {
         setQueueLength(0);
+        return 0;
       }
     }
+    return 0;
   };
 
   useEffect(() => {
@@ -31,61 +36,99 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
     setIsOffline(!navigator.onLine);
     updateQueueLength();
 
-    const handleOnline = async () => {
-      setIsOffline(false);
-      setIsSyncing(true);
+    const triggerSync = async () => {
+      if (!navigator.onLine || syncingRef.current) return;
       
       try {
         const queueStr = localStorage.getItem("offlineSyncQueue");
-        if (queueStr) {
-          const queue = JSON.parse(queueStr);
-          if (queue.length > 0) {
-            // Process queue
-            for (const item of queue) {
-              if (item.type === "markInstallmentPaid") {
-                await markInstallmentPaid(item.installmentId);
+        if (!queueStr) return;
+        const queue = JSON.parse(queueStr);
+        if (queue.length === 0) return;
+
+        syncingRef.current = true;
+        setIsOffline(false);
+        setIsSyncing(true);
+
+        const failedItems = [];
+        
+        // Process queue item by item
+        for (const item of queue) {
+          try {
+            if (item.type === "markInstallmentPaid") {
+              const res = await markInstallmentPaid(item.installmentId);
+              if (res && res.error) {
+                throw new Error(res.error);
               }
             }
-            // Clear queue
-            localStorage.removeItem("offlineSyncQueue");
-            updateQueueLength();
-            
-            // Show brief success alert
-            setShowSyncedSuccess(true);
-            setTimeout(() => {
-              setShowSyncedSuccess(false);
-            }, 4000);
+          } catch (err) {
+            console.error("Failed to sync offline item:", item, err);
+            failedItems.push(item);
           }
+        }
+        
+        // Only keep failed items in the queue
+        if (failedItems.length > 0) {
+          localStorage.setItem("offlineSyncQueue", JSON.stringify(failedItems));
+        } else {
+          localStorage.removeItem("offlineSyncQueue");
+        }
+        
+        updateQueueLength();
+        
+        // Show success alert if all synced successfully
+        if (failedItems.length === 0) {
+          setShowSyncedSuccess(true);
+          setTimeout(() => {
+            setShowSyncedSuccess(false);
+          }, 4000);
         }
       } catch (e) {
         console.error("Failed to sync offline queue", e);
       } finally {
+        syncingRef.current = false;
         setIsSyncing(false);
       }
+    };
+
+    const handleOnline = () => {
+      setIsOffline(false);
+      triggerSync();
     };
 
     const handleOffline = () => {
       setIsOffline(true);
     };
 
+    const handleQueueUpdated = () => {
+      const len = updateQueueLength();
+      if (navigator.onLine && len > 0) {
+        triggerSync();
+      }
+    };
+
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
     // Listen to custom queue update events from QuickPaymentModal
-    window.addEventListener("offline-queue-updated", updateQueueLength);
+    window.addEventListener("offline-queue-updated", handleQueueUpdated);
 
-    // Also poll queue length every 1.5 seconds in case storage updates in background
-    const interval = setInterval(updateQueueLength, 1500);
+    // Also poll queue length & auto-sync every 1.5 seconds in case storage updates in background
+    const interval = setInterval(() => {
+      const len = updateQueueLength();
+      if (navigator.onLine && len > 0) {
+        triggerSync();
+      }
+    }, 1500);
 
     // Initial check on mount
     if (navigator.onLine) {
-      handleOnline();
+      triggerSync();
     }
 
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("offline-queue-updated", updateQueueLength);
+      window.removeEventListener("offline-queue-updated", handleQueueUpdated);
       clearInterval(interval);
     };
   }, []);
