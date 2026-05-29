@@ -95,23 +95,23 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 text-slate-900 dark:text-slate-50">
-              <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3 h-3 text-blue-500 dark:text-blue-400" /> Active Loans
+            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm">
+              <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-500 text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3" /> Active Loans
               </div>
               <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">loans running</span>
+              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 text-slate-900 dark:text-slate-50">
-              <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
-                <AlertCircle className="w-3 h-3 text-rose-500 dark:text-rose-400" /> Overdue
+            <div className="rounded-xl p-5 flex flex-col gap-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm">
+              <div className="flex items-center gap-1.5 text-red-600 dark:text-red-500 text-[10px] font-bold uppercase tracking-wider">
+                <AlertCircle className="w-3 h-3" /> Overdue
               </div>
-              <span className="text-4xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
+              <span className="text-4xl font-black tracking-tight truncate text-red-600 dark:text-red-500" title={formatLKR(overdueAmount)}>
                 {formatLKR(overdueAmount)}
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">total overdue amount</span>
+              <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium">total overdue amount</span>
             </div>
           </div>
 

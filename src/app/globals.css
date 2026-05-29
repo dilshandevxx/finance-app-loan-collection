@@ -1,79 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Slate & Sapphire ─────────── */
+/* ─── Light Mode: Enterprise B2B (Stripe/Linear style) ─────────── */
 :root {
-  --background: #F8FAFC; /* Slate 50 */
-  --foreground: #0F172A; /* Slate 900 */
+  --background: #FAFAFA; /* Zinc 50 */
+  --foreground: #09090B; /* Zinc 950 */
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #09090B;
   --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
-  --primary: #3B82F6; /* Blue 500 */
+  --popover-foreground: #09090B;
+  --primary: #2563EB; /* Trust Blue 600 */
   --primary-foreground: #FFFFFF;
-  --secondary: #F1F5F9; /* Slate 100 */
-  --secondary-foreground: #0F172A;
-  --muted: #F1F5F9;
-  --muted-foreground: #64748B; /* Slate 500 */
-  --accent: #EFF6FF; /* Blue 50 */
-  --accent-foreground: #3B82F6;
+  --secondary: #F4F4F5; /* Zinc 100 */
+  --secondary-foreground: #09090B;
+  --muted: #F4F4F5;
+  --muted-foreground: #71717A; /* Zinc 500 */
+  --accent: #F4F4F5;
+  --accent-foreground: #09090B;
   --destructive: #FEF2F2;
-  --destructive-foreground: #E11D48; /* Rose 600 */
-  --border: #E2E8F0; /* Slate 200 */
+  --destructive-foreground: #DC2626; /* Red 600 */
+  --border: #E4E4E7; /* Zinc 200 */
   --input: #FFFFFF;
-  --ring: #3B82F6;
+  --ring: #2563EB;
 
   /* Custom chart variables */
-  --chart-collected: #3B82F6;
-  --chart-expected: #E11D48;
+  --chart-collected: #059669; /* Emerald 600 */
+  --chart-expected: #2563EB;  /* Blue 600 */
 
   /* Custom vibe accent colors */
-  --vibe-coral: #E11D48; /* Rose */
-  --vibe-pink: #F43F5E;  /* Rose lighter */
-  --vibe-violet: #8B5CF6;
-  --vibe-sky: #3B82F6;
+  --vibe-coral: #DC2626; /* Red */
+  --vibe-pink: #D97706;  /* Amber */
+  --vibe-violet: #7C3AED; /* Violet */
+  --vibe-sky: #2563EB; /* Blue */
 
-  --vibe-coral-lt: #FFF1F2;
-  --vibe-pink-lt: #FFF1F2;
+  --vibe-coral-lt: #FEF2F2;
+  --vibe-pink-lt: #FFFBEB;
   --vibe-violet-lt: #F5F3FF;
   --vibe-sky-lt: #EFF6FF;
 }
 
-/* ─── Dark Mode: Beautiful Midnight Slate ──────────────── */
+/* ─── Dark Mode: Enterprise B2B Dark ──────────────── */
 .dark {
-  --background: #0B1120; /* Very dark slate/navy */
-  --foreground: #F8FAFC;
-  --card: #141E33; /* Dark glass slate */
-  --card-foreground: #F8FAFC;
-  --popover: #141E33;
-  --popover-foreground: #F8FAFC;
-  --primary: #60A5FA; /* Blue 400 */
-  --primary-foreground: #0B1120;
-  --secondary: #1E293B; /* Slate 800 */
-  --secondary-foreground: #F8FAFC;
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8; /* Slate 400 */
-  --accent: #1E293B;
-  --accent-foreground: #60A5FA;
-  --destructive: #4C0519; /* Rose 950 */
-  --destructive-foreground: #FB7185; /* Rose 400 */
-  --border: #1E293B;
-  --input: #141E33;
-  --ring: #60A5FA;
+  --background: #09090B; /* Zinc 950 */
+  --foreground: #FAFAFA;
+  --card: #18181B; /* Zinc 900 */
+  --card-foreground: #FAFAFA;
+  --popover: #18181B;
+  --popover-foreground: #FAFAFA;
+  --primary: #3B82F6; /* Blue 500 */
+  --primary-foreground: #FFFFFF;
+  --secondary: #27272A; /* Zinc 800 */
+  --secondary-foreground: #FAFAFA;
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA; /* Zinc 400 */
+  --accent: #27272A;
+  --accent-foreground: #FAFAFA;
+  --destructive: #450A0A;
+  --destructive-foreground: #EF4444; /* Red 500 */
+  --border: #27272A;
+  --input: #18181B;
+  --ring: #3B82F6;
 
   /* Custom chart variables */
-  --chart-collected: #60A5FA; /* Blue */
-  --chart-expected: #FB7185;  /* Rose */
+  --chart-collected: #10B981; /* Emerald 500 */
+  --chart-expected: #3B82F6;  /* Blue 500 */
 
   /* Custom vibe accent colors */
-  --vibe-coral: #FB7185; /* Rose */
-  --vibe-pink: #F472B6;  /* Pink */
-  --vibe-violet: #A78BFA;
-  --vibe-sky: #60A5FA;   /* Blue */
+  --vibe-coral: #EF4444; /* Red */
+  --vibe-pink: #F59E0B;  /* Amber */
+  --vibe-violet: #8B5CF6; /* Violet */
+  --vibe-sky: #3B82F6; /* Blue */
 
-  --vibe-coral-lt: #4C0519;
-  --vibe-pink-lt: #500724;
+  --vibe-coral-lt: #450A0A;
+  --vibe-pink-lt: #78350F;
   --vibe-violet-lt: #2E1065;
-  --vibe-sky-lt: #172554;
+  --vibe-sky-lt: #1E3A8A;
 }
 
 @theme inline {
