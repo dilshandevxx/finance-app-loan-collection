@@ -47,27 +47,27 @@ WHERE up.id = au.id;
 -- ==========================================
 
 -- Alter customers
-ALTER TABLE public.customers ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
+ALTER TABLE public.customers ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT public.current_tenant_id() REFERENCES public.tenants(id) ON DELETE CASCADE;
 UPDATE public.customers SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
 ALTER TABLE public.customers ALTER COLUMN tenant_id SET NOT NULL;
 
 -- Alter loans
-ALTER TABLE public.loans ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
+ALTER TABLE public.loans ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT public.current_tenant_id() REFERENCES public.tenants(id) ON DELETE CASCADE;
 UPDATE public.loans SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
 ALTER TABLE public.loans ALTER COLUMN tenant_id SET NOT NULL;
 
 -- Alter installments
-ALTER TABLE public.installments ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
+ALTER TABLE public.installments ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT public.current_tenant_id() REFERENCES public.tenants(id) ON DELETE CASCADE;
 UPDATE public.installments SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
 ALTER TABLE public.installments ALTER COLUMN tenant_id SET NOT NULL;
 
 -- Alter customer_notes
-ALTER TABLE public.customer_notes ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
+ALTER TABLE public.customer_notes ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT public.current_tenant_id() REFERENCES public.tenants(id) ON DELETE CASCADE;
 UPDATE public.customer_notes SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
 ALTER TABLE public.customer_notes ALTER COLUMN tenant_id SET NOT NULL;
 
 -- Alter system_settings (replaces system_villages)
-ALTER TABLE public.system_settings ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
+ALTER TABLE public.system_settings ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT public.current_tenant_id() REFERENCES public.tenants(id) ON DELETE CASCADE;
 UPDATE public.system_settings SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
 ALTER TABLE public.system_settings ALTER COLUMN tenant_id SET NOT NULL;
 -- Note: You may need to drop and recreate the primary key on system_settings if it was just "key" before.
