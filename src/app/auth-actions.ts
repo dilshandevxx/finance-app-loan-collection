@@ -158,6 +158,26 @@ export async function updateAgentPin(currentPin: string, newPin: string) {
   return { success: true };
 }
 
+export async function updateAuthPassword(newPassword: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not logged in" };
+
+  if (newPassword.length < 6) {
+    return { success: false, error: "Password must be at least 6 characters" };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword
+  });
+
+  if (error) {
+    return { success: false, error: `Failed to update password: ${error.message}` };
+  }
+
+  return { success: true };
+}
+
 export async function getUserProfile() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
