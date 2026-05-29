@@ -60,20 +60,30 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between mb-6 px-1">
-      <div className="flex flex-col">
-        <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
-          Hi, {agentName.split(" ")[0]}!
-        </h1>
-        {formattedDate && (
-          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5 font-medium">
-            <Calendar className="w-3 h-3" />
-            {formattedDate}
+    <header className="flex items-center justify-between mb-8 pt-2 px-1">
+      <div className="flex items-center gap-3.5">
+        {/* Profile Avatar / Initial */}
+        <div className="relative">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-900 flex items-center justify-center border border-zinc-700/50 shadow-lg">
+            <span className="text-lg font-black text-white">
+              {agentName.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          {/* Online Indicator */}
+          <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-background rounded-full" />
+        </div>
+
+        <div className="flex flex-col">
+          <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
+            Welcome back
           </p>
-        )}
+          <h1 className="text-xl font-bold text-foreground tracking-tight leading-none">
+            {agentName.split(" ")[0]}
+          </h1>
+        </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center">
         <NotificationPanel
           customers={customers}
           loans={loans}
