@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
+import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/db";
@@ -24,20 +24,35 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     installmentId: string;
     expectedAmount: number;
   } | null>(null);
+  const [selectedVillage, setSelectedVillage] = useState<string>("");
+
+  const villages = Array.from(
+    new Set(
+      customers
+        .map(c => c.state)
+        .filter((s): s is string => !!s && s.trim() !== "")
+    )
+  ).sort();
 
   const filteredInstallments = pendingInstallments.filter((inst) => {
     const loan = loans.find(l => l.id === inst.loanId);
     const customer = customers.find(c => c.id === loan?.customerId);
     
     if (!customer) return false;
+
+    // 1. Village filter match
+    if (selectedVillage && customer.state !== selectedVillage) {
+      return false;
+    }
     
     if (searchQuery.trim() === "") return true;
     
     const query = searchQuery.toLowerCase();
     const nameMatch = customer.name.toLowerCase().includes(query);
     const idMatch = customer.memberId?.toLowerCase().includes(query) || customer.id.toLowerCase().includes(query);
+    const stateMatch = customer.state?.toLowerCase().includes(query);
     
-    return nameMatch || idMatch;
+    return nameMatch || idMatch || stateMatch;
   });
 
   // Group the filtered installments by customer
@@ -165,17 +180,39 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
         </Link>
       </div>
 
-      <div className="relative mb-4">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col sm:flex-row gap-3 w-full mb-4">
+        {/* Search Field */}
+        <div className="relative flex-1 group">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, ID, or village…"
+            className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
+          />
         </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name or member ID…"
-          className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
-        />
+
+        {/* Village Filter Selector */}
+        {villages.length > 0 && (
+          <div className="relative min-w-[180px] shrink-0">
+            <select
+              value={selectedVillage}
+              onChange={(e) => setSelectedVillage(e.target.value)}
+              className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-3 pr-8 py-3 text-sm text-foreground focus:outline-none transition-all appearance-none font-medium cursor-pointer"
+            >
+              <option value="">📍 All Villages</option>
+              {villages.map(v => (
+                <option key={v} value={v}>📍 {v}</option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-muted-foreground">
+              <ChevronDown className="w-4 h-4" />
+            </div>
+          </div>
+        )}
       </div>
       
       <Card className="rounded-2xl overflow-hidden border border-border bg-card shadow-sm">

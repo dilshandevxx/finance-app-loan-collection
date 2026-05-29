@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox } from "lucide-react";
+import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
 
@@ -16,6 +16,15 @@ type CustomersListProps = {
 export function CustomersList({ customers, loans, installments }: CustomersListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"active" | "settled">("active");
+  const [selectedVillage, setSelectedVillage] = useState<string>("");
+
+  const villages = Array.from(
+    new Set(
+      customers
+        .map(c => c.state)
+        .filter((s): s is string => !!s && s.trim() !== "")
+    )
+  ).sort();
 
   // Determine all active customers (have at least one active loan)
   const allActiveCustomers = customers.filter(customer => {
@@ -30,14 +39,21 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   });
 
   const filteredCustomers = customers.filter((customer) => {
+    // 1. Village filter match
+    if (selectedVillage && customer.state !== selectedVillage) {
+      return false;
+    }
+
+    // 2. Search query match
     if (searchQuery.trim() === "") return true;
     
     const query = searchQuery.toLowerCase();
     const nameMatch = customer.name.toLowerCase().includes(query);
     const idMatch = customer.memberId?.toLowerCase().includes(query) || customer.id.toLowerCase().includes(query);
     const phoneMatch = customer.phone.toLowerCase().includes(query);
+    const stateMatch = customer.state?.toLowerCase().includes(query);
     
-    return nameMatch || idMatch || phoneMatch;
+    return nameMatch || idMatch || phoneMatch || stateMatch;
   });
 
   // Split search results between the active tab
@@ -48,18 +64,40 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
       
-      {/* Search Field */}
-      <div className="relative mb-1 group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-neon-lime transition-colors" />
+      {/* Search and Village Filter */}
+      <div className="flex flex-col sm:flex-row gap-3 w-full">
+        {/* Search Field */}
+        <div className="relative flex-1 group">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search name, ID, phone, or village..."
+            className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm"
+          />
         </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name, ID, or phone..."
-          className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-neon-lime/10 focus:border-neon-lime transition-all shadow-sm"
-        />
+
+        {/* Village Filter Selector */}
+        {villages.length > 0 && (
+          <div className="relative min-w-[200px] shrink-0">
+            <select
+              value={selectedVillage}
+              onChange={(e) => setSelectedVillage(e.target.value)}
+              className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-4 pr-10 py-4 text-base text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm appearance-none font-medium cursor-pointer"
+            >
+              <option value="">📍 All Villages</option>
+              {villages.map(v => (
+                <option key={v} value={v}>📍 {v}</option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-450 dark:text-white/40">
+              <ChevronDown className="w-5 h-5" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Segmented Tab Switcher */}

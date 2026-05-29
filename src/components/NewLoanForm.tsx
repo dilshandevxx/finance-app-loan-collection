@@ -32,6 +32,43 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [compressedPhoto, setCompressedPhoto] = useState<string>("");
 
+  const [clientName, setClientName] = useState("");
+  const [clientState, setClientState] = useState("");
+  const [selectedVillageOption, setSelectedVillageOption] = useState("");
+  const [villageSelectMode, setVillageSelectMode] = useState<"select" | "new">("select");
+  const [memberId, setMemberId] = useState("");
+  const [isMemberIdEdited, setIsMemberIdEdited] = useState(false);
+  const [randomSuffix] = useState(() => Math.floor(100 + Math.random() * 900));
+
+  const generateAndSetMemberId = (nameVal: string, stateVal: string) => {
+    if (isMemberIdEdited) return;
+
+    const initials = nameVal
+      .trim()
+      .split(/\s+/)
+      .map(w => w[0])
+      .filter(Boolean)
+      .join("")
+      .toUpperCase()
+      .slice(0, 3);
+
+    const statePrefix = stateVal
+      .trim()
+      .split(/\s+/)
+      .map(w => w[0])
+      .filter(Boolean)
+      .join("")
+      .toUpperCase()
+      .slice(0, 3);
+
+    let parts = ["M"];
+    if (initials) parts.push(initials);
+    if (statePrefix) parts.push(statePrefix);
+    parts.push(randomSuffix.toString());
+
+    setMemberId(parts.join("-"));
+  };
+
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -216,6 +253,12 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   id="name"
                   name="name"
                   required
+                  value={clientName}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setClientName(val);
+                    generateAndSetMemberId(val, clientState);
+                  }}
                   placeholder="e.g. John Doe" 
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
@@ -232,6 +275,11 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
                   type="text" 
                   id="memberId"
                   name="memberId"
+                  value={memberId}
+                  onChange={(e) => {
+                    setMemberId(e.target.value);
+                    setIsMemberIdEdited(true);
+                  }}
                   placeholder="e.g. M-1004" 
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
@@ -277,28 +325,86 @@ export function NewLoanForm({ customers }: { customers: Customer[] }) {
               </div>
             </div>
 
-            {/* State/Village Collection Area */}
+            {/* State/Village Collection Area Dropdown */}
             <div className="space-y-2 col-span-2">
-              <label htmlFor="state" className="text-sm font-semibold text-gray-750 dark:text-white/70">Collection Area (State/Village)</label>
+              <label htmlFor="village-select" className="text-sm font-semibold text-gray-750 dark:text-white/70">Collection Area (Village)</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="text" 
-                  id="state"
-                  name="state"
-                  list="states-list"
-                  placeholder="Search or enter area (e.g. Village West, Ward 4)" 
-                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
-                />
-                <datalist id="states-list">
+                <select
+                  id="village-select"
+                  value={selectedVillageOption}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "new") {
+                      setSelectedVillageOption("new");
+                      setVillageSelectMode("new");
+                      setClientState("");
+                      generateAndSetMemberId(clientName, "");
+                    } else {
+                      setSelectedVillageOption(val);
+                      setVillageSelectMode("select");
+                      setClientState(val);
+                      generateAndSetMemberId(clientName, val);
+                    }
+                  }}
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-10 py-3.5 text-black dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm appearance-none font-medium cursor-pointer"
+                  required={villageSelectMode === "select"}
+                >
+                  <option value="" disabled>Select a village...</option>
                   {existingStates.map(state => (
-                    <option key={state} value={state} />
+                    <option key={state} value={state}>📍 {state}</option>
                   ))}
-                </datalist>
+                  <option value="new" className="text-primary font-bold">+ Add New Village...</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400">
+                  <ChevronDown className="h-5 w-5" />
+                </div>
               </div>
             </div>
+
+            {/* Hidden Input for Form Submission */}
+            <input type="hidden" name="state" value={clientState} />
+
+            {/* Conditionally Rendered New Village Text Input */}
+            {villageSelectMode === "new" && (
+              <div className="space-y-2 col-span-2 animate-in slide-in-from-top-2 duration-205">
+                <div className="flex justify-between items-center">
+                  <label htmlFor="new-village" className="text-sm font-semibold text-gray-750 dark:text-white/70">New Village Name</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVillageSelectMode("select");
+                      setSelectedVillageOption("");
+                      setClientState("");
+                      generateAndSetMemberId(clientName, "");
+                    }}
+                    className="text-xs text-primary font-bold hover:underline cursor-pointer"
+                  >
+                    Back to selection
+                  </button>
+                </div>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
+                  </div>
+                  <input 
+                    type="text" 
+                    id="new-village"
+                    required
+                    value={clientState}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setClientState(val);
+                      generateAndSetMemberId(clientName, val);
+                    }}
+                    placeholder="Enter new village name (e.g. Village West, Ward 4)" 
+                    className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Landmark/Address */}
             <div className="space-y-2 col-span-2">
