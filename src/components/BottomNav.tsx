@@ -85,19 +85,12 @@ export function BottomNav() {
         border-r border-border
         py-5 gap-1
       ">
-        {/* Brand logo */}
-        <div className="mb-4 flex flex-col items-center gap-1">
-          <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center font-black text-sm text-primary-foreground">
-            LT
-          </div>
-        </div>
-
         {/* New Loan Button */}
-        <Link href="/new" className="group flex flex-col items-center gap-1 mb-3 w-full px-3">
-          <div className="w-full py-2.5 rounded-2xl bg-primary text-primary-foreground hover:brightness-110 active:scale-95 transition-all duration-200 shadow-sm flex flex-col items-center">
-            <Plus className="w-4 h-4 stroke-[2.5]" />
-            <span className="text-[9px] font-black uppercase tracking-wider mt-0.5">New</span>
+        <Link href="/new" className="group flex flex-col items-center gap-1 mb-3 w-full px-3 mt-4">
+          <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-muted-foreground group-hover:text-foreground group-hover:bg-white/10 active:scale-95 transition-all duration-200 flex flex-col items-center justify-center">
+            <Plus className="w-5 h-5" />
           </div>
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">New</span>
         </Link>
 
         {/* Divider */}
@@ -113,16 +106,16 @@ export function BottomNav() {
                 href={href}
                 className={`
                   relative w-full flex flex-col items-center justify-center gap-1
-                  py-3 rounded-2xl transition-all duration-200
+                  py-3 rounded-xl transition-all duration-200
                   ${active
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                    ? "text-foreground bg-white/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                   }
                 `}
               >
                 {/* Active indicator dot */}
                 {active && (
-                  <span className="absolute -left-0.5 top-1/2 -translate-y-1/2 w-1 h-5 rounded-full bg-primary-foreground/50" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full bg-foreground" />
                 )}
                 <Icon className="w-5 h-5 shrink-0" />
                 <span className="text-[9px] font-bold uppercase tracking-wide leading-none">{label}</span>
