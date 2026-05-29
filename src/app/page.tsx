@@ -95,27 +95,27 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-[#18181B] text-white shadow-[0_4px_24px_rgba(16,185,129,0.15)] relative overflow-hidden border border-zinc-800">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-[#0A1F13] text-white shadow-[0_4px_24px_rgba(52,211,153,0.1)] relative overflow-hidden border border-emerald-900/50">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-              <div className="flex items-center gap-1.5 text-zinc-400 text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3 h-3 text-emerald-500" /> Active Loans
+              <div className="flex items-center gap-1.5 text-emerald-300/80 text-[10px] font-bold uppercase tracking-wider">
+                <Users className="w-3 h-3 text-emerald-400" /> Active Loans
               </div>
-              <span className="text-4xl font-black tracking-tight text-zinc-50">{activeLoans}</span>
-              <span className="text-[10px] text-zinc-500 font-medium">loans running</span>
+              <span className="text-4xl font-black tracking-tight text-emerald-50">{activeLoans}</span>
+              <span className="text-[10px] text-emerald-500/70 font-medium">loans running</span>
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-[#18181B] text-white shadow-[0_4px_24px_rgba(239,68,68,0.1)] relative overflow-hidden border border-red-500/20">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-[#0A1F13] text-white shadow-[0_4px_24px_rgba(239,68,68,0.1)] relative overflow-hidden border border-red-900/30">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-red-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-red-400/80 text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3" /> Overdue
               </div>
-              <span className="text-4xl font-black tracking-tight truncate text-zinc-50" title={formatLKR(overdueAmount)}>
+              <span className="text-4xl font-black tracking-tight truncate text-emerald-50" title={formatLKR(overdueAmount)}>
                 {formatLKR(overdueAmount)}
               </span>
-              <span className="text-[10px] text-zinc-500 font-medium">total overdue amount</span>
+              <span className="text-[10px] text-emerald-500/60 font-medium">total overdue amount</span>
             </div>
           </div>
 

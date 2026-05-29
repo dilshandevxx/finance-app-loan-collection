@@ -1,30 +1,30 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Ultra-Minimal Graphite ─────────── */
+/* ─── Light Mode: Soft Sage & Mint ─────────── */
 :root {
-  --background: #FAFAFA; /* Zinc 50 */
-  --foreground: #09090B; /* Zinc 950 */
+  --background: #F4FBF7;
+  --foreground: #022C1A;
   --card: #FFFFFF;
-  --card-foreground: #09090B;
+  --card-foreground: #022C1A;
   --popover: #FFFFFF;
-  --popover-foreground: #09090B;
-  --primary: #18181B; /* Zinc 900 */
-  --primary-foreground: #FAFAFA;
-  --secondary: #F4F4F5; /* Zinc 100 */
-  --secondary-foreground: #18181B;
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A; /* Zinc 500 */
-  --accent: #F4F4F5;
-  --accent-foreground: #18181B;
+  --popover-foreground: #022C1A;
+  --primary: #047857; /* Emerald 700 */
+  --primary-foreground: #FFFFFF;
+  --secondary: #E6F4EA;
+  --secondary-foreground: #022C1A;
+  --muted: #E6F4EA;
+  --muted-foreground: #4B6F5D;
+  --accent: #D1FAE5; /* Emerald 100 */
+  --accent-foreground: #047857;
   --destructive: #FEF2F2;
   --destructive-foreground: #EF4444;
-  --border: #E4E4E7; /* Zinc 200 */
+  --border: #D1E8DB;
   --input: #FFFFFF;
-  --ring: #18181B;
+  --ring: #047857;
 
   /* Custom chart variables */
-  --chart-collected: #10B981; /* Emerald */
-  --chart-expected: #18181B;  /* Graphite */
+  --chart-collected: #10B981; /* Emerald 500 */
+  --chart-expected: #047857;  /* Emerald 700 */
 
   /* Custom vibe accent colors */
   --vibe-coral: #EF4444;
@@ -38,37 +38,37 @@
   --vibe-sky-lt: #ECFDF5;
 }
 
-/* ─── Dark Mode: Deep Charcoal ──────────────── */
+/* ─── Dark Mode: Deep Forest & Mint ──────────────── */
 .dark {
-  --background: #09090B; /* Zinc 950 */
-  --foreground: #FAFAFA;
-  --card: #18181B; /* Zinc 900 */
-  --card-foreground: #FAFAFA;
-  --popover: #18181B;
-  --popover-foreground: #FAFAFA;
-  --primary: #FAFAFA;
-  --primary-foreground: #18181B;
-  --secondary: #27272A; /* Zinc 800 */
-  --secondary-foreground: #FAFAFA;
-  --muted: #27272A;
-  --muted-foreground: #A1A1AA; /* Zinc 400 */
-  --accent: #27272A;
-  --accent-foreground: #FAFAFA;
+  --background: #04120A; /* Very deep forest green */
+  --foreground: #F4FBF7;
+  --card: #0A1F13; /* Dark pine */
+  --card-foreground: #F4FBF7;
+  --popover: #0A1F13;
+  --popover-foreground: #F4FBF7;
+  --primary: #34D399; /* Bright Mint */
+  --primary-foreground: #022C1A;
+  --secondary: #123321;
+  --secondary-foreground: #F4FBF7;
+  --muted: #123321;
+  --muted-foreground: #8FAEA0;
+  --accent: #123321;
+  --accent-foreground: #34D399;
   --destructive: #450A0A;
   --destructive-foreground: #F87171;
-  --border: #27272A;
-  --input: #18181B;
-  --ring: #FAFAFA;
+  --border: #163B26;
+  --input: #0A1F13;
+  --ring: #34D399;
 
   /* Custom chart variables */
-  --chart-collected: #10B981;
-  --chart-expected: #FAFAFA;
+  --chart-collected: #34D399; /* Mint */
+  --chart-expected: #10B981;  /* Emerald */
 
   /* Custom vibe accent colors */
   --vibe-coral: #F87171;
   --vibe-pink: #FBBF24; /* Amber */
   --vibe-violet: #A78BFA;
-  --vibe-sky: #34D399; /* Mint */
+  --vibe-sky: #6EE7B7; /* Light Mint */
 
   --vibe-coral-lt: #450A0A;
   --vibe-pink-lt: #422006;
