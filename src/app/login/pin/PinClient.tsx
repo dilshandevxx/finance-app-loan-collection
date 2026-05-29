@@ -5,7 +5,7 @@ import { Delete, Lock } from "lucide-react";
 import { loginWithPin, setupAgentPin } from "@/app/auth-actions";
 import { config } from "@/lib/config";
 
-export default function PinClient({ isSetup }: { isSetup: boolean }) {
+export default function PinClient({ isSetup, agentName }: { isSetup: boolean, agentName: string }) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,7 @@ export default function PinClient({ isSetup }: { isSetup: boolean }) {
             <div className="absolute -inset-[3px] bg-primary/20 rounded-full blur-xs opacity-60" />
             <div className="relative w-20 h-20 rounded-full bg-card border border-border overflow-hidden shadow-xl">
               <img
-                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`}
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(agentName)}`}
                 alt="Agent Avatar"
                 className="w-full h-full object-cover"
               />
@@ -91,7 +91,7 @@ export default function PinClient({ isSetup }: { isSetup: boolean }) {
           </div>
 
           <h2 className="text-xl font-bold text-foreground tracking-tight">
-            {isSetup ? `Hi, ${config.agentName}` : "Create your PIN"}
+            {isSetup ? `Hi, ${agentName}` : "Create your PIN"}
           </h2>
           <p className="text-xs text-muted-foreground mt-1 font-medium tracking-widest uppercase">
             {isSetup ? "LoanTrack Pro Agent" : "Set up a 4-digit PIN for quick access"}

@@ -11,10 +11,22 @@ import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
 import { VillageCollectionBars } from "@/components/VillageCollectionBars";
+import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let agentName = config.agentName;
+  if (user?.user_metadata?.full_name) {
+    agentName = user.user_metadata.full_name;
+  } else if (user?.email) {
+    agentName = user.email.split('@')[0];
+    agentName = agentName.charAt(0).toUpperCase() + agentName.slice(1);
+  }
+
   const [customers, loans, installments] = await Promise.all([
     getCustomers(),
     getLoans(),
@@ -55,7 +67,7 @@ export default async function Home() {
 
       {/* ── Full-width Header ────────────────────────────────── */}
       <DashboardHeader
-        agentName={config.agentName}
+        agentName={agentName}
         customers={customers}
         loans={loans}
         installments={installments}
