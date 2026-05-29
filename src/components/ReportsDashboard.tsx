@@ -105,12 +105,30 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
     
+    // Aggregates for report header
+    const totalLoansCount = uniqueLoanIds.length;
+    const totalExpectedAmount = filteredInstallments.reduce((sum, inst) => sum + inst.amount, 0);
+    const totalCollectedAmount = filteredInstallments
+      .filter(inst => inst.status === "PAID")
+      .reduce((sum, inst) => sum + inst.amount, 0);
+    const totalRemainingAmount = totalExpectedAmount - totalCollectedAmount;
+    const collectionRate = totalExpectedAmount > 0 
+      ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%" 
+      : "0%";
+
     // Standard Report metadata
     const metadata = [
       `"${companyName || "Loan Collection App"}"`,
       `"LOAN COLLECTION LEDGER REPORT"`,
       `"Period: ${startDate} to ${endDate}"`,
       `"Generated: ${new Date().toLocaleDateString()}"`,
+      `""`,
+      `"SUMMARY METRICS"`,
+      `"Total Active Loans,${totalLoansCount}"`,
+      `"Total Expected Collections,${formatLKR(totalExpectedAmount).replace(/"/g, '""')}"`,
+      `"Total Collected,${formatLKR(totalCollectedAmount).replace(/"/g, '""')}"`,
+      `"Total Remaining,${formatLKR(totalRemainingAmount).replace(/"/g, '""')}"`,
+      `"Collection Rate,${collectionRate}"`,
       "" // empty spacer row
     ];
 
@@ -121,9 +139,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Member ID", 
       "Phone Number", 
       "Address / Village", 
-      "Loan Amount", 
+      "Loan Principal", 
+      "Total Repayable",
+      "Weekly Installment",
+      "Total Installments",
+      "Paid Installments",
+      "Pending Installments",
+      "Missed Installments",
+      "Total Collected",
+      "Remaining Balance",
       "Loan Start Date", 
-      "Loan End Date"
+      "Loan End Date",
+      "Loan Status"
     ];
 
     const rows = uniqueLoanIds.map(loanId => {
@@ -138,6 +165,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         ? [customer.state, customer.address].filter(Boolean).join(" • ")
         : "N/A";
 
+      const totalInstCount = loanInsts.length;
+      const paidCount = loanInsts.filter(i => i.status === "PAID").length;
+      const pendingCount = loanInsts.filter(i => i.status === "PENDING").length;
+      const missedCount = loanInsts.filter(i => i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))).length;
+      const totalPaid = loanInsts.filter(i => i.status === "PAID").reduce((sum, i) => sum + i.amount, 0);
+
+      const principalAmount = loan ? loan.principalAmount : 0;
+      const totalAmountDue = loan ? loan.totalAmountDue : 0;
+      const weeklyInstallment = loan ? loan.weeklyInstallment : 0;
+      const remainingBalance = loan ? loan.remainingBalance : 0;
+      const status = loan ? loan.status : "N/A";
+
       return [
         `"${customer?.name || "Unknown"}"`,
         `"${customer?.idNumber || "N/A"}"`,
@@ -145,9 +184,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         `"${customer?.memberId || "N/A"}"`,
         `"${customer?.phone || "N/A"}"`,
         `"${fullAddress || "N/A"}"`,
-        `"${loan ? formatLKR(loan.principalAmount) : "N/A"}"`,
+        `"${formatLKR(principalAmount).replace(/"/g, '""')}"`,
+        `"${formatLKR(totalAmountDue).replace(/"/g, '""')}"`,
+        `"${formatLKR(weeklyInstallment).replace(/"/g, '""')}"`,
+        `"${totalInstCount}"`,
+        `"${paidCount}"`,
+        `"${pendingCount}"`,
+        `"${missedCount}"`,
+        `"${formatLKR(totalPaid).replace(/"/g, '""')}"`,
+        `"${formatLKR(remainingBalance).replace(/"/g, '""')}"`,
         `"${loan?.startDate || "N/A"}"`,
-        `"${endDateVal}"`
+        `"${endDateVal}"`,
+        `"${status}"`
       ];
     });
 
@@ -166,13 +214,31 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
     
+    // Aggregates for report header
+    const totalLoansCount = uniqueLoanIds.length;
+    const totalExpectedAmount = filteredInstallments.reduce((sum, inst) => sum + inst.amount, 0);
+    const totalCollectedAmount = filteredInstallments
+      .filter(inst => inst.status === "PAID")
+      .reduce((sum, inst) => sum + inst.amount, 0);
+    const totalRemainingAmount = totalExpectedAmount - totalCollectedAmount;
+    const collectionRate = totalExpectedAmount > 0 
+      ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%" 
+      : "0%";
+
     // Standard Report metadata block
     const metadata = [
       [companyName || "Loan Collection App"],
       ["LOAN COLLECTION LEDGER REPORT"],
       [`Period: ${startDate} to ${endDate}`],
       [`Generated: ${new Date().toLocaleDateString()}`],
-      [] // Empty spacer row
+      [],
+      ["SUMMARY METRICS"],
+      ["Total Active Loans", totalLoansCount],
+      ["Total Expected Collections", formatLKR(totalExpectedAmount)],
+      ["Total Collected", formatLKR(totalCollectedAmount)],
+      ["Total Remaining", formatLKR(totalRemainingAmount)],
+      ["Collection Rate", collectionRate],
+      []
     ];
 
     const headers = [
@@ -182,9 +248,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Member ID", 
       "Phone Number", 
       "Address / Village", 
-      "Loan Amount", 
+      "Loan Principal", 
+      "Total Repayable",
+      "Weekly Installment",
+      "Total Installments",
+      "Paid Installments",
+      "Pending Installments",
+      "Missed Installments",
+      "Total Collected",
+      "Remaining Balance",
       "Loan Start Date", 
-      "Loan End Date"
+      "Loan End Date",
+      "Loan Status"
     ];
 
     const rows = uniqueLoanIds.map(loanId => {
@@ -199,6 +274,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         ? [customer.state, customer.address].filter(Boolean).join(" • ")
         : "N/A";
 
+      const totalInstCount = loanInsts.length;
+      const paidCount = loanInsts.filter(i => i.status === "PAID").length;
+      const pendingCount = loanInsts.filter(i => i.status === "PENDING").length;
+      const missedCount = loanInsts.filter(i => i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))).length;
+      const totalPaid = loanInsts.filter(i => i.status === "PAID").reduce((sum, i) => sum + i.amount, 0);
+
+      const principalAmount = loan ? loan.principalAmount : 0;
+      const totalAmountDue = loan ? loan.totalAmountDue : 0;
+      const weeklyInstallment = loan ? loan.weeklyInstallment : 0;
+      const remainingBalance = loan ? loan.remainingBalance : 0;
+      const status = loan ? loan.status : "N/A";
+
       return [
         customer?.name || "Unknown",
         customer?.idNumber || "N/A",
@@ -206,9 +293,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         customer?.memberId || "N/A",
         customer?.phone || "N/A",
         fullAddress || "N/A",
-        loan ? formatLKR(loan.principalAmount) : "N/A",
+        formatLKR(principalAmount),
+        formatLKR(totalAmountDue),
+        formatLKR(weeklyInstallment),
+        totalInstCount,
+        paidCount,
+        pendingCount,
+        missedCount,
+        formatLKR(totalPaid),
+        formatLKR(remainingBalance),
         loan?.startDate || "N/A",
-        endDateVal
+        endDateVal,
+        status
       ];
     });
 
@@ -222,17 +318,27 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       { wch: 14 }, // Member ID
       { wch: 16 }, // Phone Number
       { wch: 32 }, // Address / Village
-      { wch: 14 }, // Loan Amount
+      { wch: 16 }, // Loan Principal
+      { wch: 16 }, // Total Repayable
+      { wch: 18 }, // Weekly Installment
+      { wch: 16 }, // Total Installments
+      { wch: 16 }, // Paid Installments
+      { wch: 18 }, // Pending Installments
+      { wch: 18 }, // Missed Installments
+      { wch: 16 }, // Total Collected
+      { wch: 18 }, // Remaining Balance
       { wch: 16 }, // Loan Start Date
-      { wch: 16 }  // Loan End Date
+      { wch: 16 }, // Loan End Date
+      { wch: 14 }  // Loan Status
     ];
 
-    // Merging company name, title, and range across all columns (A-I is 0 to 8)
+    // Merging company name, title, and range across all columns (A-R is 0 to 17)
     worksheet["!merges"] = [
-      { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } },
-      { s: { r: 1, c: 0 }, e: { r: 1, c: 8 } },
-      { s: { r: 2, c: 0 }, e: { r: 2, c: 8 } },
-      { s: { r: 3, c: 0 }, e: { r: 3, c: 8 } }
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 17 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 17 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 17 } },
+      { s: { r: 3, c: 0 }, e: { r: 3, c: 17 } },
+      { s: { r: 5, c: 0 }, e: { r: 5, c: 17 } }
     ];
 
     const workbook = XLSX.utils.book_new();
