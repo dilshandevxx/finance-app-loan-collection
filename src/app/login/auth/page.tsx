@@ -41,7 +41,7 @@ export default function AuthLoginPage() {
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 border border-primary/20">
             <Lock className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground tracking-tight">{config.companyName || "Organization"} Login</h2>
+          <h2 className="text-2xl font-bold text-foreground tracking-tight">{config.appName || "Organization"} Login</h2>
           <p className="text-sm text-muted-foreground mt-1 text-center">Sign in to access your tenant</p>
         </div>
 
