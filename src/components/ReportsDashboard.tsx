@@ -15,8 +15,55 @@ type ReportsDashboardProps = {
 };
 
 export function ReportsDashboard({ installments, loans, customers }: ReportsDashboardProps) {
-  const [startDate, setStartDate] = useState("2024-07-01");
-  const [endDate, setEndDate] = useState("2024-07-31");
+  const [startDate, setStartDate] = useState(() => {
+    if (installments.length === 0) {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    }
+    const sorted = [...installments].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+    const newestDate = sorted[sorted.length - 1].dueDate;
+    const newest = new Date(newestDate);
+    return `${newest.getFullYear()}-${String(newest.getMonth() + 1).padStart(2, '0')}-01`;
+  });
+
+  const [endDate, setEndDate] = useState(() => {
+    if (installments.length === 0) {
+      const now = new Date();
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+    }
+    const sorted = [...installments].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+    const newestDate = sorted[sorted.length - 1].dueDate;
+    const newest = new Date(newestDate);
+    const lastDay = new Date(newest.getFullYear(), newest.getMonth() + 1, 0).getDate();
+    return `${newest.getFullYear()}-${String(newest.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+  });
+
+  const setThisMonth = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    setStartDate(`${year}-${month}-01`);
+    const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
+    setEndDate(`${year}-${month}-${String(lastDay).padStart(2, '0')}`);
+  };
+
+  const setLast30Days = () => {
+    const now = new Date();
+    const end = now.toISOString().split('T')[0];
+    const past = new Date();
+    past.setDate(now.getDate() - 30);
+    const start = past.toISOString().split('T')[0];
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const setAllTime = () => {
+    if (installments.length === 0) return;
+    const sorted = [...installments].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+    setStartDate(sorted[0].dueDate);
+    setEndDate(sorted[sorted.length - 1].dueDate);
+  };
 
   const filteredInstallments = installments.filter((inst) => {
     if (!startDate && !endDate) return true;
@@ -114,32 +161,59 @@ export function ReportsDashboard({ installments, loans, customers }: ReportsDash
         {/* Subtle glow */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#7c6dbf]/5 rounded-full blur-[50px] pointer-events-none -z-0" />
         
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-10">
-          <div className="flex flex-col gap-2 flex-1">
-            <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Start Date</label>
-            <div className="relative">
-              <input 
-                type="date" 
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
-                style={{ colorScheme: "dark" }}
-              />
-              <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <div className="flex flex-col gap-3.5 w-full sm:w-auto relative z-10">
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="flex flex-col gap-2 flex-1">
+              <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Start Date</label>
+              <div className="relative">
+                <input 
+                  type="date" 
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
+                  style={{ colorScheme: "dark" }}
+                />
+                <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">End Date</label>
+              <div className="relative">
+                <input 
+                  type="date" 
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
+                  style={{ colorScheme: "dark" }}
+                />
+                <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-2 flex-1">
-            <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">End Date</label>
-            <div className="relative">
-              <input 
-                type="date" 
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-[#7c6dbf]/50 transition w-full"
-                style={{ colorScheme: "dark" }}
-              />
-              <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            </div>
+
+          {/* Quick Date Presets */}
+          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+            <button
+              type="button"
+              onClick={setThisMonth}
+              className="px-3 py-1.5 text-[11px] font-bold bg-secondary hover:bg-border/60 text-foreground rounded-xl border border-border transition-all active:scale-95 cursor-pointer"
+            >
+              📅 This Month
+            </button>
+            <button
+              type="button"
+              onClick={setLast30Days}
+              className="px-3 py-1.5 text-[11px] font-bold bg-secondary hover:bg-border/60 text-foreground rounded-xl border border-border transition-all active:scale-95 cursor-pointer"
+            >
+              📅 Last 30 Days
+            </button>
+            <button
+              type="button"
+              onClick={setAllTime}
+              className="px-3 py-1.5 text-[11px] font-bold bg-secondary hover:bg-border/60 text-foreground rounded-xl border border-border transition-all active:scale-95 cursor-pointer"
+            >
+              📅 All Time
+            </button>
           </div>
         </div>
 
