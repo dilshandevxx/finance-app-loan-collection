@@ -1,79 +1,79 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: modern sleek slate & indigo ─────────── */
+/* ─── Light Mode: inspired by mobile app reference ─────────── */
 :root {
-  --background: #F8FAFC;
-  --foreground: #0F172A;
+  --background: #EEF1F8;
+  --foreground: #0D1117;
   --card: #ffffff;
-  --card-foreground: #0F172A;
+  --card-foreground: #0D1117;
   --popover: #ffffff;
-  --popover-foreground: #0F172A;
-  --primary: #4F46E5;
+  --popover-foreground: #0D1117;
+  --primary: #3D6DFF;
   --primary-foreground: #ffffff;
-  --secondary: #F1F5F9;
-  --secondary-foreground: #1E293B;
-  --muted: #F1F5F9;
-  --muted-foreground: #64748B;
-  --accent: #EEF2FF;
-  --accent-foreground: #4F46E5;
+  --secondary: #E2E7F4;
+  --secondary-foreground: #1A2235;
+  --muted: #E2E7F4;
+  --muted-foreground: #6B7A99;
+  --accent: #E8EEFF;
+  --accent-foreground: #3D6DFF;
   --destructive: #FEF2F2;
   --destructive-foreground: #EF4444;
-  --border: #E2E8F0;
+  --border: #D0D7EC;
   --input: #ffffff;
-  --ring: #6366F1;
+  --ring: #3D6DFF;
 
   /* Custom chart variables */
   --chart-collected: #10B981;
-  --chart-expected: #6366F1;
+  --chart-expected: #3D6DFF;
 
   /* Custom vibe accent colors */
   --vibe-coral: #EF4444;
-  --vibe-pink: #F59E0B;
-  --vibe-violet: #6366F1;
+  --vibe-pink: #E8A430;
+  --vibe-violet: #A855F7;
   --vibe-sky: #0EA5E9;
 
   --vibe-coral-lt: #FEF2F2;
-  --vibe-pink-lt: #FFFBEB;
-  --vibe-violet-lt: #EEF2FF;
+  --vibe-pink-lt: #FFF8EB;
+  --vibe-violet-lt: #F5F0FF;
   --vibe-sky-lt: #F0F9FF;
 }
 
-/* ─── Dark Mode: Midnight Obsidian & Violet ──────────────── */
+/* ─── Dark Mode: Deep Navy (matching mobile app reference) ──────────────── */
 .dark {
-  --background: #030712;
-  --foreground: #F8FAFC;
-  --card: #0F172A;
-  --card-foreground: #F8FAFC;
-  --popover: #0F172A;
-  --popover-foreground: #F8FAFC;
-  --primary: #818CF8;
+  --background: #0D1117;
+  --foreground: #E8EDF8;
+  --card: #131929;
+  --card-foreground: #E8EDF8;
+  --popover: #131929;
+  --popover-foreground: #E8EDF8;
+  --primary: #4A7AFF;
   --primary-foreground: #ffffff;
-  --secondary: #1E293B;
-  --secondary-foreground: #F8FAFC;
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
-  --accent: #1E293B;
-  --accent-foreground: #A5B4FC;
-  --destructive: #310413;
-  --destructive-foreground: #FDA4AF;
-  --border: #1E293B;
-  --input: #0F172A;
-  --ring: #818CF8;
+  --secondary: #1A2235;
+  --secondary-foreground: #E8EDF8;
+  --muted: #1A2235;
+  --muted-foreground: #8892B0;
+  --accent: #1A2235;
+  --accent-foreground: #7BA4FF;
+  --destructive: #2A0D1A;
+  --destructive-foreground: #FCA5A5;
+  --border: #1E2A45;
+  --input: #131929;
+  --ring: #4A7AFF;
 
   /* Custom chart variables */
   --chart-collected: #10B981;
-  --chart-expected: #818CF8;
+  --chart-expected: #4A7AFF;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #FDA4AF;
-  --vibe-pink: #FDE047;
-  --vibe-violet: #A5B4FC;
-  --vibe-sky: #7DD3FC;
+  --vibe-coral: #FCA5A5;
+  --vibe-pink: #FBBF24;
+  --vibe-violet: #C084FC;
+  --vibe-sky: #67E8F9;
 
-  --vibe-coral-lt: #4C0519;
-  --vibe-pink-lt: #422006;
-  --vibe-violet-lt: #1E1B4B;
-  --vibe-sky-lt: #082F49;
+  --vibe-coral-lt: #450A0A;
+  --vibe-pink-lt: #3A2000;
+  --vibe-violet-lt: #2D1B4E;
+  --vibe-sky-lt: #0A2A35;
 }
 
 @theme inline {
