@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS public.tenants (
 CREATE TABLE IF NOT EXISTS public.user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   tenant_id UUID NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+  email TEXT,
   hashed_pin TEXT,
   full_name TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
@@ -33,6 +34,13 @@ ON CONFLICT DO NOTHING;
 -- ==========================================
 
 ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS full_name TEXT;
+ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS email TEXT;
+
+-- Sync existing emails from auth.users
+UPDATE public.user_profiles up
+SET email = au.email
+FROM auth.users au
+WHERE up.id = au.id;
 
 -- ==========================================
 -- 4. Add tenant_id to Existing Tables
