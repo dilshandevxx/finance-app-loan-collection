@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, CheckCircle2, DollarSign, MessageCircle } from "lucide-react";
+import { X, CheckCircle2, MessageCircle } from "lucide-react";
 import { Customer } from "@/data/db";
 import { config } from "@/lib/config";
+import { formatLKR } from "@/lib/format";
 
 type QuickPaymentModalProps = {
   customer: Customer;
@@ -76,7 +77,7 @@ export function QuickPaymentModal({
   const handleWhatsAppShare = () => {
     const finalAmount = parseFloat(amount) || expectedAmount;
     const phone = customer.phone.replace(/[^0-9]/g, '');
-    const message = `Receipt: Payment of $${finalAmount.toFixed(2)} received on ${new Date().toLocaleDateString()}. Thank you! - ${config.appName}`;
+    const message = `Receipt: Payment of ${formatLKR(finalAmount)} received on ${new Date().toLocaleDateString()}. Thank you! - ${config.appName}`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
@@ -108,7 +109,7 @@ export function QuickPaymentModal({
             </div>
             
             <div className="flex flex-col items-center gap-1">
-              <span className="text-4xl font-black tracking-tighter text-black dark:text-white">${parseFloat(amount || expectedAmount.toString()).toFixed(2)}</span>
+              <span className="text-4xl font-black tracking-tighter text-black dark:text-white">{formatLKR(parseFloat(amount || expectedAmount.toString()))}</span>
               <span className="text-sm font-medium text-gray-500 dark:text-white/50">Collected from {customer.name}</span>
             </div>
 
@@ -150,7 +151,7 @@ export function QuickPaymentModal({
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Amount Collected</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <DollarSign className="h-6 w-6 text-black dark:text-white" />
+                    <span className="text-sm font-bold text-black dark:text-white">Rs.</span>
                   </div>
                   <input
                     type="number"
@@ -162,7 +163,7 @@ export function QuickPaymentModal({
               </div>
               
               <div className="flex gap-2">
-                {[expectedAmount, 50, 100].map((preset) => (
+                {[expectedAmount, 500, 1000].map((preset) => (
                   <button
                     key={preset}
                     onClick={() => setAmount(preset.toString())}
@@ -172,7 +173,7 @@ export function QuickPaymentModal({
                         : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-muted dark:text-white dark:border-[#333] dark:hover:bg-[#222]"
                     }`}
                   >
-                    ${preset}
+                    {preset === expectedAmount ? formatLKR(preset) : `Rs. ${preset.toLocaleString()}`}
                   </button>
                 ))}
               </div>

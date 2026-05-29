@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createLoan, createSystemVillage } from "@/app/actions";
 import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
+import { formatLKR } from "@/lib/format";
 
 type Customer = {
   id: string;
@@ -329,7 +330,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                   id="phone"
                   name="phone"
                   required
-                  placeholder="e.g. 555-0199" 
+                  placeholder="e.g. 071 234 5678" 
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
@@ -466,11 +467,11 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <label htmlFor="principal" className="text-sm font-semibold text-gray-750 dark:text-white/70">Principal Amount</label>
-            <span className="text-xs font-bold text-black/50 dark:text-white/50 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-md">${principal.toFixed(2)}</span>
+            <span className="text-xs font-bold text-black/50 dark:text-white/50 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-md">{formatLKR(principal)}</span>
           </div>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <DollarSign className="h-5 w-5 text-black dark:text-white group-focus-within:text-primary transition-colors" />
+              <span className="text-sm font-bold text-black dark:text-white group-focus-within:text-primary transition-colors">Rs.</span>
             </div>
             <input 
               type="number" 
@@ -496,9 +497,9 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
               className="w-full h-1 bg-gray-250 dark:bg-[#222] rounded-lg appearance-none cursor-pointer accent-primary"
             />
             <div className="flex justify-between text-[10px] text-gray-400 dark:text-white/30 px-0.5 mt-0.5 font-medium">
-              <span>$0</span>
-              <span>$2,500</span>
-              <span>$5,000</span>
+              <span>Rs. 0</span>
+              <span>Rs. 2,500</span>
+              <span>Rs. 5,000</span>
             </div>
           </div>
         </div>
@@ -590,7 +591,7 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
           <div className="flex flex-col gap-1 min-w-0">
             <span className="text-[11px] sm:text-xs font-bold text-primary uppercase tracking-wider truncate">Calculated Installment</span>
             <span className="text-2xl sm:text-3xl font-black text-black dark:text-white tracking-tight flex items-baseline gap-1 flex-wrap">
-              ${installmentAmount.toFixed(2)} <span className="text-xs sm:text-sm text-gray-500 dark:text-white/60 font-medium">/ week</span>
+              {formatLKR(installmentAmount)} <span className="text-xs sm:text-sm text-gray-500 dark:text-white/60 font-medium">/ week</span>
             </span>
           </div>
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center shrink-0">
@@ -603,15 +604,15 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
           <div className="border-t border-neutral-200 dark:border-[#333] pt-3 grid grid-cols-3 gap-2 text-center text-xs">
             <div className="flex flex-col">
               <span className="text-gray-500 dark:text-white/40 font-medium">Principal</span>
-              <span className="text-black dark:text-white font-bold">${principal.toFixed(2)}</span>
+              <span className="text-black dark:text-white font-bold">{formatLKR(principal)}</span>
             </div>
             <div className="flex flex-col border-x border-neutral-250 dark:border-[#333]">
               <span className="text-gray-500 dark:text-white/40 font-medium">Interest ({interest}%)</span>
-              <span className="text-black dark:text-white font-bold">+${((principal * interest) / 100).toFixed(2)}</span>
+              <span className="text-black dark:text-white font-bold">+{formatLKR((principal * interest) / 100)}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-gray-500 dark:text-white/40 font-medium">Total Repay</span>
-              <span className="text-black dark:text-white font-bold">${(principal * (1 + interest / 100)).toFixed(2)}</span>
+              <span className="text-black dark:text-white font-bold">{formatLKR(principal * (1 + interest / 100))}</span>
             </div>
           </div>
         )}

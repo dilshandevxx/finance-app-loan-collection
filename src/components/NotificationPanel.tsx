@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Bell, X, Phone, MessageSquare, Calendar, AlertTriangle, ArrowRight, Inbox, Clock } from "lucide-react";
 import Link from "next/link";
 import { Customer, Loan, Installment } from "@/data/db";
+import { formatLKR } from "@/lib/format";
 
 type NotificationPanelProps = {
   customers: Customer[];
@@ -157,7 +158,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                               </div>
                             </div>
                             <div className="flex flex-col items-end">
-                              <span className="text-sm font-black text-red-600 dark:text-red-400">${inst.amount.toFixed(2)}</span>
+                              <span className="text-sm font-black text-red-600 dark:text-red-400">{formatLKR(inst.amount)}</span>
                               <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 font-bold uppercase tracking-wide mt-1">
                                 {getOverdueDays(inst.dueDate)}d Overdue
                               </span>
@@ -232,7 +233,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
                               </div>
                             </div>
-                            <span className="text-sm font-black text-primary">${inst.amount.toFixed(2)}</span>
+                            <span className="text-sm font-black text-primary">{formatLKR(inst.amount)}</span>
                           </div>
 
                           <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-border/50">
@@ -307,7 +308,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
                               </div>
                             </div>
-                            <span className="text-sm font-black text-indigo-500">${inst.amount.toFixed(2)}</span>
+                            <span className="text-sm font-black text-indigo-500">{formatLKR(inst.amount)}</span>
                           </div>
 
                           <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100/50 dark:border-border/20">
@@ -324,7 +325,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                                 <Phone className="w-3.5 h-3.5" />
                               </a>
                               <a 
-                                href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${customer?.name}, this is a gentle reminder that your installment payment of $${inst.amount.toFixed(2)} is scheduled for tomorrow. Thank you!`)}`}
+                                href={`https://wa.me/${customer?.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${customer?.name}, this is a gentle reminder that your installment payment of ${formatLKR(inst.amount)} is scheduled for tomorrow. Thank you!`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-colors"

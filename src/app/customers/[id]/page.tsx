@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId, getCustomerNotes } from "@/data/db";
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
 import { CustomerOperations } from "@/components/CustomerOperations";
+import { formatLKR, formatLKRShort, formatLKRDecimal } from "@/lib/format";
 
 export const dynamic = 'force-dynamic';
 
@@ -118,7 +119,7 @@ export default async function CustomerDetails({ params }: Props) {
             <div className="mt-8 text-center w-full">
               <span className="text-muted-foreground text-sm font-medium">Remaining Balance</span>
               <div className="text-5xl font-bold tracking-tighter mt-1 text-foreground">
-                ${Math.floor(loan.remainingBalance)}<span className="text-muted-foreground text-3xl">.{(loan.remainingBalance % 1).toFixed(2).substring(2)}</span>
+                Rs. {formatLKRShort(loan.remainingBalance)}<span className="text-muted-foreground text-3xl">.{formatLKRDecimal(loan.remainingBalance)}</span>
               </div>
             </div>
 
@@ -172,11 +173,11 @@ export default async function CustomerDetails({ params }: Props) {
               <CardContent className="p-5 flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground text-sm">Total Amount</span>
-                  <span className="font-medium text-foreground">${loan.principalAmount.toFixed(2)}</span>
+                  <span className="font-medium text-foreground">{formatLKR(loan.principalAmount)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground text-sm">Weekly Installment</span>
-                  <span className="font-medium text-foreground">${loan.weeklyInstallment.toFixed(2)}</span>
+                  <span className="font-medium text-foreground">{formatLKR(loan.weeklyInstallment)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground text-sm">Status</span>
@@ -222,7 +223,7 @@ export default async function CustomerDetails({ params }: Props) {
 
                         <div className="flex flex-col items-end">
                           <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
-                            ${inst.amount.toFixed(2)}
+                            {formatLKR(inst.amount)}
                           </span>
                           {inst.paidDate && (
                             <span className="text-xs text-muted-foreground">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>

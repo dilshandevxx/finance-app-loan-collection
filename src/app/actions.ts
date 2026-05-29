@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { formatLKR } from "@/lib/format";
 
 export async function createLoan(formData: FormData) {
   const name = formData.get("name") as string;
@@ -260,7 +261,7 @@ export async function restructureWeeklyInstallment(loanId: string, newAmount: nu
   if (loan) {
     await supabase.from("customer_notes").insert({
       customer_id: loan.customer_id,
-      note: `Restructured Loan: Adjusted weekly installment amount to $${newAmount.toFixed(2)}.`
+      note: `Restructured Loan: Adjusted weekly installment amount to ${formatLKR(newAmount)}.`
     });
     revalidatePath(`/customers/${loan.customer_id}`);
   }

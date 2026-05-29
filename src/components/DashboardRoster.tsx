@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/db";
 import { markInstallmentPaid } from "@/app/actions";
+import { formatLKR } from "@/lib/format";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 
 type DashboardRosterProps = {
@@ -153,7 +154,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     const remaining = loan ? loan.remainingBalance : amount;
     const phone = customer.phone.replace(/[^0-9]/g, '');
     const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
-    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of $${amount.toFixed(2)} is due today. Your remaining balance is $${remaining.toFixed(2)}. Please coordinate with your collection agent. Thank you!`;
+    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of ${formatLKR(amount)} is due today. Your remaining balance is ${formatLKR(remaining)}. Please coordinate with your collection agent. Thank you!`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -164,7 +165,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     const remaining = loan ? loan.remainingBalance : amount;
     const phone = customer.phone.replace(/[^0-9]/g, '');
     const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
-    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of $${amount.toFixed(2)} is due today. Your remaining balance is $${remaining.toFixed(2)}. Please coordinate with your collection agent. Thank you!`;
+    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of ${formatLKR(amount)} is due today. Your remaining balance is ${formatLKR(remaining)}. Please coordinate with your collection agent. Thank you!`;
     window.open(`sms:${phone}?body=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -262,7 +263,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
                       <div className="flex items-center gap-2 shrink-0">
                         <span className={`font-bold text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
-                          ${totalAmount.toFixed(2)}
+                          {formatLKR(totalAmount)}
                         </span>
                         <div className="flex items-center gap-1.5">
                           <button

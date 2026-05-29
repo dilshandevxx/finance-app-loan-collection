@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
+import { formatLKR } from "@/lib/format";
 
 type CustomersListProps = {
   customers: Customer[];
@@ -219,7 +220,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             {activeLoan ? (
                               <>
                                 <span className={`font-bold text-base sm:text-lg tracking-tight ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
-                                  ${totalRemaining.toFixed(2)}
+                                  {formatLKR(totalRemaining)}
                                 </span>
                                 <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
                               </>

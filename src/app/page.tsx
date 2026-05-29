@@ -7,6 +7,7 @@ import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { AnalyticsChart } from "@/components/AnalyticsChart";
+import { formatLKR } from "@/lib/format";
 
 export const dynamic = 'force-dynamic';
 
@@ -71,8 +72,8 @@ export default async function Home() {
           <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
             <AlertCircle className="w-3 h-3" /> Overdue
           </div>
-          <span className="text-3xl font-black tracking-tight truncate" title={`$${overdueAmount.toFixed(2)}`}>
-            ${overdueAmount.toFixed(0)}
+          <span className="text-3xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
+            {formatLKR(overdueAmount)}
           </span>
           <span className="text-[10px] text-white/70 font-medium">amount due</span>
         </div>

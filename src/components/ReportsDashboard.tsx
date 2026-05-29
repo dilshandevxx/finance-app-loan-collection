@@ -7,6 +7,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Customer, Installment, Loan } from "@/data/db";
+import { formatLKR } from "@/lib/format";
 
 type ReportsDashboardProps = {
   installments: Installment[];
@@ -144,7 +145,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         `"${customer?.memberId || "N/A"}"`,
         `"${customer?.phone || "N/A"}"`,
         `"${fullAddress || "N/A"}"`,
-        `"${loan ? `$${loan.principalAmount.toFixed(2)}` : "N/A"}"`,
+        `"${loan ? formatLKR(loan.principalAmount) : "N/A"}"`,
         `"${loan?.startDate || "N/A"}"`,
         `"${endDateVal}"`
       ];
@@ -205,7 +206,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         customer?.memberId || "N/A",
         customer?.phone || "N/A",
         fullAddress || "N/A",
-        loan ? `$${loan.principalAmount.toFixed(2)}` : "N/A",
+        loan ? formatLKR(loan.principalAmount) : "N/A",
         loan?.startDate || "N/A",
         endDateVal
       ];
@@ -353,21 +354,21 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[30px] -z-0" />
           <CardContent className="p-6 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Expected</span>
-            <div className="text-3xl font-black mt-1 text-foreground tracking-tight">${totalExpected.toFixed(2)}</div>
+            <div className="text-3xl font-black mt-1 text-foreground tracking-tight">{formatLKR(totalExpected)}</div>
           </CardContent>
         </Card>
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-green-600/10 dark:bg-green-500/10 rounded-full blur-[30px] -z-0" />
           <CardContent className="p-6 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Collected</span>
-            <div className="text-3xl font-black mt-1 text-green-600 dark:text-green-400 tracking-tight">${totalCollected.toFixed(2)}</div>
+            <div className="text-3xl font-black mt-1 text-green-600 dark:text-green-400 tracking-tight">{formatLKR(totalCollected)}</div>
           </CardContent>
         </Card>
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[30px] -z-0" />
           <CardContent className="p-6 relative z-10">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Pending</span>
-            <div className="text-3xl font-black mt-1 text-red-500 dark:text-red-400 tracking-tight">${totalPending.toFixed(2)}</div>
+            <div className="text-3xl font-black mt-1 text-red-500 dark:text-red-400 tracking-tight">{formatLKR(totalPending)}</div>
           </CardContent>
         </Card>
       </section>
@@ -405,13 +406,13 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                     axisLine={false} 
                     tickLine={false} 
                     tick={{ fontSize: 11, fill: '#888888' }}
-                    tickFormatter={(value) => `$${value}`}
+                    tickFormatter={(value) => `Rs. ${Number(value).toLocaleString("en-LK")}`}
                   />
                   <Tooltip 
                     contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', color: 'var(--foreground)' }}
                     itemStyle={{ fontWeight: 'bold' }}
                     labelStyle={{ color: 'var(--muted-foreground)', marginBottom: '8px', fontSize: '12px' }}
-                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, undefined]}
+                    formatter={(value: any) => [formatLKR(Number(value)), undefined]}
                     cursor={{ stroke: 'var(--border)', strokeWidth: 1.5 }}
                   />
                   <Area 
@@ -476,7 +477,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                         <td className="p-4 px-6 font-semibold text-sm">{customer?.name || "Unknown"}</td>
                         <td className="p-4 text-muted-foreground print:text-black/70 text-xs font-mono">{customer?.memberId || customer?.id.slice(0,8) || "N/A"}</td>
                         <td className="p-4 text-muted-foreground print:text-black/70 text-xs">{inst.dueDate}</td>
-                        <td className="p-4 text-right font-bold text-sm">${inst.amount.toFixed(2)}</td>
+                        <td className="p-4 text-right font-bold text-sm">{formatLKR(inst.amount)}</td>
                         <td className="p-4 px-6 text-right flex justify-end">
                           <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                             inst.status === "PAID" ? "bg-[#9dedc8]/10 text-[#9dedc8] border border-[#9dedc8]/20 print:bg-transparent print:text-black" :

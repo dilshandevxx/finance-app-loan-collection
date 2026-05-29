@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { formatLKR, formatLKRShort, formatLKRDecimal } from "@/lib/format";
 
 interface CollectionGoalCardProps {
   expectedToday: number;
@@ -56,12 +57,13 @@ export function CollectionGoalCard({
           </h2>
           
           <div className="text-3xl sm:text-4xl font-black text-foreground flex items-baseline tracking-tight mt-1">
-            <span>${(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[0]}</span>
-            <span className="text-muted-foreground text-xl">.{(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday).toFixed(2).split('.')[1]}</span>
+            <span className="text-xl font-bold mr-1 text-muted-foreground">Rs.</span>
+            <span>{formatLKRShort(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday)}</span>
+            <span className="text-muted-foreground text-xl">.{formatLKRDecimal(progressPercent >= 100 && totalTargetToday > 0 ? collectedToday : expectedToday)}</span>
           </div>
 
           <p className="text-xs text-muted-foreground mt-1">
-            Collected <span className="font-bold text-foreground">${collectedToday.toFixed(2)}</span> / ${totalTargetToday.toFixed(2)}
+            Collected <span className="font-bold text-foreground">{formatLKR(collectedToday)}</span> / {formatLKR(totalTargetToday)}
           </p>
 
           {/* Settlement Badge */}
