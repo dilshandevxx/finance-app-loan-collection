@@ -80,7 +80,7 @@ export function CollectionGoalCard({
                 cx={size / 2}
                 cy={size / 2}
                 r={radius}
-                className="stroke-zinc-200 dark:stroke-[#262626]"
+                className="stroke-zinc-200 dark:stroke-border"
                 strokeWidth={strokeWidth}
                 fill="none"
               />
@@ -88,7 +88,7 @@ export function CollectionGoalCard({
                 cx={size / 2}
                 cy={size / 2}
                 r={radius}
-                className="stroke-[#10B981] transition-all duration-1000 ease-out"
+                className="stroke-primary transition-all duration-1000 ease-out"
                 strokeWidth={strokeWidth}
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
