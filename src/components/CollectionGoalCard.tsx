@@ -77,12 +77,12 @@ export function CollectionGoalCard({
 
         {/* Right Side: Animated Ring */}
         <div className="col-span-4 flex justify-end items-center relative">
-          <div className="relative w-24 h-24 drop-shadow-[0_0_18px_rgba(192,132,252,0.4)]">
+          <div className="relative w-24 h-24 drop-shadow-[0_0_18px_rgba(232,28,255,0.4)]">
             <svg width={size} height={size} className="transform -rotate-90">
               <defs>
                 <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#C084FC" />
-                  <stop offset="100%" stopColor="#F472B6" />
+                  <stop offset="0%" stopColor="#e81cff" />
+                  <stop offset="100%" stopColor="#00f0ff" />
                 </linearGradient>
               </defs>
               <circle

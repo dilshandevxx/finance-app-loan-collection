@@ -95,7 +95,7 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#06B6D4] to-[#2563EB] text-white shadow-[0_4px_24px_rgba(6,182,212,0.35)] relative overflow-hidden">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#e81cff] to-[#a855f7] text-white shadow-[0_4px_24px_rgba(232,28,255,0.35)] relative overflow-hidden">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-3xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-white/70 text-[10px] font-bold uppercase tracking-wider">
@@ -106,7 +106,7 @@ export default async function Home() {
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#F97316] to-[#DB2777] text-white shadow-[0_4px_24px_rgba(249,115,22,0.35)] relative overflow-hidden">
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-[#00f0ff] to-[#0ea5e9] text-white shadow-[0_4px_24px_rgba(0,240,255,0.35)] relative overflow-hidden">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-3xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
