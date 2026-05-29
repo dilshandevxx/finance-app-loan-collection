@@ -60,48 +60,25 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-card/50 dark:bg-card/30 border border-white/10 dark:border-white/5 backdrop-blur-2xl mb-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-      <div className="flex items-center gap-3.5">
-        {/* Dynamic Glassmorphic Greeting Icon */}
-        <div className={`relative w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${iconClass}`}>
-          <Icon className="w-5.5 h-5.5 animate-pulse" />
-        </div>
-
-        {/* Text Greeting Block */}
-        <div className="flex flex-col text-left">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">
-              {greeting}
-            </span>
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Active
-            </span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-black text-foreground leading-tight tracking-tight mt-0.5 flex items-center gap-1.5">
-            {agentName}
-            <span className="animate-[wave_2.5s_infinite] origin-[70%_70%] inline-block text-xl select-none cursor-default text-foreground">👋</span>
-          </h1>
-          <p className="text-[11px] sm:text-xs text-muted-foreground font-semibold mt-0.5">
-            Welcome back! Here's your collection status for today.
+    <header className="flex items-center justify-between mb-6 px-1">
+      <div className="flex flex-col">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
+          Hi, {agentName.split(" ")[0]}!
+        </h1>
+        {formattedDate && (
+          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5 font-medium">
+            <Calendar className="w-3 h-3" />
+            {formattedDate}
           </p>
-        </div>
+        )}
       </div>
 
-      <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-none border-border/30 pt-3 sm:pt-0">
-        {formattedDate && (
-          <span className="text-xs text-muted-foreground font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-secondary/50 border border-border/20 select-none">
-            <Calendar className="w-3.5 h-3.5 opacity-80" />
-            {formattedDate}
-          </span>
-        )}
-        <div className="flex items-center">
-          <NotificationPanel
-            customers={customers}
-            loans={loans}
-            installments={installments}
-          />
-        </div>
+      <div className="flex items-center gap-3">
+        <NotificationPanel
+          customers={customers}
+          loans={loans}
+          installments={installments}
+        />
       </div>
     </header>
   );
