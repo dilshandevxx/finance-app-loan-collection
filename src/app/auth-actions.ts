@@ -1,33 +1,84 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
-// Define the valid agent PIN for the client instance, falling back to a default
-const AGENT_PIN = process.env.AGENT_PIN || "1234";
+export async function loginWithEmail(email: string) {
+  const supabase = await createClient();
+  
+  // We use OTP (Magic Link) or Password. Let's assume you set them up with a default password,
+  // or they just use Magic Link. Magic link is easiest for manual onboarding.
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: false, // You manually create them in Supabase to collect payment
+    }
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function loginWithPassword(email: string, password: string) {
+  const supabase = await createClient();
+  
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/", "layout");
+  return { success: true };
+}
+
+export async function logout() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  
+  // Also clear the PIN session
+  const cookieStore = await cookies();
+  cookieStore.delete("agent_session");
+  
+  revalidatePath("/", "layout");
+  return { success: true };
+}
+
+// ==========================================
+// PIN Logic (Secondary Lock)
+// ==========================================
 
 export async function getAgentPin(): Promise<string> {
-  try {
-    const { data, error } = await supabase
-      .from("system_settings")
-      .select("value")
-      .eq("key", "agent_pin")
-      .maybeSingle();
+  const supabase = await createClient();
+  // Fetch from user_profiles instead of system_settings for multi-tenant
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return "1234";
 
-    if (data?.value) {
-      return data.value;
-    }
-  } catch (err) {
-    console.error("Failed to fetch agent pin from DB, using fallback", err);
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select("hashed_pin")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (data?.hashed_pin) {
+    return data.hashed_pin;
   }
-  return AGENT_PIN;
+  
+  return "1234"; // Default if not set
 }
 
 export async function loginWithPin(pin: string) {
   const activePin = await getAgentPin();
   if (pin === activePin) {
-    // Set a secure HTTP-only cookie to keep the agent logged in
-    (await cookies()).set({
+    const cookieStore = await cookies();
+    cookieStore.set({
       name: "agent_session",
       value: "authenticated",
       httpOnly: true,
@@ -41,6 +92,10 @@ export async function loginWithPin(pin: string) {
 }
 
 export async function updateAgentPin(currentPin: string, newPin: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not logged in" };
+
   const activePin = await getAgentPin();
   if (currentPin !== activePin) {
     return { success: false, error: "Current PIN is incorrect" };
@@ -50,23 +105,15 @@ export async function updateAgentPin(currentPin: string, newPin: string) {
     return { success: false, error: "New PIN must be exactly 4 digits" };
   }
 
-  try {
-    const { error } = await supabase
-      .from("system_settings")
-      .upsert({ key: "agent_pin", value: newPin }, { onConflict: "key" });
+  const { error } = await supabase
+    .from("user_profiles")
+    .upsert({ 
+      id: user.id,
+      hashed_pin: newPin 
+    });
 
-    if (error) {
-      console.error("Failed to upsert agent pin:", error);
-      return { success: false, error: `Failed to save new PIN: ${error.message}` };
-    }
-    return { success: true };
-  } catch (err: any) {
-    console.error("Error updating agent pin:", err);
-    return { success: false, error: err?.message || "An unexpected error occurred" };
+  if (error) {
+    return { success: false, error: `Failed to save new PIN: ${error.message}` };
   }
-}
-
-export async function logout() {
-  (await cookies()).delete("agent_session");
   return { success: true };
 }

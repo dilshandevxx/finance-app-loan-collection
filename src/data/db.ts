@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 // Database Raw Types (as stored in Postgres)
 export type DBCustomer = {
@@ -100,6 +100,7 @@ function parseAddressField(rawAddress: string | undefined | null) {
 }
 
 export async function getCustomers(): Promise<Customer[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase.from("customers").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching customers:", error);
   
@@ -121,6 +122,7 @@ export async function getCustomers(): Promise<Customer[]> {
 }
 
 export async function getCustomerById(id: string): Promise<Customer | null> {
+  const supabase = await createClient();
   const { data, error } = await supabase.from("customers").select("*").eq("id", id).maybeSingle();
   if (error) {
     console.error(`Error fetching customer by id ${id}:`, error);
@@ -144,6 +146,7 @@ export async function getCustomerById(id: string): Promise<Customer | null> {
 }
 
 export async function getLoans(): Promise<Loan[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase.from("loans").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching loans:", error);
   
@@ -161,6 +164,7 @@ export async function getLoans(): Promise<Loan[]> {
 }
 
 export async function getLoansByCustomerId(customerId: string): Promise<Loan[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase.from("loans").select("*").eq("customer_id", customerId).order("created_at", { ascending: false });
   if (error) {
     console.error(`Error fetching loans for customer ${customerId}:`, error);
@@ -181,6 +185,7 @@ export async function getLoansByCustomerId(customerId: string): Promise<Loan[]> 
 }
 
 export async function getInstallments(): Promise<Installment[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase.from("installments").select("*").order("due_date", { ascending: true });
   if (error) console.error("Error fetching installments:", error);
   
@@ -196,6 +201,7 @@ export async function getInstallments(): Promise<Installment[]> {
 }
 
 export async function getInstallmentsByLoanId(loanId: string): Promise<Installment[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase.from("installments").select("*").eq("loan_id", loanId).order("due_date", { ascending: true });
   if (error) {
     console.error(`Error fetching installments for loan ${loanId}:`, error);
@@ -214,6 +220,7 @@ export async function getInstallmentsByLoanId(loanId: string): Promise<Installme
 }
 
 export async function getCustomerNotes(customerId: string): Promise<CustomerNote[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("customer_notes")
     .select("*")
@@ -234,6 +241,7 @@ export async function getCustomerNotes(customerId: string): Promise<CustomerNote
 }
 
 export async function getSystemVillages(): Promise<string[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("system_settings")
     .select("value")
@@ -273,6 +281,7 @@ export async function getSystemVillages(): Promise<string[]> {
 }
 
 export async function addSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
   const trimmedName = villageName.trim();
   if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
 
@@ -301,6 +310,7 @@ export async function addSystemVillage(villageName: string): Promise<{ success: 
 }
 
 export async function removeSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
   const trimmedName = villageName.trim();
   if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
 
@@ -359,6 +369,7 @@ export async function removeSystemVillage(villageName: string): Promise<{ succes
 }
 
 export async function getCompanySettings(): Promise<{ name: string; logo: string }> {
+  const supabase = await createClient();
   const { data: nameData } = await supabase
     .from("system_settings")
     .select("value")
@@ -378,6 +389,7 @@ export async function getCompanySettings(): Promise<{ name: string; logo: string
 }
 
 export async function updateCompanySettings(name: string, logo: string): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
   const { error: nameError } = await supabase
     .from("system_settings")
     .upsert({

@@ -51,10 +51,14 @@ ALTER TABLE public.customer_notes ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAUL
 UPDATE public.customer_notes SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
 ALTER TABLE public.customer_notes ALTER COLUMN tenant_id SET NOT NULL;
 
--- Alter system_villages
-ALTER TABLE public.system_villages ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
-UPDATE public.system_villages SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
-ALTER TABLE public.system_villages ALTER COLUMN tenant_id SET NOT NULL;
+-- Alter system_settings (replaces system_villages)
+ALTER TABLE public.system_settings ADD COLUMN IF NOT EXISTS tenant_id UUID DEFAULT '00000000-0000-0000-0000-000000000001' REFERENCES public.tenants(id) ON DELETE CASCADE;
+UPDATE public.system_settings SET tenant_id = '00000000-0000-0000-0000-000000000001' WHERE tenant_id IS NULL;
+ALTER TABLE public.system_settings ALTER COLUMN tenant_id SET NOT NULL;
+-- Note: You may need to drop and recreate the primary key on system_settings if it was just "key" before.
+-- Let's make the primary key composite: (tenant_id, key)
+ALTER TABLE public.system_settings DROP CONSTRAINT IF EXISTS system_settings_pkey;
+ALTER TABLE public.system_settings ADD PRIMARY KEY (tenant_id, key);
 
 -- ==========================================
 -- 4. Row Level Security (RLS) Helper Function
@@ -77,13 +81,13 @@ ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.loans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.installments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.customer_notes ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.system_villages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.system_settings ENABLE ROW LEVEL SECURITY;
 
--- Tenants Policy (Users can only view their own tenant info if they belong to it)
+-- Tenants Policy
 CREATE POLICY "Users can view their own tenant" ON public.tenants
 FOR SELECT USING (id = public.current_tenant_id());
 
--- User Profiles Policy (Users can only view/update their own profile)
+-- User Profiles Policy
 CREATE POLICY "Users can view their own profile" ON public.user_profiles
 FOR SELECT USING (id = auth.uid());
 CREATE POLICY "Users can update their own profile" ON public.user_profiles
@@ -105,8 +109,6 @@ FOR ALL USING (tenant_id = public.current_tenant_id());
 CREATE POLICY "Tenant isolation for customer_notes" ON public.customer_notes
 FOR ALL USING (tenant_id = public.current_tenant_id());
 
--- System Villages Policy
-CREATE POLICY "Tenant isolation for system_villages" ON public.system_villages
+-- System Settings Policy
+CREATE POLICY "Tenant isolation for system_settings" ON public.system_settings
 FOR ALL USING (tenant_id = public.current_tenant_id());
-
--- Allow Admins to bypass RLS via Service Role Key (already happens automatically, but good to note)

@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 import { formatLKR, normalizePhone } from "@/lib/format";
 
 export async function createLoan(formData: FormData) {
+  const supabase = await createClient();
   const name = formData.get("name") as string;
   const phoneRaw = formData.get("phone") as string;
   const phone = normalizePhone(phoneRaw);
@@ -125,6 +126,7 @@ export async function createLoan(formData: FormData) {
 }
 
 export async function getReceiptDetails(installmentId: string) {
+  const supabase = await createClient();
   try {
     // 1. Fetch installment
     const { data: installment, error: instError } = await supabase
@@ -214,6 +216,7 @@ export async function getReceiptDetails(installmentId: string) {
 }
 
 export async function markInstallmentPaid(installmentId: string) {
+  const supabase = await createClient();
   // Get installment
   const { data: installment, error: instError } = await supabase
     .from("installments")
@@ -258,6 +261,7 @@ export async function markInstallmentPaid(installmentId: string) {
 }
 
 export async function addCustomerNote(customerId: string, note: string) {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("customer_notes")
     .insert({
@@ -275,6 +279,7 @@ export async function addCustomerNote(customerId: string, note: string) {
 }
 
 export async function postponeInstallments(loanId: string, weeksToShift: number) {
+  const supabase = await createClient();
   // Get all unpaid installments (PENDING or MISSED)
   const { data: installments, error: instError } = await supabase
     .from("installments")
@@ -320,6 +325,7 @@ export async function postponeInstallments(loanId: string, weeksToShift: number)
 }
 
 export async function restructureWeeklyInstallment(loanId: string, newAmount: number) {
+  const supabase = await createClient();
   // Update loan weekly installment amount
   const { error: loanError } = await supabase
     .from("loans")
@@ -362,6 +368,7 @@ export async function restructureWeeklyInstallment(loanId: string, newAmount: nu
 }
 
 export async function clearAllData() {
+  const supabase = await createClient();
   try {
     // 1. Delete customer notes
     const { error: notesErr } = await supabase.from("customer_notes").delete().neq("id", "00000000-0000-0000-0000-000000000000");
@@ -393,10 +400,12 @@ export async function clearAllData() {
 import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySettings, updateCompanySettings } from "@/data/db";
 
 export async function fetchSystemVillages() {
+  const supabase = await createClient();
   return await getSystemVillages();
 }
 
 export async function createSystemVillage(villageName: string) {
+  const supabase = await createClient();
   const res = await addSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
@@ -405,6 +414,7 @@ export async function createSystemVillage(villageName: string) {
 }
 
 export async function deleteSystemVillage(villageName: string) {
+  const supabase = await createClient();
   const res = await removeSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
@@ -414,10 +424,12 @@ export async function deleteSystemVillage(villageName: string) {
 }
 
 export async function fetchCompanySettings() {
+  const supabase = await createClient();
   return await getCompanySettings();
 }
 
 export async function saveCompanySettings(name: string, logo: string) {
+  const supabase = await createClient();
   const res = await updateCompanySettings(name, logo);
   revalidatePath("/settings");
   revalidatePath("/reports");
