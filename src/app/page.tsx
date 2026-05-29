@@ -95,8 +95,8 @@ export default async function Home() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Active Loans */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-primary text-primary-foreground shadow-lg shadow-primary/20 relative overflow-hidden">
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-primary-foreground/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-primary to-vibe-violet text-primary-foreground shadow-[0_4px_20px_rgba(99,102,241,0.3)] relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-primary-foreground/70 text-[10px] font-bold uppercase tracking-wider">
                 <Users className="w-3 h-3" /> Active Loans
               </div>
@@ -105,8 +105,8 @@ export default async function Home() {
             </div>
 
             {/* Overdue */}
-            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-destructive-foreground text-white shadow-lg shadow-destructive-foreground/20 relative overflow-hidden">
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="rounded-2xl p-5 flex flex-col gap-1 bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-[0_4px_20px_rgba(239,68,68,0.3)] relative overflow-hidden">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-1.5 text-white/80 text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3" /> Overdue
               </div>
@@ -128,7 +128,7 @@ export default async function Home() {
           />
 
           {/* Weekly Collections Chart */}
-          <div className="rounded-2xl bg-card border border-border p-5 shadow-sm">
+          <div className="rounded-2xl bg-card border border-white/5 dark:border-white/10 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Collections</p>

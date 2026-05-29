@@ -23,13 +23,13 @@ export function BottomNav() {
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
         <nav className="
           flex items-center
-          bg-card/92 backdrop-blur-2xl
-          border-t border-border/60
+          bg-card/80 dark:bg-card/60 backdrop-blur-3xl
+          border-t border-white/10 dark:border-white/5
           rounded-t-3xl
           px-2 pt-3 pb-4
           gap-1
-          shadow-[0_-4px_24px_rgba(0,0,0,0.08)]
-          dark:shadow-[0_-4px_24px_rgba(0,0,0,0.4)]
+          shadow-[0_-4px_24px_rgba(0,0,0,0.06)]
+          dark:shadow-[0_-4px_30px_rgba(0,0,0,0.4)]
         ">
           {NAV.slice(0, 2).map(({ href, Icon, label }) => {
             const active = pathname === href;
@@ -51,12 +51,12 @@ export function BottomNav() {
           {/* Center FAB */}
           <Link href="/new" className="flex flex-col items-center gap-0.5 group shrink-0 mx-1">
             <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-primary/20 blur-md scale-125 group-hover:scale-150 transition-all duration-300" />
-              <div className="relative w-12 h-12 rounded-full bg-primary border-2 border-primary-foreground/20 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-105 transition-transform duration-200">
-                <Plus className="w-5 h-5 text-primary-foreground stroke-[2.5]" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary to-vibe-violet blur-md scale-125 group-hover:scale-150 transition-all duration-500 opacity-60" />
+              <div className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-vibe-violet border border-white/20 flex items-center justify-center shadow-[0_4px_15px_rgba(99,102,241,0.5)] group-hover:scale-110 transition-transform duration-300">
+                <Plus className="w-5 h-5 text-white stroke-[2.5]" />
               </div>
             </div>
-            <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground">New</span>
+            <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground mt-1">New</span>
           </Link>
 
           {NAV.slice(2).map(({ href, Icon, label }) => {
@@ -95,12 +95,13 @@ export function BottomNav() {
 
         {/* New Loan Button */}
         <Link href="/new" className="group flex flex-col items-center gap-1 mb-3 w-full px-3">
-          <div className="w-full py-2.5 rounded-2xl bg-primary hover:bg-primary/90 active:scale-95
+          <div className="w-full py-2.5 rounded-2xl bg-gradient-to-tr from-primary to-indigo-500 hover:brightness-110 active:scale-95
             flex flex-col items-center justify-center gap-0.5
-            shadow-lg shadow-primary/20 transition-all duration-200
-          ">
-            <Plus className="w-4.5 h-4.5 text-primary-foreground stroke-[2.5]" />
-            <span className="text-[9px] font-black text-primary-foreground uppercase tracking-wider">New</span>
+            shadow-[0_4px_15px_rgba(99,102,241,0.4)] transition-all duration-300 border border-white/10 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+            <Plus className="w-4 h-4 text-white stroke-[2.5] relative z-10" />
+            <span className="text-[9px] font-black text-white uppercase tracking-wider relative z-10">New</span>
           </div>
         </Link>
 

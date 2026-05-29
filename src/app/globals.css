@@ -40,38 +40,38 @@
 
 /* ─── Dark Mode: Midnight Obsidian & Violet ──────────────── */
 .dark {
-  --background: #0B0F19;
+  --background: #030712;
   --foreground: #F8FAFC;
-  --card: #111827;
+  --card: #0F172A;
   --card-foreground: #F8FAFC;
-  --popover: #111827;
+  --popover: #0F172A;
   --popover-foreground: #F8FAFC;
-  --primary: #6366F1;
+  --primary: #818CF8;
   --primary-foreground: #ffffff;
-  --secondary: #1F2937;
+  --secondary: #1E293B;
   --secondary-foreground: #F8FAFC;
-  --muted: #1F2937;
-  --muted-foreground: #9CA3AF;
-  --accent: #1F2937;
-  --accent-foreground: #818CF8;
-  --destructive: #1E1B4B;
-  --destructive-foreground: #FCA5A5;
-  --border: #1F2937;
-  --input: #111827;
-  --ring: #6366F1;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  --accent: #1E293B;
+  --accent-foreground: #A5B4FC;
+  --destructive: #310413;
+  --destructive-foreground: #FDA4AF;
+  --border: #1E293B;
+  --input: #0F172A;
+  --ring: #818CF8;
 
   /* Custom chart variables */
-  --chart-collected: #34D399;
+  --chart-collected: #10B981;
   --chart-expected: #818CF8;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #FCA5A5;
-  --vibe-pink: #FBBF24;
-  --vibe-violet: #818CF8;
-  --vibe-sky: #38BDF8;
+  --vibe-coral: #FDA4AF;
+  --vibe-pink: #FDE047;
+  --vibe-violet: #A5B4FC;
+  --vibe-sky: #7DD3FC;
 
-  --vibe-coral-lt: #450A0A;
-  --vibe-pink-lt: #451A03;
+  --vibe-coral-lt: #4C0519;
+  --vibe-pink-lt: #422006;
   --vibe-violet-lt: #1E1B4B;
   --vibe-sky-lt: #082F49;
 }

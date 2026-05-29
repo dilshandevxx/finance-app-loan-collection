@@ -40,17 +40,17 @@ export function CollectionGoalCard({
   const strokeDashoffset = circumference - (animatedProgress / 100) * circumference;
 
   return (
-    <div className="w-full rounded-[2rem] bg-card border border-border p-6 flex flex-col gap-6 shadow-sm relative overflow-hidden">
+    <div className="w-full rounded-[2rem] bg-card border border-white/5 dark:border-white/10 p-6 flex flex-col gap-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden">
       
       {/* Background glow accent */}
-      <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-[40px] pointer-events-none" />
+      <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-primary/20 to-vibe-violet/20 rounded-full blur-[50px] pointer-events-none" />
 
       {/* Main Grid: Info + Ring */}
       <div className="grid grid-cols-12 gap-4 items-center relative z-10">
         
         {/* Left Side: Goal & Amounts */}
         <div className="col-span-8 flex flex-col gap-1.5">
-          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary">
+          <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-primary to-vibe-violet">
             {progressPercent >= 100 
               ? (totalTargetToday > 0 ? "Goal Achieved" : "No Collections Due") 
               : "Remaining Today"}
@@ -68,7 +68,7 @@ export function CollectionGoalCard({
 
           {/* Settlement Badge */}
           {totalClientsToday > 0 && (
-            <div className="inline-flex items-center gap-1.5 mt-2 bg-secondary border border-border text-foreground text-[10px] font-bold px-2.5 py-1.5 rounded-full w-fit shadow-sm">
+            <div className="inline-flex items-center gap-1.5 mt-2 bg-secondary/80 border border-white/10 text-foreground text-[10px] font-bold px-2.5 py-1.5 rounded-full w-fit shadow-sm backdrop-blur-md">
               <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
               <span>{collectedClientsToday} / {totalClientsToday} clients settled</span>
             </div>
@@ -77,10 +77,16 @@ export function CollectionGoalCard({
 
         {/* Right Side: Animated Ring */}
         <div className="col-span-4 flex justify-end items-center relative">
-          <div className="relative w-24 h-24">
+          <div className="relative w-24 h-24 drop-shadow-[0_0_15px_rgba(99,102,241,0.3)]">
             <svg width={size} height={size} className="transform -rotate-90">
+              <defs>
+                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="var(--color-primary)" />
+                  <stop offset="100%" stopColor="var(--color-vibe-violet)" />
+                </linearGradient>
+              </defs>
               <circle
-                className="text-secondary"
+                className="text-secondary/50 dark:text-secondary"
                 strokeWidth={strokeWidth}
                 stroke="currentColor"
                 fill="transparent"
@@ -89,12 +95,12 @@ export function CollectionGoalCard({
                 cy={size / 2}
               />
               <circle
-                className="text-primary transition-all duration-1000 ease-out"
+                className="transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
                 strokeWidth={strokeWidth}
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                stroke="currentColor"
+                stroke="url(#ringGradient)"
                 fill="transparent"
                 r={radius}
                 cx={size / 2}

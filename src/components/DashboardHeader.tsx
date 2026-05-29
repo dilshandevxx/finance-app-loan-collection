@@ -60,7 +60,7 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-card/45 border border-border/40 backdrop-blur-md mb-4 shadow-xs">
+    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-card/50 dark:bg-card/30 border border-white/10 dark:border-white/5 backdrop-blur-2xl mb-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
       <div className="flex items-center gap-3.5">
         {/* Dynamic Glassmorphic Greeting Icon */}
         <div className={`relative w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${iconClass}`}>
@@ -78,9 +78,9 @@ export function DashboardHeader({
               Active
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-black text-foreground leading-tight tracking-tight mt-0.5 flex items-center gap-1.5">
+          <h1 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/70 leading-tight tracking-tight mt-0.5 flex items-center gap-1.5">
             {agentName}
-            <span className="animate-[wave_2.5s_infinite] origin-[70%_70%] inline-block text-xl select-none cursor-default">👋</span>
+            <span className="animate-[wave_2.5s_infinite] origin-[70%_70%] inline-block text-xl select-none cursor-default text-foreground">👋</span>
           </h1>
           <p className="text-[11px] sm:text-xs text-muted-foreground font-semibold mt-0.5">
             Welcome back! Here's your collection status for today.
