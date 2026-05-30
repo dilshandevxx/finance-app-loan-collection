@@ -46,15 +46,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
     })
     .filter(item => item.customer !== null);
 
-  // 2. Today's Tasks (installments due today that are pending)
-  const todayTasks = installments
-    .filter(i => i.status === "PENDING" && isSameDay(i.dueDate, today))
-    .map(inst => {
-      const loan = loans.find(l => l.id === inst.loanId);
-      const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
-      return { inst, loan, customer };
-    })
-    .filter(item => item.customer !== null);
+  // 2. Today's Tasks will be calculated dynamically below based on schedule
 
   const [schedule, setSchedule] = useState<VillageSchedule | null>(null);
   const [showTomorrowPlan, setShowTomorrowPlan] = useState(false);
@@ -77,35 +69,72 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
   }, []);
 
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const tomorrowDay = days[tomorrow.getDay()];
-  const tomorrowsVillages = schedule?.[tomorrowDay] || [];
-
-  const relevantCustomerIds = new Set(
-    customers
-      .filter(c => c.state && tomorrowsVillages.includes(c.state))
-      .map(c => c.id)
-  );
-
-  const relevantLoanIds = new Set(
-    loans
-      .filter(l => l.status === "ACTIVE" && relevantCustomerIds.has(l.customerId))
-      .map(l => l.id)
-  );
-
-  // Total unhandled notifications/reminders count
-  // Calculate tomorrow tasks dynamically based on village schedule when showTomorrowPlan is true
-  let tomorrowTasks: any[] = [];
   
-  if (showTomorrowPlan && schedule) {
-    const targetInstallments: Installment[] = [];
-    for (const loanId of relevantLoanIds) {
+  // -- Today Logic --
+  const todayDay = days[today.getDay()];
+  const todaysVillages = schedule?.[todayDay] || [];
+  
+  const relevantTodayCustomerIds = new Set(
+    customers.filter(c => c.state && todaysVillages.includes(c.state)).map(c => c.id)
+  );
+  const relevantTodayLoanIds = new Set(
+    loans.filter(l => l.status === "ACTIVE" && relevantTodayCustomerIds.has(l.customerId)).map(l => l.id)
+  );
+
+  let todayTasks: any[] = [];
+  if (schedule) {
+    const todayTargetInsts: Installment[] = [];
+    for (const loanId of relevantTodayLoanIds) {
       const loanInsts = installments.filter(i => i.loanId === loanId);
       const pending = loanInsts
         .filter(i => i.status === "PENDING")
         .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
         
       if (pending.length > 0) {
-        targetInstallments.push(pending[0]);
+        todayTargetInsts.push(pending[0]);
+      }
+    }
+
+    const overdueIds = new Set(overdueList.map(t => t.inst.id));
+    
+    todayTasks = todayTargetInsts
+      .filter(inst => !overdueIds.has(inst.id))
+      .map(inst => {
+        const loan = loans.find(l => l.id === inst.loanId);
+        const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
+        return { inst, loan, customer };
+      })
+      .filter(item => item.customer !== null);
+  }
+
+  // -- Tomorrow Logic --
+  const tomorrowDay = days[tomorrow.getDay()];
+  const tomorrowsVillages = schedule?.[tomorrowDay] || [];
+
+  const relevantTomorrowCustomerIds = new Set(
+    customers
+      .filter(c => c.state && tomorrowsVillages.includes(c.state))
+      .map(c => c.id)
+  );
+
+  const relevantTomorrowLoanIds = new Set(
+    loans
+      .filter(l => l.status === "ACTIVE" && relevantTomorrowCustomerIds.has(l.customerId))
+      .map(l => l.id)
+  );
+
+  let tomorrowTasks: any[] = [];
+  
+  if (showTomorrowPlan && schedule) {
+    const tomorrowTargetInsts: Installment[] = [];
+    for (const loanId of relevantTomorrowLoanIds) {
+      const loanInsts = installments.filter(i => i.loanId === loanId);
+      const pending = loanInsts
+        .filter(i => i.status === "PENDING")
+        .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+        
+      if (pending.length > 0) {
+        tomorrowTargetInsts.push(pending[0]);
       }
     }
 
@@ -114,7 +143,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
       ...todayTasks.map(t => t.inst.id)
     ]);
 
-    tomorrowTasks = targetInstallments
+    tomorrowTasks = tomorrowTargetInsts
       .filter(inst => !existingIds.has(inst.id))
       .map(inst => {
         const loan = loans.find(l => l.id === inst.loanId);
