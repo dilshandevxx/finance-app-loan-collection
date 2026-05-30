@@ -2,13 +2,16 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { NewLoanForm } from "@/components/NewLoanForm";
-import { getCustomers, getSystemVillages } from "@/data/db";
+import { getCustomers, getSystemVillages, getVillageSchedule } from "@/data/db";
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewLoan() {
-  const customers = await getCustomers();
-  const villages = await getSystemVillages();
+  const [customers, villages, schedule] = await Promise.all([
+    getCustomers(),
+    getSystemVillages(),
+    getVillageSchedule()
+  ]);
 
   return (
     <div className="w-full flex flex-col gap-6 sm:gap-8 pb-32 md:pb-12 max-w-5xl mx-auto px-2 sm:px-4">
@@ -25,7 +28,7 @@ export default async function NewLoan() {
       <div className="max-w-2xl mx-auto w-full">
         <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
           <CardContent className="p-4 sm:p-8 flex flex-col gap-6">
-            <NewLoanForm customers={customers} villages={villages} />
+            <NewLoanForm customers={customers} villages={villages} schedule={schedule} />
           </CardContent>
         </Card>
       </div>

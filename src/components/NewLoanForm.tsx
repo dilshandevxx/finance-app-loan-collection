@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { createLoan, createSystemVillage } from "@/app/actions";
 import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
 import { formatLKR } from "@/lib/format";
+import type { VillageSchedule } from "@/lib/schedule";
 
 type Customer = {
   id: string;
@@ -16,7 +17,7 @@ type Customer = {
 
 const initialState = { error: undefined as string | undefined };
 
-export function NewLoanForm({ customers, villages }: { customers: Customer[]; villages: string[] }) {
+export function NewLoanForm({ customers, villages, schedule }: { customers: Customer[]; villages: string[], schedule: VillageSchedule | null }) {
   const [state, formAction, isPending] = useActionState(
     async (_prev: typeof initialState, formData: FormData) => {
       const result = await createLoan(formData);
@@ -158,6 +159,18 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
   };
 
   const installmentAmount = calculateInstallment();
+
+  const getDaysForVillage = (villageName: string) => {
+    if (!schedule) return [];
+    const days = [];
+    for (const [day, dayVillages] of Object.entries(schedule)) {
+      if (Array.isArray(dayVillages) && dayVillages.includes(villageName)) {
+        // use shortened day names for cleaner UI, e.g., "Monday" -> "Mon"
+        days.push(day.slice(0, 3));
+      }
+    }
+    return days;
+  };
 
   return (
     <form action={formAction} className="flex flex-col gap-6 sm:gap-8">
@@ -421,9 +434,13 @@ export function NewLoanForm({ customers, villages }: { customers: Customer[]; vi
                   required
                 >
                   <option value="" disabled>Select a village...</option>
-                  {existingStates.map(state => (
-                    <option key={state} value={state}>📍 {state}</option>
-                  ))}
+                  {existingStates.map(state => {
+                    const days = getDaysForVillage(state);
+                    const daysStr = days.length > 0 ? ` (${days.join(", ")})` : "";
+                    return (
+                      <option key={state} value={state}>📍 {state}{daysStr}</option>
+                    );
+                  })}
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400">
                   <ChevronDown className="h-5 w-5" />
