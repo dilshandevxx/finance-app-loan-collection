@@ -15,17 +15,19 @@ type Customer = {
   state?: string;
 };
 
-const initialState = { 
-  error: undefined as string | undefined, 
-  success: undefined as boolean | undefined,
-  customerId: undefined as string | undefined
+type FormState = {
+  error?: string;
+  success?: boolean;
+  customerId?: string;
 };
+
+const initialState: FormState = {};
 
 export function NewLoanForm({ customers, villages, schedule }: { customers: Customer[]; villages: string[], schedule: VillageSchedule | null }) {
   const [state, formAction, isPending] = useActionState(
-    async (_prev: typeof initialState, formData: FormData) => {
+    async (_prev: FormState, formData: FormData): Promise<FormState> => {
       const result = await createLoan(formData);
-      return result ?? initialState;
+      return (result as FormState) ?? initialState;
     },
     initialState
   );
