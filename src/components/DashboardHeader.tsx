@@ -60,7 +60,7 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between mb-8 pt-2 px-1">
+    <header className="flex items-center justify-between mb-5 pt-2 px-1">
       <div className="flex items-center gap-3.5">
         {/* Profile Avatar / Initial */}
         <div className="relative">
