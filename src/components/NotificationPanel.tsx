@@ -305,7 +305,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                     </div>
                   ) : (
                     <div className="flex flex-col gap-5">
-                      {todaysVillages.map(village => {
+                      {todaysVillages.map((village: string) => {
                         const villageTasks = todayTasks.filter(t => t.customer?.state === village);
                         if (villageTasks.length === 0) return null;
                         
@@ -402,7 +402,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                         <span className="pt-0.5"><strong>Pre-collection alert:</strong> Remind these customers today to prepare tomorrow's installment payment!</span>
                       </div>
 
-                      {tomorrowsVillages.map(village => {
+                      {tomorrowsVillages.map((village: string) => {
                         const villageTasks = tomorrowTasks.filter(t => t.customer?.state === village);
                         if (villageTasks.length === 0) return null;
                         
