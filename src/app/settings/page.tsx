@@ -239,7 +239,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 pb-28 pt-1 max-w-lg mx-auto w-full relative min-h-screen px-4">
+    <div className="flex flex-col gap-6 sm:gap-8 pb-32 md:pb-12 max-w-5xl mx-auto w-full relative min-h-screen px-4 sm:px-6 pt-4 sm:pt-8">
       
       {/* Toast Notification */}
       {showToast && (
@@ -249,10 +249,10 @@ export default function SettingsPage() {
       )}
 
       {/* Header */}
-      <header className="flex items-center justify-between mb-2 mt-1">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Settings</h1>
-        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm">
-          Agent Profile
+      <header className="flex items-center justify-between bg-card p-4 sm:p-6 rounded-[1.75rem] border border-border shadow-sm mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Settings</h1>
+        <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary/20 shadow-sm">
+          Administrator
         </span>
       </header>
 
@@ -288,8 +288,146 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <div className="flex flex-col gap-6 mt-2">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN */}
+        <div className="md:col-span-7 flex flex-col gap-6">
         
+        {/* Company Profile Settings */}
+        <section>
+          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Company Profile</h3>
+          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-5 flex flex-col gap-4">
+              <form onSubmit={handleSaveCompanySettings} className="flex flex-col gap-5">
+                
+                {/* Logo Uploader */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-5 border-b border-border/50 pb-5">
+                  <span className="text-sm font-bold text-muted-foreground uppercase tracking-wide sm:w-1/3">Company Logo</span>
+                  
+                  <div className="relative group sm:w-2/3">
+                    <div 
+                      onClick={() => document.getElementById("logo-input")?.click()}
+                      className="w-32 h-16 sm:w-40 sm:h-20 rounded-xl border border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-secondary/35 flex items-center justify-center transition-all shadow-inner group-hover:scale-[1.02] cursor-pointer"
+                    >
+                      {companyLogoPreview ? (
+                        <img src={companyLogoPreview} alt="Company Logo" className="w-full h-full object-contain p-1" />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary transition-colors text-center p-2">
+                          <span className="text-[10px] font-black uppercase tracking-wider">No Logo Selected</span>
+                          <span className="text-[8px] text-muted-foreground/80 mt-0.5">Click to Upload</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <input 
+                    type="file" 
+                    id="logo-input"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+
+                  {companyLogoPreview && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCompanyLogoPreview("");
+                        setCompanyLogo("");
+                      }}
+                      className="text-xs text-red-500 hover:underline font-bold transition-colors cursor-pointer self-start sm:self-center"
+                    >
+                      Remove Logo
+                    </button>
+                  )}
+                </div>
+
+                {/* Company Name Input */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <label htmlFor="company-name" className="text-sm font-bold text-muted-foreground uppercase tracking-wide sm:w-1/3">Company Name</label>
+                  <input
+                    type="text"
+                    id="company-name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    placeholder="Enter Loan Company Name..."
+                    className="sm:w-2/3 bg-secondary border border-border focus:border-ring/40 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSavingCompany}
+                  className="h-11 w-full bg-primary hover:bg-primary/95 text-primary-foreground font-black rounded-xl text-sm transition-all active:scale-95 flex items-center justify-center cursor-pointer border-none mt-2 shadow-md"
+                >
+                  {isSavingCompany ? "Saving Company Profile..." : "Save Company Profile"}
+                </button>
+              </form>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Villages Management */}
+        <section>
+          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Villages & Routes</h3>
+          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-0 flex flex-col">
+              <Link 
+                href="/villages"
+                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors text-sm">
+                    📍
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-foreground font-semibold text-base">Route Villages Registry</span>
+                    <span className="text-muted-foreground text-sm mt-0.5">Manage ({villages.length}) collection villages and schedules</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
+        
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div className="md:col-span-5 flex flex-col gap-6">
+
+        {/* Account Settings */}
+        <section>
+          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Account</h3>
+          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
+            <CardContent className="p-0 flex flex-col">
+              <Link 
+                href="/settings/security"
+                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors border-b border-border group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Shield className="w-5 h-5" />
+                  </div>
+                  <span className="text-foreground font-semibold text-sm">Security & PIN</span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+              </Link>
+              <Link 
+                href="/settings/notifications"
+                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Bell className="w-5 h-5" />
+                  </div>
+                  <span className="text-foreground font-semibold text-sm">Notifications</span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* App Installation Section */}
         <section>
           <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Mobile Application</h3>
@@ -356,137 +494,6 @@ export default function SettingsPage() {
                   </ol>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Account Settings */}
-        <section>
-          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Account</h3>
-          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
-            <CardContent className="p-0 flex flex-col">
-              <Link 
-                href="/settings/security"
-                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors border-b border-border group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Shield className="w-5 h-5" />
-                  </div>
-                  <span className="text-foreground font-semibold text-sm">Security & PIN</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </Link>
-              <Link 
-                href="/settings/notifications"
-                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Bell className="w-5 h-5" />
-                  </div>
-                  <span className="text-foreground font-semibold text-sm">Notifications</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </Link>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Company Profile Settings */}
-        <section>
-          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Company Profile</h3>
-          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
-            <CardContent className="p-5 flex flex-col gap-4">
-              <form onSubmit={handleSaveCompanySettings} className="flex flex-col gap-4">
-                
-                {/* Logo Uploader */}
-                <div className="flex flex-col items-center justify-center gap-3 border-b border-border/50 pb-4">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide self-start">Company Logo</span>
-                  
-                  <div className="relative group">
-                    <div 
-                      onClick={() => document.getElementById("logo-input")?.click()}
-                      className="w-32 h-16 rounded-xl border border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-secondary/35 flex items-center justify-center transition-all shadow-inner group-hover:scale-[1.02] cursor-pointer"
-                    >
-                      {companyLogoPreview ? (
-                        <img src={companyLogoPreview} alt="Company Logo" className="w-full h-full object-contain p-1" />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center text-gray-400 dark:text-white/30 group-hover:text-primary transition-colors text-center p-2">
-                          <span className="text-[10px] font-black uppercase tracking-wider">No Logo Selected</span>
-                          <span className="text-[8px] text-muted-foreground/80 mt-0.5">Click to Upload</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <input 
-                    type="file" 
-                    id="logo-input"
-                    accept="image/*"
-                    onChange={handleLogoChange}
-                    className="hidden"
-                  />
-
-                  {companyLogoPreview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCompanyLogoPreview("");
-                        setCompanyLogo("");
-                      }}
-                      className="text-xs text-red-500 hover:underline font-bold transition-colors cursor-pointer"
-                    >
-                      Remove Logo
-                    </button>
-                  )}
-                </div>
-
-                {/* Company Name Input */}
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="company-name" className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Company Name</label>
-                  <input
-                    type="text"
-                    id="company-name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Enter Loan Company Name..."
-                    className="bg-secondary border border-border focus:border-ring/40 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSavingCompany}
-                  className="h-10 w-full bg-primary hover:bg-primary/95 text-primary-foreground font-black rounded-xl text-xs transition-all active:scale-95 flex items-center justify-center cursor-pointer border-none"
-                >
-                  {isSavingCompany ? "Saving Company Profile..." : "Save Company Profile"}
-                </button>
-              </form>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Villages Management */}
-        <section>
-          <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Villages & Routes</h3>
-          <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
-            <CardContent className="p-0 flex flex-col">
-              <Link 
-                href="/villages"
-                className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors text-xs">
-                    📍
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-foreground font-semibold text-sm">Route Villages Registry</span>
-                    <span className="text-muted-foreground text-xs mt-0.5">Manage ({villages.length}) collection villages</span>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </Link>
             </CardContent>
           </Card>
         </section>
@@ -576,11 +583,11 @@ export default function SettingsPage() {
         </section>
         
         {/* Actions */}
-        <section className="mt-4">
+        <section className="mt-2">
           <button 
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="w-full flex items-center justify-center gap-2 h-12 rounded-2xl bg-card hover:bg-secondary text-destructive-foreground font-bold transition-colors border border-border shadow-sm disabled:opacity-50 active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 h-14 rounded-2xl bg-card hover:bg-secondary text-destructive-foreground font-bold transition-colors border border-border shadow-sm disabled:opacity-50 active:scale-[0.98] text-sm"
           >
             {isSigningOut ? (
               <div className="w-5 h-5 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
@@ -592,6 +599,8 @@ export default function SettingsPage() {
             )}
           </button>
         </section>
+        
+        </div>
       </div>
 
       <BottomNav />
