@@ -5,6 +5,8 @@ import { Bell, X, Phone, MessageSquare, Calendar, AlertTriangle, ArrowRight, Inb
 import Link from "next/link";
 import { Customer, Loan, Installment } from "@/data/db";
 import { formatLKR, phoneToDial } from "@/lib/format";
+import { fetchVillageSchedule } from "@/app/actions";
+import type { VillageSchedule } from "@/lib/schedule";
 
 type NotificationPanelProps = {
   customers: Customer[];
@@ -54,17 +56,74 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
     })
     .filter(item => item.customer !== null);
 
-  // 3. Tomorrow's Schedule (installments due tomorrow that are pending)
-  const tomorrowTasks = installments
-    .filter(i => i.status === "PENDING" && isSameDay(i.dueDate, tomorrow))
-    .map(inst => {
-      const loan = loans.find(l => l.id === inst.loanId);
-      const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
-      return { inst, loan, customer };
-    })
-    .filter(item => item.customer !== null);
+  const [schedule, setSchedule] = useState<VillageSchedule | null>(null);
+  const [showTomorrowPlan, setShowTomorrowPlan] = useState(false);
+
+  useEffect(() => {
+    fetchVillageSchedule().then(fetchedSchedule => {
+      setSchedule(fetchedSchedule);
+      
+      const timeStr = fetchedSchedule.notificationTime || "16:00";
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      
+      const now = new Date();
+      const notifyTime = new Date();
+      notifyTime.setHours(hours, minutes, 0, 0);
+      
+      if (now >= notifyTime) {
+        setShowTomorrowPlan(true);
+      }
+    });
+  }, []);
+
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const tomorrowDay = days[tomorrow.getDay()];
+  const tomorrowsVillages = schedule?.[tomorrowDay] || [];
+
+  const relevantCustomerIds = new Set(
+    customers
+      .filter(c => c.state && tomorrowsVillages.includes(c.state))
+      .map(c => c.id)
+  );
+
+  const relevantLoanIds = new Set(
+    loans
+      .filter(l => l.status === "ACTIVE" && relevantCustomerIds.has(l.customerId))
+      .map(l => l.id)
+  );
 
   // Total unhandled notifications/reminders count
+  // Calculate tomorrow tasks dynamically based on village schedule when showTomorrowPlan is true
+  let tomorrowTasks: any[] = [];
+  
+  if (showTomorrowPlan && schedule) {
+    const targetInstallments: Installment[] = [];
+    for (const loanId of relevantLoanIds) {
+      const loanInsts = installments.filter(i => i.loanId === loanId);
+      const pending = loanInsts
+        .filter(i => i.status === "PENDING")
+        .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+        
+      if (pending.length > 0) {
+        targetInstallments.push(pending[0]);
+      }
+    }
+
+    const existingIds = new Set([
+      ...overdueList.map(t => t.inst.id),
+      ...todayTasks.map(t => t.inst.id)
+    ]);
+
+    tomorrowTasks = targetInstallments
+      .filter(inst => !existingIds.has(inst.id))
+      .map(inst => {
+        const loan = loans.find(l => l.id === inst.loanId);
+        const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
+        return { inst, loan, customer };
+      })
+      .filter(item => item.customer !== null);
+  }
+
   const totalCount = overdueList.length + todayTasks.length + tomorrowTasks.length;
 
   // Prevent background scrolling when panel is open
@@ -283,7 +342,9 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                   
                   {tomorrowTasks.length === 0 ? (
                     <div className="py-6 px-4 rounded-2xl border border-dashed border-gray-100 dark:border-border/50 bg-gray-50/50 dark:bg-card/10 flex flex-col items-center justify-center gap-2">
-                      <p className="text-xs text-gray-400 dark:text-white/30 text-center font-medium">No tasks scheduled for tomorrow</p>
+                      <p className="text-xs text-gray-400 dark:text-white/30 text-center font-medium">
+                        {showTomorrowPlan ? "No collections needed tomorrow" : "Tomorrow's schedule is not ready yet"}
+                      </p>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-3">
