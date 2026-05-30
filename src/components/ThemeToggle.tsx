@@ -9,7 +9,9 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handle = requestAnimationFrame(() => setMounted(true));
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+    });
     return () => cancelAnimationFrame(handle);
   }, []);
 
@@ -22,7 +24,7 @@ export function ThemeToggle() {
   }
 
   return (
-    <button 
+    <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-black dark:text-white dark:hover:bg-secondary transition-colors shadow-sm"
       title="Toggle Theme"

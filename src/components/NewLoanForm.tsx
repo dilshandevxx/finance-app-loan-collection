@@ -4,7 +4,7 @@ import { useState, useActionState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createLoan, createSystemVillage } from "@/app/actions";
-import { User, Hash, Phone, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
+import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
 import { formatLKR } from "@/lib/format";
 import type { VillageSchedule } from "@/lib/schedule";
 
@@ -79,7 +79,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
       } else {
         setModalError(res.error || "Failed to add village.");
       }
-    } catch {
+    } catch (err) {
       setModalError("An unexpected error occurred.");
     } finally {
       setModalIsAdding(false);
@@ -206,7 +206,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
 
   return (
     <form action={formAction} className="flex flex-col gap-6 sm:gap-8">
-      
+
       {/* Error Banner */}
       {state?.error && (
         <div className="flex items-start gap-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-4 text-red-700 dark:text-red-400 animate-in fade-in duration-300">
@@ -217,8 +217,8 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
 
       {/* Segmented Control for Customer Type */}
       <div className="bg-gray-100/80 dark:bg-muted p-1.5 rounded-2xl flex items-center relative overflow-hidden">
-        <div 
-          className="absolute inset-y-1.5 w-[calc(50%-6px)] bg-white dark:bg-secondary rounded-xl shadow-sm transition-all duration-300 ease-out" 
+        <div
+          className="absolute inset-y-1.5 w-[calc(50%-6px)] bg-white dark:bg-secondary rounded-xl shadow-sm transition-all duration-300 ease-out"
           style={{ left: isExisting ? 'calc(50% + 3px)' : '6px' }}
         />
         <button
@@ -272,7 +272,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
             {/* Profile Photo Uploader */}
             <div className="col-span-2 flex flex-col items-center justify-center gap-3 py-2">
               <div className="relative group">
-                <div 
+                <div
                   onClick={() => document.getElementById("photo-input")?.click()}
                   className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 dark:border-border hover:border-primary dark:hover:border-primary overflow-hidden bg-gray-50 dark:bg-secondary flex items-center justify-center transition-all shadow-inner group-hover:scale-105 cursor-pointer relative"
                 >
@@ -294,17 +294,17 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                   <Camera className="w-4 h-4 stroke-[2]" />
                 </button>
               </div>
-              <input 
-                type="file" 
+              <input
+                type="file"
                 id="photo-input"
                 accept="image/*"
                 onChange={handlePhotoChange}
                 className="hidden"
               />
-              <input 
-                type="hidden" 
-                name="avatarDataUrl" 
-                value={compressedPhoto} 
+              <input
+                type="hidden"
+                name="avatarDataUrl"
+                value={compressedPhoto}
               />
               {photoPreview && (
                 <button
@@ -326,8 +326,8 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   id="name"
                   name="name"
                   required
@@ -337,20 +337,20 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                     setClientName(val);
                     generateAndSetMemberId(val, clientState);
                   }}
-                  placeholder="e.g. John Doe" 
+                  placeholder="e.g. John Doe"
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2 col-span-2 sm:col-span-1">
               <label htmlFor="memberId" className="text-sm font-semibold text-gray-750 dark:text-white/70">Member ID <span className="text-gray-400 font-normal">(optional)</span></label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Hash className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   id="memberId"
                   name="memberId"
                   value={memberId}
@@ -358,24 +358,24 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                     setMemberId(e.target.value);
                     setIsMemberIdEdited(true);
                   }}
-                  placeholder="e.g. M-1004" 
+                  placeholder="e.g. M-1004"
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2 col-span-2 sm:col-span-1">
               <label htmlFor="phone" className="text-sm font-semibold text-gray-750 dark:text-white/70">Phone Number</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="tel" 
+                <input
+                  type="tel"
                   id="phone"
                   name="phone"
                   required
-                  placeholder="e.g. 0775944600" 
+                  placeholder="e.g. 0775944600"
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
@@ -388,11 +388,11 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Hash className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   id="idNumber"
                   name="idNumber"
-                  placeholder="e.g. 963829472V" 
+                  placeholder="e.g. 963829472V"
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
@@ -405,16 +405,16 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Building className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   id="companyName"
                   name="companyName"
-                  placeholder="e.g. Acme Corp" 
+                  placeholder="e.g. Acme Corp"
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2 col-span-2">
               <label htmlFor="gender" className="text-sm font-semibold text-gray-750 dark:text-white/70">Gender</label>
               <div className="relative group">
@@ -492,11 +492,11 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-primary dark:group-focus-within:text-primary transition-colors" />
                 </div>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   id="address"
                   name="address"
-                  placeholder="e.g. Near the temple, House #12" 
+                  placeholder="e.g. Near the temple, House #12"
                   className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
                 />
               </div>
@@ -512,7 +512,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
         <h3 className="text-base sm:text-lg font-bold text-black dark:text-white tracking-tight flex items-center gap-2">
           Loan Details
         </h3>
-        
+
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <label htmlFor="principal" className="text-sm font-semibold text-gray-750 dark:text-white/70">Principal Amount</label>
@@ -522,8 +522,8 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <span className="text-sm font-bold text-black dark:text-white group-focus-within:text-primary transition-colors">Rs.</span>
             </div>
-            <input 
-              type="number" 
+            <input
+              type="number"
               id="principal"
               name="principal"
               required
@@ -531,7 +531,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
               step="0.01"
               value={principal || ""}
               onChange={(e) => setPrincipal(parseFloat(e.target.value) || 0)}
-              placeholder="0.00" 
+              placeholder="0.00"
               className="w-full bg-white dark:bg-card border-2 border-gray-200 dark:border-border focus:border-primary dark:focus:border-primary rounded-2xl pl-12 pr-4 py-4 text-2xl font-bold text-black dark:text-white placeholder:text-gray-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-primary/5 transition shadow-sm"
             />
           </div>
@@ -552,7 +552,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
             </div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2 col-span-2 sm:col-span-1">
             <div className="flex justify-between items-center">
@@ -563,8 +563,8 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Percent className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
               </div>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 id="interest"
                 name="interest"
                 required
@@ -572,7 +572,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                 step="0.1"
                 value={interest || ""}
                 onChange={(e) => setInterest(parseFloat(e.target.value) || 0)}
-                placeholder="10" 
+                placeholder="10"
                 className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
               />
             </div>
@@ -602,15 +602,15 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <CalendarDays className="h-5 w-5 text-gray-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
               </div>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 id="weeks"
                 name="weeks"
                 required
                 min="1"
                 value={weeks || ""}
                 onChange={(e) => setWeeks(parseInt(e.target.value) || 0)}
-                placeholder="10" 
+                placeholder="10"
                 className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-2xl pl-11 pr-4 py-3.5 text-black dark:text-white placeholder:text-gray-455 dark:placeholder:text-white/30 focus:outline-none focus:border-primary dark:focus:border-primary focus:ring-2 focus:ring-primary/5 transition shadow-sm font-medium"
               />
             </div>
@@ -647,7 +647,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
             <CheckCircle2 className="w-5.5 h-5.5 sm:w-6 sm:h-6 stroke-[2.5]" />
           </div>
         </div>
-        
+
         {/* Breakdown details */}
         {principal > 0 && (
           <div className="border-t border-neutral-200 dark:border-border pt-3 grid grid-cols-3 gap-2 text-center text-xs">
@@ -670,8 +670,8 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
       {/* Sticky Bottom Actions for Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border z-50">
         <div className="bg-white dark:bg-muted p-2 rounded-2xl border border-gray-200 dark:border-border shadow-2xl backdrop-blur-xl">
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isPending}
             className="w-full bg-primary hover:bg-primary/95 text-primary-foreground font-black rounded-xl h-14 text-base shadow-sm transition-all active:scale-[0.98] disabled:opacity-60 border-none cursor-pointer"
           >
@@ -681,8 +681,8 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
       </div>
 
       {/* Desktop Action */}
-      <Button 
-        type="submit" 
+      <Button
+        type="submit"
         disabled={isPending}
         className="hidden md:flex w-full bg-primary hover:bg-primary/95 text-primary-foreground font-black rounded-2xl h-14 text-lg mt-4 shadow-md border-none transition-all active:scale-[0.98] disabled:opacity-60 cursor-pointer"
       >
@@ -692,22 +692,22 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
       {isAddVillageModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           {/* Backdrop with blur */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
             onClick={() => setIsAddVillageModalOpen(false)}
           />
-          
+
           {/* Modal Container */}
           <div className="bg-white dark:bg-card border border-border rounded-3xl w-full max-w-sm p-6 shadow-2xl relative z-10 animate-in zoom-in-95 duration-200 text-left">
             <h4 className="text-base font-bold text-foreground">Add New Village</h4>
             <p className="text-xs text-muted-foreground mt-1">This village will be added to the system settings and auto-selected for this client.</p>
-            
+
             {modalError && (
               <div className="mt-3 p-2.5 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-400 rounded-xl text-xs font-semibold">
                 ⚠️ {modalError}
               </div>
             )}
-            
+
             <form onSubmit={handleModalAddVillage} className="mt-4 flex flex-col gap-3">
               <input
                 type="text"
@@ -719,7 +719,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
                 required
                 autoFocus
               />
-              
+
               <div className="flex gap-2 justify-end mt-2">
                 <button
                   type="button"

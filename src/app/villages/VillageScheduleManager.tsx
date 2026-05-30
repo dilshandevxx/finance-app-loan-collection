@@ -19,8 +19,8 @@ export default function VillageScheduleManager({ availableVillages, initialSched
 
   const toggleVillage = (day: string, village: string) => {
     setSchedule(prev => {
-      const val = prev[day];
-      const dayVillages = Array.isArray(val) ? val : [];
+      const dayVal = prev[day];
+      const dayVillages = Array.isArray(dayVal) ? dayVal : [];
       const newVillages = dayVillages.includes(village)
         ? dayVillages.filter((v: string) => v !== village)
         : [...dayVillages, village];
@@ -77,9 +77,9 @@ export default function VillageScheduleManager({ availableVillages, initialSched
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">When should we show tomorrow&apos;s plan banner on the dashboard?</p>
         </div>
-        <input 
-          type="time" 
-          value={schedule.notificationTime || "16:00"} 
+        <input
+          type="time"
+          value={schedule.notificationTime || "16:00"}
           onChange={handleTimeChange}
           className="bg-background border border-border rounded-xl px-4 py-2 text-sm font-bold focus:ring-2 focus:ring-primary focus:outline-none"
         />
@@ -92,22 +92,22 @@ export default function VillageScheduleManager({ availableVillages, initialSched
               <span className="w-2 h-2 rounded-full bg-primary/50"></span>
               {day}
             </h3>
-            
+
             <div className="flex flex-wrap gap-2">
               {availableVillages.length === 0 ? (
                 <span className="text-xs text-muted-foreground">No villages added yet.</span>
               ) : (
                 availableVillages.map(village => {
-                  const isSelected = schedule[day]?.includes(village);
+                  const dayVal = schedule[day];
+                  const isSelected = Array.isArray(dayVal) && dayVal.includes(village);
                   return (
                     <button
                       key={village}
                       onClick={() => toggleVillage(day, village)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                        isSelected 
-                          ? "bg-primary text-primary-foreground border-primary" 
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${isSelected
+                          ? "bg-primary text-primary-foreground border-primary"
                           : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
-                      }`}
+                        }`}
                     >
                       {isSelected ? <Check className="w-3.5 h-3.5" /> : <MapPin className="w-3.5 h-3.5" />}
                       {village}

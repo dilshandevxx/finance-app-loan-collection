@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Delete, Lock } from "lucide-react";
 import { loginWithPin, setupAgentPin } from "@/app/auth-actions";
+import { config } from "@/lib/config";
 
 export default function PinClient({ isSetup, agentName }: { isSetup: boolean, agentName: string }) {
   const [pin, setPin] = useState("");
@@ -10,13 +11,13 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const triggerHaptic = useCallback((type: "light" | "error" | "success") => {
+  const triggerHaptic = (type: "light" | "error" | "success") => {
     if (typeof window !== "undefined" && navigator.vibrate) {
       if (type === "light") navigator.vibrate(25);
       else if (type === "error") navigator.vibrate([50, 50, 50]);
       else if (type === "success") navigator.vibrate([40, 30, 40]);
     }
-  }, []);
+  };
 
   const handleNumberClick = (num: number) => {
     if (pin.length < 4) {
@@ -36,8 +37,8 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
     setLoading(true);
     try {
       await new Promise(r => setTimeout(r, 600));
-      
-      const result = isSetup 
+
+      const result = isSetup
         ? await loginWithPin(pin)
         : await setupAgentPin(pin);
 
@@ -56,13 +57,14 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
       setPin("");
       setLoading(false);
     }
-  }, [isSetup, pin, router, triggerHaptic]);
+  }, [pin, isSetup, router]);
 
   useEffect(() => {
     if (pin.length === 4) {
-      requestAnimationFrame(() => {
+      const handle = requestAnimationFrame(() => {
         handleAction();
       });
+      return () => cancelAnimationFrame(handle);
     }
   }, [pin, handleAction]);
 
@@ -74,9 +76,9 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 overflow-hidden relative">
-      
+
       <div className="w-full max-w-sm flex flex-col items-center z-10">
-        
+
         {/* Avatar */}
         <div className="flex flex-col items-center mb-10">
           <div className="relative mb-4">
@@ -107,13 +109,12 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
-                className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
-                  pin.length > i
+                className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${pin.length > i
                     ? "bg-primary scale-110 shadow-[0_0_12px_var(--primary)]"
                     : error
-                    ? "bg-destructive-foreground shadow-[0_0_8px_var(--destructive-foreground)]"
-                    : "bg-secondary border border-border"
-                }`}
+                      ? "bg-destructive-foreground shadow-[0_0_8px_var(--destructive-foreground)]"
+                      : "bg-secondary border border-border"
+                  }`}
               />
             ))}
           </div>

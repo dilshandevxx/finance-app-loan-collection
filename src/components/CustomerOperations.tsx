@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plus, Calendar, DollarSign, AlertCircle } from "lucide-react";
+import { Plus, Calendar, DollarSign, Clock, MessageSquare, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, CustomerNote } from "@/data/db";
@@ -16,7 +16,7 @@ type CustomerOperationsProps = {
 export function CustomerOperations({ customer, loan, notes }: CustomerOperationsProps) {
   const [noteText, setNoteText] = useState("");
   const [isPendingNote, startTransitionNote] = useTransition();
-  
+
   const [isRestructureOpen, setIsRestructureOpen] = useState(false);
   const [holidayWeeks, setHolidayWeeks] = useState(1);
   const [newWeeklyAmount, setNewWeeklyAmount] = useState(loan.weeklyInstallment.toString());
@@ -54,7 +54,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
       setErrorMsg("Please enter a valid payment amount");
       return;
     }
-    
+
     startTransitionRestructure(async () => {
       const res = await restructureWeeklyInstallment(loan.id, parsedAmount);
       if (res.success) {
@@ -83,7 +83,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
       {/* Activity Timeline & Notes */}
       <section>
         <h3 className="text-lg font-semibold mb-4 text-black dark:text-white tracking-tight">Activity Log & Agent Notes</h3>
-        
+
         {/* Notes form */}
         <form onSubmit={handleAddNote} className="mb-6 flex gap-2">
           <input
@@ -117,7 +117,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                     <div key={note.id} className="relative flex flex-col gap-1">
                       {/* Timeline Dot */}
                       <div className={`absolute -left-[31px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${isSystem ? 'bg-primary border-white dark:border-card' : 'bg-gray-400 border-white dark:border-card'}`} />
-                      
+
                       <div className="flex items-center justify-between text-xs text-gray-400 dark:text-white/40">
                         <span className="font-semibold tracking-wide uppercase flex items-center gap-1.5">
                           {isSystem ? "System Log" : "Agent Note"}
@@ -146,17 +146,17 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
       {/* Restructuring & Pause Dialog */}
       {isRestructureOpen && (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 pb-0 sm:pb-4">
-          <div 
+          <div
             className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={() => setIsRestructureOpen(false)}
           />
-          
+
           <div className="relative w-full max-w-lg bg-white dark:bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-border transform transition-all animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-border/60">
               <h3 className="text-xl font-bold tracking-tight text-black dark:text-white">
                 Loan Restructure & Pause Settings
               </h3>
-              <button 
+              <button
                 onClick={() => setIsRestructureOpen(false)}
                 className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-gray-500 dark:text-gray-400 transition-colors"
               >
@@ -172,7 +172,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
             )}
 
             <div className="p-4 sm:p-6 flex flex-col gap-8">
-              
+
               {/* Option A: Payment Holiday (Pause) */}
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
@@ -205,7 +205,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
 
               <div className="border-t border-gray-100 dark:border-border/60" />
 
-               {/* Option B: Restructure Payment Amount */}
+              {/* Option B: Restructure Payment Amount */}
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-primary font-bold">
                   <DollarSign className="w-5 h-5 text-primary" />

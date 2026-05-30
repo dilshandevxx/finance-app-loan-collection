@@ -103,7 +103,7 @@ export async function getCustomers(): Promise<Customer[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("customers").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching customers:", error);
-  
+
   return (data || []).map(row => {
     const { address, state, companyName, idNumber } = parseAddressField(row.address);
     return {
@@ -129,7 +129,7 @@ export async function getCustomerById(id: string): Promise<Customer | null> {
     return null;
   }
   if (!data) return null;
-  
+
   const { address, state, companyName, idNumber } = parseAddressField(data.address);
   return {
     id: data.id,
@@ -149,7 +149,7 @@ export async function getLoans(): Promise<Loan[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("loans").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching loans:", error);
-  
+
   return (data || []).map(row => ({
     id: row.id,
     customerId: row.customer_id,
@@ -170,7 +170,7 @@ export async function getLoansByCustomerId(customerId: string): Promise<Loan[]> 
     console.error(`Error fetching loans for customer ${customerId}:`, error);
     return [];
   }
-  
+
   return (data || []).map(row => ({
     id: row.id,
     customerId: row.customer_id,
@@ -188,7 +188,7 @@ export async function getInstallments(): Promise<Installment[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("installments").select("*").order("due_date", { ascending: true });
   if (error) console.error("Error fetching installments:", error);
-  
+
   return (data || []).map(row => ({
     id: row.id,
     loanId: row.loan_id,
@@ -207,7 +207,7 @@ export async function getPendingInstallments(): Promise<Installment[]> {
     .in("status", ["PENDING", "MISSED"])
     .order("due_date", { ascending: true });
   if (error) console.error("Error fetching pending installments:", error);
-  
+
   return (data || []).map(row => ({
     id: row.id,
     loanId: row.loan_id,
@@ -221,21 +221,21 @@ export async function getPendingInstallments(): Promise<Installment[]> {
 
 export async function getDashboardInstallments(): Promise<Installment[]> {
   const supabase = await createClient();
-  
+
   // We need all PENDING and MISSED, plus any PAID today.
   // Supabase OR query: status=in.(PENDING,MISSED) or (status=eq.PAID and paid_date=gte.TODAY)
   // To keep it simple and safe across timezones, we fetch all PENDING/MISSED, 
   // and fetch PAID installments separately for today, then combine them, OR we do an OR query.
-  
+
   const todayStr = new Date().toISOString().split('T')[0];
-  
+
   const { data, error } = await supabase.from("installments")
     .select("*")
     .or(`status.in.(PENDING,MISSED),and(status.eq.PAID,paid_date.gte.${todayStr})`)
     .order("due_date", { ascending: true });
-    
+
   if (error) console.error("Error fetching dashboard installments:", error);
-  
+
   return (data || []).map(row => ({
     id: row.id,
     loanId: row.loan_id,
@@ -254,7 +254,7 @@ export async function getActiveLoans(): Promise<Loan[]> {
     .eq("status", "ACTIVE")
     .order("created_at", { ascending: false });
   if (error) console.error("Error fetching active loans:", error);
-  
+
   return (data || []).map(row => ({
     id: row.id,
     customerId: row.customer_id,
@@ -275,7 +275,7 @@ export async function getInstallmentsByLoanId(loanId: string): Promise<Installme
     console.error(`Error fetching installments for loan ${loanId}:`, error);
     return [];
   }
-  
+
   return (data || []).map(row => ({
     id: row.id,
     loanId: row.loan_id,
@@ -310,7 +310,7 @@ export async function getCustomerNotes(customerId: string): Promise<CustomerNote
 
 export async function getSystemVillages(): Promise<string[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("system_settings")
     .select("value")
     .eq("key", "villages")
@@ -335,7 +335,7 @@ export async function getSystemVillages(): Promise<string[]> {
           if (parsed.state) {
             customerVillages.push(parsed.state);
           }
-        } catch {}
+        } catch { }
       }
     });
   }
@@ -355,7 +355,7 @@ export async function addSystemVillage(villageName: string): Promise<{ success: 
 
   const currentVillages = await getSystemVillages();
   const lowercased = currentVillages.map(v => v.toLowerCase());
-  
+
   if (lowercased.includes(trimmedName.toLowerCase())) {
     return { success: false, error: "Village already exists." };
   }
@@ -392,7 +392,7 @@ export async function removeSystemVillage(villageName: string): Promise<{ succes
           if (parsed.state && parsed.state.trim().toLowerCase() === trimmedName.toLowerCase()) {
             return true;
           }
-        } catch {}
+        } catch { }
       }
       return false;
     });
@@ -416,7 +416,7 @@ export async function removeSystemVillage(villageName: string): Promise<{ succes
   if (data?.value) {
     try {
       settingsVillages = JSON.parse(data.value);
-    } catch {}
+    } catch { }
   }
 
   const updatedVillages = settingsVillages.filter(v => v.trim().toLowerCase() !== trimmedName.toLowerCase());
@@ -520,6 +520,6 @@ export async function updateVillageSchedule(schedule: VillageSchedule): Promise<
     console.error("Error saving village schedule:", error);
     return { success: false, error: error.message };
   }
-  
+
   return { success: true };
 }

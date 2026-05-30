@@ -31,16 +31,18 @@ export function AnalyticsChart() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handle = requestAnimationFrame(() => setMounted(true));
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+    });
     return () => cancelAnimationFrame(handle);
   }, []);
 
   if (!mounted) return <div className="h-[200px] w-full animate-pulse bg-secondary rounded-2xl" />;
 
   const isDark = resolvedTheme === "dark";
-  const textColor  = isDark ? "#9CA3AF" : "#64748B";
-  const gridColor  = "var(--border)";
-  const tooltipBg  = "var(--card)";
+  const textColor = isDark ? "#9CA3AF" : "#64748B";
+  const gridColor = "var(--border)";
+  const tooltipBg = "var(--card)";
   const tooltipBdr = "var(--border)";
 
   return (

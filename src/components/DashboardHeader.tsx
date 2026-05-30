@@ -26,7 +26,7 @@ export function DashboardHeader({
   const [iconClass, setIconClass] = useState("");
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    const handle = requestAnimationFrame(() => {
       // Determine greeting based on local time
       const hour = new Date().getHours();
       if (hour < 12) {
@@ -51,6 +51,7 @@ export function DashboardHeader({
       };
       setFormattedDate(new Date().toLocaleDateString("en-US", options));
     });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export function DashboardHeader({
           </div>
           {/* Online Indicator */}
           <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-[2.5px] border-background rounded-full z-10 flex items-center justify-center">
-             <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse opacity-80" />
+            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse opacity-80" />
           </div>
         </div>
 
@@ -104,10 +105,10 @@ export function DashboardHeader({
       <div className="flex items-center gap-3">
         {/* Date Pill (Desktop Only) */}
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/80 border border-border">
-           <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-           <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{formattedDate}</span>
+          <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{formattedDate}</span>
         </div>
-        
+
         <NotificationPanel
           customers={customers}
           loans={loans}

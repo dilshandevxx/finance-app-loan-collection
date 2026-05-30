@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ChevronLeft, Bell, MessageSquare, Mail, Smartphone,
-  MapPin, Phone, CheckCircle2, Loader2,
-  CalendarClock, ChevronRight
+  MapPin, User, Phone, AlertCircle, CheckCircle2, Loader2,
+  CalendarClock, ChevronRight, Banknote
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { fetchTomorrowsWork } from "@/app/actions";
@@ -61,7 +61,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="flex flex-col gap-5 pb-28 max-w-lg mx-auto w-full min-h-screen px-4">
-      
+
       {/* Header */}
       <header className="w-full flex items-center justify-between bg-card p-4 rounded-[1.75rem] border border-border shadow-sm relative overflow-hidden mb-1 mt-2">
         <Link href="/settings">

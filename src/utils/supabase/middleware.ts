@@ -15,7 +15,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
           })
@@ -34,10 +34,10 @@ export async function updateSession(request: NextRequest) {
   const agentSession = request.cookies.get('agent_session')?.value
   const pathname = request.nextUrl.pathname
 
-  const isPwaFile = 
-    pathname === '/manifest.webmanifest' || 
-    pathname === '/sw.js' || 
-    pathname.startsWith('/workbox-') || 
+  const isPwaFile =
+    pathname === '/manifest.webmanifest' ||
+    pathname === '/sw.js' ||
+    pathname.startsWith('/workbox-') ||
     pathname.startsWith('/swe-worker-')
 
   if (isPwaFile) return supabaseResponse;

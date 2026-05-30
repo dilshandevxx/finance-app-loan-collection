@@ -16,12 +16,12 @@ type QuickPaymentModalProps = {
   onConfirm: (amount: number) => Promise<void>;
 };
 
-type ReceiptDetails = {
+interface ReceiptDetails {
   installment: {
     id: string;
     amount: number;
     dueDate: string;
-    paidDate?: string;
+    paidDate: string | null;
     status: string;
     index: number;
     totalCount: number;
@@ -37,9 +37,9 @@ type ReceiptDetails = {
   customer: {
     name: string;
     phone: string;
-    memberId?: string;
+    memberId: string | null;
   };
-};
+}
 
 export function QuickPaymentModal({
   customer,
@@ -75,15 +75,15 @@ export function QuickPaymentModal({
   const handleConfirm = async () => {
     setIsProcessing(true);
     const finalAmount = parseFloat(amount) || expectedAmount;
-    
+
     try {
       // Check online status first
       if (typeof window !== 'undefined' && !navigator.onLine) {
         throw new Error("offline");
       }
-      
+
       await onConfirm(finalAmount);
-      
+
       // Update local IndexedDB cache instantly
       try {
         const { updateLocalInstallmentPaid } = await import("@/lib/idb");
@@ -94,7 +94,7 @@ export function QuickPaymentModal({
       }
 
       setIsSuccess(true);
-      
+
       // Load detailed receipt details
       try {
         const details = await getReceiptDetails(installmentId);
@@ -115,7 +115,7 @@ export function QuickPaymentModal({
           timestamp: Date.now()
         });
         localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
-        
+
         // Update local IndexedDB cache instantly
         try {
           const { updateLocalInstallmentPaid } = await import("@/lib/idb");
@@ -212,7 +212,7 @@ export function QuickPaymentModal({
         principal: receiptData?.loan.principalAmount || 0,
         remainingBalance: receiptData?.loan.remainingBalance || 0,
         totalPaid: receiptData?.loan.totalPaid || finalAmount,
-        installmentNo: receiptData 
+        installmentNo: receiptData
           ? `${receiptData.installment.index} of ${receiptData.installment.totalCount}`
           : "1 (Offline)",
         companyName: config.appName,
@@ -221,14 +221,14 @@ export function QuickPaymentModal({
       // Generate PDF
       const { generateReceiptPDF } = await import("@/lib/pdf");
       const doc = generateReceiptPDF(pdfData);
-      
+
       const fileName = `Receipt-${receiptId}.pdf`;
 
       // Check Web Share API
       if (typeof window !== "undefined" && navigator.canShare) {
         const pdfBlob = doc.output("blob");
         const file = new File([pdfBlob], fileName, { type: "application/pdf" });
-        
+
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
@@ -251,31 +251,31 @@ export function QuickPaymentModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 pb-0 sm:pb-4">
-      <div 
+      <div
         className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      
+
       <div className="relative w-full max-w-md bg-white dark:bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-border transform transition-all translate-y-0 sm:scale-100 animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200">
-        
+
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 dark:border-border/60">
           <h3 className="text-xl font-bold tracking-tight text-black dark:text-white">
             {isSuccess ? "Payment Recorded" : "Record Payment"}
           </h3>
-          <button 
+          <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-secondary dark:hover:bg-muted text-gray-500 dark:text-gray-400 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
-        
+
         {isSuccess ? (
           <div className="p-6 flex flex-col items-center gap-6 text-center animate-in fade-in zoom-in-95 duration-300">
             <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-2 ${isOfflineSaved ? 'bg-orange-100 dark:bg-orange-500/10 text-orange-500' : 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'}`}>
               <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
             </div>
-            
+
             <div className="flex flex-col items-center gap-1">
               <span className="text-4xl font-black tracking-tighter text-black dark:text-white">{formatLKR(parseFloat(amount || expectedAmount.toString()))}</span>
               <span className="text-sm font-medium text-gray-500 dark:text-white/50">Collected from {customer.name}</span>
@@ -332,7 +332,7 @@ export function QuickPaymentModal({
                   <span className="text-xs text-gray-500 dark:text-white/50">{formatLKPhone(customer.phone)}</span>
                 </div>
               </div>
-              
+
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Amount Collected</label>
                 <div className="relative">
@@ -347,24 +347,23 @@ export function QuickPaymentModal({
                   />
                 </div>
               </div>
-              
+
               <div className="flex gap-2">
                 {[expectedAmount, 500, 1000].map((preset) => (
                   <button
                     key={preset}
                     onClick={() => setAmount(preset.toString())}
-                    className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-colors border ${
-                      amount === preset.toString()
+                    className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-colors border ${amount === preset.toString()
                         ? "bg-primary text-primary-foreground border-primary font-bold"
                         : "bg-white text-black border-gray-200 hover:bg-gray-50 dark:bg-secondary dark:text-white dark:border-border dark:hover:bg-muted"
-                    }`}
+                      }`}
                   >
                     {preset === expectedAmount ? formatLKR(preset) : `Rs. ${preset.toLocaleString()}`}
                   </button>
                 ))}
               </div>
             </div>
-            
+
             <div className="p-4 sm:p-6 pt-0">
               <button
                 onClick={handleConfirm}
@@ -382,7 +381,7 @@ export function QuickPaymentModal({
             </div>
           </>
         )}
-        
+
         <div className="h-[env(safe-area-inset-bottom)] bg-white dark:bg-card" />
       </div>
     </div>

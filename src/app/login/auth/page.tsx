@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Lock, Mail, Key } from "lucide-react";
 import { loginWithPassword } from "@/app/auth-actions";
 import { config } from "@/lib/config";
@@ -68,7 +69,15 @@ export default function AuthLoginPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Password</label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Password</label>
+              <Link
+                href="/login/forgot-password"
+                className="text-xs font-bold text-primary hover:underline transition-colors"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <div className="relative">
               <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input

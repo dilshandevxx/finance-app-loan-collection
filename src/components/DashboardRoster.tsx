@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -49,27 +50,27 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   };
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    const handle = requestAnimationFrame(() => {
       loadFromCache();
     });
 
     const handleCacheUpdated = () => {
-      requestAnimationFrame(() => {
-        loadFromCache();
-      });
+      loadFromCache();
     };
     window.addEventListener("local-cache-updated", handleCacheUpdated);
     return () => {
+      cancelAnimationFrame(handle);
       window.removeEventListener("local-cache-updated", handleCacheUpdated);
     };
   }, []);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    const handle = requestAnimationFrame(() => {
       setLocalCustomers(customers);
       setLocalLoans(loans);
       setLocalInstallments(pendingInstallments);
     });
+    return () => cancelAnimationFrame(handle);
   }, [customers, loans, pendingInstallments]);
 
   const villages = React.useMemo(() => Array.from(
@@ -83,21 +84,21 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   const filteredInstallments = React.useMemo(() => localInstallments.filter((inst) => {
     const loan = localLoans.find(l => l.id === inst.loanId);
     const customer = localCustomers.find(c => c.id === loan?.customerId);
-    
+
     if (!customer) return false;
 
     // 1. Village filter match
     if (selectedVillage && customer.state !== selectedVillage) {
       return false;
     }
-    
+
     if (searchQuery.trim() === "") return true;
-    
+
     const query = searchQuery.toLowerCase();
     const nameMatch = customer.name.toLowerCase().includes(query);
     const idMatch = customer.memberId?.toLowerCase().includes(query) || customer.id.toLowerCase().includes(query);
     const stateMatch = customer.state?.toLowerCase().includes(query);
-    
+
     return nameMatch || idMatch || stateMatch;
   }), [localInstallments, localLoans, localCustomers, selectedVillage, searchQuery]);
 
@@ -105,12 +106,12 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   const customerGroups = React.useMemo(() => filteredInstallments.reduce((acc, inst) => {
     const loan = localLoans.find(l => l.id === inst.loanId);
     const customer = localCustomers.find(c => c.id === loan?.customerId);
-    
+
     if (!customer) return acc;
-    
+
     const existingGroup = acc.find(g => g.customer.id === customer.id);
     const isOverdue = inst.status === "MISSED" || new Date(inst.dueDate) < new Date(new Date().toDateString());
-    
+
     if (existingGroup) {
       existingGroup.installments.push(inst);
       existingGroup.totalAmount += inst.amount;
@@ -130,7 +131,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
         oldestInstallment: inst
       });
     }
-    
+
     return acc;
   }, [] as Array<{
     customer: Customer;
@@ -152,10 +153,10 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     setSelectedPayment({ customer, installmentId, expectedAmount });
   }, []);
 
-  const handleConfirmPayment = (): Promise<void> => {
+  const handleConfirmPayment = (amount: number): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!selectedPayment) return resolve();
-      
+
       startTransition(async () => {
         try {
           if (!navigator.onLine) {
@@ -186,7 +187,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
             resolve();
           } else {
-            reject(err);
+            reject(error);
           }
         }
       });
@@ -261,7 +262,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           </div>
         )}
       </div>
-      
+
       <Card className="rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
         <CardContent className="p-0">
           {sortedCustomerGroups.length === 0 ? (
@@ -276,11 +277,11 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             <div className="divide-y divide-border">
               {sortedCustomerGroups.map((group) => {
                 const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
-                
+
                 return (
                   <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
                     <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
-                      
+
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
                           <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
@@ -326,7 +327,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           >
                             <MessageSquare className="w-4 h-4" />
                           </button>
-                          <Button 
+                          <Button
                             onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
                             disabled={isPending}
                             className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"

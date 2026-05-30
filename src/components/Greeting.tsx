@@ -8,7 +8,7 @@ export function Greeting({ name }: { name: string }) {
   const [Icon, setIcon] = useState<React.ElementType>(Sun);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    const handle = requestAnimationFrame(() => {
       const hour = new Date().getHours();
       if (hour < 12) {
         setGreeting("Good morning");
@@ -21,17 +21,18 @@ export function Greeting({ name }: { name: string }) {
         setIcon(() => Moon);
       }
     });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   return (
     <div className="flex items-center gap-4">
       {/* Dynamic Time-based Icon Indicator with glassmorphism */}
-      <div 
+      <div
         className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 shrink-0 shadow-lg"
       >
         <Icon className="w-5 h-5 text-fintech-accent relative z-10 animate-pulse" />
       </div>
-      
+
       <div className="flex flex-col justify-center text-left">
         <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-white/40 leading-none mb-1.5">
           {greeting}

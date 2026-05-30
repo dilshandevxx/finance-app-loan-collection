@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { formatLKR, normalizePhone } from "@/lib/format";
 
@@ -42,7 +43,7 @@ export async function createLoan(formData: FormData) {
     if (!name || !phone) {
       return { error: "Name and phone number are required for a new customer." };
     }
-    
+
     const avatarUrl = avatarDataUrl || (gender === "female"
       ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=bigHair,bob,bun,curly,curvy,dreads01,dreads02,frida,froAndBand,frizzle,miaWallace,longButNotTooLong,straight01,straight02,straightAndStrand&facialHairProbability=0`
       : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`);
@@ -68,7 +69,7 @@ export async function createLoan(formData: FormData) {
       })
       .select()
       .single();
-      
+
     if (customerError) {
       console.error("Customer insert error:", customerError);
       return { error: `Failed to create customer: ${customerError.message}` };
@@ -229,9 +230,9 @@ export async function markInstallmentPaid(installmentId: string) {
   // Update installment
   await supabase
     .from("installments")
-    .update({ 
-      status: "PAID", 
-      paid_date: new Date().toISOString() 
+    .update({
+      status: "PAID",
+      paid_date: new Date().toISOString()
     })
     .eq("id", installmentId);
 
@@ -256,13 +257,13 @@ export async function markInstallmentPaid(installmentId: string) {
   revalidatePath("/");
   revalidatePath("/customers/[id]", "page");
   revalidatePath("/reports");
-  
+
   return { success: true };
 }
 
 export async function addCustomerNote(customerId: string, note: string) {
   const supabase = await createClient();
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("customer_notes")
     .insert({
       customer_id: customerId,
@@ -389,12 +390,12 @@ export async function clearAllData() {
     revalidatePath("/");
     revalidatePath("/customers");
     revalidatePath("/reports");
-    
+
     return { success: true };
   } catch (err) {
-    console.error("Error in clearAllData action:", err);
-    const message = err instanceof Error ? err.message : "Failed to clear database tables";
-    return { success: false, error: message };
+    const error = err as Error;
+    console.error("Error in clearAllData action:", error);
+    return { success: false, error: error?.message || "Failed to clear database tables" };
   }
 }
 
@@ -402,10 +403,12 @@ import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySet
 import type { VillageSchedule } from "@/lib/schedule";
 
 export async function fetchSystemVillages() {
+  const supabase = await createClient();
   return await getSystemVillages();
 }
 
 export async function createSystemVillage(villageName: string) {
+  const supabase = await createClient();
   const res = await addSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
@@ -414,6 +417,7 @@ export async function createSystemVillage(villageName: string) {
 }
 
 export async function deleteSystemVillage(villageName: string) {
+  const supabase = await createClient();
   const res = await removeSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
@@ -423,10 +427,12 @@ export async function deleteSystemVillage(villageName: string) {
 }
 
 export async function fetchCompanySettings() {
+  const supabase = await createClient();
   return await getCompanySettings();
 }
 
 export async function saveCompanySettings(name: string, logo: string) {
+  const supabase = await createClient();
   const res = await updateCompanySettings(name, logo);
   revalidatePath("/settings");
   revalidatePath("/reports");
@@ -484,7 +490,7 @@ export async function fetchTomorrowsWork() {
     try {
       const addr = typeof customer.address === "string" ? JSON.parse(customer.address) : customer.address;
       if (addr?.state) village = addr.state;
-    } catch {}
+    } catch { }
 
     if (!villageMap[village]) {
       villageMap[village] = { village, customers: [] };

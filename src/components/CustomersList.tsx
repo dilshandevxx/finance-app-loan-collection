@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -99,13 +100,13 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
 
     // 2. Search query match
     if (searchQuery.trim() === "") return true;
-    
+
     const query = searchQuery.toLowerCase();
     const nameMatch = customer.name.toLowerCase().includes(query);
     const idMatch = customer.memberId?.toLowerCase().includes(query) || customer.id.toLowerCase().includes(query);
     const phoneMatch = customer.phone.toLowerCase().includes(query);
     const stateMatch = customer.state?.toLowerCase().includes(query);
-    
+
     return nameMatch || idMatch || phoneMatch || stateMatch;
   });
 
@@ -116,7 +117,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
-      
+
       {/* Search and Village Filter */}
       <div className="flex flex-col sm:flex-row gap-3 w-full">
         {/* Search Field */}
@@ -160,37 +161,33 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
       <div className="flex bg-gray-50 dark:bg-muted p-1.5 rounded-2xl w-full max-w-sm mx-auto shadow-inner border border-gray-100 dark:border-border/30">
         <button
           onClick={() => setActiveTab("active")}
-          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${
-            activeTab === "active"
+          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${activeTab === "active"
               ? "bg-white dark:bg-card text-black dark:text-white shadow-md"
               : "text-gray-500 dark:text-white/40 hover:text-black dark:hover:text-white"
-          }`}
+            }`}
         >
           <UserCheck className="w-4 h-4" />
           Active Clients
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
-            activeTab === "active"
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${activeTab === "active"
               ? "bg-primary/20 text-primary dark:bg-primary/10 dark:text-primary-foreground"
               : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
-          }`}>
+            }`}>
             {allActiveCustomers.length}
           </span>
         </button>
         <button
           onClick={() => setActiveTab("settled")}
-          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${
-            activeTab === "settled"
+          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${activeTab === "settled"
               ? "bg-white dark:bg-card text-black dark:text-white shadow-md"
               : "text-gray-500 dark:text-white/40 hover:text-black dark:hover:text-white"
-          }`}
+            }`}
         >
           <CheckCircle2 className="w-4 h-4" />
           Settled
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
-            activeTab === "settled"
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${activeTab === "settled"
               ? "bg-primary/20 text-primary dark:bg-primary/10 dark:text-primary-foreground"
               : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
-          }`}>
+            }`}>
             {allSettledCustomers.length}
           </span>
         </button>
@@ -213,11 +210,11 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
             </div>
           </div>
         ) : (
-          displayCustomers.map((customer) => {
+          displayCustomers.map((customer, i) => {
             const customerLoans = localLoans.filter(l => l.customerId === customer.id);
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
-            const isOverdue = customerLoans.some(l => 
+            const isOverdue = customerLoans.some(l =>
               localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
             );
 
@@ -225,18 +222,18 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
               <Link key={customer.id} href={`/customers/${customer.id}`}>
                 <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-primary/40 transition-all cursor-pointer group transform hover:-translate-y-0.5">
                   <CardContent className="p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
-                    
+
                     {/* Avatar */}
                     <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-border overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 bg-gray-50 dark:bg-muted">
                       <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                     </div>
-                    
+
                     {/* Right Side: Info & Balance Column */}
                     <div className="flex flex-col flex-1 min-w-0 gap-2 sm:gap-3">
-                      
+
                       {/* Top Row: Name/ID and Balance */}
                       <div className="flex items-start justify-between gap-2 w-full">
-                        
+
                         <div className="flex flex-col min-w-0 gap-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-bold text-base sm:text-lg text-black dark:text-white truncate tracking-tight">{customer.name}</span>
@@ -248,7 +245,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                               <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
                             )}
                           </div>
-                          
+
                           <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-gray-500 dark:text-white/50 min-w-0 flex-wrap font-medium">
                             {customer.state && (
                               <>
@@ -266,7 +263,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             </span>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center gap-3 shrink-0">
                           <div className="flex flex-col items-end">
                             {activeLoan ? (
@@ -286,9 +283,9 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
                           </div>
                         </div>
-                        
+
                       </div>
- 
+
                       {/* Bottom Row: Progress Bar */}
                       {activeLoan && (
                         <div className="flex flex-col gap-1.5 w-full pr-0 sm:pr-12">
@@ -297,14 +294,14 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                             <span>{Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%</span>
                           </div>
                           <div className="w-full h-1.5 sm:h-2 bg-gray-100 dark:bg-secondary rounded-full overflow-hidden">
-                            <div 
+                            <div
                               className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
                               style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
                             />
                           </div>
                         </div>
                       )}
-                      
+
                     </div>
                   </CardContent>
                 </Card>

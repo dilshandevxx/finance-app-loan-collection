@@ -23,7 +23,7 @@ function formatPaidDate(paidDateStr?: string): string {
     if (isNaN(d.getTime())) return "PAID";
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
-    
+
     const hasTime = paidDateStr.includes('T') || paidDateStr.includes(':') || paidDateStr.includes(' ');
     if (hasTime) {
       const hours = String(d.getHours()).padStart(2, '0');
@@ -32,7 +32,7 @@ function formatPaidDate(paidDateStr?: string): string {
     } else {
       return `PAID (${month}/${day})`;
     }
-  } catch {
+  } catch (e) {
     return "PAID";
   }
 }
@@ -90,11 +90,11 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
   const filteredInstallments = installments.filter((inst) => {
     if (!startDate && !endDate) return true;
-    
+
     const instDate = new Date(inst.dueDate);
     const start = startDate ? new Date(startDate) : new Date("2000-01-01");
     const end = endDate ? new Date(endDate) : new Date("2100-01-01");
-    
+
     return instDate >= start && instDate <= end;
   });
 
@@ -117,15 +117,15 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const vLoans = loans.filter(l => customerIds.has(l.customerId));
       const activeLoans = vLoans.filter(l => l.status === "ACTIVE");
       const activeLoansCount = activeLoans.length;
-      
+
       const vLoanIds = new Set(vLoans.map(l => l.id));
       const vInstallments = installments.filter(inst => vLoanIds.has(inst.loanId));
-      
+
       const totalExpected = vInstallments.reduce((sum, inst) => sum + inst.amount, 0);
       const totalCollected = vInstallments
         .filter(inst => inst.status === "PAID")
         .reduce((sum, inst) => sum + inst.amount, 0);
-        
+
       const outstandingBalance = activeLoans.reduce((sum, l) => sum + l.remainingBalance, 0);
 
       return {
@@ -149,11 +149,11 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
   const totalCollected = filteredInstallments
     .filter(inst => inst.status === "PAID")
     .reduce((sum, inst) => sum + inst.amount, 0);
-  
+
   const totalPending = totalExpected - totalCollected;
 
   const chartDataMap = new Map<string, { date: string, expected: number, collected: number }>();
-  
+
   filteredInstallments.forEach(inst => {
     const dateStr = inst.dueDate;
     if (!chartDataMap.has(dateStr)) {
@@ -171,7 +171,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
   const exportCSV = () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
-    
+
     // Aggregates for report header
     const totalLoansCount = uniqueLoanIds.length;
     const totalExpectedAmount = filteredInstallments.reduce((sum, inst) => sum + inst.amount, 0);
@@ -179,8 +179,8 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       .filter(inst => inst.status === "PAID")
       .reduce((sum, inst) => sum + inst.amount, 0);
     const totalRemainingAmount = totalExpectedAmount - totalCollectedAmount;
-    const collectionRate = totalExpectedAmount > 0 
-      ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%" 
+    const collectionRate = totalExpectedAmount > 0
+      ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%"
       : "0%";
 
     // Find the maximum installment count of the exported loans to dynamically size headers
@@ -206,13 +206,13 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     ];
 
     const headers = [
-      "Customer Name", 
-      "ID / NIC Number", 
-      "Company Name", 
-      "Member ID", 
-      "Phone Number", 
-      "Address / Village", 
-      "Loan Principal", 
+      "Customer Name",
+      "ID / NIC Number",
+      "Company Name",
+      "Member ID",
+      "Phone Number",
+      "Address / Village",
+      "Loan Principal",
       "Interest Rate",
       "Total Repayable",
       "Weekly Installment",
@@ -222,7 +222,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Missed Installments",
       "Total Collected",
       "Remaining Balance",
-      "Loan Start Date", 
+      "Loan Start Date",
       "Loan End Date",
       "Loan Status",
       ...Array.from({ length: maxInstallments }, (_, idx) => `Installment ${idx + 1}`)
@@ -231,12 +231,12 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     const rows = uniqueLoanIds.map(loanId => {
       const loan = loans.find(l => l.id === loanId);
       const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
-      
+
       const loanInsts = installments.filter(i => i.loanId === loanId);
       const sortedLoanInsts = [...loanInsts].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
       const endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
-      
-      const fullAddress = customer 
+
+      const fullAddress = customer
         ? [customer.state, customer.address].filter(Boolean).join(" • ")
         : "N/A";
 
@@ -251,9 +251,9 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const weeklyInstallment = loan ? loan.weeklyInstallment : 0;
       const remainingBalance = loan ? loan.remainingBalance : 0;
       const status = loan ? loan.status : "N/A";
-      
-      const interestRate = principalAmount > 0 
-        ? Math.round(((totalAmountDue / principalAmount) - 1) * 100) 
+
+      const interestRate = principalAmount > 0
+        ? Math.round(((totalAmountDue / principalAmount) - 1) * 100)
         : 0;
 
       const installmentStatusList = Array.from({ length: maxInstallments }, (_, idx) => {
@@ -324,12 +324,12 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
   const exportExcel = async () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
-    
+
     // Dynamically import xlsx only when needed
     const XLSX = await import("xlsx");
-    
+
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
-    
+
     // Aggregates for report header
     const totalLoansCount = uniqueLoanIds.length;
     const totalExpectedAmount = filteredInstallments.reduce((sum, inst) => sum + inst.amount, 0);
@@ -337,8 +337,8 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       .filter(inst => inst.status === "PAID")
       .reduce((sum, inst) => sum + inst.amount, 0);
     const totalRemainingAmount = totalExpectedAmount - totalCollectedAmount;
-    const collectionRate = totalExpectedAmount > 0 
-      ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%" 
+    const collectionRate = totalExpectedAmount > 0
+      ? ((totalCollectedAmount / totalExpectedAmount) * 100).toFixed(1) + "%"
       : "0%";
 
     // Find the maximum installment count of the exported loans to dynamically size headers
@@ -366,13 +366,13 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     ];
 
     const headers = [
-      "Customer Name", 
-      "ID / NIC Number", 
-      "Company Name", 
-      "Member ID", 
-      "Phone Number", 
-      "Address / Village", 
-      "Loan Principal", 
+      "Customer Name",
+      "ID / NIC Number",
+      "Company Name",
+      "Member ID",
+      "Phone Number",
+      "Address / Village",
+      "Loan Principal",
       "Interest Rate",
       "Total Repayable",
       "Weekly Installment",
@@ -382,7 +382,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Missed Installments",
       "Total Collected",
       "Remaining Balance",
-      "Loan Start Date", 
+      "Loan Start Date",
       "Loan End Date",
       "Loan Status",
       ...Array.from({ length: maxInstallments }, (_, idx) => `Installment ${idx + 1}`)
@@ -391,12 +391,12 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     const rows = uniqueLoanIds.map(loanId => {
       const loan = loans.find(l => l.id === loanId);
       const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
-      
+
       const loanInsts = installments.filter(i => i.loanId === loanId);
       const sortedLoanInsts = [...loanInsts].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
       const endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
-      
-      const fullAddress = customer 
+
+      const fullAddress = customer
         ? [customer.state, customer.address].filter(Boolean).join(" • ")
         : "N/A";
 
@@ -411,9 +411,9 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       const weeklyInstallment = loan ? loan.weeklyInstallment : 0;
       const remainingBalance = loan ? loan.remainingBalance : 0;
       const status = loan ? loan.status : "N/A";
-      
-      const interestRate = principalAmount > 0 
-        ? Math.round(((totalAmountDue / principalAmount) - 1) * 100) 
+
+      const interestRate = principalAmount > 0
+        ? Math.round(((totalAmountDue / principalAmount) - 1) * 100)
         : 0;
 
       const installmentStatusList = Array.from({ length: maxInstallments }, (_, idx) => {
@@ -453,7 +453,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     });
 
     const worksheet = XLSX.utils.aoa_to_sheet([...metadata, headers, ...rows]);
-    
+
     // Set auto-fit columns for gorgeous readable Excel files
     const baseCols = [
       { wch: 22 }, // Customer Name
@@ -528,7 +528,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto pb-28">
-      
+
       {/* Header Info */}
       <div className="flex flex-col gap-1 px-1">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Analytics</h1>
@@ -539,14 +539,14 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       <section className="print:hidden bg-card border border-border rounded-3xl p-5 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-5 relative overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[50px] pointer-events-none -z-0" />
-        
+
         <div className="flex flex-col gap-3.5 w-full sm:w-auto relative z-10">
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <div className="flex flex-col gap-2 flex-1">
               <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Start Date</label>
               <div className="relative">
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-primary/50 transition w-full"
@@ -558,8 +558,8 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
             <div className="flex flex-col gap-2 flex-1">
               <label className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">End Date</label>
               <div className="relative">
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                   className="bg-secondary border border-border rounded-2xl pl-4 pr-10 py-3 text-sm text-foreground focus:outline-none focus:border-primary/50 transition w-full"
@@ -686,56 +686,55 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--chart-collected)" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="var(--chart-collected)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--chart-collected)" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="var(--chart-collected)" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorExpected" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--chart-expected)" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="var(--chart-expected)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--chart-expected)" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="var(--chart-expected)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis 
-                    dataKey="date" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 11, fill: '#888888' }} 
+                  <XAxis
+                    dataKey="date"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 11, fill: '#888888' }}
                     dy={10}
                     tickFormatter={(val) => {
                       const d = new Date(val);
                       return `${d.getMonth() + 1}/${d.getDate()}`;
                     }}
                   />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
                     tick={{ fontSize: 11, fill: '#888888' }}
                     tickFormatter={(value) => `Rs. ${Number(value).toLocaleString("en-LK")}`}
                   />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', color: 'var(--foreground)' }}
                     itemStyle={{ fontWeight: 'bold' }}
                     labelStyle={{ color: 'var(--muted-foreground)', marginBottom: '8px', fontSize: '12px' }}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    formatter={(value: any) => [formatLKR(Number(value)), undefined]}
+                    formatter={(value: string | number | readonly (string | number)[] | undefined) => [formatLKR(Number(Array.isArray(value) ? value[0] : value || 0)), undefined]}
                     cursor={{ stroke: 'var(--border)', strokeWidth: 1.5 }}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="expected" 
-                    stroke="var(--chart-expected)" 
+                  <Area
+                    type="monotone"
+                    dataKey="expected"
+                    stroke="var(--chart-expected)"
                     strokeWidth={2}
                     strokeDasharray="5 5"
-                    fillOpacity={1} 
-                    fill="url(#colorExpected)" 
+                    fillOpacity={1}
+                    fill="url(#colorExpected)"
                     name="Expected"
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="collected" 
-                    stroke="var(--chart-collected)" 
+                  <Area
+                    type="monotone"
+                    dataKey="collected"
+                    stroke="var(--chart-collected)"
                     strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#colorCollected)" 
+                    fillOpacity={1}
+                    fill="url(#colorCollected)"
                     name="Collected"
                   />
                 </AreaChart>
@@ -835,19 +834,18 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   filteredInstallments.map(inst => {
                     const loan = loans.find(l => l.id === inst.loanId);
                     const customer = customers.find(c => c.id === loan?.customerId);
-                    
+
                     return (
                       <tr key={inst.id} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
                         <td className="p-4 px-6 font-semibold text-sm">{customer?.name || "Unknown"}</td>
-                        <td className="p-4 text-muted-foreground print:text-black/70 text-xs font-mono">{customer?.memberId || customer?.id.slice(0,8) || "N/A"}</td>
+                        <td className="p-4 text-muted-foreground print:text-black/70 text-xs font-mono">{customer?.memberId || customer?.id.slice(0, 8) || "N/A"}</td>
                         <td className="p-4 text-muted-foreground print:text-black/70 text-xs">{inst.dueDate}</td>
                         <td className="p-4 text-right font-bold text-sm">{formatLKR(inst.amount)}</td>
                         <td className="p-4 px-6 text-right flex justify-end">
-                          <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            inst.status === "PAID" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 print:bg-transparent print:text-black" :
-                            inst.status === "PENDING" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 print:bg-transparent print:text-yellow-700" :
-                            "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 print:bg-transparent print:text-red-700"
-                          }`}>
+                          <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${inst.status === "PAID" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 print:bg-transparent print:text-black" :
+                              inst.status === "PENDING" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 print:bg-transparent print:text-yellow-700" :
+                                "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 print:bg-transparent print:text-red-700"
+                            }`}>
                             {inst.status}
                           </span>
                         </td>

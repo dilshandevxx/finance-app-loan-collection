@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { getSupabaseClient } from "@/lib/supabase";
 
 export async function loginWithEmail(email: string) {
   const supabase = await createClient();
@@ -229,4 +230,89 @@ export async function getUserProfile() {
     pin: profile?.hashed_pin || "Not set",
     avatarUrl
   };
+}
+
+export async function inviteAgent(email: string, fullName: string) {
+  try {
+    const supabase = await createClient();
+    
+    // 1. Get the current user's profile to retrieve their tenant_id
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: "Not logged in" };
+    
+    const { data: currentProfile } = await supabase
+      .from("user_profiles")
+      .select("tenant_id")
+      .eq("id", user.id)
+      .single();
+      
+    if (!currentProfile?.tenant_id) {
+      return { success: false, error: "Could not determine organization/tenant ID" };
+    }
+    
+    // 2. Instantiate the Admin/Service-Role Supabase client to call inviteUserByEmail
+    const adminSupabase = getSupabaseClient();
+    
+    // 3. Detect host to set correct redirection URL
+    const { headers } = await import("next/headers");
+    const host = (await headers()).get("host") || "localhost:3000";
+    const protocol = host.startsWith("localhost") ? "http" : "https";
+    const redirectUrl = `${protocol}://${host}/login/pin`;
+
+    // 4. Invite the user and store tenant_id & full_name in metadata
+    const { data: inviteData, error: inviteError } = await adminSupabase.auth.admin.inviteUserByEmail(
+      email,
+      {
+        data: {
+          full_name: fullName,
+          tenant_id: currentProfile.tenant_id
+        },
+        redirectTo: redirectUrl
+      }
+    );
+    
+    if (inviteError) {
+      return { success: false, error: inviteError.message };
+    }
+
+    // 5. In case database triggers don't copy the profile automatically, upsert manually
+    if (inviteData?.user) {
+      await adminSupabase
+        .from("user_profiles")
+        .upsert({
+          id: inviteData.user.id,
+          tenant_id: currentProfile.tenant_id,
+          email: email,
+          full_name: fullName
+        });
+    }
+    
+    revalidatePath("/settings");
+    return { success: true };
+  } catch (err) {
+    const error = err as Error;
+    return { success: false, error: error.message || "An unexpected error occurred" };
+  }
+}
+
+export async function sendPasswordResetEmail(email: string) {
+  try {
+    const { headers } = await import("next/headers");
+    const host = (await headers()).get("host") || "localhost:3000";
+    const protocol = host.startsWith("localhost") ? "http" : "https";
+    const redirectUrl = `${protocol}://${host}/login/reset-password`;
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err) {
+    const error = err as Error;
+    return { success: false, error: error.message || "An unexpected error occurred" };
+  }
 }

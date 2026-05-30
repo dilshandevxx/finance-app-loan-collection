@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { markInstallmentPaid } from "@/app/actions";
-import { WifiOff, Loader2, CheckCircle } from "lucide-react";
+import { Wifi, WifiOff, Loader2, CheckCircle } from "lucide-react";
 
 export function OfflineProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -25,7 +25,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
           setQueueLength(0);
           return 0;
         }
-      } catch {
+      } catch (e) {
         setQueueLength(0);
         return 0;
       }
@@ -34,15 +34,15 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const handle = requestAnimationFrame(() => {
-      // Initial check
+    // Initial check
+    const frameId = requestAnimationFrame(() => {
       setIsOffline(!navigator.onLine);
       updateQueueLength();
     });
 
     const triggerSync = async () => {
       if (!navigator.onLine || syncingRef.current) return;
-      
+
       try {
         const queueStr = localStorage.getItem("offlineSyncQueue");
         if (!queueStr) return;
@@ -54,7 +54,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
         setIsSyncing(true);
 
         const failedItems = [];
-        
+
         // Process queue item by item
         for (const item of queue) {
           try {
@@ -69,16 +69,16 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
             failedItems.push(item);
           }
         }
-        
+
         // Only keep failed items in the queue
         if (failedItems.length > 0) {
           localStorage.setItem("offlineSyncQueue", JSON.stringify(failedItems));
         } else {
           localStorage.removeItem("offlineSyncQueue");
         }
-        
+
         updateQueueLength();
-        
+
         // Show success alert if all synced successfully
         if (failedItems.length === 0) {
           setShowSyncedSuccess(true);
@@ -132,7 +132,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
     }
 
     return () => {
-      cancelAnimationFrame(handle);
+      cancelAnimationFrame(frameId);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("offline-queue-updated", handleQueueUpdated);
@@ -144,7 +144,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
     <>
       {/* Floating Status Banners */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none">
-        
+
         {/* Offline Banner */}
         {isOffline && (
           <div className="bg-orange-600 dark:bg-orange-500 border border-orange-500/20 text-white px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 shadow-2xl animate-in slide-in-from-top-4 duration-300 pointer-events-auto">
@@ -157,7 +157,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
             )}
           </div>
         )}
-        
+
         {/* Syncing Banner */}
         {isSyncing && (
           <div className="bg-primary text-primary-foreground border border-primary/20 px-4 py-2.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2.5 shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">

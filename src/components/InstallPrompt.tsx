@@ -5,18 +5,8 @@ import { X, Download, Share2, PlusSquare } from "lucide-react";
 import { config } from "@/lib/config";
 
 interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[];
-  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
-  prompt(): Promise<void>;
-}
-
-interface CustomWindow extends Window {
-  MSStream?: unknown;
-  deferredPrompt?: BeforeInstallPromptEvent;
-}
-
-interface NavigatorStandalone extends Navigator {
-  standalone?: boolean;
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 export function InstallPrompt() {
@@ -26,9 +16,9 @@ export function InstallPrompt() {
 
   useEffect(() => {
     // 1. Check if already running in standalone mode (already installed)
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches 
-      || (window.navigator as NavigatorStandalone).standalone === true;
-    
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+      || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+
     if (isStandalone) return;
 
     // 2. Check if dismissed before
@@ -38,9 +28,9 @@ export function InstallPrompt() {
     // 3. Listen for Android/Chrome PWA prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      const promptEvent = e as BeforeInstallPromptEvent;
-      setDeferredPrompt(promptEvent);
-      (window as unknown as CustomWindow).deferredPrompt = promptEvent;
+      const beforeInstallEvent = e as BeforeInstallPromptEvent;
+      setDeferredPrompt(beforeInstallEvent);
+      (window as unknown as { deferredPrompt: BeforeInstallPromptEvent }).deferredPrompt = beforeInstallEvent;
       setPlatform("android");
       setShowPrompt(true);
       window.dispatchEvent(new CustomEvent("pwa-prompt-available"));
@@ -49,18 +39,21 @@ export function InstallPrompt() {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
     // 4. Detect iOS
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) 
-      && !(window as unknown as CustomWindow).MSStream;
-    
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      && !("MSStream" in window);
+
     if (isIos) {
-      requestAnimationFrame(() => {
+      const frameId = requestAnimationFrame(() => {
         setPlatform("ios");
       });
       // Add a slight delay for better UX
       const timer = setTimeout(() => {
         setShowPrompt(true);
       }, 3000);
-      return () => clearTimeout(timer);
+      return () => {
+        cancelAnimationFrame(frameId);
+        clearTimeout(timer);
+      };
     }
 
     return () => {
@@ -70,10 +63,10 @@ export function InstallPrompt() {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
-    
+
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
+
     if (outcome === "accepted") {
       setShowPrompt(false);
     }
@@ -89,7 +82,7 @@ export function InstallPrompt() {
 
   return (
     <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-gray-900 text-white dark:bg-neutral-900 border border-gray-800 dark:border-neutral-800 rounded-2xl p-5 shadow-2xl z-[10000] animate-in slide-in-from-bottom-8 duration-500">
-      <button 
+      <button
         onClick={handleDismiss}
         className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
         aria-label="Dismiss"
@@ -105,7 +98,7 @@ export function InstallPrompt() {
           <h3 className="font-bold text-sm text-gray-100 mb-1">
             Install {config.appShortName}
           </h3>
-          
+
           {platform === "android" && (
             <p className="text-xs text-gray-400 mb-4 leading-relaxed">
               Install the app on your home screen for quick access and offline collection.

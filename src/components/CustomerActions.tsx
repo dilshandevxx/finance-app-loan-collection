@@ -10,7 +10,7 @@ import { phoneToDial } from "@/lib/format";
 
 export function CustomerContactActions({ customer }: { customer: Customer }) {
   const phone = customer.phone.replace(/[^0-9]/g, '');
-  
+
   return (
     <div className="flex items-center gap-3 mt-4 w-full justify-center">
       <a href={`tel:${phone}`} className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-500 flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
@@ -32,14 +32,14 @@ type CustomerPaymentActionsProps = {
   nextInstallment?: Installment;
 };
 
-export function CustomerPaymentActions({ customer, nextInstallment }: CustomerPaymentActionsProps) {
+export function CustomerPaymentActions({ customer, loan, nextInstallment }: CustomerPaymentActionsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const handleConfirmPayment = (): Promise<void> => {
+  const handleConfirmPayment = (amount: number): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!nextInstallment) return resolve();
-      
+
       startTransition(async () => {
         try {
           await markInstallmentPaid(nextInstallment.id);
@@ -54,7 +54,7 @@ export function CustomerPaymentActions({ customer, nextInstallment }: CustomerPa
   return (
     <>
       <div className="flex gap-3 w-full">
-        <Button 
+        <Button
           onClick={() => setIsModalOpen(true)}
           disabled={!nextInstallment || isPending}
           className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-bold h-12 md:h-14 shadow-md disabled:opacity-50 transition-all active:scale-95"

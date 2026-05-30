@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, MapPin, CheckCircle2, AlertCircle, TrendingUp } from "lucide-react";
+import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId, getCustomerNotes } from "@/data/db";
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
@@ -16,14 +17,14 @@ export default async function CustomerDetails({ params }: Props) {
   const resolvedParams = await params;
   const customerId = resolvedParams.id;
   const customer = await getCustomerById(customerId);
-  
+
   if (!customer) {
     return <div className="p-12 text-center text-gray-500 dark:text-white/50">Customer not found</div>;
   }
 
   const customerLoans = await getLoansByCustomerId(customerId);
   const loan = customerLoans.find(l => l.status === "ACTIVE") || customerLoans[0];
-  
+
   if (!loan) {
     return (
       <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
@@ -43,7 +44,7 @@ export default async function CustomerDetails({ params }: Props) {
             <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-muted overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-border">
               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
             </div>
-            
+
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
             <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
             {customer.state && (
@@ -51,7 +52,7 @@ export default async function CustomerDetails({ params }: Props) {
                 📍 {customer.state}
               </span>
             )}
-            
+
             <CustomerContactActions customer={customer} />
 
             <div className="mt-8 text-center text-gray-500 dark:text-white/50">
@@ -65,7 +66,7 @@ export default async function CustomerDetails({ params }: Props) {
 
   const installments = await getInstallmentsByLoanId(loan.id);
   const notes = await getCustomerNotes(customerId);
-  
+
   const paidCount = installments.filter(i => i.status === "PAID").length;
   const progressPercent = Math.round((paidCount / installments.length) * 100) || 0;
 
@@ -92,10 +93,10 @@ export default async function CustomerDetails({ params }: Props) {
       <div className="grid md:grid-cols-12 gap-8 items-start">
         {/* Left Column */}
         <div className="md:col-span-5 flex flex-col gap-4">
-          
+
           {/* Profile Card */}
           <div className="flex flex-col items-center bg-white dark:bg-card border border-gray-200 dark:border-border rounded-[2rem] p-8 shadow-sm relative">
-            
+
             <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black border border-primary/20">
               <TrendingUp className="w-3.5 h-3.5" />
               {reliabilityScore}
@@ -104,7 +105,7 @@ export default async function CustomerDetails({ params }: Props) {
             <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-muted overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-border">
               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
             </div>
-            
+
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
             <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
             {customer.state && (
@@ -112,7 +113,7 @@ export default async function CustomerDetails({ params }: Props) {
                 📍 {customer.state}
               </span>
             )}
-            
+
             <CustomerContactActions customer={customer} />
 
             <div className="mt-8 text-center w-full">
@@ -129,8 +130,8 @@ export default async function CustomerDetails({ params }: Props) {
                 <span>{progressPercent}%</span>
               </div>
               <div className="w-full h-2 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary rounded-full transition-all duration-500 ease-out" 
+                <div
+                  className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -164,7 +165,7 @@ export default async function CustomerDetails({ params }: Props) {
 
         {/* Right Column */}
         <div className="md:col-span-7 flex flex-col gap-8">
-          
+
           {/* Details List */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-foreground tracking-tight">Loan Details</h3>
@@ -200,10 +201,10 @@ export default async function CustomerDetails({ params }: Props) {
                 <div className="flex flex-col">
                   {installments.map((inst, i) => {
                     const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
-                    
+
                     return (
                       <div key={inst.id} className={`flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl ${i === 0 ? 'mt-2' : ''} ${i === installments.length - 1 ? 'mb-2' : ''}`}>
-                        
+
                         <div className="flex items-center gap-4 relative z-10">
                           <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
                             {inst.status === "PAID" ? (
