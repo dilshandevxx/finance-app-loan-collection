@@ -15,7 +15,11 @@ type Customer = {
   state?: string;
 };
 
-const initialState = { error: undefined as string | undefined };
+const initialState = { 
+  error: undefined as string | undefined, 
+  success: undefined as boolean | undefined,
+  customerId: undefined as string | undefined
+};
 
 export function NewLoanForm({ customers, villages, schedule }: { customers: Customer[]; villages: string[], schedule: VillageSchedule | null }) {
   const [state, formAction, isPending] = useActionState(
@@ -171,6 +175,32 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
     }
     return days;
   };
+
+  if (state?.success) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center min-h-[400px] animate-in zoom-in-95 duration-300">
+        <div className="w-20 h-20 bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-6 shadow-sm">
+          <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
+        </div>
+        <h3 className="text-2xl font-black text-black dark:text-white tracking-tight mb-2">Loan Created Successfully!</h3>
+        <p className="text-gray-500 dark:text-white/60 font-medium mb-8 max-w-sm mx-auto">
+          The customer and their loan installments have been successfully registered in the system.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <Link href="/" className="w-full sm:w-auto">
+            <Button type="button" className="w-full bg-secondary text-foreground hover:bg-secondary/80 font-bold px-6 border border-border shadow-sm h-12 rounded-xl transition-all cursor-pointer">
+              Back to Dashboard
+            </Button>
+          </Link>
+          <Link href={`/customers/${state.customerId}`} className="w-full sm:w-auto">
+            <Button type="button" className="w-full bg-primary hover:bg-primary/95 text-primary-foreground font-bold px-6 border-none shadow-md h-12 rounded-xl transition-all cursor-pointer">
+              View Customer Profile
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className="flex flex-col gap-6 sm:gap-8">

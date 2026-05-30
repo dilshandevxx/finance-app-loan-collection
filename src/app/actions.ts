@@ -122,7 +122,8 @@ export async function createLoan(formData: FormData) {
   }
 
   revalidatePath("/");
-  redirect("/");
+  revalidatePath("/customers");
+  return { success: true, customerId: newLoan.customer_id };
 }
 
 export async function getReceiptDetails(installmentId: string) {
