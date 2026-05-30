@@ -485,17 +485,7 @@ export async function updateCompanySettings(name: string, logo: string): Promise
   return { success: true };
 }
 
-export type VillageSchedule = Record<string, string[]>;
-
-export const defaultVillageSchedule: VillageSchedule = {
-  "Monday": [],
-  "Tuesday": [],
-  "Wednesday": [],
-  "Thursday": [],
-  "Friday": [],
-  "Saturday": [],
-  "Sunday": []
-};
+import { VillageSchedule, defaultVillageSchedule } from "@/lib/schedule";
 
 export async function getVillageSchedule(): Promise<VillageSchedule> {
   const supabase = await createClient();

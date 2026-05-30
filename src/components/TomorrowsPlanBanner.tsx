@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { fetchVillageSchedule } from "@/app/actions";
-import { Customer, Installment, Loan, VillageSchedule } from "@/data/db";
+import { Customer, Installment, Loan } from "@/data/db";
+import type { VillageSchedule } from "@/lib/schedule";
 import { formatLKR } from "@/lib/format";
 import { CalendarDays, MapPin } from "lucide-react";
 

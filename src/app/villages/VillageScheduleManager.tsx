@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { saveVillageSchedule } from "@/app/actions";
 import { Loader2, Calendar, MapPin, Check } from "lucide-react";
-import { VillageSchedule, defaultVillageSchedule } from "@/data/db";
+import { VillageSchedule, defaultVillageSchedule } from "@/lib/schedule";
 
 const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 

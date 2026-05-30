@@ -397,7 +397,8 @@ export async function clearAllData() {
   }
 }
 
-import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySettings, updateCompanySettings, getVillageSchedule, updateVillageSchedule, type VillageSchedule } from "@/data/db";
+import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySettings, updateCompanySettings, getVillageSchedule, updateVillageSchedule } from "@/data/db";
+import type { VillageSchedule } from "@/lib/schedule";
 
 export async function fetchSystemVillages() {
   const supabase = await createClient();
