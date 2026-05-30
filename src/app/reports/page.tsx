@@ -1,11 +1,7 @@
-import dynamic from "next/dynamic";
+import { ReportsDashboardWrapper } from "@/components/ReportsDashboardWrapper";
 import { BottomNav } from "@/components/BottomNav";
 import { getCustomers, getInstallments, getLoans, getCompanySettings } from "@/data/db";
 
-const ReportsDashboard = dynamic(
-  () => import("@/components/ReportsDashboard").then(mod => mod.ReportsDashboard),
-  { ssr: false }
-);
 export const dynamic = 'force-dynamic';
 
 export default async function ReportsPage() {
@@ -25,7 +21,7 @@ export default async function ReportsPage() {
         </span>
       </header>
 
-      <ReportsDashboard 
+      <ReportsDashboardWrapper 
         installments={installments} 
         loans={loans} 
         customers={customers} 
