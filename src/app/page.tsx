@@ -20,6 +20,7 @@ export default async function Home() {
   const { data: { user } } = await supabase.auth.getUser();
 
   let agentName = config.agentName;
+  let agentAvatar = "";
   if (user) {
     const { data: profile } = await supabase
       .from("user_profiles")
@@ -31,6 +32,10 @@ export default async function Home() {
       agentName = profile.full_name;
     } else if (user.user_metadata?.full_name) {
       agentName = user.user_metadata.full_name;
+    }
+
+    if (user.user_metadata?.avatar_url) {
+      agentAvatar = user.user_metadata.avatar_url;
     } else if (user.email) {
       agentName = user.email.split('@')[0];
       agentName = agentName.charAt(0).toUpperCase() + agentName.slice(1);
@@ -78,6 +83,7 @@ export default async function Home() {
       {/* ── Full-width Header ────────────────────────────────── */}
       <DashboardHeader
         agentName={agentName}
+        agentAvatar={agentAvatar}
         customers={customers}
         loans={loans}
         installments={installments}

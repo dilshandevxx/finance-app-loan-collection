@@ -178,6 +178,22 @@ export async function updateAuthPassword(newPassword: string) {
   return { success: true };
 }
 
+export async function updateUserProfileImage(avatarUrl: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not logged in" };
+
+  const { error } = await supabase.auth.updateUser({
+    data: { avatar_url: avatarUrl }
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
 export async function getUserProfile() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -204,11 +220,13 @@ export async function getUserProfile() {
 
   // Always prefer the confirmed email from Supabase Auth — it's guaranteed to be set
   const displayEmail = user.email || profile?.email || "No email";
+  const avatarUrl = user.user_metadata?.avatar_url || "";
 
   return {
     id: user.id,
     name: displayName,
     email: displayEmail,
-    pin: profile?.hashed_pin || "Not set"
+    pin: profile?.hashed_pin || "Not set",
+    avatarUrl
   };
 }

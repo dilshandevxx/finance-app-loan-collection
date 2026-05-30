@@ -7,6 +7,7 @@ import { Calendar, Sun, Moon, CloudSun } from "lucide-react";
 
 interface DashboardHeaderProps {
   agentName: string;
+  agentAvatar?: string;
   customers: Customer[];
   loans: Loan[];
   installments: Installment[];
@@ -14,6 +15,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({
   agentName,
+  agentAvatar,
   customers,
   loans,
   installments,
@@ -64,10 +66,14 @@ export function DashboardHeader({
       <div className="flex items-center gap-4">
         {/* Profile Avatar / Initial */}
         <div className="relative group cursor-pointer">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-primary/70 flex items-center justify-center shadow-xl shadow-primary/20 group-hover:scale-105 transition-all duration-300 ring-2 ring-background">
-            <span className="text-xl font-black text-primary-foreground drop-shadow-md">
-              {agentName.charAt(0).toUpperCase()}
-            </span>
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-primary/70 flex items-center justify-center shadow-xl shadow-primary/20 group-hover:scale-105 transition-all duration-300 ring-2 ring-background overflow-hidden">
+            {agentAvatar ? (
+              <img src={agentAvatar} alt={agentName} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-xl font-black text-primary-foreground drop-shadow-md">
+                {agentName.charAt(0).toUpperCase()}
+              </span>
+            )}
           </div>
           {/* Online Indicator */}
           <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-[2.5px] border-background rounded-full z-10 flex items-center justify-center">

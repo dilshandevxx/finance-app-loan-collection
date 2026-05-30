@@ -26,7 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
-import { logout, getUserProfile } from "@/app/auth-actions";
+import { logout, getUserProfile, updateUserProfileImage } from "@/app/auth-actions";
 import { clearAllData, fetchSystemVillages, createSystemVillage, fetchCompanySettings, saveCompanySettings } from "@/app/actions";
 
 export default function SettingsPage() {
@@ -49,7 +49,7 @@ export default function SettingsPage() {
   const [isSavingCompany, setIsSavingCompany] = useState(false);
 
   // User Profile state
-  const [userProfile, setUserProfile] = useState<{name: string, email: string, pin: string} | null>(null);
+  const [userProfile, setUserProfile] = useState<{name: string, email: string, pin: string, avatarUrl?: string} | null>(null);
 
   const loadVillages = async () => {
     try {
@@ -143,6 +143,56 @@ export default function SettingsPage() {
     } finally {
       setIsSavingCompany(false);
     }
+  };
+
+  const handleUserProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = async () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const maxDim = 400;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        
+        setUserProfile(prev => prev ? { ...prev, avatarUrl: dataUrl } : null);
+        setShowToast("Saving profile image...");
+
+        const res = await updateUserProfileImage(dataUrl);
+        if (res.success) {
+          setShowToast("Profile image updated successfully!");
+          setTimeout(() => setShowToast(null), 3000);
+        } else {
+          setShowToast(res.error || "Failed to save profile image");
+          setTimeout(() => setShowToast(null), 4000);
+        }
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleClearAllData = async () => {
@@ -265,11 +315,25 @@ export default function SettingsPage() {
           </span>
         </div>
         <CardContent className="p-6 sm:p-8 flex items-center gap-5 sm:gap-6">
-          <div className="relative">
-            <div className="absolute -inset-[3px] bg-primary/20 rounded-full blur-xs opacity-60" />
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-secondary overflow-hidden relative border-2 border-card shadow-xl shrink-0 z-10">
-              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(config.agentName)}`} alt="Agent Profile" className="w-full h-full object-cover" />
+          <div className="relative group cursor-pointer" onClick={() => document.getElementById("profile-image-input")?.click()}>
+            <div className="absolute -inset-[3px] bg-primary/20 rounded-full blur-xs opacity-60 group-hover:opacity-100 transition-opacity" />
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-secondary overflow-hidden relative border-2 border-card shadow-xl shrink-0 z-10 transition-transform group-hover:scale-105">
+              <img 
+                src={userProfile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userProfile?.name || config.agentName)}`} 
+                alt="Agent Profile" 
+                className="w-full h-full object-cover" 
+              />
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                 <span className="text-white text-[10px] font-bold uppercase tracking-wider">Change</span>
+              </div>
             </div>
+            <input 
+              type="file" 
+              id="profile-image-input"
+              accept="image/*"
+              onChange={handleUserProfileImageChange}
+              className="hidden"
+            />
           </div>
           <div className="flex flex-col gap-1 z-10 w-full overflow-hidden">
             <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight truncate">
