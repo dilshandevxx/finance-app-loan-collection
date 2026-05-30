@@ -63,21 +63,26 @@ export function TomorrowsPlanBanner({ installments, customers, loans }: Props) {
   );
 
   // Find pending/missed installments for these loans
-  // OR installments specifically due tomorrow
-  const targetInstallments = installments.filter(i => {
-    if (!relevantLoanIds.has(i.loanId)) return false;
+  // We want ALL missed installments, PLUS the next (earliest) pending installment for each loan,
+  // because if the agent is visiting the village tomorrow, they will collect the next due installment.
+  const targetInstallments: Installment[] = [];
+  
+  for (const loanId of relevantLoanIds) {
+    const loanInsts = installments.filter(i => i.loanId === loanId);
     
-    // Include if it's missed, OR if it's pending and due on or before tomorrow
-    if (i.status === "MISSED") return true;
-    if (i.status === "PENDING") {
-      const dueDate = new Date(i.dueDate);
-      dueDate.setHours(0,0,0,0);
-      const tomorrowMidnight = new Date(tomorrowDate);
-      tomorrowMidnight.setHours(0,0,0,0);
-      return dueDate.getTime() <= tomorrowMidnight.getTime();
+    // 1. Add all missed
+    const missed = loanInsts.filter(i => i.status === "MISSED");
+    targetInstallments.push(...missed);
+    
+    // 2. Add the earliest pending
+    const pending = loanInsts
+      .filter(i => i.status === "PENDING")
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+      
+    if (pending.length > 0) {
+      targetInstallments.push(pending[0]);
     }
-    return false;
-  });
+  }
 
   if (targetInstallments.length === 0) return null;
 
