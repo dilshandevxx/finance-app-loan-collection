@@ -11,6 +11,7 @@ import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
 import { VillageCollectionBars } from "@/components/VillageCollectionBars";
+import { TomorrowsPlanBanner } from "@/components/TomorrowsPlanBanner";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -81,6 +82,12 @@ export default async function Home() {
         customers={customers}
         loans={loans}
         installments={installments}
+      />
+
+      <TomorrowsPlanBanner 
+        installments={installments} 
+        customers={customers} 
+        loans={loans} 
       />
 
       {/* ── Desktop: 2-Column Grid │ Mobile: Single Column ───── */}

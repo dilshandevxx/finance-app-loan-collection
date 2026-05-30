@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { getCustomers, getSystemVillages } from "@/data/db";
+import { getCustomers, getSystemVillages, getVillageSchedule } from "@/data/db";
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
 import VillagesClientManager from "./VillagesClientManager";
+import VillageScheduleManager from "./VillageScheduleManager";
 
 export const dynamic = 'force-dynamic';
 
 export default async function VillagesPage() {
-  const [customers, villages] = await Promise.all([
+  const [customers, villages, schedule] = await Promise.all([
     getCustomers(),
-    getSystemVillages()
+    getSystemVillages(),
+    getVillageSchedule()
   ]);
 
   // Compute client counts per village
@@ -34,10 +36,16 @@ export default async function VillagesPage() {
         </span>
       </header>
 
-      <div className="max-w-2xl mx-auto w-full">
+      <div className="max-w-2xl mx-auto w-full flex flex-col gap-6">
         <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm">
           <CardContent className="p-4 sm:p-8">
             <VillagesClientManager initialStats={villageStats} />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-3xl overflow-hidden shadow-sm mt-4">
+          <CardContent className="p-4 sm:p-8">
+            <VillageScheduleManager availableVillages={villages} initialSchedule={schedule} />
           </CardContent>
         </Card>
       </div>

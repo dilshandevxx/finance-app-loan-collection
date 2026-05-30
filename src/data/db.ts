@@ -485,5 +485,51 @@ export async function updateCompanySettings(name: string, logo: string): Promise
   return { success: true };
 }
 
+export type VillageSchedule = Record<string, string[]>;
 
+export const defaultVillageSchedule: VillageSchedule = {
+  "Monday": [],
+  "Tuesday": [],
+  "Wednesday": [],
+  "Thursday": [],
+  "Friday": [],
+  "Saturday": [],
+  "Sunday": []
+};
 
+export async function getVillageSchedule(): Promise<VillageSchedule> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("system_settings")
+    .select("value")
+    .eq("key", "village_schedule")
+    .maybeSingle();
+
+  if (data?.value) {
+    try {
+      const schedule = JSON.parse(data.value);
+      return { ...defaultVillageSchedule, ...schedule };
+    } catch (e) {
+      console.error("Error parsing village_schedule:", e);
+    }
+  }
+  return defaultVillageSchedule;
+}
+
+export async function updateVillageSchedule(schedule: VillageSchedule): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("system_settings")
+    .upsert({
+      key: "village_schedule",
+      value: JSON.stringify(schedule),
+      updated_at: new Date().toISOString()
+    });
+
+  if (error) {
+    console.error("Error saving village schedule:", error);
+    return { success: false, error: error.message };
+  }
+  
+  return { success: true };
+}

@@ -397,7 +397,7 @@ export async function clearAllData() {
   }
 }
 
-import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySettings, updateCompanySettings } from "@/data/db";
+import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySettings, updateCompanySettings, getVillageSchedule, updateVillageSchedule, type VillageSchedule } from "@/data/db";
 
 export async function fetchSystemVillages() {
   const supabase = await createClient();
@@ -506,4 +506,15 @@ export async function fetchTomorrowsWork() {
   );
 
   return { success: true, tomorrowDate: tomorrowStr, groups };
+}
+
+export async function fetchVillageSchedule() {
+  return await getVillageSchedule();
+}
+
+export async function saveVillageSchedule(schedule: VillageSchedule) {
+  const res = await updateVillageSchedule(schedule);
+  revalidatePath("/villages");
+  revalidatePath("/");
+  return res;
 }
