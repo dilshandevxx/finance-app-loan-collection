@@ -304,60 +304,79 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                       <p className="text-xs text-gray-400 dark:text-white/30 text-center font-medium">No tasks scheduled for today</p>
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-3">
-                      {todayTasks.map(({ inst, customer }) => (
-                        <div key={inst.id} className="p-4 rounded-2xl bg-gray-50/50 dark:bg-muted/30 border border-gray-100 dark:border-border/50 flex flex-col gap-3">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full border border-gray-100 dark:border-border overflow-hidden relative shrink-0 bg-gray-100">
-                                <img 
-                                  src={customer?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer?.name || "")}`} 
-                                  alt={customer?.name} 
-                                  className="w-full h-full object-cover" 
-                                />
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="font-bold text-sm text-black dark:text-white">{customer?.name}</span>
-                                <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
-                              </div>
+                    <div className="flex flex-col gap-5">
+                      {todaysVillages.map(village => {
+                        const villageTasks = todayTasks.filter(t => t.customer?.state === village);
+                        if (villageTasks.length === 0) return null;
+                        
+                        return (
+                          <div key={village} className="flex flex-col gap-2.5">
+                            {/* Village Header */}
+                            <div className="flex items-center justify-between px-1">
+                              <span className="bg-primary/10 text-primary border border-primary/20 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
+                                📍 {village}
+                              </span>
+                              <span className="text-[11px] text-gray-500 font-bold">{villageTasks.length} collections</span>
                             </div>
-                            <span className="text-sm font-black text-primary">{formatLKR(inst.amount)}</span>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-border/50">
-                            <span className="text-xs text-primary font-bold bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md">
-                              Due Today
-                            </span>
                             
-                            <div className="flex items-center gap-2">
-                              <a 
-                                href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
-                                title="Call Customer"
-                              >
-                                <Phone className="w-3.5 h-3.5" />
-                              </a>
-                              <a 
-                                href={`https://wa.me/${phoneToDial(customer?.phone || '')}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
-                                title="WhatsApp Customer"
-                              >
-                                <MessageSquare className="w-3.5 h-3.5" />
-                              </a>
-                              <Link 
-                                href={`/customers/${customer?.id}`}
-                                onClick={() => setIsOpen(false)}
-                                className="px-2.5 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-black flex items-center gap-1 transition-colors"
-                              >
-                                Collect
-                                <ArrowRight className="w-3 h-3" />
-                              </Link>
+                            {/* Village Tasks */}
+                            <div className="flex flex-col gap-3">
+                              {villageTasks.map(({ inst, customer }) => (
+                                <div key={inst.id} className="p-3.5 rounded-2xl bg-gray-50/50 dark:bg-muted/30 border border-gray-100 dark:border-border/50 flex flex-col gap-3">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-9 h-9 rounded-full border border-gray-100 dark:border-border overflow-hidden relative shrink-0 bg-gray-100">
+                                        <img 
+                                          src={customer?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer?.name || "")}`} 
+                                          alt={customer?.name} 
+                                          className="w-full h-full object-cover" 
+                                        />
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="font-bold text-sm text-black dark:text-white">{customer?.name}</span>
+                                        <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
+                                      </div>
+                                    </div>
+                                    <span className="text-sm font-black text-primary">{formatLKR(inst.amount)}</span>
+                                  </div>
+
+                                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-border/50">
+                                    <span className="text-[10px] text-primary font-bold bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
+                                      Due Today
+                                    </span>
+                                    
+                                    <div className="flex items-center gap-2">
+                                      <a 
+                                        href={`tel:${customer?.phone}`}
+                                        className="w-7 h-7 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
+                                        title="Call Customer"
+                                      >
+                                        <Phone className="w-3.5 h-3.5" />
+                                      </a>
+                                      <a 
+                                        href={`https://wa.me/${phoneToDial(customer?.phone || '')}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-7 h-7 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
+                                        title="WhatsApp Customer"
+                                      >
+                                        <MessageSquare className="w-3.5 h-3.5" />
+                                      </a>
+                                      <Link 
+                                        href={`/customers/${customer?.id}`}
+                                        onClick={() => setIsOpen(false)}
+                                        className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-[11px] font-black flex items-center gap-1 transition-colors"
+                                      >
+                                        Collect <ArrowRight className="w-3 h-3" />
+                                      </Link>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -376,57 +395,78 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                       </p>
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-5">
                       {/* Advance Warning Informational Banner */}
-                      <div className="p-3 rounded-xl bg-indigo-50/40 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-950/20 text-xs text-indigo-700 dark:text-indigo-400 font-medium">
-                        💡 <strong>Pre-collection alert:</strong> Remind these customers today to prepare tomorrow's installment payment!
+                      <div className="p-3.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/30 text-xs text-indigo-700 dark:text-indigo-400 font-medium flex items-start gap-2 shadow-sm shadow-indigo-100/20">
+                        <span className="text-base leading-none">💡</span> 
+                        <span className="pt-0.5"><strong>Pre-collection alert:</strong> Remind these customers today to prepare tomorrow's installment payment!</span>
                       </div>
 
-                      {tomorrowTasks.map(({ inst, customer }) => (
-                        <div key={inst.id} className="p-4 rounded-2xl bg-gray-50/30 dark:bg-card/50 border border-gray-100 dark:border-border/40 flex flex-col gap-3">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full border border-gray-100/50 dark:border-border/30 overflow-hidden relative shrink-0 bg-gray-100/50">
-                                <img 
-                                  src={customer?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer?.name || "")}`} 
-                                  alt={customer?.name} 
-                                  className="w-full h-full object-cover" 
-                                />
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="font-bold text-sm text-black dark:text-white">{customer?.name}</span>
-                                <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
-                              </div>
+                      {tomorrowsVillages.map(village => {
+                        const villageTasks = tomorrowTasks.filter(t => t.customer?.state === village);
+                        if (villageTasks.length === 0) return null;
+                        
+                        return (
+                          <div key={village} className="flex flex-col gap-2.5">
+                            {/* Village Header */}
+                            <div className="flex items-center justify-between px-1">
+                              <span className="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
+                                📍 {village}
+                              </span>
+                              <span className="text-[11px] text-gray-500 font-bold">{villageTasks.length} reminders</span>
                             </div>
-                            <span className="text-sm font-black text-indigo-500">{formatLKR(inst.amount)}</span>
-                          </div>
 
-                          <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100/50 dark:border-border/20">
-                            <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wide">
-                              Tomorrow
-                            </span>
-                            
-                            <div className="flex items-center gap-2">
-                              <a 
-                                href={`tel:${customer?.phone}`}
-                                className="w-8 h-8 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
-                                title="Call Customer"
-                              >
-                                <Phone className="w-3.5 h-3.5" />
-                              </a>
-                              <a 
-                                href={`https://wa.me/${phoneToDial(customer?.phone || '')}?text=${encodeURIComponent(`Hello ${customer?.name}, this is a gentle reminder that your installment payment of ${formatLKR(inst.amount)} is scheduled for tomorrow. Thank you!`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold flex items-center gap-1.5 transition-colors"
-                              >
-                                <MessageSquare className="w-3 h-3" />
-                                Remind
-                              </a>
+                            {/* Village Tasks */}
+                            <div className="flex flex-col gap-3">
+                              {villageTasks.map(({ inst, customer }) => (
+                                <div key={inst.id} className="p-3.5 rounded-2xl bg-gray-50/30 dark:bg-card/50 border border-gray-100 dark:border-border/40 flex flex-col gap-3">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-9 h-9 rounded-full border border-gray-100/50 dark:border-border/30 overflow-hidden relative shrink-0 bg-gray-100/50">
+                                        <img 
+                                          src={customer?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer?.name || "")}`} 
+                                          alt={customer?.name} 
+                                          className="w-full h-full object-cover" 
+                                        />
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="font-bold text-sm text-black dark:text-white">{customer?.name}</span>
+                                        <span className="text-[11px] text-gray-400 dark:text-white/40">ID: {customer?.memberId || customer?.id}</span>
+                                      </div>
+                                    </div>
+                                    <span className="text-sm font-black text-indigo-500">{formatLKR(inst.amount)}</span>
+                                  </div>
+
+                                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100/50 dark:border-border/20">
+                                    <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wide">
+                                      Tomorrow
+                                    </span>
+                                    
+                                    <div className="flex items-center gap-2">
+                                      <a 
+                                        href={`tel:${customer?.phone}`}
+                                        className="w-7 h-7 rounded-lg bg-white dark:bg-card border border-gray-200 dark:border-border flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-primary transition-colors"
+                                        title="Call Customer"
+                                      >
+                                        <Phone className="w-3.5 h-3.5" />
+                                      </a>
+                                      <a 
+                                        href={`https://wa.me/${phoneToDial(customer?.phone || '')}?text=${encodeURIComponent(`Hello ${customer?.name}, this is a gentle reminder that your installment payment of ${formatLKR(inst.amount)} is scheduled for tomorrow. Thank you!`)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[11px] font-bold flex items-center gap-1.5 transition-colors"
+                                      >
+                                        <MessageSquare className="w-3 h-3" />
+                                        Remind
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
