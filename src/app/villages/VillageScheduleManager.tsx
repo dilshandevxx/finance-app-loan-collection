@@ -19,9 +19,9 @@ export default function VillageScheduleManager({ availableVillages, initialSched
 
   const toggleVillage = (day: string, village: string) => {
     setSchedule(prev => {
-      const dayVillages = prev[day] || [];
+      const dayVillages: string[] = prev[day] || [];
       const newVillages = dayVillages.includes(village)
-        ? dayVillages.filter(v => v !== village)
+        ? dayVillages.filter((v: string) => v !== village)
         : [...dayVillages, village];
       return { ...prev, [day]: newVillages };
     });
