@@ -60,7 +60,7 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between mb-5 pt-2 px-1">
+    <header className="flex items-center justify-between pt-2 px-1">
       <div className="flex items-center gap-3.5">
         {/* Profile Avatar / Initial */}
         <div className="relative">
@@ -75,7 +75,7 @@ export function DashboardHeader({
 
         <div className="flex flex-col">
           <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
-            Welcome back
+            {greeting}
           </p>
           <h1 className="text-xl font-bold text-foreground tracking-tight leading-none">
             {agentName.split(" ")[0]}
