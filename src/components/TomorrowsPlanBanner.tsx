@@ -18,12 +18,22 @@ export function TomorrowsPlanBanner({ installments, customers, loans }: Props) {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // 1. Check if it's past 4:00 PM (16:00)
-    const currentHour = new Date().getHours();
-    if (currentHour >= 16) {
-      setShowBanner(true);
-      fetchVillageSchedule().then(setSchedule);
-    }
+    fetchVillageSchedule().then(fetchedSchedule => {
+      setSchedule(fetchedSchedule);
+      
+      // Parse notification time (default 16:00)
+      const timeStr = fetchedSchedule.notificationTime || "16:00";
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      
+      const now = new Date();
+      const notifyTime = new Date();
+      notifyTime.setHours(hours, minutes, 0, 0);
+      
+      // Show banner if current time is past the configured notification time
+      if (now >= notifyTime) {
+        setShowBanner(true);
+      }
+    });
   }, []);
 
   if (!showBanner || !schedule) return null;

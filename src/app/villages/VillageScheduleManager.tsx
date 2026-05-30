@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { saveVillageSchedule } from "@/app/actions";
-import { Loader2, Calendar, MapPin, Check } from "lucide-react";
+import { Loader2, Calendar, MapPin, Check, Clock } from "lucide-react";
 import { VillageSchedule, defaultVillageSchedule } from "@/lib/schedule";
 
 const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -25,6 +25,10 @@ export default function VillageScheduleManager({ availableVillages, initialSched
         : [...dayVillages, village];
       return { ...prev, [day]: newVillages };
     });
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSchedule(prev => ({ ...prev, notificationTime: e.target.value }));
   };
 
   const handleSave = () => {
@@ -58,10 +62,27 @@ export default function VillageScheduleManager({ availableVillages, initialSched
       </div>
 
       {saveMessage && (
-        <div className={`p-3 rounded-lg text-sm font-medium ${saveMessage.includes("success") ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-red-500/10 text-red-600 dark:text-red-400"}`}>
+        <div className={`p-4 rounded-xl text-sm font-bold flex items-center gap-2 ${saveMessage.includes("success") ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30" : "bg-red-500/15 text-red-700 dark:text-red-400 border border-red-500/30"}`}>
+          {saveMessage.includes("success") ? <Check className="w-5 h-5" /> : null}
           {saveMessage}
         </div>
       )}
+
+      <div className="bg-secondary/30 p-4 rounded-2xl border border-border flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h3 className="font-bold text-foreground flex items-center gap-2">
+            <Clock className="w-4 h-4 text-primary" />
+            Notification Time
+          </h3>
+          <p className="text-xs text-muted-foreground mt-0.5">When should we show tomorrow's plan banner on the dashboard?</p>
+        </div>
+        <input 
+          type="time" 
+          value={schedule.notificationTime || "16:00"} 
+          onChange={handleTimeChange}
+          className="bg-background border border-border rounded-xl px-4 py-2 text-sm font-bold focus:ring-2 focus:ring-primary focus:outline-none"
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {DAYS_OF_WEEK.map(day => (
