@@ -310,7 +310,7 @@ export async function getCustomerNotes(customerId: string): Promise<CustomerNote
 
 export async function getSystemVillages(): Promise<string[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("system_settings")
     .select("value")
     .eq("key", "villages")
@@ -326,7 +326,7 @@ export async function getSystemVillages(): Promise<string[]> {
   }
 
   const { data: customerData, error: custError } = await supabase.from("customers").select("address");
-  let customerVillages: string[] = [];
+  const customerVillages: string[] = [];
   if (!custError && customerData) {
     customerData.forEach(row => {
       if (row.address && row.address.trim().startsWith("{")) {

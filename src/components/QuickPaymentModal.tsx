@@ -16,6 +16,31 @@ type QuickPaymentModalProps = {
   onConfirm: (amount: number) => Promise<void>;
 };
 
+type ReceiptDetails = {
+  installment: {
+    id: string;
+    amount: number;
+    dueDate: string;
+    paidDate?: string;
+    status: string;
+    index: number;
+    totalCount: number;
+  };
+  loan: {
+    id: string;
+    principalAmount: number;
+    totalAmountDue: number;
+    remainingBalance: number;
+    weeklyInstallment: number;
+    totalPaid: number;
+  };
+  customer: {
+    name: string;
+    phone: string;
+    memberId?: string;
+  };
+};
+
 export function QuickPaymentModal({
   customer,
   expectedAmount,
@@ -28,17 +53,20 @@ export function QuickPaymentModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isOfflineSaved, setIsOfflineSaved] = useState(false);
-  const [receiptData, setReceiptData] = useState<any>(null);
+  const [receiptData, setReceiptData] = useState<ReceiptDetails | null>(null);
   const [isSharingPdf, setIsSharingPdf] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setAmount(expectedAmount.toString());
-      setIsSuccess(false);
-      setIsOfflineSaved(false);
-      setIsProcessing(false);
-      setReceiptData(null);
-      setIsSharingPdf(false);
+      const handle = requestAnimationFrame(() => {
+        setAmount(expectedAmount.toString());
+        setIsSuccess(false);
+        setIsOfflineSaved(false);
+        setIsProcessing(false);
+        setReceiptData(null);
+        setIsSharingPdf(false);
+      });
+      return () => cancelAnimationFrame(handle);
     }
   }, [isOpen, expectedAmount]);
 

@@ -4,15 +4,30 @@ import { useState, useEffect } from "react";
 import { X, Download, Share2, PlusSquare } from "lucide-react";
 import { config } from "@/lib/config";
 
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+  prompt(): Promise<void>;
+}
+
+interface CustomWindow extends Window {
+  MSStream?: unknown;
+  deferredPrompt?: BeforeInstallPromptEvent;
+}
+
+interface NavigatorStandalone extends Navigator {
+  standalone?: boolean;
+}
+
 export function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [platform, setPlatform] = useState<"ios" | "android" | "other">("other");
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
     // 1. Check if already running in standalone mode (already installed)
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches 
-      || (window.navigator as any).standalone === true;
+      || (window.navigator as NavigatorStandalone).standalone === true;
     
     if (isStandalone) return;
 
@@ -23,8 +38,9 @@ export function InstallPrompt() {
     // 3. Listen for Android/Chrome PWA prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
-      (window as any).deferredPrompt = e;
+      const promptEvent = e as BeforeInstallPromptEvent;
+      setDeferredPrompt(promptEvent);
+      (window as unknown as CustomWindow).deferredPrompt = promptEvent;
       setPlatform("android");
       setShowPrompt(true);
       window.dispatchEvent(new CustomEvent("pwa-prompt-available"));
@@ -34,10 +50,12 @@ export function InstallPrompt() {
 
     // 4. Detect iOS
     const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) 
-      && !(window as any).MSStream;
+      && !(window as unknown as CustomWindow).MSStream;
     
     if (isIos) {
-      setPlatform("ios");
+      requestAnimationFrame(() => {
+        setPlatform("ios");
+      });
       // Add a slight delay for better UX
       const timer = setTimeout(() => {
         setShowPrompt(true);
@@ -102,7 +120,7 @@ export function InstallPrompt() {
                   Tap the share button <Share2 className="w-3.5 h-3.5 text-blue-400 inline" /> below
                 </li>
                 <li className="flex items-center gap-1.5">
-                  Select <span className="text-gray-200">"Add to Home Screen"</span> <PlusSquare className="w-3.5 h-3.5 text-gray-200 inline" />
+                  Select <span className="text-gray-200">&quot;Add to Home Screen&quot;</span> <PlusSquare className="w-3.5 h-3.5 text-gray-200 inline" />
                 </li>
               </ol>
             </div>

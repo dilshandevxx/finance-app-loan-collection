@@ -22,33 +22,35 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const [greeting, setGreeting] = useState("Hello,");
   const [formattedDate, setFormattedDate] = useState("");
-  const [Icon, setIcon] = useState<React.ComponentType<any>>(Sun);
+  const [Icon, setIcon] = useState<React.ComponentType<{ className?: string }>>(Sun);
   const [iconClass, setIconClass] = useState("");
 
   useEffect(() => {
-    // Determine greeting based on local time
-    const hour = new Date().getHours();
-    if (hour < 12) {
-      setGreeting("Good morning,");
-      setIcon(() => Sun);
-      setIconClass("text-amber-600 bg-amber-500/10 border-amber-500/20 dark:text-amber-400 dark:bg-amber-500/5 dark:border-amber-500/10");
-    } else if (hour < 18) {
-      setGreeting("Good afternoon,");
-      setIcon(() => CloudSun);
-      setIconClass("text-primary bg-primary/10 border-primary/20 dark:bg-primary/5 dark:border-primary/10");
-    } else {
-      setGreeting("Good evening,");
-      setIcon(() => Moon);
-      setIconClass("text-orange-500 bg-orange-500/10 border-orange-500/20 dark:text-orange-400 dark:bg-orange-500/5 dark:border-orange-500/10");
-    }
+    requestAnimationFrame(() => {
+      // Determine greeting based on local time
+      const hour = new Date().getHours();
+      if (hour < 12) {
+        setGreeting("Good morning,");
+        setIcon(() => Sun);
+        setIconClass("text-amber-600 bg-amber-500/10 border-amber-500/20 dark:text-amber-400 dark:bg-amber-500/5 dark:border-amber-500/10");
+      } else if (hour < 18) {
+        setGreeting("Good afternoon,");
+        setIcon(() => CloudSun);
+        setIconClass("text-primary bg-primary/10 border-primary/20 dark:bg-primary/5 dark:border-primary/10");
+      } else {
+        setGreeting("Good evening,");
+        setIcon(() => Moon);
+        setIconClass("text-orange-500 bg-orange-500/10 border-orange-500/20 dark:text-orange-400 dark:bg-orange-500/5 dark:border-orange-500/10");
+      }
 
-    // Format date: e.g. "Thu, May 28"
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    };
-    setFormattedDate(new Date().toLocaleDateString("en-US", options));
+      // Format date: e.g. "Thu, May 28"
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      };
+      setFormattedDate(new Date().toLocaleDateString("en-US", options));
+    });
   }, []);
 
   useEffect(() => {

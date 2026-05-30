@@ -4,7 +4,7 @@ import { useState, useActionState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createLoan, createSystemVillage } from "@/app/actions";
-import { User, Hash, Phone, DollarSign, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
+import { User, Hash, Phone, Percent, CalendarDays, CheckCircle2, AlertCircle, ChevronDown, MapPin, Camera, Building } from "lucide-react";
 import { formatLKR } from "@/lib/format";
 import type { VillageSchedule } from "@/lib/schedule";
 
@@ -79,7 +79,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
       } else {
         setModalError(res.error || "Failed to add village.");
       }
-    } catch (err) {
+    } catch {
       setModalError("An unexpected error occurred.");
     } finally {
       setModalIsAdding(false);
@@ -107,7 +107,7 @@ export function NewLoanForm({ customers, villages, schedule }: { customers: Cust
       .toUpperCase()
       .slice(0, 3);
 
-    let parts = ["M"];
+    const parts = ["M"];
     if (initials) parts.push(initials);
     if (statePrefix) parts.push(statePrefix);
     parts.push(randomSuffix.toString());

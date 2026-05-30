@@ -32,7 +32,7 @@ function formatPaidDate(paidDateStr?: string): string {
     } else {
       return `PAID (${month}/${day})`;
     }
-  } catch (e) {
+  } catch {
     return "PAID";
   }
 }
@@ -715,6 +715,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                     contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', color: 'var(--foreground)' }}
                     itemStyle={{ fontWeight: 'bold' }}
                     labelStyle={{ color: 'var(--muted-foreground)', marginBottom: '8px', fontSize: '12px' }}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     formatter={(value: any) => [formatLKR(Number(value)), undefined]}
                     cursor={{ stroke: 'var(--border)', strokeWidth: 1.5 }}
                   />

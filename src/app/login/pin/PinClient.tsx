@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Delete, Lock } from "lucide-react";
 import { loginWithPin, setupAgentPin } from "@/app/auth-actions";
-import { config } from "@/lib/config";
 
 export default function PinClient({ isSetup, agentName }: { isSetup: boolean, agentName: string }) {
   const [pin, setPin] = useState("");
@@ -11,13 +10,13 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const triggerHaptic = (type: "light" | "error" | "success") => {
+  const triggerHaptic = useCallback((type: "light" | "error" | "success") => {
     if (typeof window !== "undefined" && navigator.vibrate) {
       if (type === "light") navigator.vibrate(25);
       else if (type === "error") navigator.vibrate([50, 50, 50]);
       else if (type === "success") navigator.vibrate([40, 30, 40]);
     }
-  };
+  }, []);
 
   const handleNumberClick = (num: number) => {
     if (pin.length < 4) {
@@ -33,11 +32,7 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
     setError(false);
   };
 
-  useEffect(() => {
-    if (pin.length === 4) handleAction();
-  }, [pin]);
-
-  const handleAction = async () => {
+  const handleAction = useCallback(async () => {
     setLoading(true);
     try {
       await new Promise(r => setTimeout(r, 600));
@@ -61,7 +56,15 @@ export default function PinClient({ isSetup, agentName }: { isSetup: boolean, ag
       setPin("");
       setLoading(false);
     }
-  };
+  }, [isSetup, pin, router, triggerHaptic]);
+
+  useEffect(() => {
+    if (pin.length === 4) {
+      requestAnimationFrame(() => {
+        handleAction();
+      });
+    }
+  }, [pin, handleAction]);
 
   const keypadLetters: Record<number, string> = {
     1: " ", 2: "ABC", 3: "DEF",

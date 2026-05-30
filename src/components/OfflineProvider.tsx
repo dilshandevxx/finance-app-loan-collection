@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { markInstallmentPaid } from "@/app/actions";
-import { Wifi, WifiOff, Loader2, CheckCircle } from "lucide-react";
+import { WifiOff, Loader2, CheckCircle } from "lucide-react";
 
 export function OfflineProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -25,7 +25,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
           setQueueLength(0);
           return 0;
         }
-      } catch (e) {
+      } catch {
         setQueueLength(0);
         return 0;
       }
@@ -34,9 +34,11 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    // Initial check
-    setIsOffline(!navigator.onLine);
-    updateQueueLength();
+    const handle = requestAnimationFrame(() => {
+      // Initial check
+      setIsOffline(!navigator.onLine);
+      updateQueueLength();
+    });
 
     const triggerSync = async () => {
       if (!navigator.onLine || syncingRef.current) return;
@@ -130,12 +132,13 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
     }
 
     return () => {
+      cancelAnimationFrame(handle);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("offline-queue-updated", handleQueueUpdated);
       clearInterval(interval);
     };
-  }, []);
+  }, [router]);
 
   return (
     <>

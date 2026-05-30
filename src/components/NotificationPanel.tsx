@@ -14,16 +14,15 @@ type NotificationPanelProps = {
   installments: Installment[];
 };
 
+type TaskItem = {
+  inst: Installment;
+  loan: Loan | undefined;
+  customer: Customer;
+};
+
 export function NotificationPanel({ customers, loans, installments }: NotificationPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Time-zone safe day matching helper
-  const isSameDay = (d1Str: string, d2Date: Date) => {
-    const d1 = new Date(d1Str);
-    return d1.getFullYear() === d2Date.getFullYear() &&
-           d1.getMonth() === d2Date.getMonth() &&
-           d1.getDate() === d2Date.getDate();
-  };
 
   const isBeforeDay = (d1Str: string, d2Date: Date) => {
     const d1 = new Date(d1Str);
@@ -72,7 +71,8 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
   
   // -- Today Logic --
   const todayDay = days[today.getDay()];
-  const todaysVillages = schedule?.[todayDay] || [];
+  const todaysVillagesRaw = schedule?.[todayDay];
+  const todaysVillages = Array.isArray(todaysVillagesRaw) ? todaysVillagesRaw : [];
   
   const relevantTodayCustomerIds = new Set(
     customers.filter(c => c.state && todaysVillages.includes(c.state)).map(c => c.id)
@@ -81,7 +81,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
     loans.filter(l => l.status === "ACTIVE" && relevantTodayCustomerIds.has(l.customerId)).map(l => l.id)
   );
 
-  let todayTasks: any[] = [];
+  let todayTasks: TaskItem[] = [];
   if (schedule) {
     const todayTargetInsts: Installment[] = [];
     for (const loanId of relevantTodayLoanIds) {
@@ -102,14 +102,15 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
       .map(inst => {
         const loan = loans.find(l => l.id === inst.loanId);
         const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
-        return { inst, loan, customer };
+        return { inst, loan, customer } as TaskItem;
       })
-      .filter(item => item.customer !== null);
+      .filter((item): item is TaskItem => item.customer !== null);
   }
 
   // -- Tomorrow Logic --
   const tomorrowDay = days[tomorrow.getDay()];
-  const tomorrowsVillages = schedule?.[tomorrowDay] || [];
+  const tomorrowsVillagesRaw = schedule?.[tomorrowDay];
+  const tomorrowsVillages = Array.isArray(tomorrowsVillagesRaw) ? tomorrowsVillagesRaw : [];
 
   const relevantTomorrowCustomerIds = new Set(
     customers
@@ -123,7 +124,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
       .map(l => l.id)
   );
 
-  let tomorrowTasks: any[] = [];
+  let tomorrowTasks: TaskItem[] = [];
   
   if (showTomorrowPlan && schedule) {
     const tomorrowTargetInsts: Installment[] = [];
@@ -148,9 +149,9 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
       .map(inst => {
         const loan = loans.find(l => l.id === inst.loanId);
         const customer = loan ? customers.find(c => c.id === loan.customerId) : null;
-        return { inst, loan, customer };
+        return { inst, loan, customer } as TaskItem;
       })
-      .filter(item => item.customer !== null);
+      .filter((item): item is TaskItem => item.customer !== null);
   }
 
   const totalCount = overdueList.length + todayTasks.length + tomorrowTasks.length;
@@ -207,7 +208,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
               <div className="px-5 py-4 border-b border-gray-100 dark:border-border flex items-center justify-between bg-gray-50/50 dark:bg-muted/30">
                 <div className="flex items-center gap-2">
                   <Bell className="w-5 h-5 text-primary" />
-                  <h2 className="font-extrabold text-lg text-black dark:text-white tracking-tight">Today's Schedule & Tasks</h2>
+                  <h2 className="font-extrabold text-lg text-black dark:text-white tracking-tight">Today&apos;s Schedule &amp; Tasks</h2>
                 </div>
                 <button 
                   onClick={() => setIsOpen(false)}
@@ -296,7 +297,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                 <div className="flex flex-col gap-2.5">
                   <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-wider px-1">
                     <Clock className="w-3.5 h-3.5 text-primary" />
-                    <span>Today's Tasks ({todayTasks.length})</span>
+                    <span>Today&apos;s Tasks ({todayTasks.length})</span>
                   </div>
                   
                   {todayTasks.length === 0 ? (
@@ -385,7 +386,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                 <div className="flex flex-col gap-2.5">
                   <div className="flex items-center gap-2 text-indigo-500 font-bold text-xs uppercase tracking-wider px-1">
                     <Calendar className="w-3.5 h-3.5" />
-                    <span>Tomorrow's Schedule ({tomorrowTasks.length})</span>
+                    <span>Tomorrow&apos;s Schedule ({tomorrowTasks.length})</span>
                   </div>
                   
                   {tomorrowTasks.length === 0 ? (
@@ -399,7 +400,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                       {/* Advance Warning Informational Banner */}
                       <div className="p-3.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/30 text-xs text-indigo-700 dark:text-indigo-400 font-medium flex items-start gap-2 shadow-sm shadow-indigo-100/20">
                         <span className="text-base leading-none">💡</span> 
-                        <span className="pt-0.5"><strong>Pre-collection alert:</strong> Remind these customers today to prepare tomorrow's installment payment!</span>
+                        <span className="pt-0.5"><strong>Pre-collection alert:</strong> Remind these customers today to prepare tomorrow&apos;s installment payment!</span>
                       </div>
 
                       {tomorrowsVillages.map((village: string) => {

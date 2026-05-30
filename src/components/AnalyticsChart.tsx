@@ -30,7 +30,10 @@ export function AnalyticsChart() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   if (!mounted) return <div className="h-[200px] w-full animate-pulse bg-secondary rounded-2xl" />;
 

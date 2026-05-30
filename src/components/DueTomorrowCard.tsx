@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, AlertCircle } from "lucide-react";
+import { Clock } from "lucide-react";
 import { Customer, Installment, Loan } from "@/data/db";
 import { formatLKR } from "@/lib/format";
 

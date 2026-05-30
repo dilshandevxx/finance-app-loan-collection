@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useTransition, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,10 +49,14 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   };
 
   useEffect(() => {
-    loadFromCache();
+    requestAnimationFrame(() => {
+      loadFromCache();
+    });
 
     const handleCacheUpdated = () => {
-      loadFromCache();
+      requestAnimationFrame(() => {
+        loadFromCache();
+      });
     };
     window.addEventListener("local-cache-updated", handleCacheUpdated);
     return () => {
@@ -62,9 +65,11 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   }, []);
 
   useEffect(() => {
-    setLocalCustomers(customers);
-    setLocalLoans(loans);
-    setLocalInstallments(pendingInstallments);
+    requestAnimationFrame(() => {
+      setLocalCustomers(customers);
+      setLocalLoans(loans);
+      setLocalInstallments(pendingInstallments);
+    });
   }, [customers, loans, pendingInstallments]);
 
   const villages = React.useMemo(() => Array.from(
@@ -147,7 +152,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     setSelectedPayment({ customer, installmentId, expectedAmount });
   }, []);
 
-  const handleConfirmPayment = (amount: number): Promise<void> => {
+  const handleConfirmPayment = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!selectedPayment) return resolve();
       
@@ -168,8 +173,9 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             await markInstallmentPaid(selectedPayment.installmentId);
             resolve();
           }
-        } catch (err: any) {
-          if (err?.message?.includes("fetch") || err?.message?.includes("network")) {
+        } catch (err) {
+          const error = err as Error;
+          if (error?.message?.includes("fetch") || error?.message?.includes("network")) {
             const queueStr = localStorage.getItem("offlineSyncQueue");
             const queue = queueStr ? JSON.parse(queueStr) : [];
             queue.push({
@@ -264,7 +270,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                 <CheckCircle2 className="w-6 h-6 text-muted-foreground/40" />
               </div>
               <h4 className="text-foreground font-semibold mb-1">No pending collections</h4>
-              <p className="text-muted-foreground text-sm">You're all caught up for the day.</p>
+              <p className="text-muted-foreground text-sm">You&apos;re all caught up for the day.</p>
             </div>
           ) : (
             <div className="divide-y divide-border">

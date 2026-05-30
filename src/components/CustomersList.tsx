@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,21 +38,27 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   };
 
   useEffect(() => {
-    loadFromCache();
+    const handle = requestAnimationFrame(() => {
+      loadFromCache();
+    });
 
     const handleCacheUpdated = () => {
       loadFromCache();
     };
     window.addEventListener("local-cache-updated", handleCacheUpdated);
     return () => {
+      cancelAnimationFrame(handle);
       window.removeEventListener("local-cache-updated", handleCacheUpdated);
     };
   }, []);
 
   useEffect(() => {
-    setLocalCustomers(customers);
-    setLocalLoans(loans);
-    setLocalInstallments(installments);
+    const handle = requestAnimationFrame(() => {
+      setLocalCustomers(customers);
+      setLocalLoans(loans);
+      setLocalInstallments(installments);
+    });
+    return () => cancelAnimationFrame(handle);
   }, [customers, loans, installments]);
 
   useEffect(() => {
@@ -202,13 +207,13 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
               </p>
               {searchQuery && (
                 <p className="text-xs text-gray-400 dark:text-white/30">
-                  Try adjusting your search query "{searchQuery}"
+                  Try adjusting your search query &quot;{searchQuery}&quot;
                 </p>
               )}
             </div>
           </div>
         ) : (
-          displayCustomers.map((customer, i) => {
+          displayCustomers.map((customer) => {
             const customerLoans = localLoans.filter(l => l.customerId === customer.id);
             const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
             const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);

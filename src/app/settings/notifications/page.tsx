@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ChevronLeft, Bell, MessageSquare, Mail, Smartphone,
-  MapPin, User, Phone, AlertCircle, CheckCircle2, Loader2,
-  CalendarClock, ChevronRight, Banknote
+  MapPin, Phone, CheckCircle2, Loader2,
+  CalendarClock, ChevronRight
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { fetchTomorrowsWork } from "@/app/actions";
@@ -78,7 +78,7 @@ export default function NotificationsPage() {
         <div className="flex items-center gap-2 mb-3 px-1">
           <CalendarClock className="w-4 h-4 text-primary" />
           <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            Tomorrow's Work Plan
+            Tomorrow&apos;s Work Plan
           </h2>
         </div>
 
@@ -86,7 +86,7 @@ export default function NotificationsPage() {
           <Card className="bg-card border-border rounded-2xl">
             <CardContent className="p-8 flex flex-col items-center justify-center gap-3">
               <Loader2 className="w-6 h-6 text-primary animate-spin" />
-              <p className="text-sm text-muted-foreground">Loading tomorrow's schedule...</p>
+              <p className="text-sm text-muted-foreground">Loading tomorrow&apos;s schedule...</p>
             </CardContent>
           </Card>
         ) : groups.length === 0 ? (

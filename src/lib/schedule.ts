@@ -7,7 +7,7 @@ export interface VillageSchedule {
   Friday?: string[];
   Saturday?: string[];
   Sunday?: string[];
-  [key: string]: any;
+  [key: string]: string[] | string | undefined;
 }
 
 export const defaultVillageSchedule: VillageSchedule = {

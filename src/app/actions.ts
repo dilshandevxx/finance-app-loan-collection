@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { formatLKR, normalizePhone } from "@/lib/format";
 
@@ -263,7 +262,7 @@ export async function markInstallmentPaid(installmentId: string) {
 
 export async function addCustomerNote(customerId: string, note: string) {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("customer_notes")
     .insert({
       customer_id: customerId,
@@ -392,9 +391,10 @@ export async function clearAllData() {
     revalidatePath("/reports");
     
     return { success: true };
-  } catch (err: any) {
+  } catch (err) {
     console.error("Error in clearAllData action:", err);
-    return { success: false, error: err?.message || "Failed to clear database tables" };
+    const message = err instanceof Error ? err.message : "Failed to clear database tables";
+    return { success: false, error: message };
   }
 }
 
@@ -402,12 +402,10 @@ import { getSystemVillages, addSystemVillage, removeSystemVillage, getCompanySet
 import type { VillageSchedule } from "@/lib/schedule";
 
 export async function fetchSystemVillages() {
-  const supabase = await createClient();
   return await getSystemVillages();
 }
 
 export async function createSystemVillage(villageName: string) {
-  const supabase = await createClient();
   const res = await addSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
@@ -416,7 +414,6 @@ export async function createSystemVillage(villageName: string) {
 }
 
 export async function deleteSystemVillage(villageName: string) {
-  const supabase = await createClient();
   const res = await removeSystemVillage(villageName);
   revalidatePath("/settings");
   revalidatePath("/new");
@@ -426,12 +423,10 @@ export async function deleteSystemVillage(villageName: string) {
 }
 
 export async function fetchCompanySettings() {
-  const supabase = await createClient();
   return await getCompanySettings();
 }
 
 export async function saveCompanySettings(name: string, logo: string) {
-  const supabase = await createClient();
   const res = await updateCompanySettings(name, logo);
   revalidatePath("/settings");
   revalidatePath("/reports");

@@ -8,17 +8,19 @@ export function Greeting({ name }: { name: string }) {
   const [Icon, setIcon] = useState<React.ElementType>(Sun);
 
   useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) {
-      setGreeting("Good morning");
-      setIcon(() => Sun);
-    } else if (hour < 18) {
-      setGreeting("Good afternoon");
-      setIcon(() => CloudSun);
-    } else {
-      setGreeting("Good evening");
-      setIcon(() => Moon);
-    }
+    requestAnimationFrame(() => {
+      const hour = new Date().getHours();
+      if (hour < 12) {
+        setGreeting("Good morning");
+        setIcon(() => Sun);
+      } else if (hour < 18) {
+        setGreeting("Good afternoon");
+        setIcon(() => CloudSun);
+      } else {
+        setGreeting("Good evening");
+        setIcon(() => Moon);
+      }
+    });
   }, []);
 
   return (

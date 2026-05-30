@@ -32,11 +32,11 @@ type CustomerPaymentActionsProps = {
   nextInstallment?: Installment;
 };
 
-export function CustomerPaymentActions({ customer, loan, nextInstallment }: CustomerPaymentActionsProps) {
+export function CustomerPaymentActions({ customer, nextInstallment }: CustomerPaymentActionsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const handleConfirmPayment = (amount: number): Promise<void> => {
+  const handleConfirmPayment = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!nextInstallment) return resolve();
       

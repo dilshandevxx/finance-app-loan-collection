@@ -60,7 +60,7 @@ export async function getAgentPin(): Promise<string | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("user_profiles")
     .select("hashed_pin")
     .eq("id", user.id)

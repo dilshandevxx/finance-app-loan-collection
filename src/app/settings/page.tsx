@@ -24,10 +24,18 @@ import {
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
 import { logout, getUserProfile, updateUserProfileImage } from "@/app/auth-actions";
-import { clearAllData, fetchSystemVillages, createSystemVillage, fetchCompanySettings, saveCompanySettings } from "@/app/actions";
+import { clearAllData, fetchSystemVillages, fetchCompanySettings, saveCompanySettings } from "@/app/actions";
+
+interface DeferredPromptEvent extends Event {
+  prompt(): Promise<void>;
+  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
+
+interface CustomWindow extends Window {
+  deferredPrompt?: DeferredPromptEvent;
+}
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -72,14 +80,17 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    loadVillages();
-    loadCompanySettings();
-    getUserProfile().then(res => {
-      if (res) {
-        setUserProfile(res);
-      }
+    const handle = requestAnimationFrame(() => {
+      loadVillages();
+      loadCompanySettings();
+      getUserProfile().then(res => {
+        if (res) {
+          setUserProfile(res);
+        }
+      });
+      setThemeMounted(true);
     });
-    setThemeMounted(true);
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,30 +235,35 @@ export default function SettingsPage() {
 
   // PWA Installation states
   const [isInstalled, setIsInstalled] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<DeferredPromptEvent | null>(null);
   const [showTroubleshooting, setShowTroubleshooting] = useState(false);
 
   useEffect(() => {
-    const checkStandalone = () => {
-      const standalone = window.matchMedia("(display-mode: standalone)").matches 
-        || (window.navigator as any).standalone === true;
-      setIsInstalled(standalone);
-    };
+    const handle = requestAnimationFrame(() => {
+      const checkStandalone = () => {
+        const standalone = window.matchMedia("(display-mode: standalone)").matches 
+          || (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+        setIsInstalled(standalone);
+      };
 
-    checkStandalone();
+      checkStandalone();
 
-    if ((window as any).deferredPrompt) {
-      setDeferredPrompt((window as any).deferredPrompt);
-    }
+      const customWindow = window as unknown as CustomWindow;
+      if (customWindow.deferredPrompt) {
+        setDeferredPrompt(customWindow.deferredPrompt);
+      }
+    });
 
     const handlePrompt = () => {
-      if ((window as any).deferredPrompt) {
-        setDeferredPrompt((window as any).deferredPrompt);
+      const customWindow = window as unknown as CustomWindow;
+      if (customWindow.deferredPrompt) {
+        setDeferredPrompt(customWindow.deferredPrompt);
       }
     };
 
     window.addEventListener("pwa-prompt-available", handlePrompt);
     return () => {
+      cancelAnimationFrame(handle);
       window.removeEventListener("pwa-prompt-available", handlePrompt);
     };
   }, []);
@@ -278,7 +294,7 @@ export default function SettingsPage() {
     if (outcome === "accepted") {
       setIsInstalled(true);
       setDeferredPrompt(null);
-      (window as any).deferredPrompt = null;
+      (window as unknown as CustomWindow).deferredPrompt = undefined;
     }
   };
 
@@ -537,7 +553,7 @@ export default function SettingsPage() {
                     onClick={() => setShowTroubleshooting(!showTroubleshooting)}
                     className="flex-1 h-9 bg-secondary hover:bg-border/50 text-[11px] font-bold text-muted-foreground rounded-xl transition-all flex items-center justify-center gap-1.5 border border-border uppercase tracking-wide"
                   >
-                    <HelpCircle className="w-3.5 h-3.5" /> Can't Install?
+                    <HelpCircle className="w-3.5 h-3.5" /> Can&apos;t Install?
                   </button>
                 </div>
               )}
@@ -545,7 +561,7 @@ export default function SettingsPage() {
               {!isInstalled && showTroubleshooting && (
                 <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mt-2 text-left flex flex-col gap-3 animate-in fade-in slide-in-from-top-2">
                   <div className="flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-widest">
-                    <Info className="w-4 h-4" /> Why is "Install" hidden?
+                    <Info className="w-4 h-4" /> Why is &quot;Install&quot; hidden?
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Browsers enforce a 24-hour cooldown if you recently uninstalled. To bypass it:

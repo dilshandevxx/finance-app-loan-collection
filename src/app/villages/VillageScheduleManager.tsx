@@ -19,7 +19,8 @@ export default function VillageScheduleManager({ availableVillages, initialSched
 
   const toggleVillage = (day: string, village: string) => {
     setSchedule(prev => {
-      const dayVillages: string[] = prev[day] || [];
+      const val = prev[day];
+      const dayVillages = Array.isArray(val) ? val : [];
       const newVillages = dayVillages.includes(village)
         ? dayVillages.filter((v: string) => v !== village)
         : [...dayVillages, village];
@@ -74,7 +75,7 @@ export default function VillageScheduleManager({ availableVillages, initialSched
             <Clock className="w-4 h-4 text-primary" />
             Notification Time
           </h3>
-          <p className="text-xs text-muted-foreground mt-0.5">When should we show tomorrow's plan banner on the dashboard?</p>
+          <p className="text-xs text-muted-foreground mt-0.5">When should we show tomorrow&apos;s plan banner on the dashboard?</p>
         </div>
         <input 
           type="time" 
