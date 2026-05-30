@@ -1,5 +1,5 @@
 import { AlertCircle, Users } from "lucide-react";
-import { getCustomers, getInstallments, getLoans } from "@/data/db";
+import { getCustomers, getDashboardInstallments, getActiveLoans } from "@/data/db";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
 import Link from "next/link";
@@ -39,8 +39,8 @@ export default async function Home() {
 
   const [customers, loans, installments] = await Promise.all([
     getCustomers(),
-    getLoans(),
-    getInstallments(),
+    getActiveLoans(),
+    getDashboardInstallments(),
   ]);
 
   const pendingInstallments = installments.filter(i => i.status === "PENDING" || i.status === "MISSED");

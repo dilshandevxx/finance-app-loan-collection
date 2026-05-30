@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import * as XLSX from "xlsx";
 import { Download, Printer, Calendar, Table } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
@@ -323,8 +322,12 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     document.body.removeChild(link);
   };
 
-  const exportExcel = () => {
+  const exportExcel = async () => {
     if (filteredInstallments.length === 0) return alert("No data to export for this period.");
+    
+    // Dynamically import xlsx only when needed
+    const XLSX = await import("xlsx");
+    
     const uniqueLoanIds = Array.from(new Set(filteredInstallments.map(inst => inst.loanId)));
     
     // Aggregates for report header

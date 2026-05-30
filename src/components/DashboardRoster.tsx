@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import React, { useState, useTransition, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown } from "lucide-react";
@@ -67,15 +67,15 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     setLocalInstallments(pendingInstallments);
   }, [customers, loans, pendingInstallments]);
 
-  const villages = Array.from(
+  const villages = React.useMemo(() => Array.from(
     new Set(
       localCustomers
         .map(c => c.state)
         .filter((s): s is string => !!s && s.trim() !== "")
     )
-  ).sort();
+  ).sort(), [localCustomers]);
 
-  const filteredInstallments = localInstallments.filter((inst) => {
+  const filteredInstallments = React.useMemo(() => localInstallments.filter((inst) => {
     const loan = localLoans.find(l => l.id === inst.loanId);
     const customer = localCustomers.find(c => c.id === loan?.customerId);
     
@@ -94,10 +94,10 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     const stateMatch = customer.state?.toLowerCase().includes(query);
     
     return nameMatch || idMatch || stateMatch;
-  });
+  }), [localInstallments, localLoans, localCustomers, selectedVillage, searchQuery]);
 
   // Group the filtered installments by customer
-  const customerGroups = filteredInstallments.reduce((acc, inst) => {
+  const customerGroups = React.useMemo(() => filteredInstallments.reduce((acc, inst) => {
     const loan = localLoans.find(l => l.id === inst.loanId);
     const customer = localCustomers.find(c => c.id === loan?.customerId);
     
@@ -133,19 +133,19 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     totalAmount: number;
     isOverdue: boolean;
     oldestInstallment: Installment;
-  }>);
+  }>), [filteredInstallments, localLoans, localCustomers]);
 
   // Sort customer groups: overdue first, then by oldest installment date ascending
-  const sortedCustomerGroups = [...customerGroups].sort((a, b) => {
+  const sortedCustomerGroups = React.useMemo(() => [...customerGroups].sort((a, b) => {
     if (a.isOverdue && !b.isOverdue) return -1;
     if (!a.isOverdue && b.isOverdue) return 1;
     return new Date(a.oldestInstallment.dueDate).getTime() - new Date(b.oldestInstallment.dueDate).getTime();
-  });
+  }), [customerGroups]);
 
-  const handlePayClick = (e: React.MouseEvent, installmentId: string, customer: Customer, expectedAmount: number) => {
+  const handlePayClick = React.useCallback((e: React.MouseEvent, installmentId: string, customer: Customer, expectedAmount: number) => {
     e.preventDefault(); // Prevent navigating to customer details
     setSelectedPayment({ customer, installmentId, expectedAmount });
-  };
+  }, []);
 
   const handleConfirmPayment = (amount: number): Promise<void> => {
     return new Promise((resolve, reject) => {

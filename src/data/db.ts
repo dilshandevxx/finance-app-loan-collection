@@ -200,6 +200,74 @@ export async function getInstallments(): Promise<Installment[]> {
   }));
 }
 
+export async function getPendingInstallments(): Promise<Installment[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("installments")
+    .select("*")
+    .in("status", ["PENDING", "MISSED"])
+    .order("due_date", { ascending: true });
+  if (error) console.error("Error fetching pending installments:", error);
+  
+  return (data || []).map(row => ({
+    id: row.id,
+    loanId: row.loan_id,
+    amount: Number(row.amount),
+    dueDate: row.due_date,
+    paidDate: row.paid_date,
+    status: row.status,
+    createdAt: row.created_at
+  }));
+}
+
+export async function getDashboardInstallments(): Promise<Installment[]> {
+  const supabase = await createClient();
+  
+  // We need all PENDING and MISSED, plus any PAID today.
+  // Supabase OR query: status=in.(PENDING,MISSED) or (status=eq.PAID and paid_date=gte.TODAY)
+  // To keep it simple and safe across timezones, we fetch all PENDING/MISSED, 
+  // and fetch PAID installments separately for today, then combine them, OR we do an OR query.
+  
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  const { data, error } = await supabase.from("installments")
+    .select("*")
+    .or(`status.in.(PENDING,MISSED),and(status.eq.PAID,paid_date.gte.${todayStr})`)
+    .order("due_date", { ascending: true });
+    
+  if (error) console.error("Error fetching dashboard installments:", error);
+  
+  return (data || []).map(row => ({
+    id: row.id,
+    loanId: row.loan_id,
+    amount: Number(row.amount),
+    dueDate: row.due_date,
+    paidDate: row.paid_date,
+    status: row.status,
+    createdAt: row.created_at
+  }));
+}
+
+export async function getActiveLoans(): Promise<Loan[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("loans")
+    .select("*")
+    .eq("status", "ACTIVE")
+    .order("created_at", { ascending: false });
+  if (error) console.error("Error fetching active loans:", error);
+  
+  return (data || []).map(row => ({
+    id: row.id,
+    customerId: row.customer_id,
+    principalAmount: Number(row.principal_amount),
+    totalAmountDue: Number(row.total_amount_due),
+    remainingBalance: Number(row.remaining_balance),
+    weeklyInstallment: Number(row.weekly_installment),
+    startDate: row.start_date,
+    status: row.status,
+    createdAt: row.created_at
+  }));
+}
+
 export async function getInstallmentsByLoanId(loanId: string): Promise<Installment[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("installments").select("*").eq("loan_id", loanId).order("due_date", { ascending: true });
