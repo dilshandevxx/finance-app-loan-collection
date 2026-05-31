@@ -71,17 +71,12 @@ export default function AuthLoginPage() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Password</label>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  window.location.href = "/login/forgot-password";
-                }}
+              <Link
+                href="/login/forgot-password"
                 className="text-xs font-bold text-primary hover:underline transition-colors cursor-pointer bg-transparent border-none p-0 inline-block z-50 relative"
               >
                 Forgot Password?
-              </button>
+              </Link>
             </div>
             <div className="relative">
               <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
