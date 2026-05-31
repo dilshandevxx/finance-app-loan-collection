@@ -26,5 +26,5 @@ export default async function PinPage() {
     }
   }
   
-  return <PinClient isSetup={isSetup} agentName={agentName} />;
+  return <PinClient needsSetup={isSetup} agentName={agentName} />;
 }
