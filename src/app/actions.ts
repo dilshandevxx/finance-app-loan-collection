@@ -216,8 +216,9 @@ export async function getReceiptDetails(installmentId: string) {
   }
 }
 
-export async function markInstallmentPaid(installmentId: string) {
+export async function markInstallmentPaid(installmentId: string, customAmount?: number) {
   const supabase = await createClient();
+  
   // Get installment
   const { data: installment, error: instError } = await supabase
     .from("installments")
@@ -227,31 +228,114 @@ export async function markInstallmentPaid(installmentId: string) {
 
   if (instError || !installment) return { error: "Installment not found" };
 
-  // Update installment
-  await supabase
-    .from("installments")
-    .update({
-      status: "PAID",
-      paid_date: new Date().toISOString()
-    })
-    .eq("id", installmentId);
+  const amountPaid = customAmount !== undefined ? customAmount : Number(installment.amount);
 
-  // Update loan balance
+  // Update loan balance first to ensure atomicity logically
   const { data: loan } = await supabase
     .from("loans")
     .select("*")
     .eq("id", installment.loan_id)
     .single();
 
-  if (loan) {
-    const newBalance = Math.max(0, loan.remaining_balance - installment.amount);
-    await supabase
-      .from("loans")
-      .update({
-        remaining_balance: newBalance,
-        status: newBalance <= 0 ? "PAID_OFF" : loan.status
-      })
-      .eq("id", loan.id);
+  if (!loan) return { error: "Loan not found" };
+
+  const newBalance = Math.max(0, loan.remaining_balance - amountPaid);
+  await supabase
+    .from("loans")
+    .update({
+      remaining_balance: newBalance,
+      status: newBalance <= 0 ? "PAID_OFF" : loan.status
+    })
+    .eq("id", loan.id);
+
+  // Update installment
+  await supabase
+    .from("installments")
+    .update({
+      amount: amountPaid,
+      status: "PAID",
+      paid_date: new Date().toISOString()
+    })
+    .eq("id", installmentId);
+
+  // Adjust schedule if loan not fully paid off
+  if (newBalance <= 0) {
+    // Paid off - delete any remaining pending installments
+    await supabase.from("installments").delete().eq("loan_id", loan.id).in("status", ["PENDING", "MISSED"]);
+  } else {
+    // Reconcile pending installments
+    const { data: allRemaining } = await supabase
+      .from("installments")
+      .select("*")
+      .eq("loan_id", loan.id)
+      .in("status", ["PENDING", "MISSED"])
+      .order("due_date", { ascending: true });
+
+    const missed = allRemaining?.filter(i => i.status === "MISSED") || [];
+    const pending = allRemaining?.filter(i => i.status === "PENDING") || [];
+
+    const missedSum = missed.reduce((sum, i) => sum + Number(i.amount), 0);
+    let amountToSchedule = Number(newBalance) - missedSum;
+    amountToSchedule = Math.round(amountToSchedule * 100) / 100;
+    
+    const weeklyAmount = Number(loan.weekly_installment);
+
+    const pendingUpdates = [];
+    const pendingDeletes = [];
+    const pendingInserts = [];
+
+    for (const inst of pending) {
+      if (amountToSchedule <= 0) {
+        pendingDeletes.push(inst.id);
+      } else {
+        const instAmount = amountToSchedule >= weeklyAmount ? weeklyAmount : amountToSchedule;
+        pendingUpdates.push({ id: inst.id, amount: instAmount });
+        amountToSchedule -= instAmount;
+        amountToSchedule = Math.round(amountToSchedule * 100) / 100;
+      }
+    }
+
+    for (const update of pendingUpdates) {
+      await supabase.from("installments").update({ amount: update.amount }).eq("id", update.id);
+    }
+
+    if (pendingDeletes.length > 0) {
+      await supabase.from("installments").delete().in("id", pendingDeletes);
+    }
+
+    if (amountToSchedule > 0) {
+      let lastDate = new Date(installment.due_date);
+      if (pending.length > 0) {
+        lastDate = new Date(pending[pending.length - 1].due_date);
+      } else {
+         const { data: latest } = await supabase
+            .from("installments")
+            .select("due_date")
+            .eq("loan_id", loan.id)
+            .order("due_date", { ascending: false })
+            .limit(1);
+         if (latest && latest.length > 0) {
+           lastDate = new Date(latest[0].due_date);
+         }
+      }
+
+      while (amountToSchedule > 0) {
+        lastDate.setDate(lastDate.getDate() + 7);
+        const instAmount = amountToSchedule >= weeklyAmount ? weeklyAmount : amountToSchedule;
+        pendingInserts.push({
+          loan_id: loan.id,
+          amount: instAmount,
+          due_date: lastDate.toISOString().split("T")[0],
+          status: "PENDING"
+        });
+        amountToSchedule -= instAmount;
+        amountToSchedule = Math.round(amountToSchedule * 100) / 100;
+      }
+
+      if (pendingInserts.length > 0) {
+        await supabase.from("installments").insert(pendingInserts);
+      }
+    }
   }
 
   revalidatePath("/");

@@ -166,12 +166,13 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             queue.push({
               type: "markInstallmentPaid",
               installmentId: selectedPayment.installmentId,
+              amount: amount,
               timestamp: Date.now()
             });
             localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
             resolve();
           } else {
-            await markInstallmentPaid(selectedPayment.installmentId);
+            await markInstallmentPaid(selectedPayment.installmentId, amount);
             resolve();
           }
         } catch (err) {
@@ -182,6 +183,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             queue.push({
               type: "markInstallmentPaid",
               installmentId: selectedPayment.installmentId,
+              amount: amount,
               timestamp: Date.now()
             });
             localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));

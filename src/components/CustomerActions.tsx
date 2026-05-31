@@ -42,10 +42,37 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
 
       startTransition(async () => {
         try {
-          await markInstallmentPaid(nextInstallment.id);
-          resolve();
+          if (!navigator.onLine) {
+            const queueStr = localStorage.getItem("offlineSyncQueue");
+            const queue = queueStr ? JSON.parse(queueStr) : [];
+            queue.push({
+              type: "markInstallmentPaid",
+              installmentId: nextInstallment.id,
+              amount: amount,
+              timestamp: Date.now()
+            });
+            localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+            resolve();
+          } else {
+            await markInstallmentPaid(nextInstallment.id, amount);
+            resolve();
+          }
         } catch (err) {
-          reject(err);
+          const error = err as Error;
+          if (error?.message?.includes("fetch") || error?.message?.includes("network")) {
+            const queueStr = localStorage.getItem("offlineSyncQueue");
+            const queue = queueStr ? JSON.parse(queueStr) : [];
+            queue.push({
+              type: "markInstallmentPaid",
+              installmentId: nextInstallment.id,
+              amount: amount,
+              timestamp: Date.now()
+            });
+            localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+            resolve();
+          } else {
+            reject(err);
+          }
         }
       });
     });

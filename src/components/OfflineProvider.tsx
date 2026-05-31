@@ -59,7 +59,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
         for (const item of queue) {
           try {
             if (item.type === "markInstallmentPaid") {
-              const res = await markInstallmentPaid(item.installmentId);
+              const res = await markInstallmentPaid(item.installmentId, item.amount);
               if (res && res.error) {
                 throw new Error(res.error);
               }
