@@ -216,7 +216,7 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                 </p>
                 <div className="flex gap-3 mt-1.5">
                   <div className="relative flex-1">
-                    <span className="absolute left-4 top-3 text-gray-400 dark:text-white/40 text-sm">$</span>
+                    <span className="absolute left-4 top-3 text-gray-400 dark:text-white/40 text-xs font-bold">Rs.</span>
                     <input
                       type="number"
                       step="0.01"

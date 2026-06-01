@@ -330,6 +330,9 @@ export async function markInstallmentPaid(installmentId: string, customAmount?: 
     amountToSchedule = Math.round(amountToSchedule * 100) / 100;
     
     const weeklyAmount = Number(loan.weekly_installment);
+    if (weeklyAmount <= 0) {
+      return { error: "Weekly installment must be greater than zero." };
+    }
 
     const pendingUpdates = [];
     const pendingDeletes = [];
@@ -462,6 +465,11 @@ export async function postponeInstallments(loanId: string, weeksToShift: number)
 
 export async function restructureWeeklyInstallment(loanId: string, newAmount: number) {
   const supabase = await createClient();
+  
+  if (isNaN(newAmount) || newAmount <= 0) {
+    return { success: false, error: "Weekly installment amount must be greater than zero." };
+  }
+
   // Update loan weekly installment amount
   const { error: loanError } = await supabase
     .from("loans")
