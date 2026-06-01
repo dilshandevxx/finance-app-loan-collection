@@ -42,10 +42,16 @@ export async function updateSession(request: NextRequest) {
 
   if (isPwaFile) return supabaseResponse;
 
-  // 1. Not logged into Supabase -> Must go to Auth Login
-  if (!user && pathname !== '/login/auth') {
+  const isPublicRoute = 
+    pathname === '/welcome' || 
+    pathname === '/login/auth' || 
+    pathname === '/login/forgot-password' || 
+    pathname === '/login/reset-password'
+
+  // 1. Not logged into Supabase -> Redirect to /welcome if not on a public route
+  if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login/auth'
+    url.pathname = '/welcome'
     return NextResponse.redirect(url)
   }
 
@@ -56,8 +62,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // 3. Fully logged in (Auth + PIN) -> Redirect away from login pages to home
-  if (user && agentSession && pathname.startsWith('/login')) {
+  // 3. Fully logged in (Auth + PIN) -> Redirect away from login pages and welcome to home
+  if (user && agentSession && (pathname.startsWith('/login') || pathname === '/welcome')) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
     return NextResponse.redirect(url)
