@@ -101,7 +101,11 @@ export async function createLoan(formData: FormData) {
         phone: phone,
         member_id: memberId?.trim() || null,
         avatar_url: avatarUrl,
-        address: serializedAddress
+        address: serializedAddress,
+        street_address: addressVal.trim() || null,
+        village: stateVal.trim() || null,
+        company_name: companyNameVal.trim() || null,
+        nic_number: idNumberVal.trim() || null
       })
       .select()
       .single();
@@ -605,7 +609,8 @@ export async function fetchTomorrowsWork() {
           id,
           name,
           phone,
-          address
+          address,
+          village
         )
       )
     `)
@@ -629,11 +634,13 @@ export async function fetchTomorrowsWork() {
     const customer = loan ? (Array.isArray(loan.customers) ? loan.customers[0] : loan.customers) : null;
     if (!customer) continue;
 
-    let village = "Unknown Village";
-    try {
-      const addr = typeof customer.address === "string" ? JSON.parse(customer.address) : customer.address;
-      if (addr?.state) village = addr.state;
-    } catch { }
+    let village = customer.village || "Unknown Village";
+    if (!customer.village && customer.address) {
+      try {
+        const addr = typeof customer.address === "string" ? JSON.parse(customer.address) : customer.address;
+        if (addr?.state) village = addr.state;
+      } catch { }
+    }
 
     if (!villageMap[village]) {
       villageMap[village] = { village, customers: [] };

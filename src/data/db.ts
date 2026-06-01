@@ -99,26 +99,46 @@ function parseAddressField(rawAddress: string | undefined | null) {
   return { address, state, companyName, idNumber };
 }
 
+function mapRowToCustomer(row: any): Customer {
+  let streetAddress = row.street_address || "";
+  let village = row.village || "";
+  let companyName = row.company_name || "";
+  let nicNumber = row.nic_number || "";
+
+  if (!streetAddress && !village && !companyName && !nicNumber && row.address && row.address.trim().startsWith("{")) {
+    try {
+      const parsed = JSON.parse(row.address);
+      streetAddress = parsed.address || "";
+      village = parsed.state || "";
+      companyName = parsed.companyName || "";
+      nicNumber = parsed.idNumber || "";
+    } catch {
+      streetAddress = row.address;
+    }
+  } else if (!streetAddress && row.address && !row.address.trim().startsWith("{")) {
+    streetAddress = row.address;
+  }
+
+  return {
+    id: row.id,
+    memberId: row.member_id,
+    name: row.name,
+    phone: row.phone,
+    avatarUrl: row.avatar_url,
+    address: streetAddress,
+    state: village,
+    companyName: companyName,
+    idNumber: nicNumber,
+    createdAt: row.created_at
+  };
+}
+
 export async function getCustomers(): Promise<Customer[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("customers").select("*").order("created_at", { ascending: false });
   if (error) console.error("Error fetching customers:", error);
 
-  return (data || []).map(row => {
-    const { address, state, companyName, idNumber } = parseAddressField(row.address);
-    return {
-      id: row.id,
-      memberId: row.member_id,
-      name: row.name,
-      phone: row.phone,
-      avatarUrl: row.avatar_url,
-      address,
-      state,
-      companyName,
-      idNumber,
-      createdAt: row.created_at
-    };
-  });
+  return (data || []).map(mapRowToCustomer);
 }
 
 export async function getCustomerById(id: string): Promise<Customer | null> {
@@ -130,19 +150,7 @@ export async function getCustomerById(id: string): Promise<Customer | null> {
   }
   if (!data) return null;
 
-  const { address, state, companyName, idNumber } = parseAddressField(data.address);
-  return {
-    id: data.id,
-    memberId: data.member_id,
-    name: data.name,
-    phone: data.phone,
-    avatarUrl: data.avatar_url,
-    address,
-    state,
-    companyName,
-    idNumber,
-    createdAt: data.created_at
-  };
+  return mapRowToCustomer(data);
 }
 
 export async function getLoans(): Promise<Loan[]> {
@@ -325,11 +333,13 @@ export async function getSystemVillages(): Promise<string[]> {
     }
   }
 
-  const { data: customerData, error: custError } = await supabase.from("customers").select("address");
+  const { data: customerData, error: custError } = await supabase.from("customers").select("address, village");
   const customerVillages: string[] = [];
   if (!custError && customerData) {
     customerData.forEach(row => {
-      if (row.address && row.address.trim().startsWith("{")) {
+      if (row.village) {
+        customerVillages.push(row.village);
+      } else if (row.address && row.address.trim().startsWith("{")) {
         try {
           const parsed = JSON.parse(row.address);
           if (parsed.state) {
@@ -383,9 +393,12 @@ export async function removeSystemVillage(villageName: string): Promise<{ succes
   if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
 
   // Check if any customer is using this village
-  const { data: customerData, error: custError } = await supabase.from("customers").select("address");
+  const { data: customerData, error: custError } = await supabase.from("customers").select("address, village");
   if (!custError && customerData) {
     const isUsed = customerData.some(row => {
+      if (row.village && row.village.trim().toLowerCase() === trimmedName.toLowerCase()) {
+        return true;
+      }
       if (row.address && row.address.trim().startsWith("{")) {
         try {
           const parsed = JSON.parse(row.address);

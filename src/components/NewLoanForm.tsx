@@ -23,7 +23,8 @@ import {
   Sparkles,
   Check,
   Info,
-  Calendar
+  Calendar,
+  WifiOff
 } from "lucide-react";
 import { formatLKR } from "@/lib/format";
 import type { VillageSchedule } from "@/lib/schedule";
@@ -61,6 +62,21 @@ export function NewLoanForm({
     },
     initialState
   );
+
+  const [offlineSuccess, setOfflineSuccess] = useState(false);
+
+  const handleAction = (formData: FormData) => {
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      const payload = Object.fromEntries(formData.entries());
+      const queue = JSON.parse(localStorage.getItem("offlineSyncQueue") || "[]");
+      queue.push({ type: "createLoan", payload });
+      localStorage.setItem("offlineSyncQueue", JSON.stringify(queue));
+      window.dispatchEvent(new CustomEvent("offline-queue-updated"));
+      setOfflineSuccess(true);
+    } else {
+      formAction(formData);
+    }
+  };
 
   // Steps state: 1 = Profile, 2 = Terms, 3 = Confirm
   const [step, setStep] = useState(1);
@@ -400,19 +416,24 @@ export function NewLoanForm({
   }, [isExisting, selectedCustomerId, selectedCustomer]);
 
   // Redirection/Success state styling
-  if (state?.success) {
+  if (state?.success || offlineSuccess) {
+    const isOffline = offlineSuccess;
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center min-h-[460px] animate-in zoom-in-95 duration-300">
         <div className="relative mb-6">
-          <div className="absolute inset-0 bg-green-500/20 dark:bg-green-500/10 blur-xl rounded-full scale-120 animate-pulse" />
-          <div className="relative w-20 h-20 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg">
-            <Check className="w-10 h-10 stroke-[3]" />
+          <div className={`absolute inset-0 blur-xl rounded-full scale-120 animate-pulse ${isOffline ? 'bg-orange-500/20' : 'bg-green-500/20 dark:bg-green-500/10'}`} />
+          <div className={`relative w-20 h-20 text-white rounded-full flex items-center justify-center shadow-lg ${isOffline ? 'bg-orange-500' : 'bg-emerald-500'}`}>
+            {isOffline ? <WifiOff className="w-10 h-10 stroke-[2.5]" /> : <Check className="w-10 h-10 stroke-[3]" />}
           </div>
         </div>
         
-        <h3 className="text-3xl font-black text-foreground tracking-tight mb-2">Loan Created!</h3>
+        <h3 className="text-3xl font-black text-foreground tracking-tight mb-2">
+          {isOffline ? "Loan Queued Offline" : "Loan Created!"}
+        </h3>
         <p className="text-muted-foreground font-medium mb-8 max-w-sm mx-auto">
-          The loan account and weekly repayment schedule have been registered.
+          {isOffline 
+            ? "You are offline. The loan details have been saved to your device and will automatically sync when you reconnect." 
+            : "The loan account and weekly repayment schedule have been registered."}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3.5 w-full justify-center max-w-md">
@@ -421,11 +442,13 @@ export function NewLoanForm({
               Dashboard
             </Button>
           </Link>
-          <Link href={`/customers/${state.customerId}`} className="w-full sm:flex-1">
-            <Button type="button" className="w-full h-13 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold cursor-pointer shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
-              View Profile
-            </Button>
-          </Link>
+          {!isOffline && state?.customerId && (
+            <Link href={`/customers/${state.customerId}`} className="w-full sm:flex-1">
+              <Button type="button" className="w-full h-13 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold cursor-pointer shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
+                View Profile
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     );
@@ -437,7 +460,7 @@ export function NewLoanForm({
   const durationPresets = [10, 15, 20, 26, 40, 52];
 
   return (
-    <form action={formAction} className="flex flex-col gap-6">
+    <form action={handleAction} className="flex flex-col gap-6">
       
       {/* Client-side Action Error or Server Error */}
       {(state?.error || Object.keys(validationErrors).length > 0) && (
@@ -1097,9 +1120,20 @@ export function NewLoanForm({
                   {validationErrors.preferredInstallment}
                 </p>
               )}
-              <p className="text-[10px] text-muted-foreground/80 leading-normal">
-                Standard installment for Rs. {principal.toLocaleString("en-LK")} is <strong>Rs. {Math.round((principal * 1.40) / 14).toLocaleString("en-LK")}</strong>. Entering a lower amount will extend weeks and recalculate the recovery interest rate.
-              </p>
+              <div className="mt-2 bg-primary/5 border border-primary/20 rounded-xl p-3">
+                <details className="group cursor-pointer">
+                  <summary className="flex items-center gap-1.5 text-xs font-bold text-primary list-none outline-none">
+                    <Info className="w-4 h-4" />
+                    How is custom interest calculated?
+                  </summary>
+                  <div className="mt-2 text-[10px] text-muted-foreground leading-relaxed space-y-1.5">
+                    <p>1. <strong>Standard Check:</strong> Default is Rs. {Math.round((principal * 1.40) / 14).toLocaleString("en-LK")} over 14 weeks.</p>
+                    <p>2. <strong>Duration Extension:</strong> We calculate how many weeks it takes to pay the standard total with your lower installment.</p>
+                    <p>3. <strong>Recovery Fee:</strong> For every extra week beyond 14, a fixed travel/recovery fee is added to the interest.</p>
+                    <p>4. <strong>Final Calculation:</strong> The new duration and total interest rate are automatically updated below.</p>
+                  </div>
+                </details>
+              </div>
             </div>
           )}
         </div>

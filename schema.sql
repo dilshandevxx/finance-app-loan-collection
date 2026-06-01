@@ -5,7 +5,11 @@ CREATE TABLE customers (
   name TEXT NOT NULL,
   phone TEXT NOT NULL,
   avatar_url TEXT,
-  address TEXT,
+  address TEXT, -- Keeps serialized JSON fallback for compatibility
+  street_address TEXT,
+  village TEXT,
+  company_name TEXT,
+  nic_number TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

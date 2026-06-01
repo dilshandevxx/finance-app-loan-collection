@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { markInstallmentPaid } from "@/app/actions";
+import { markInstallmentPaid, createLoan } from "@/app/actions";
 import { Wifi, WifiOff, Loader2, CheckCircle } from "lucide-react";
 
 export function OfflineProvider({ children }: { children: React.ReactNode }) {
@@ -62,6 +62,17 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
               const res = await markInstallmentPaid(item.installmentId, item.amount);
               if (res && res.error) {
                 throw new Error(res.error);
+              }
+            } else if (item.type === "createLoan") {
+              const formData = new FormData();
+              for (const [key, value] of Object.entries(item.payload)) {
+                if (value !== undefined && value !== null) {
+                  formData.append(key, String(value));
+                }
+              }
+              const res = await createLoan(formData);
+              if (res && (res as any).error) {
+                throw new Error((res as any).error);
               }
             }
           } catch (err) {
