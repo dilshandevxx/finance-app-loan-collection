@@ -49,18 +49,16 @@ export async function createLoan(formData: FormData) {
       // Step 2: Extra weeks
       const weeksExtra = weeksBase - stdWeeks;
 
-      // Step 3: Weekly profit for standard (pHigh) and base (pBase)
-      const pHigh = stdInterest / stdWeeks;
-      const pBase = stdInterest / weeksBase;
+      // Step 3: Weekly profit of standard option, rounded to nearest 100 LKR
+      const pHigh = Math.round((stdInterest / stdWeeks) / 100) * 100;
 
-      // Step 4: First standard 14 weeks gets pBase profit/wk, extra weeks gets pHigh profit/wk
-      const interestAmt = (stdWeeks * pBase) + (weeksExtra * pHigh);
+      // Step 4: Calculate full profit (standard interest + extra weeks * standard weekly profit)
+      const interestAmt = stdInterest + (weeksExtra * pHigh);
 
-      // Step 5: Total amount due is calculated from (principal + interestAmt)
-      // Step 6: Interest rate is calculated
+      // Step 5: Interest rate is calculated
       interest = (interestAmt / principalAmount) * 100;
 
-      // Step 7: Finally calculate weeks count needed to pay full amount
+      // Step 6: Finally calculate weeks count needed to pay full amount
       weeks = Math.ceil((principalAmount + interestAmt) / preferredInstallment);
     } else {
       weeks = stdWeeks;

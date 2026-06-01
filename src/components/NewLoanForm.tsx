@@ -101,27 +101,20 @@ export function NewLoanForm({
       // 2. Extra weeks
       const weeksExtra = weeksBase - stdWeeks;
 
-      // 3. Weekly profit for standard high profit (pHigh) and second base profit (pBase)
-      const pHigh = stdInterest / stdWeeks;
-      const pBase = stdInterest / weeksBase;
+      // 3. Weekly profit of standard option, rounded to nearest 100 LKR
+      const pHigh = Math.round((stdInterest / stdWeeks) / 100) * 100;
 
-      // 4. First standard 14 weeks gets pBase profit/wk, extra weeks gets pHigh profit/wk
-      const interestAmt = (stdWeeks * pBase) + (weeksExtra * pHigh);
+      // 4. Calculate full profit (standard interest + extra weeks * standard weekly profit)
+      const interestAmt = stdInterest + (weeksExtra * pHigh);
 
-      // 5. Total amount due
-      const totalDue = principal + interestAmt;
+      // 5. Calculate new interest rate
+      const interestRate = (interestAmt / principal) * 100;
 
-      // 7. Finally calculate weeks count needed to pay full amount
-      const finalWeeks = Math.ceil(totalDue / prefVal);
-
-      // Re-run standard steps using finalWeeks to get final values
-      const finalWeeksExtra = finalWeeks - stdWeeks;
-      const finalPBase = stdInterest / finalWeeks;
-      const finalInterestAmt = (stdWeeks * finalPBase) + (finalWeeksExtra * pHigh);
-      const finalInterestRate = (finalInterestAmt / principal) * 100;
+      // 6. Finally calculate weeks count needed to pay full amount
+      const finalWeeks = Math.ceil((principal + interestAmt) / prefVal);
 
       setWeeks(finalWeeks);
-      setInterest(Number(finalInterestRate.toFixed(2)));
+      setInterest(Number(interestRate.toFixed(2)));
     }
   }, [isCustomInstallment, preferredInstallment, principal]);
 
