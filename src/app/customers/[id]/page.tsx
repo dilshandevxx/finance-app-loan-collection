@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle, TrendingUp, ChevronDown } from "lucide-react";
+import { ChevronLeft, MapPin, CheckCircle2, Circle, AlertCircle, TrendingUp, ChevronDown, PartyPopper } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId, getCustomerNotes } from "@/data/db";
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
@@ -89,6 +89,19 @@ export default async function CustomerDetails({ params }: Props) {
         <span className="text-sm font-semibold tracking-tight text-foreground">Customer Profile</span>
         <div className="w-10" /> {/* Spacer */}
       </header>
+
+      {/* Celebration Banner for Paid Off Loans */}
+      {loan.status === "PAID_OFF" && (
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 p-5 rounded-[1.75rem] shadow-sm flex items-center gap-4 animate-in fade-in zoom-in-95 duration-500 mb-4">
+          <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/30">
+            <PartyPopper className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-lg font-black tracking-tight mb-0.5">Loan Fully Settled!</h3>
+            <p className="text-sm font-medium opacity-90">Great collection work. This customer has completely paid off their loan balance.</p>
+          </div>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-12 gap-8 items-start">
         {/* Left Column */}
