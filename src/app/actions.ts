@@ -22,19 +22,57 @@ export async function createLoan(formData: FormData) {
   const idNumberVal = formData.get("idNumber") as string || "";
 
   const principalAmount = parseFloat(principalStr);
-  const interest = 40; // Fixed at 40% per settings
-  const weeks = 14;    // Fixed at 14 weeks per settings
+  const weeksRaw = parseInt(weeksStr);
 
   const existingCustomerId = formData.get("existingCustomerId") as string | null;
 
   if (isNaN(principalAmount) || principalAmount <= 0) {
     return { error: "Please enter a valid principal amount greater than 0." };
   }
-  if (isNaN(interest) || interest < 0) {
-    return { error: "Please enter a valid interest rate." };
+
+  const isCustom = formData.get("isCustom") === "true";
+  const preferredInstallmentStr = formData.get("preferredInstallment") as string;
+  const preferredInstallment = parseFloat(preferredInstallmentStr);
+
+  let weeks = weeksRaw;
+  let interest = 40;
+
+  if (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0) {
+    const stdWeeks = 14;
+    const stdInterest = principalAmount * 0.40;
+    const stdTotal = principalAmount + stdInterest;
+
+    // Step 1: Base weeks needed to pay standard total at preferred installment
+    const weeksBase = Math.ceil(stdTotal / preferredInstallment);
+
+    if (weeksBase > stdWeeks) {
+      // Step 2: Extra weeks
+      const weeksExtra = weeksBase - stdWeeks;
+
+      // Step 3: Weekly profit for standard (pHigh) and base (pBase)
+      const pHigh = stdInterest / stdWeeks;
+      const pBase = stdInterest / weeksBase;
+
+      // Step 4: First standard 14 weeks gets pBase profit/wk, extra weeks gets pHigh profit/wk
+      const interestAmt = (stdWeeks * pBase) + (weeksExtra * pHigh);
+
+      // Step 5: Total amount due is calculated from (principal + interestAmt)
+      // Step 6: Interest rate is calculated
+      interest = (interestAmt / principalAmount) * 100;
+
+      // Step 7: Finally calculate weeks count needed to pay full amount
+      weeks = Math.ceil((principalAmount + interestAmt) / preferredInstallment);
+    } else {
+      weeks = stdWeeks;
+      interest = 40;
+    }
+  } else {
+    weeks = 14;
+    interest = 40;
   }
-  if (isNaN(weeks) || weeks <= 0) {
-    return { error: "Please enter a valid loan duration (weeks)." };
+
+  if (isNaN(weeks) || weeks < 14) {
+    return { error: "Please enter a valid loan duration of at least 14 weeks." };
   }
 
   let customerId = existingCustomerId || null;
@@ -78,7 +116,13 @@ export async function createLoan(formData: FormData) {
   }
 
   const totalAmountDue = principalAmount * (1 + interest / 100);
-  const weeklyInstallment = totalAmountDue / weeks;
+  
+  // For custom installment, weekly installment is exactly the preferred installment,
+  // otherwise it is totalAmountDue / weeks.
+  const weeklyInstallment = (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0)
+    ? preferredInstallment
+    : totalAmountDue / weeks;
+
   const startDate = new Date().toISOString().split('T')[0];
 
   const { data: newLoan, error: loanError } = await supabase
@@ -104,9 +148,18 @@ export async function createLoan(formData: FormData) {
   const currentDate = new Date();
   for (let i = 0; i < weeks; i++) {
     currentDate.setDate(currentDate.getDate() + 7);
+    
+    let amount = weeklyInstallment;
+    if (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0 && i === weeks - 1) {
+      // The last installment settles the remaining balance
+      amount = totalAmountDue - (weeklyInstallment * (weeks - 1));
+      // Round to 2 decimal places to be safe with floats
+      amount = Math.round(amount * 100) / 100;
+    }
+
     installments.push({
       loan_id: newLoan.id,
-      amount: weeklyInstallment,
+      amount: amount,
       due_date: currentDate.toISOString().split('T')[0],
       status: "PENDING"
     });

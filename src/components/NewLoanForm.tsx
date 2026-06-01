@@ -70,6 +70,61 @@ export function NewLoanForm({
   const [interest, setInterest] = useState<number>(40);
   const [weeks, setWeeks] = useState<number>(14);
 
+  // Special/custom installment states
+  const [isCustomInstallment, setIsCustomInstallment] = useState<boolean>(false);
+  const [preferredInstallment, setPreferredInstallment] = useState<string>("");
+
+  useEffect(() => {
+    if (!isCustomInstallment) {
+      setInterest(40);
+      setWeeks(14);
+    } else {
+      const prefVal = parseFloat(preferredInstallment) || 0;
+      if (prefVal <= 0 || principal <= 0) {
+        setInterest(40);
+        setWeeks(14);
+        return;
+      }
+
+      const stdWeeks = 14;
+      const stdInterest = principal * 0.40;
+      const stdTotal = principal + stdInterest;
+
+      // 1. How many weeks needed to pay standard total of 70000 (for 50k principal)
+      const weeksBase = Math.ceil(stdTotal / prefVal);
+      if (weeksBase <= stdWeeks) {
+        setInterest(40);
+        setWeeks(14);
+        return;
+      }
+
+      // 2. Extra weeks
+      const weeksExtra = weeksBase - stdWeeks;
+
+      // 3. Weekly profit for standard high profit (pHigh) and second base profit (pBase)
+      const pHigh = stdInterest / stdWeeks;
+      const pBase = stdInterest / weeksBase;
+
+      // 4. First standard 14 weeks gets pBase profit/wk, extra weeks gets pHigh profit/wk
+      const interestAmt = (stdWeeks * pBase) + (weeksExtra * pHigh);
+
+      // 5. Total amount due
+      const totalDue = principal + interestAmt;
+
+      // 7. Finally calculate weeks count needed to pay full amount
+      const finalWeeks = Math.ceil(totalDue / prefVal);
+
+      // Re-run standard steps using finalWeeks to get final values
+      const finalWeeksExtra = finalWeeks - stdWeeks;
+      const finalPBase = stdInterest / finalWeeks;
+      const finalInterestAmt = (stdWeeks * finalPBase) + (finalWeeksExtra * pHigh);
+      const finalInterestRate = (finalInterestAmt / principal) * 100;
+
+      setWeeks(finalWeeks);
+      setInterest(Number(finalInterestRate.toFixed(2)));
+    }
+  }, [isCustomInstallment, preferredInstallment, principal]);
+
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [compressedPhoto, setCompressedPhoto] = useState<string>("");
 
@@ -230,7 +285,9 @@ export function NewLoanForm({
     return totalDue / weeks;
   };
 
-  const installmentAmount = calculateInstallment();
+  const installmentAmount = isCustomInstallment && parseFloat(preferredInstallment) > 0
+    ? parseFloat(preferredInstallment)
+    : calculateInstallment();
 
   const getDaysForVillage = (villageName: string) => {
     if (!schedule) return [];
@@ -286,6 +343,18 @@ export function NewLoanForm({
     } else if (currentStep === 2) {
       if (principal <= 0) {
         newErrors.principal = "Enter a principal amount greater than Rs. 0.";
+      }
+      if (isCustomInstallment) {
+        const prefVal = parseFloat(preferredInstallment) || 0;
+        const stdTotal = principal * 1.40;
+        const stdInst = Math.round(stdTotal / 14);
+        if (prefVal <= 0) {
+          newErrors.preferredInstallment = "Enter a preferred weekly installment amount.";
+        } else if (prefVal >= stdTotal) {
+          newErrors.preferredInstallment = `Installment must be less than the total standard due (Rs. ${stdTotal.toLocaleString("en-LK")}).`;
+        } else if (prefVal >= stdInst) {
+          newErrors.preferredInstallment = `Installment must be less than the standard installment (Rs. ${stdInst.toLocaleString("en-LK")}) to require a custom duration.`;
+        }
       }
       if (interest < 0) {
         newErrors.interest = "Interest rate cannot be negative.";
@@ -967,14 +1036,93 @@ export function NewLoanForm({
           )}
         </div>
 
+        {/* Custom weekly installment card */}
+        <div className="bg-secondary/40 dark:bg-secondary/15 border border-border/40 rounded-3xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                ⭐ Custom Weekly Installment
+              </span>
+              <span className="text-[10px] text-muted-foreground font-medium">
+                Adjust terms for a lower customer installment.
+              </span>
+            </div>
+            
+            <button
+              type="button"
+              onClick={() => {
+                const nextVal = !isCustomInstallment;
+                setIsCustomInstallment(nextVal);
+                if (nextVal) {
+                  const stdTotal = principal * 1.40;
+                  const defaultInst = Math.round(stdTotal / 14);
+                  setPreferredInstallment(defaultInst.toString());
+                } else {
+                  setPreferredInstallment("");
+                }
+              }}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                isCustomInstallment ? "bg-primary" : "bg-neutral-200 dark:bg-neutral-800"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  isCustomInstallment ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {isCustomInstallment && (
+            <div className="space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
+              <label htmlFor="preferredInstallment" className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                Preferred Weekly Installment
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <span className="text-sm font-black text-muted-foreground group-focus-within:text-primary transition-colors">Rs.</span>
+                </div>
+                <input
+                  type="number"
+                  id="preferredInstallment"
+                  value={preferredInstallment}
+                  onChange={(e) => {
+                    setPreferredInstallment(e.target.value);
+                    if (validationErrors.preferredInstallment) {
+                      setValidationErrors(prev => ({ ...prev, preferredInstallment: "" }));
+                    }
+                  }}
+                  placeholder="e.g. 3500"
+                  className={`w-full bg-card border ${
+                    validationErrors.preferredInstallment ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/10" : "border-border/60 focus:border-primary focus:ring-primary/10"
+                  } rounded-2xl pl-11 pr-4 py-3 text-foreground font-black text-lg focus:outline-none focus:ring-4 transition`}
+                />
+              </div>
+              {validationErrors.preferredInstallment && (
+                <p className="text-xs font-bold text-red-500 flex items-center gap-1 mt-0.5 animate-in fade-in duration-150">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {validationErrors.preferredInstallment}
+                </p>
+              )}
+              <p className="text-[10px] text-muted-foreground/80 leading-normal">
+                Standard installment for Rs. {principal.toLocaleString("en-LK")} is <strong>Rs. {Math.round((principal * 1.40) / 14).toLocaleString("en-LK")}</strong>. Entering a lower amount will extend weeks and recalculate the recovery interest rate.
+              </p>
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
           
           {/* Interest input card */}
           <div className="bg-secondary/15 dark:bg-secondary/5 border border-border/40 rounded-3xl p-4 sm:p-5 space-y-3 col-span-2 sm:col-span-1 opacity-90 relative overflow-hidden">
             <div className="flex justify-between items-center">
               <label htmlFor="interest" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Interest Rate</label>
-              <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider">
-                🔒 Fixed
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider ${
+                isCustomInstallment 
+                  ? "text-primary bg-primary/10" 
+                  : "text-amber-600 dark:text-amber-400 bg-amber-500/10"
+              }`}>
+                {isCustomInstallment ? "⚙️ Calculated" : "🔒 Fixed"}
               </span>
             </div>
             
@@ -991,7 +1139,7 @@ export function NewLoanForm({
               />
             </div>
             <div className="text-[10px] font-bold text-muted-foreground/60 italic">
-              Fixed at 40% interest rate.
+              {isCustomInstallment ? "Adjusted to recover travel/oil bills." : "Fixed at 40% interest rate."}
             </div>
           </div>
 
@@ -999,8 +1147,12 @@ export function NewLoanForm({
           <div className="bg-secondary/15 dark:bg-secondary/5 border border-border/40 rounded-3xl p-4 sm:p-5 space-y-3 col-span-2 sm:col-span-1 opacity-90 relative overflow-hidden">
             <div className="flex justify-between items-center">
               <label htmlFor="weeks" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Duration</label>
-              <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider">
-                🔒 Fixed
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider ${
+                isCustomInstallment 
+                  ? "text-primary bg-primary/10" 
+                  : "text-amber-600 dark:text-amber-400 bg-amber-500/10"
+              }`}>
+                {isCustomInstallment ? "⚙️ Calculated" : "🔒 Fixed"}
               </span>
             </div>
             
@@ -1017,7 +1169,7 @@ export function NewLoanForm({
               />
             </div>
             <div className="text-[10px] font-bold text-muted-foreground/60 italic">
-              Fixed at 14 weeks duration.
+              {isCustomInstallment ? "Extended to match preferred payment." : "Fixed at 14 weeks duration."}
             </div>
           </div>
         </div>
@@ -1225,6 +1377,8 @@ export function NewLoanForm({
         <input type="hidden" name="principal" value={principal} />
         <input type="hidden" name="interest" value={interest} />
         <input type="hidden" name="weeks" value={weeks} />
+        <input type="hidden" name="isCustom" value={isCustomInstallment ? "true" : "false"} />
+        <input type="hidden" name="preferredInstallment" value={preferredInstallment} />
 
         {/* Back and Action Buttons */}
         <div className="flex gap-3 pt-4 border-t border-border/40">
