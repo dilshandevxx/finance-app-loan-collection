@@ -234,7 +234,14 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
       const loanInsts = installments.filter(i => i.loanId === loanId);
       const sortedLoanInsts = [...loanInsts].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
-      const endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
+      
+      let endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
+      if (loan?.status === "PAID_OFF") {
+        const paidDates = sortedLoanInsts.filter(i => i.paidDate).map(i => new Date(i.paidDate as string).getTime());
+        if (paidDates.length > 0) {
+          endDateVal = new Date(Math.max(...paidDates)).toISOString().split('T')[0];
+        }
+      }
 
       const fullAddress = customer
         ? [customer.state, customer.address].filter(Boolean).join(" • ")
@@ -394,7 +401,14 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
       const loanInsts = installments.filter(i => i.loanId === loanId);
       const sortedLoanInsts = [...loanInsts].sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
-      const endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
+      
+      let endDateVal = sortedLoanInsts.length > 0 ? sortedLoanInsts[sortedLoanInsts.length - 1].dueDate : "N/A";
+      if (loan?.status === "PAID_OFF") {
+        const paidDates = sortedLoanInsts.filter(i => i.paidDate).map(i => new Date(i.paidDate as string).getTime());
+        if (paidDates.length > 0) {
+          endDateVal = new Date(Math.max(...paidDates)).toISOString().split('T')[0];
+        }
+      }
 
       const fullAddress = customer
         ? [customer.state, customer.address].filter(Boolean).join(" • ")
