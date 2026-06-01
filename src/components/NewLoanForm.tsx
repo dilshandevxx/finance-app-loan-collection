@@ -67,8 +67,8 @@ export function NewLoanForm({
   const [isExisting, setIsExisting] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [principal, setPrincipal] = useState<number>(5000);
-  const [interest, setInterest] = useState<number>(10);
-  const [weeks, setWeeks] = useState<number>(10);
+  const [interest, setInterest] = useState<number>(40);
+  const [weeks, setWeeks] = useState<number>(14);
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [compressedPhoto, setCompressedPhoto] = useState<string>("");
@@ -970,140 +970,54 @@ export function NewLoanForm({
         <div className="grid grid-cols-2 gap-4">
           
           {/* Interest input card */}
-          <div className="bg-secondary/30 dark:bg-secondary/10 border border-border/40 rounded-3xl p-4 sm:p-5 space-y-3 col-span-2 sm:col-span-1">
+          <div className="bg-secondary/15 dark:bg-secondary/5 border border-border/40 rounded-3xl p-4 sm:p-5 space-y-3 col-span-2 sm:col-span-1 opacity-90 relative overflow-hidden">
             <div className="flex justify-between items-center">
               <label htmlFor="interest" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Interest Rate</label>
-              <span className="text-xs font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full">{interest}%</span>
+              <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider">
+                🔒 Fixed
+              </span>
             </div>
             
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Percent className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <Percent className="h-5 w-5 text-muted-foreground" />
               </div>
               <input
                 type="number"
                 id="interest"
-                name="interest"
-                min="0"
-                step="0.1"
                 value={interest || ""}
-                onChange={(e) => {
-                  setInterest(parseFloat(e.target.value) || 0);
-                  if (validationErrors.interest) {
-                    setValidationErrors(prev => ({ ...prev, interest: "" }));
-                  }
-                }}
-                placeholder="10"
-                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-4 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-black text-lg"
+                disabled
+                className="w-full bg-secondary/50 border border-border/40 rounded-2xl pl-11 pr-4 py-4 text-muted-foreground focus:outline-none transition font-black text-lg cursor-not-allowed"
               />
             </div>
-
-            {/* Slider */}
-            <div>
-              <input
-                type="range"
-                min="0"
-                max="40"
-                step="0.5"
-                value={interest}
-                onChange={(e) => {
-                  setInterest(parseFloat(e.target.value) || 0);
-                  if (validationErrors.interest) {
-                    setValidationErrors(prev => ({ ...prev, interest: "" }));
-                  }
-                }}
-                className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
-              />
-            </div>
-
-            {/* Presets */}
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {interestPresets.map((val) => (
-                <button
-                  key={val}
-                  type="button"
-                  onClick={() => {
-                    setInterest(val);
-                    setValidationErrors(prev => ({ ...prev, interest: "" }));
-                  }}
-                  className={`px-2 py-1 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
-                    interest === val 
-                      ? "bg-primary border-primary text-white scale-105" 
-                      : "bg-card border-border/75 text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  {val}%
-                </button>
-              ))}
+            <div className="text-[10px] font-bold text-muted-foreground/60 italic">
+              Fixed at 40% interest rate.
             </div>
           </div>
 
           {/* Weeks input card */}
-          <div className="bg-secondary/30 dark:bg-secondary/10 border border-border/40 rounded-3xl p-4 sm:p-5 space-y-3 col-span-2 sm:col-span-1">
+          <div className="bg-secondary/15 dark:bg-secondary/5 border border-border/40 rounded-3xl p-4 sm:p-5 space-y-3 col-span-2 sm:col-span-1 opacity-90 relative overflow-hidden">
             <div className="flex justify-between items-center">
               <label htmlFor="weeks" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Duration</label>
-              <span className="text-xs font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full">{weeks} Wks</span>
+              <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 uppercase tracking-wider">
+                🔒 Fixed
+              </span>
             </div>
             
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <CalendarDays className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <CalendarDays className="h-5 w-5 text-muted-foreground" />
               </div>
               <input
                 type="number"
                 id="weeks"
-                name="weeks"
-                min="1"
-                step="1"
                 value={weeks || ""}
-                onChange={(e) => {
-                  setWeeks(parseInt(e.target.value) || 0);
-                  if (validationErrors.weeks) {
-                    setValidationErrors(prev => ({ ...prev, weeks: "" }));
-                  }
-                }}
-                placeholder="10"
-                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-4 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-black text-lg"
+                disabled
+                className="w-full bg-secondary/50 border border-border/40 rounded-2xl pl-11 pr-4 py-4 text-muted-foreground focus:outline-none transition font-black text-lg cursor-not-allowed"
               />
             </div>
-
-            {/* Slider */}
-            <div>
-              <input
-                type="range"
-                min="4"
-                max="52"
-                step="1"
-                value={weeks}
-                onChange={(e) => {
-                  setWeeks(parseInt(e.target.value) || 0);
-                  if (validationErrors.weeks) {
-                    setValidationErrors(prev => ({ ...prev, weeks: "" }));
-                  }
-                }}
-                className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
-              />
-            </div>
-
-            {/* Presets */}
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {durationPresets.map((val) => (
-                <button
-                  key={val}
-                  type="button"
-                  onClick={() => {
-                    setWeeks(val);
-                    setValidationErrors(prev => ({ ...prev, weeks: "" }));
-                  }}
-                  className={`px-2 py-1 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
-                    weeks === val 
-                      ? "bg-primary border-primary text-white scale-105" 
-                      : "bg-card border-border/75 text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  {val}w
-                </button>
-              ))}
+            <div className="text-[10px] font-bold text-muted-foreground/60 italic">
+              Fixed at 14 weeks duration.
             </div>
           </div>
         </div>

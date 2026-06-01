@@ -22,8 +22,8 @@ export async function createLoan(formData: FormData) {
   const idNumberVal = formData.get("idNumber") as string || "";
 
   const principalAmount = parseFloat(principalStr);
-  const interest = parseFloat(interestStr);
-  const weeks = parseInt(weeksStr);
+  const interest = 40; // Fixed at 40% per settings
+  const weeks = 14;    // Fixed at 14 weeks per settings
 
   const existingCustomerId = formData.get("existingCustomerId") as string | null;
 
