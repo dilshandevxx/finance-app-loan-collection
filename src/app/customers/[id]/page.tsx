@@ -6,6 +6,7 @@ import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId, getCust
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
 import { CustomerOperations } from "@/components/CustomerOperations";
 import { formatLKR, formatLKRShort, formatLKRDecimal } from "@/lib/format";
+import { BottomNav } from "@/components/BottomNav";
 
 export const dynamic = 'force-dynamic';
 
@@ -58,8 +59,15 @@ export default async function CustomerDetails({ params }: Props) {
             <div className="mt-8 text-center text-gray-500 dark:text-white/50">
               No active or past loans found for this customer.
             </div>
+
+            <Link href={`/new?customer=${customerId}`} className="w-full">
+              <button className="w-full mt-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-4 rounded-2xl active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+                Create New Loan
+              </button>
+            </Link>
           </div>
         </div>
+        <BottomNav hideOnMobile />
       </div>
     );
   }
@@ -303,6 +311,7 @@ export default async function CustomerDetails({ params }: Props) {
         </div>
       </div>
 
+      <BottomNav hideOnMobile />
     </div>
   );
 }

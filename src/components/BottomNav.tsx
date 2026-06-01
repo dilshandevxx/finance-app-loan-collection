@@ -12,7 +12,7 @@ const NAV = [
   { href: "/settings",  Icon: Settings, label: "Settings" },
 ];
 
-export function BottomNav() {
+export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } = {}) {
   const pathname = usePathname();
 
   return (
@@ -20,7 +20,7 @@ export function BottomNav() {
       {/* ─────────────────────────────────────────────
           MOBILE: Bottom tab bar
           ───────────────────────────────────────────── */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 ${hideOnMobile ? 'hidden' : ''}`}>
         <nav className="
           flex items-center
           bg-card/80 dark:bg-card/60 backdrop-blur-3xl

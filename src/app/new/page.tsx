@@ -3,6 +3,7 @@ import { ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { NewLoanForm } from "@/components/NewLoanForm";
 import { getCustomers, getSystemVillages, getVillageSchedule } from "@/data/db";
+import { BottomNav } from "@/components/BottomNav";
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,7 @@ export default async function NewLoan() {
           </CardContent>
         </Card>
       </div>
+      <BottomNav hideOnMobile />
     </div>
   );
 }
