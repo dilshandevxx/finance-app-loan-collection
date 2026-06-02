@@ -165,7 +165,8 @@ export function QuickPaymentModal({
         `• Status: PAID SUCCESSFUL ✅\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*📊 LOAN ACCOUNT SUMMARY*\n` +
-        `• Total Loan Amount: ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
+        `• Loan Amount (Principal): ${formatLKR(receiptData.loan.principalAmount)}\n` +
+        `• Total Payable (With Interest): ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
         `• Total Paid to Date: ${formatLKR(receiptData.loan.totalPaid)}\n` +
         `• *Remaining Balance:* *${formatLKR(receiptData.loan.remainingBalance)}*\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -211,6 +212,7 @@ export function QuickPaymentModal({
         phone: formatLKPhone(receiptData?.customer.phone || customer.phone),
         amountPaid: finalAmount,
         status: isOfflineSaved ? "PAID (OFFLINE)" : "PAID SUCCESSFUL",
+        principal: receiptData?.loan.principalAmount || 0,
         totalLoanAmount: receiptData?.loan.totalAmountDue || 0,
         remainingBalance: receiptData?.loan.remainingBalance || 0,
         totalPaid: receiptData?.loan.totalPaid || finalAmount,

@@ -8,6 +8,7 @@ export type ReceiptPDFData = {
   phone: string;
   amountPaid: number;
   status: string;
+  principal: number;
   totalLoanAmount: number;
   remainingBalance: number;
   totalPaid: number;
@@ -103,30 +104,33 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
   doc.text("LOAN ACCOUNT SUMMARY", 40, 87.5, { align: "center" });
 
   doc.setFont("helvetica", "normal");
-  doc.text("Total Loan Amount:", 5, 94);
-  doc.text(`Rs. ${data.totalLoanAmount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 94, { align: "right" });
+  doc.text("Loan Amount (Principal):", 5, 94);
+  doc.text(`Rs. ${data.principal.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 94, { align: "right" });
 
-  doc.text("Total Paid to Date:", 5, 99);
-  doc.text(`Rs. ${data.totalPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 99, { align: "right" });
+  doc.text("Total Payable (With Interest):", 5, 99);
+  doc.text(`Rs. ${data.totalLoanAmount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 99, { align: "right" });
+
+  doc.text("Total Paid to Date:", 5, 104);
+  doc.text(`Rs. ${data.totalPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 104, { align: "right" });
 
   doc.setFont("helvetica", "bold");
-  doc.text("Remaining Balance:", 5, 105);
+  doc.text("Remaining Balance:", 5, 110);
   doc.setFontSize(10);
-  doc.text(`Rs. ${data.remainingBalance.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 105, { align: "right" });
+  doc.text(`Rs. ${data.remainingBalance.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 110, { align: "right" });
 
   // Divider Line
   doc.setLineWidth(0.3);
-  doc.line(5, 110, 75, 110);
+  doc.line(5, 115, 75, 115);
 
   // Footer
   doc.setFont("helvetica", "italic");
   doc.setFontSize(7.5);
-  doc.text("Thank you for your business!", cx, 118, { align: "center" });
+  doc.text("Thank you for your business!", cx, 123, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(5.5);
   doc.setTextColor(100, 100, 100);
-  doc.text("This is an official computer-generated receipt.", cx, 122, { align: "center" });
+  doc.text("This is an official computer-generated receipt.", cx, 127, { align: "center" });
 
   // Border Outer Frame
   doc.setDrawColor(0, 0, 0);
