@@ -270,7 +270,7 @@ export default function SettingsPage() {
     try {
       const res = await logout();
       if (res.success) {
-        router.push("/login");
+        router.push("/welcome");
       } else {
         setIsSigningOut(false);
         setShowToast("Sign out failed");
