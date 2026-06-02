@@ -101,25 +101,30 @@ export default function WelcomePage() {
             <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-center mb-16">Our Platform</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group hover:bg-[#1a1a1a] transition-colors cursor-pointer border border-white/5">
-                <WifiOff className="w-8 h-8 text-white/30 group-hover:text-white transition-colors" />
-                <div>
+              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[#1a1a1a] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <WifiOff className="w-8 h-8 text-white/30 group-hover:text-white transition-colors relative z-10" />
+                <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2">Offline First</h3>
                   <p className="text-xs text-white/50 font-light leading-relaxed">Collect anywhere. Auto-sync later when you have internet.</p>
                 </div>
               </div>
-              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group hover:bg-[#1a1a1a] transition-colors cursor-pointer border border-white/5">
-                <MapPin className="w-8 h-8 text-white/30 group-hover:text-white transition-colors" />
-                <div>
+              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-500 bg-[url('/mobile_ui.png')] bg-cover bg-center" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-80" />
+                <MapPin className="w-8 h-8 text-white/30 group-hover:text-white transition-colors relative z-10" />
+                <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2">Smart Routing</h3>
                   <p className="text-xs text-white/50 font-light leading-relaxed">Organize customers by village and focus on the daily target.</p>
                 </div>
               </div>
-              <div className="aspect-square sm:aspect-[4/5] bg-white text-black p-8 flex flex-col justify-between group cursor-pointer hover:bg-gray-100 transition-colors">
-                <BarChart3 className="w-8 h-8 text-black/50 group-hover:text-black transition-colors" />
-                <div>
-                  <h3 className="text-lg font-bold mb-2">Real-time Analytics</h3>
-                  <p className="text-xs text-black/70 font-light leading-relaxed">Know your numbers instantly without any manual work.</p>
+              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20 group-hover:opacity-50 transition-opacity duration-500 bg-[url('/finance_dashboard.png')] bg-cover bg-left" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-80" />
+                <BarChart3 className="w-8 h-8 text-white/30 group-hover:text-[#FFB800] transition-colors relative z-10" />
+                <div className="relative z-10">
+                  <h3 className="text-lg font-bold mb-2 text-white">Real-time Analytics</h3>
+                  <p className="text-xs text-white/50 font-light leading-relaxed">Know your numbers instantly without any manual work.</p>
                 </div>
               </div>
             </div>
@@ -190,7 +195,7 @@ export default function WelcomePage() {
           <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-24 py-24">
             <div className="w-full aspect-video md:aspect-[21/9] bg-[#111] flex items-center justify-center relative overflow-hidden group cursor-pointer border border-white/10">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-              <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center group-hover:scale-105 transition-transform duration-[2000ms] ease-out" />
+              <div className="absolute inset-0 opacity-40 bg-[url('/finance_dashboard.png')] bg-cover bg-center group-hover:scale-105 transition-transform duration-[2000ms] ease-out" />
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/30 flex items-center justify-center z-20 group-hover:bg-white group-hover:text-black transition-colors backdrop-blur-sm">
                 <PlayCircle className="w-6 h-6 md:w-8 md:h-8" />
               </div>
