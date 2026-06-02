@@ -98,7 +98,7 @@ export async function getAgentPin(): Promise<string | null> {
     .select(`
       hashed_pin,
       tenants!inner (
-        name
+        company_name
       )
     `)
     .eq("id", user.id)
@@ -237,48 +237,52 @@ export async function getUserProfile() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select(`
-      full_name, 
-      email, 
-      hashed_pin,
-      tenants (
-        name
-      )
-    `)
-    .eq("id", user.id)
-    .maybeSingle();
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select(`
+        full_name, 
+        email, 
+        hashed_pin,
+        tenants (
+          company_name
+        )
+      `)
+      .eq("id", user.id)
+      .maybeSingle();
 
-  let displayName = "Agent";
-  if (profile?.full_name) {
-    displayName = profile.full_name;
-  } else if (user.user_metadata?.full_name) {
-    displayName = user.user_metadata.full_name;
-  } else if (profile?.email) {
-    displayName = profile.email.split('@')[0];
-    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-  } else if (user.email) {
-    displayName = user.email.split('@')[0];
-    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+    let displayName = "Agent";
+    if (profile?.full_name) {
+      displayName = profile.full_name;
+    } else if (user.user_metadata?.full_name) {
+      displayName = user.user_metadata.full_name;
+    } else if (profile?.email) {
+      displayName = profile.email.split('@')[0];
+      displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+    } else if (user.email) {
+      displayName = user.email.split('@')[0];
+      displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+    }
+
+    // Always prefer the confirmed email from Supabase Auth
+    const displayEmail = user.email || profile?.email || "No email";
+    const avatarUrl = user.user_metadata?.avatar_url || "";
+    
+    // Type assertion since PostgREST can return an array or object for joins
+    const tenantData = profile?.tenants as unknown as { company_name?: string };
+    const userMetadataCompany = user.user_metadata?.company_name;
+
+    return {
+      id: user.id,
+      name: displayName,
+      email: displayEmail,
+      pin: profile?.hashed_pin || "Not set",
+      avatarUrl,
+      companyName: userMetadataCompany || tenantData?.company_name || "My Loan Company"
+    };
+  } catch (err) {
+    console.error("Error fetching user profile:", err);
+    return null;
   }
-
-  // Always prefer the confirmed email from Supabase Auth
-  const displayEmail = user.email || profile?.email || "No email";
-  const avatarUrl = user.user_metadata?.avatar_url || "";
-  
-  // Type assertion since PostgREST can return an array or object for joins
-  const tenantData = profile?.tenants as unknown as { name?: string };
-  const userMetadataCompany = user.user_metadata?.company_name;
-
-  return {
-    id: user.id,
-    name: displayName,
-    email: displayEmail,
-    pin: profile?.hashed_pin || "Not set",
-    avatarUrl,
-    companyName: userMetadataCompany || tenantData?.name || "My Loan Company"
-  };
 }
 
 export async function inviteAgent(email: string, fullName: string) {

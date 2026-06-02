@@ -5,7 +5,7 @@
 -- Table: tenants (represents a client's business)
 CREATE TABLE IF NOT EXISTS public.tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
+  company_name TEXT NOT NULL,
   contact_email TEXT, -- Added to make it easy to identify the tenant owner in Supabase Studio
   status TEXT NOT NULL DEFAULT 'ACTIVE', -- 'ACTIVE', 'INACTIVE'
   created_at TIMESTAMPTZ DEFAULT now()
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
 -- ==========================================
 
 -- Insert a default tenant to adopt any existing data
-INSERT INTO public.tenants (id, name, status)
+INSERT INTO public.tenants (id, company_name, status)
 VALUES ('00000000-0000-0000-0000-000000000001', 'Default Organization', 'ACTIVE')
 ON CONFLICT DO NOTHING;
 
