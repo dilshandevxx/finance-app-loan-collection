@@ -269,6 +269,7 @@ export async function getUserProfile() {
   
   // Type assertion since PostgREST can return an array or object for joins
   const tenantData = profile?.tenants as unknown as { name?: string };
+  const userMetadataCompany = user.user_metadata?.company_name;
 
   return {
     id: user.id,
@@ -276,7 +277,7 @@ export async function getUserProfile() {
     email: displayEmail,
     pin: profile?.hashed_pin || "Not set",
     avatarUrl,
-    companyName: tenantData?.name || "My Loan Company"
+    companyName: userMetadataCompany || tenantData?.name || "My Loan Company"
   };
 }
 

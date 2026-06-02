@@ -42,6 +42,7 @@ interface ReceiptDetails {
     idNumber?: string | null;
     address?: string | null;
   };
+  companyName?: string;
 }
 
 export function QuickPaymentModal({
@@ -172,7 +173,7 @@ export function QuickPaymentModal({
       const newBal = receiptData.loan.remainingBalance;
       message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `🏢 *${config.appName}*\n` +
+        `🏢 *${receiptData.companyName || config.appName}*\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
@@ -272,7 +273,7 @@ export function QuickPaymentModal({
         installmentNo: receiptData
           ? `${receiptData.installment.index} of ${receiptData.installment.totalCount}`
           : "1 (Offline)",
-        companyName: config.appName,
+        companyName: receiptData?.companyName || config.appName,
       };
 
       // Generate PDF

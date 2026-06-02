@@ -101,7 +101,11 @@ export async function createLoan(formData: FormData) {
         phone: phone,
         member_id: memberId?.trim() || null,
         avatar_url: avatarUrl,
-        address: serializedAddress
+        address: serializedAddress,
+        company_name: companyNameVal.trim() || null,
+        nic_number: idNumberVal.trim() || null,
+        street_address: addressVal.trim() || null,
+        village: stateVal.trim() || null
       })
       .select()
       .single();
@@ -243,7 +247,12 @@ export async function getReceiptDetails(installmentId: string) {
     const thisInstallmentPaid = Number(installment.amount);
     const previousBalance = currentRemainingBalance + thisInstallmentPaid;
 
+    const { getUserProfile } = await import("./auth-actions");
+    const profile = await getUserProfile();
+    const companyName = profile?.companyName || "Loan Track";
+
     return {
+      companyName,
       installment: {
         id: installment.id,
         amount: Number(installment.amount),

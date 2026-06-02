@@ -48,6 +48,9 @@ export default async function CustomerDetails({ params }: Props) {
 
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
             <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            {customer.companyName && (
+              <span className="text-primary font-bold text-sm mt-1">{customer.companyName}</span>
+            )}
             {customer.state && (
               <span className="mt-2 px-3 py-1 text-xs font-black bg-primary/10 dark:bg-white/10 text-primary dark:text-white/80 rounded-full flex items-center gap-1 select-none">
                 📍 {customer.state}
@@ -129,6 +132,9 @@ export default async function CustomerDetails({ params }: Props) {
 
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
             <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            {customer.companyName && (
+              <span className="text-primary font-bold text-sm mt-1">{customer.companyName}</span>
+            )}
             {customer.state && (
               <span className="mt-2 px-3 py-1 text-xs font-black bg-primary/10 dark:bg-white/10 text-primary dark:text-white/80 rounded-full flex items-center gap-1 select-none">
                 📍 {customer.state}
