@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, WifiOff, BarChart3, MapPin, Circle, PlayCircle, Star } from "lucide-react";
+import { ArrowUpRight, WifiOff, BarChart3, MapPin, Circle, PlayCircle, Star, CircleDashed } from "lucide-react";
 import { config } from "@/lib/config";
 
 export default function WelcomePage() {
@@ -10,9 +10,7 @@ export default function WelcomePage() {
       {/* ── Nav ── */}
       <header className="px-6 sm:px-12 py-8 flex items-center justify-between max-w-[1400px] mx-auto">
         <div className="flex items-center gap-3">
-          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/10 shrink-0">
-            <Image src="/icon-192x192.png" alt="Logo" fill className="object-cover" sizes="32px" />
-          </div>
+          <CircleDashed className="w-7 h-7 text-white stroke-[1.5]" />
           <span className="text-sm font-semibold tracking-tight">{config.appName}</span>
         </div>
         <div className="flex items-center gap-6">
