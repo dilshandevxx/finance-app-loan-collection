@@ -8,7 +8,7 @@ export default function WelcomePage() {
     <div className="min-h-screen bg-[#050505] text-white font-sans antialiased overflow-x-hidden selection:bg-white selection:text-black">
       
       {/* ── Nav ── */}
-      <header className="px-6 sm:px-12 py-8 flex items-center justify-between">
+      <header className="px-6 sm:px-12 py-8 flex items-center justify-between max-w-[1400px] mx-auto">
         <div className="flex items-center gap-3">
           <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/10 shrink-0">
             <Image src="/icon-192x192.png" alt="Logo" fill className="object-cover" sizes="32px" />
@@ -25,7 +25,7 @@ export default function WelcomePage() {
         </div>
       </header>
 
-      <main className="px-6 sm:px-12 lg:px-24">
+      <main className="px-6 sm:px-12 lg:px-24 max-w-[1400px] mx-auto">
         
         {/* ── Hero ── */}
         <section className="pt-20 pb-32 flex flex-col md:flex-row justify-between items-start md:items-end gap-12 border-b border-white/10">
@@ -51,31 +51,31 @@ export default function WelcomePage() {
 
         {/* ── What We Do ── */}
         <section className="py-24 border-b border-white/10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div className="md:col-span-1">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+            <div className="md:col-span-4">
               <h2 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-8">What We Do</h2>
             </div>
             
-            <div className="md:col-span-1 flex flex-col gap-3">
-              <h3 className="text-sm font-bold text-white mb-2">Field Collection</h3>
-              <p className="text-sm text-white/60 font-light cursor-default">Offline Mode</p>
-              <p className="text-sm text-white/60 font-light cursor-default">Route Villages</p>
-              <p className="text-sm text-white/60 font-light cursor-default">PDF Receipts</p>
-              <p className="text-sm text-white/60 font-light cursor-default">Quick Search</p>
+            <div className="md:col-span-4 flex flex-col gap-3">
+              <h3 className="text-sm font-bold text-white mb-4">Field Collection</h3>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Offline Mode</p>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Route Villages</p>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">PDF Receipts</p>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Quick Search</p>
               
-              <Link href="/login/auth" className="mt-6">
-                <button className="px-4 py-2 border border-white/20 hover:border-white transition-colors text-[10px] font-bold uppercase tracking-widest">
+              <Link href="/login/auth" className="mt-8">
+                <button className="px-5 py-2.5 border border-white/20 hover:border-white transition-colors text-[10px] font-bold uppercase tracking-widest">
                   See Details
                 </button>
               </Link>
             </div>
             
-            <div className="md:col-span-1 flex flex-col gap-3">
-              <h3 className="text-sm font-bold text-white mb-2">Management</h3>
-              <p className="text-sm text-white/60 font-light cursor-default">Live Analytics</p>
-              <p className="text-sm text-white/60 font-light cursor-default">Full Reports</p>
-              <p className="text-sm text-white/60 font-light cursor-default">PIN Access</p>
-              <p className="text-sm text-white/60 font-light cursor-default">Agent Tracking</p>
+            <div className="md:col-span-4 flex flex-col gap-3">
+              <h3 className="text-sm font-bold text-white mb-4">Management</h3>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Live Analytics</p>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Full Reports</p>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">PIN Access</p>
+              <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Agent Tracking</p>
             </div>
           </div>
           
@@ -128,28 +128,29 @@ export default function WelcomePage() {
 
         {/* ── Stats & Awards ── */}
         <section className="py-24 border-b border-white/10">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div className="md:col-span-3">
-              <p className="text-xs text-white/40 font-light leading-relaxed">
-                You get results, we get records. Built to scale with your collection business.
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+            <div className="md:col-span-4">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-6">Our Scale</h2>
+              <p className="text-sm text-white/60 font-light leading-relaxed max-w-sm">
+                You get results, we get records. Built to scale seamlessly with your growing collection business across any region.
               </p>
             </div>
             
-            <div className="md:col-span-4 md:col-start-5">
+            <div className="md:col-span-4">
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/20">
                 <h3 className="font-bold text-lg">Performance</h3>
                 <span className="text-sm font-bold text-white/50">99.9%</span>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                   <span className="text-white/60 font-light">Uptime</span>
                   <span className="font-medium">99.99%</span>
                 </div>
-                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                   <span className="text-white/60 font-light">Sync Speed</span>
                   <span className="font-medium">&lt; 1s</span>
                 </div>
-                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                   <span className="text-white/60 font-light">Data Security</span>
                   <span className="font-medium">AES-256</span>
                 </div>
@@ -162,11 +163,11 @@ export default function WelcomePage() {
                 <span className="text-sm font-bold text-white/50">2026</span>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                   <span className="text-white/60 font-light">Collections</span>
                   <span className="font-medium">1M+</span>
                 </div>
-                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-2">
+                <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                   <span className="text-white/60 font-light">Active Agents</span>
                   <span className="font-medium">5,000+</span>
                 </div>
@@ -188,30 +189,30 @@ export default function WelcomePage() {
 
         {/* ── Testimonials ── */}
         <section className="py-24 border-b border-white/10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div className="md:col-span-1">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+            <div className="lg:col-span-4">
               <h2 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-8">What They Think</h2>
             </div>
             
-            <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 { name: "Kamal Perera", role: "Field Agent", quote: "This platform is more familiar with field work than good internet." },
                 { name: "Nuwan Silva", role: "Collection Manager", quote: "It is so resilient, unbothered by patchy connections. Because that's what it lives with." },
                 { name: "Ruwan Dias", role: "Finance Director", quote: "A designed beauty the loan software industry has not asked for. There is nothing left to add." },
                 { name: "Asela Fernando", role: "Field Supervisor", quote: "The platform is more familiar with field design than good design." },
               ].map((t, i) => (
-                <div key={i} className="p-8 border border-white/10 bg-[#0a0a0a] flex flex-col gap-6 hover:border-white/20 transition-colors">
+                <div key={i} className="p-8 border border-white/10 bg-[#0a0a0a] flex flex-col gap-6 hover:border-white/20 hover:bg-[#111] transition-all cursor-default">
                   <div className="flex gap-1">
-                    {[...Array(5)].map((_, j) => <Star key={j} className="w-3 h-3 fill-[#e8d44d] text-[#e8d44d]" />)}
+                    {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-[#e8d44d] text-[#e8d44d]" />)}
                   </div>
                   <p className="text-sm font-medium leading-relaxed text-white/90">"{t.quote}"</p>
-                  <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/5">
-                    <div className="w-10 h-10 rounded-full bg-[#222] overflow-hidden shrink-0">
+                  <div className="flex items-center gap-3 mt-auto pt-5 border-t border-white/5">
+                    <div className="w-10 h-10 rounded-full bg-[#222] overflow-hidden shrink-0 border border-white/10">
                        <Image src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${t.name.replace(' ', '')}`} alt={t.name} width={40} height={40} />
                     </div>
                     <div>
                       <h4 className="text-xs font-bold">{t.name}</h4>
-                      <p className="text-[10px] text-white/50">{t.role}</p>
+                      <p className="text-[10px] text-white/50 mt-0.5 uppercase tracking-wider">{t.role}</p>
                     </div>
                   </div>
                 </div>
