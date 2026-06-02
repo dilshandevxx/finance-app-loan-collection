@@ -274,10 +274,10 @@ export default function WelcomePage() {
               <div className="sm:col-span-2 flex flex-col items-center sm:items-start text-center sm:text-left">
                 <h4 className="font-bold text-white/80 mb-6 text-sm uppercase tracking-widest">Newsletter</h4>
                 <p className="text-white/50 mb-8 max-w-md leading-relaxed text-base">Subscribe to receive the latest updates on product features and fintech insights.</p>
-                <form className="flex items-center border-b border-white/20 pb-4 focus-within:border-white transition-colors w-full max-w-md group" onSubmit={(e) => e.preventDefault()}>
+                <div className="flex items-center border-b border-white/20 pb-4 focus-within:border-white transition-colors w-full max-w-md group">
                   <input type="email" required placeholder="Your Email Address" className="bg-transparent outline-none flex-1 text-base md:text-lg placeholder:text-white/20 text-white" />
-                  <button type="submit" className="p-2 -mr-2 group-hover:translate-x-1 transition-transform"><ArrowUpRight className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" /></button>
-                </form>
+                  <button type="button" className="p-2 -mr-2 group-hover:translate-x-1 transition-transform"><ArrowUpRight className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" /></button>
+                </div>
               </div>
             </div>
             
