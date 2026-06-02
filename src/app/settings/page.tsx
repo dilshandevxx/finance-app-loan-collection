@@ -496,18 +496,6 @@ export default function SettingsPage() {
                   </div>
                   <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </Link>
-                <Link
-                  href="/settings/add-agent"
-                  className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      <Shield className="w-5 h-5" />
-                    </div>
-                    <span className="text-foreground font-semibold text-sm">Provision New Agent</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                </Link>
               </CardContent>
             </Card>
           </section>
