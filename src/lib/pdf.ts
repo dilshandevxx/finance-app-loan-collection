@@ -13,141 +13,185 @@ export type ReceiptPDFData = {
   principal: number;
   totalLoanAmount: number;
   remainingBalance: number;
+  previousBalance: number;
+  weeklyInstallment: number;
   totalPaid: number;
   installmentNo: string;
   companyName: string;
 };
 
+function fmtRs(n: number): string {
+  return `Rs. ${n.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`;
+}
+
 export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
-  // Create a thermal receipt size PDF (80mm width x 140mm height)
+  // Create a thermal receipt size PDF (80mm width x 170mm height - taller for more detail)
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
-    format: [80, 140],
+    format: [80, 175],
   });
 
   // Margins & dimensions
-  const pageWidth = doc.internal.pageSize.getWidth(); // should be 80
+  const pageWidth = doc.internal.pageSize.getWidth(); // 80
   const cx = pageWidth / 2;
+  const lx = 5;  // left margin
+  const rx = 75; // right margin
+  let y = 0;
 
-  // Header Title
+  // ── HEADER ─────────────────────────────────────────────
+  y = 12;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
-  doc.text(data.companyName.toUpperCase(), cx, 12, { align: "center" });
+  doc.text(data.companyName.toUpperCase(), cx, y, { align: "center" });
 
+  y = 17;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  doc.text("OFFICIAL PAYMENT RECEIPT", cx, 17, { align: "center" });
+  doc.text("OFFICIAL PAYMENT RECEIPT", cx, y, { align: "center" });
 
-  // Divider Line
+  y = 20;
   doc.setDrawColor(0, 0, 0);
   doc.setLineWidth(0.4);
-  doc.line(5, 20, 75, 20);
+  doc.line(lx, y, rx, y);
 
-  // Metadata
+  // ── RECEIPT INFO ───────────────────────────────────────
+  y = 25;
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "bold");
-  doc.text("Receipt No:", 5, 25);
+  doc.text("Receipt No:", lx, y);
   doc.setFont("helvetica", "normal");
-  doc.text(data.receiptId, 25, 25);
+  doc.text(data.receiptId, 25, y);
 
+  y = 29;
   doc.setFont("helvetica", "bold");
-  doc.text("Date/Time:", 5, 29);
+  doc.text("Date/Time:", lx, y);
   doc.setFont("helvetica", "normal");
-  doc.text(data.dateStr, 25, 29);
+  doc.text(data.dateStr, 25, y);
 
-  // Divider Line
-  doc.line(5, 33, 75, 33);
+  y = 33;
+  doc.line(lx, y, rx, y);
 
-  // Client Details
+  // ── CUSTOMER DETAILS ───────────────────────────────────
+  y = 38;
   doc.setFont("helvetica", "bold");
-  doc.text("CLIENT DETAILS", 5, 38);
+  doc.text("CUSTOMER", lx, y);
 
   doc.setFont("helvetica", "normal");
-  doc.text(`Name:`, 5, 43);
-  doc.text(data.customerName, 25, 43);
-
-  doc.text(`ID (NIC):`, 5, 47);
-  doc.text(data.idNumber, 25, 47);
-
-  doc.text(`User ID:`, 5, 51);
-  doc.text(data.memberId, 25, 51);
-
-  doc.text(`Phone:`, 5, 55);
-  doc.text(data.phone, 25, 55);
-
-  doc.text(`Address:`, 5, 59);
+  y = 43; doc.text("Name:", lx, y); doc.text(data.customerName, 25, y);
+  y = 47; doc.text("NIC:", lx, y); doc.text(data.idNumber, 25, y);
+  y = 51; doc.text("ID:", lx, y); doc.text(data.memberId, 25, y);
+  y = 55; doc.text("Phone:", lx, y); doc.text(data.phone, 25, y);
+  y = 59; doc.text("Address:", lx, y);
   const splitAddress = doc.splitTextToSize(data.address, 50);
-  doc.text(splitAddress, 25, 59);
+  doc.text(splitAddress, 25, y);
 
-  // Divider Line
-  doc.line(5, 65, 75, 65);
+  y = 65;
+  doc.line(lx, y, rx, y);
 
-  // Payment Summary
+  // ── LOAN DETAILS (Clear Section) ───────────────────────
+  y = 67;
   doc.setFont("helvetica", "bold");
-  doc.setFillColor(240, 240, 240);
-  doc.rect(5, 67, 70, 6, "F");
-  doc.text("PAYMENT DETAILS", 40, 71.5, { align: "center" });
+  doc.setFillColor(230, 230, 230);
+  doc.rect(lx, y, 70, 6, "F");
+  doc.text("LOAN DETAILS", cx, y + 4.5, { align: "center" });
 
   doc.setFont("helvetica", "normal");
-  doc.text("Installment No:", 5, 77);
-  doc.text(data.installmentNo, 75, 77, { align: "right" });
+  y = 77; doc.text("Principal (Given):", lx, y);
+  doc.text(fmtRs(data.principal), rx, y, { align: "right" });
 
+  y = 82; doc.text("Full Amount (+ Interest):", lx, y);
+  doc.text(fmtRs(data.totalLoanAmount), rx, y, { align: "right" });
+
+  y = 87; doc.text("Weekly Installment:", lx, y);
+  doc.text(fmtRs(data.weeklyInstallment), rx, y, { align: "right" });
+
+  y = 91;
+  doc.setLineWidth(0.2);
+  doc.line(lx, y, rx, y);
+
+  // ── TODAY'S PAYMENT ────────────────────────────────────
+  y = 93;
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(9.5);
-  doc.text("Amount Paid:", 5, 83);
-  doc.text(`Rs. ${data.amountPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 83, { align: "right" });
+  doc.setFillColor(230, 230, 230);
+  doc.rect(lx, y, 70, 6, "F");
+  doc.text("TODAY'S PAYMENT", cx, y + 4.5, { align: "center" });
+
+  doc.setFont("helvetica", "normal");
+  y = 103; doc.text("Installment No:", lx, y);
+  doc.text(data.installmentNo, rx, y, { align: "right" });
+
+  y = 108; doc.text("Due Amount:", lx, y);
+  doc.text(fmtRs(data.weeklyInstallment), rx, y, { align: "right" });
+
+  y = 114;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text("Customer Paid:", lx, y);
+  doc.text(fmtRs(data.amountPaid), rx, y, { align: "right" });
 
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "normal");
-  doc.text("Status:", 5, 89);
+  y = 119; doc.text("Status:", lx, y);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(34, 197, 94); // Emerald Green
-  doc.text(data.status, 75, 89, { align: "right" });
-  doc.setTextColor(0, 0, 0); // Reset color
+  doc.text(data.status, rx, y, { align: "right" });
+  doc.setTextColor(0, 0, 0);
 
-  // Loan Progress Balance
+  y = 123;
+  doc.setLineWidth(0.2);
+  doc.line(lx, y, rx, y);
+
+  // ── BALANCE (Clear calculation) ────────────────────────
+  y = 125;
   doc.setFont("helvetica", "bold");
-  doc.setFillColor(240, 240, 240);
-  doc.rect(5, 93, 70, 6, "F");
-  doc.text("LOAN ACCOUNT SUMMARY", 40, 97.5, { align: "center" });
+  doc.setFillColor(230, 230, 230);
+  doc.rect(lx, y, 70, 6, "F");
+  doc.text("BALANCE", cx, y + 4.5, { align: "center" });
 
   doc.setFont("helvetica", "normal");
-  doc.text("Loan Principal:", 5, 104);
-  doc.text(`Rs. ${data.principal.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 104, { align: "right" });
+  y = 135; doc.text("Previous Balance:", lx, y);
+  doc.text(fmtRs(data.previousBalance), rx, y, { align: "right" });
 
-  doc.text("Full Amount:", 5, 109);
-  doc.text(`Rs. ${data.totalLoanAmount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 109, { align: "right" });
+  y = 140; doc.text("Paid Today:", lx, y);
+  doc.text(`- ${fmtRs(data.amountPaid)}`, rx, y, { align: "right" });
 
-  doc.text("Total Paid to Date:", 5, 114);
-  doc.text(`Rs. ${data.totalPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 114, { align: "right" });
-
-  doc.text("Customer Paid Amount:", 5, 119);
-  doc.text(`Rs. ${data.amountPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 119, { align: "right" });
-
-  doc.setFont("helvetica", "bold");
-  doc.text("Remaining Balance:", 5, 125);
-  doc.setFontSize(10);
-  doc.text(`Rs. ${data.remainingBalance.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 125, { align: "right" });
-
-  // Divider Line
-  doc.setFontSize(7.5);
+  y = 144;
   doc.setLineWidth(0.3);
-  doc.line(5, 130, 75, 130);
+  doc.line(35, y, rx, y);
 
-  // Footer
+  y = 149;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9.5);
+  doc.text("New Balance:", lx, y);
+  doc.text(fmtRs(data.remainingBalance), rx, y, { align: "right" });
+
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  y = 155; doc.text("Total Paid So Far:", lx, y);
+  doc.text(fmtRs(data.totalPaid), rx, y, { align: "right" });
+
+  y = 159;
+  doc.setLineWidth(0.3);
+  doc.line(lx, y, rx, y);
+
+  // ── FOOTER ─────────────────────────────────────────────
   doc.setFont("helvetica", "italic");
-  doc.text("Thank you for your business!", cx, 134, { align: "center" });
+  doc.setFontSize(7.5);
+  y = 163;
+  doc.text("Thank you for your payment!", cx, y, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(5.5);
   doc.setTextColor(100, 100, 100);
-  doc.text("This is an official computer-generated receipt.", cx, 137, { align: "center" });
+  y = 167;
+  doc.text("This is an official computer-generated receipt.", cx, y, { align: "center" });
 
   // Border Outer Frame
   doc.setDrawColor(0, 0, 0);
+  doc.setTextColor(0, 0, 0);
   doc.setLineWidth(0.5);
-  doc.rect(2, 2, 76, 138);
+  doc.rect(2, 2, 76, 172);
 
   return doc;
 }
