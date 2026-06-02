@@ -259,6 +259,8 @@ export async function getReceiptDetails(installmentId: string) {
         name: customer.name,
         phone: customer.phone,
         memberId: customer.member_id,
+        idNumber: customer.id_number,
+        address: customer.address,
       }
     };
   } catch (err) {

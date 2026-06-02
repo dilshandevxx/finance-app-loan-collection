@@ -38,6 +38,8 @@ interface ReceiptDetails {
     name: string;
     phone: string;
     memberId: string | null;
+    idNumber?: string | null;
+    address?: string | null;
   };
 }
 
@@ -145,6 +147,23 @@ export function QuickPaymentModal({
     });
     const receiptId = `REC-${installmentId.slice(0, 8).toUpperCase()}`;
 
+    let parsedAddressStr = "N/A";
+    let nicStr = "N/A";
+    if (receiptData) {
+      try {
+        if (receiptData.customer.address) {
+          const parsed = JSON.parse(receiptData.customer.address);
+          const parts = [];
+          if (parsed.address) parts.push(parsed.address);
+          if (parsed.state) parts.push(parsed.state);
+          if (parts.length > 0) parsedAddressStr = parts.join(", ");
+        }
+      } catch (e) {
+        parsedAddressStr = receiptData.customer.address || "N/A";
+      }
+      nicStr = receiptData.customer.idNumber || "N/A";
+    }
+
     let message = "";
     if (receiptData) {
       const instNo = `${receiptData.installment.index} of ${receiptData.installment.totalCount}`;
@@ -157,17 +176,20 @@ export function QuickPaymentModal({
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*👤 CLIENT DETAILS*\n` +
         `• Name: ${receiptData.customer.name}\n` +
-        `• Member ID: ${receiptData.customer.memberId || 'N/A'}\n` +
-        `• Phone: ${formatLKPhone(receiptData.customer.phone)}\n\n` +
+        `• ID (NIC): ${nicStr}\n` +
+        `• User ID: ${receiptData.customer.memberId || 'N/A'}\n` +
+        `• Phone: ${formatLKPhone(receiptData.customer.phone)}\n` +
+        `• Address: ${parsedAddressStr}\n\n` +
         `*💰 PAYMENT DETAILS*\n` +
         `• Installment: ${instNo}\n` +
         `• Amount Paid: *${formatLKR(finalAmount)}*\n` +
         `• Status: PAID SUCCESSFUL ✅\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*📊 LOAN ACCOUNT SUMMARY*\n` +
-        `• Loan Amount (Principal): ${formatLKR(receiptData.loan.principalAmount)}\n` +
-        `• Total Payable (With Interest): ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
-        `• Total Paid to Date: ${formatLKR(receiptData.loan.totalPaid)}\n` +
+        `• Loan Principal: ${formatLKR(receiptData.loan.principalAmount)}\n` +
+        `• Full Amount: ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
+        `• Total Paid to Date (Installment): ${formatLKR(receiptData.loan.totalPaid)}\n` +
+        `• Customer Paid Amount: *${formatLKR(finalAmount)}*\n` +
         `• *Remaining Balance:* *${formatLKR(receiptData.loan.remainingBalance)}*\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `Thank you for your business!\n`;
@@ -203,12 +225,31 @@ export function QuickPaymentModal({
       });
       const receiptId = `REC-${installmentId.slice(0, 8).toUpperCase()}`;
 
+      // Extract address safely
+      let parsedAddressStr = "N/A";
+      let nicStr = receiptData?.customer.idNumber || customer.id_number || "N/A";
+      const rawAddress = receiptData?.customer.address || customer.address;
+      
+      try {
+        if (rawAddress) {
+          const parsed = JSON.parse(rawAddress as string);
+          const parts = [];
+          if (parsed.address) parts.push(parsed.address);
+          if (parsed.state) parts.push(parsed.state);
+          if (parts.length > 0) parsedAddressStr = parts.join(", ");
+        }
+      } catch (e) {
+        parsedAddressStr = (rawAddress as string) || "N/A";
+      }
+
       // Compile receipt details data
       const pdfData = {
         receiptId,
         dateStr,
         customerName: receiptData?.customer.name || customer.name,
         memberId: receiptData?.customer.memberId || customer.memberId || "N/A",
+        idNumber: nicStr,
+        address: parsedAddressStr,
         phone: formatLKPhone(receiptData?.customer.phone || customer.phone),
         amountPaid: finalAmount,
         status: isOfflineSaved ? "PAID (OFFLINE)" : "PAID SUCCESSFUL",
