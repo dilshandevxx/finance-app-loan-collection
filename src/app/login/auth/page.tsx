@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Mail, Key } from "lucide-react";
 import { loginWithPassword } from "@/app/auth-actions";
 import { config } from "@/lib/config";
+import { CredFlowLogo } from "@/components/CredFlowLogo";
 
 export default function AuthLoginPage() {
   const [email, setEmail] = useState("");
@@ -42,19 +43,11 @@ export default function AuthLoginPage() {
         
         {/* Header with New Logo */}
         <div className="flex flex-col items-center mb-10">
-          <div className="relative w-20 h-20 mb-6 group">
-            <div className="absolute inset-0 bg-primary/40 rounded-[1.5rem] blur-xl group-hover:blur-2xl transition-all duration-500" />
-            <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border border-white/20 shadow-xl bg-black">
-              <Image 
-                src="/icon-192x192.png" 
-                alt="Logo" 
-                fill 
-                className="object-cover"
-                sizes="80px"
-              />
-            </div>
+          <div className="relative w-20 h-20 mb-6 flex items-center justify-center rounded-[1.5rem] bg-black/50 border border-white/20 shadow-xl overflow-hidden group">
+            <div className="absolute inset-0 bg-primary/20 blur-xl group-hover:blur-2xl transition-all duration-500" />
+            <CredFlowLogo className="w-12 h-12 relative z-10 drop-shadow-lg group-hover:scale-105 transition-transform" />
           </div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight">{config.appName || "LoanTrack Pro"}</h2>
+          <h2 className="text-3xl font-extrabold text-white tracking-tight">{config.appName}</h2>
           <p className="text-sm text-gray-400 mt-2 text-center font-medium">Welcome back. Please sign in to continue.</p>
         </div>
 

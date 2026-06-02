@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, WifiOff, BarChart3, MapPin, Circle, PlayCircle, Star, CircleDashed } from "lucide-react";
 import { config } from "@/lib/config";
+import { CredFlowLogo } from "@/components/CredFlowLogo";
 
 export default function WelcomePage() {
   return (
@@ -10,7 +11,7 @@ export default function WelcomePage() {
       {/* ── Nav ── */}
       <header className="px-6 sm:px-12 py-8 flex items-center justify-between max-w-[1400px] mx-auto">
         <div className="flex items-center gap-3">
-          <CircleDashed className="w-7 h-7 text-white stroke-[1.5]" />
+          <CredFlowLogo className="w-8 h-8" />
           <span className="text-sm font-semibold tracking-tight">{config.appName}</span>
         </div>
         <div className="flex items-center gap-6">
