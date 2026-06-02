@@ -6,6 +6,7 @@
 CREATE TABLE IF NOT EXISTS public.tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
+  contact_email TEXT, -- Added to make it easy to identify the tenant owner in Supabase Studio
   status TEXT NOT NULL DEFAULT 'ACTIVE', -- 'ACTIVE', 'INACTIVE'
   created_at TIMESTAMPTZ DEFAULT now()
 );
