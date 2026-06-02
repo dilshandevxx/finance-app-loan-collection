@@ -360,6 +360,12 @@ export default function SettingsPage() {
               <span className="text-muted-foreground text-[10px] sm:text-xs font-semibold tracking-widest uppercase opacity-70">
                 PIN: {userProfile?.pin ? "••••" : "Not Set"}
               </span>
+              {(userProfile as any)?.companyName && (
+                <span className="text-muted-foreground text-[10px] sm:text-xs font-bold tracking-widest uppercase opacity-90 mt-1 flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                  {(userProfile as any).companyName}
+                </span>
+              )}
             </div>
           </div>
         </CardContent>
@@ -418,18 +424,7 @@ export default function SettingsPage() {
                     )}
                   </div>
 
-                  {/* Company Name Input */}
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                    <label htmlFor="company-name" className="text-sm font-bold text-muted-foreground uppercase tracking-wide sm:w-1/3">Company Name</label>
-                    <input
-                      type="text"
-                      id="company-name"
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      placeholder="Enter Loan Company Name..."
-                      className="sm:w-2/3 bg-secondary border border-border focus:border-ring/40 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
-                    />
-                  </div>
+                  {/* Removed Company Name Input */}
 
                   <button
                     type="submit"
@@ -498,6 +493,18 @@ export default function SettingsPage() {
                       <Bell className="w-5 h-5" />
                     </div>
                     <span className="text-foreground font-semibold text-sm">Notifications</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                </Link>
+                <Link
+                  href="/settings/add-agent"
+                  className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="bg-primary/10 border border-primary/20 p-2.5 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Shield className="w-5 h-5" />
+                    </div>
+                    <span className="text-foreground font-semibold text-sm">Provision New Agent</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </Link>

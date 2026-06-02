@@ -40,6 +40,38 @@ export async function loginWithPassword(email: string, password: string) {
   return { success: true };
 }
 
+export async function adminCreateAgent(fullName: string, companyName: string, email: string, tempPassword: string) {
+  try {
+    const supabase = await createClient();
+    
+    // 1. Verify caller is authenticated
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: "Not logged in as admin" };
+
+    // 2. Instantiate Admin Client
+    const adminSupabase = getSupabaseClient();
+
+    // 3. Create the user
+    const { data, error } = await adminSupabase.auth.admin.createUser({
+      email,
+      password: tempPassword,
+      email_confirm: true, // Auto-confirm
+      user_metadata: {
+        full_name: fullName,
+        company_name: companyName
+      }
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
@@ -63,7 +95,12 @@ export async function getAgentPin(): Promise<string | null> {
 
   const { data } = await supabase
     .from("user_profiles")
-    .select("hashed_pin")
+    .select(`
+      hashed_pin,
+      tenants!inner (
+        name
+      )
+    `)
     .eq("id", user.id)
     .maybeSingle();
 
@@ -202,7 +239,14 @@ export async function getUserProfile() {
 
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("full_name, email, hashed_pin")
+    .select(`
+      full_name, 
+      email, 
+      hashed_pin,
+      tenants (
+        name
+      )
+    `)
     .eq("id", user.id)
     .maybeSingle();
 
@@ -219,16 +263,20 @@ export async function getUserProfile() {
     displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
   }
 
-  // Always prefer the confirmed email from Supabase Auth — it's guaranteed to be set
+  // Always prefer the confirmed email from Supabase Auth
   const displayEmail = user.email || profile?.email || "No email";
   const avatarUrl = user.user_metadata?.avatar_url || "";
+  
+  // Type assertion since PostgREST can return an array or object for joins
+  const tenantData = profile?.tenants as unknown as { name?: string };
 
   return {
     id: user.id,
     name: displayName,
     email: displayEmail,
     pin: profile?.hashed_pin || "Not set",
-    avatarUrl
+    avatarUrl,
+    companyName: tenantData?.name || "My Loan Company"
   };
 }
 
