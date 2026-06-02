@@ -1,7 +1,7 @@
 export const config = {
   appName: process.env.NEXT_PUBLIC_APP_NAME || "CredFlow",
-  appShortName: process.env.NEXT_PUBLIC_APP_SHORT_NAME || "LoanTrack",
+  appShortName: process.env.NEXT_PUBLIC_APP_SHORT_NAME || "CredFlow",
   appDescription: process.env.NEXT_PUBLIC_APP_DESCRIPTION || "Professional loan collection and management platform",
-  supportContact: process.env.NEXT_PUBLIC_SUPPORT_CONTACT || "support@loantrack.com",
+  supportContact: process.env.NEXT_PUBLIC_SUPPORT_CONTACT || "support@credflow.com",
   agentName: process.env.NEXT_PUBLIC_AGENT_NAME || "Agent",
 };
