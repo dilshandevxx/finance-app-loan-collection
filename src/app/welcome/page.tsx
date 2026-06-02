@@ -239,45 +239,45 @@ export default function WelcomePage() {
           </div>
         </section>
 
-        {/* ── Footer / Let's Work ── */}
+        {/* ── Footer / Let's Talk ── */}
         <footer className="w-full bg-[#030303] border-t border-white/5">
-          <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-24 pt-32 pb-12">
-            <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-12 mb-32 border-b border-white/10 pb-20 text-center md:text-left">
+          <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-24 pt-40 pb-16">
+            <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-16 mb-40 border-b border-white/10 pb-24 text-center md:text-left">
               <div>
-                <h2 className="text-[clamp(3.5rem,10vw,8rem)] font-bold tracking-tighter leading-none mb-4">Let's Work</h2>
-                <p className="text-sm text-white/40 font-light max-w-sm mx-auto md:mx-0">Transform your loan collection process with our next-generation platform designed for field mobility.</p>
+                <h2 className="text-[clamp(4rem,12vw,10rem)] font-bold tracking-tighter leading-none mb-6 text-white">Let's Talk</h2>
+                <p className="text-base md:text-lg text-white/50 font-light max-w-md mx-auto md:mx-0 leading-relaxed">Transform your loan collection process with our next-generation platform designed for field mobility.</p>
               </div>
               <Link href="/login/auth">
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border border-white/20 flex flex-col items-center justify-center hover:bg-white hover:text-black hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden shrink-0">
+                <div className="w-40 h-40 md:w-48 md:h-48 rounded-full border border-white/20 flex flex-col items-center justify-center hover:bg-white hover:text-black hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden shrink-0">
                   <div className="absolute inset-3 rounded-full border border-dashed border-current animate-[spin_20s_linear_infinite] opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
-                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-center leading-tight z-10">Start<br/>Now</span>
+                  <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-center leading-tight z-10">Start<br/>Now</span>
                 </div>
               </Link>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-16 md:gap-12 text-sm font-light">
-              <div className="flex flex-col gap-4 text-center sm:text-left">
-                <h4 className="font-bold text-white mb-2 text-xs uppercase tracking-widest">Sitemap</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-20 md:gap-16 text-base font-light">
+              <div className="flex flex-col gap-6 text-center sm:text-left">
+                <h4 className="font-bold text-white/80 mb-2 text-sm uppercase tracking-widest">Sitemap</h4>
                 <Link href="#" className="text-white/50 hover:text-white transition-colors">Platform</Link>
                 <Link href="#" className="text-white/50 hover:text-white transition-colors">Features</Link>
                 <Link href="#" className="text-white/50 hover:text-white transition-colors">Pricing</Link>
                 <Link href="#" className="text-white/50 hover:text-white transition-colors">About Us</Link>
               </div>
               
-              <div className="flex flex-col gap-4 text-center sm:text-left">
-                <h4 className="font-bold text-white mb-2 text-xs uppercase tracking-widest">Contact</h4>
-                <p className="text-white/50 leading-relaxed">Level 4, Access Tower<br/>Union Place, Colombo 02</p>
-                <p className="text-white/50 mt-2">T: +94 11 234 5678</p>
+              <div className="flex flex-col gap-6 text-center sm:text-left">
+                <h4 className="font-bold text-white/80 mb-2 text-sm uppercase tracking-widest">Contact</h4>
+                <p className="text-white/50 leading-loose">Level 4, Access Tower<br/>Union Place, Colombo 02</p>
+                <p className="text-white/50">T: +94 11 234 5678</p>
                 <p className="text-white/50 hover:text-white transition-colors cursor-pointer">hello@credflow.com</p>
               </div>
               
               <div className="sm:col-span-2 flex flex-col items-center sm:items-start text-center sm:text-left">
-                <h4 className="font-bold text-white mb-6 text-xs uppercase tracking-widest">Newsletter</h4>
-                <p className="text-white/40 mb-6 max-w-sm">Subscribe to receive the latest updates on product features and fintech insights.</p>
-                <div className="flex items-center border-b border-white/20 pb-3 focus-within:border-white transition-colors w-full max-w-sm group">
-                  <input type="email" placeholder="Your Email Address" className="bg-transparent outline-none flex-1 text-sm placeholder:text-white/20" />
-                  <button className="p-2 -mr-2 group-hover:translate-x-1 transition-transform"><ArrowUpRight className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" /></button>
-                </div>
+                <h4 className="font-bold text-white/80 mb-6 text-sm uppercase tracking-widest">Newsletter</h4>
+                <p className="text-white/50 mb-8 max-w-md leading-relaxed text-base">Subscribe to receive the latest updates on product features and fintech insights.</p>
+                <form className="flex items-center border-b border-white/20 pb-4 focus-within:border-white transition-colors w-full max-w-md group" onSubmit={(e) => e.preventDefault()}>
+                  <input type="email" required placeholder="Your Email Address" className="bg-transparent outline-none flex-1 text-base md:text-lg placeholder:text-white/20 text-white" />
+                  <button type="submit" className="p-2 -mr-2 group-hover:translate-x-1 transition-transform"><ArrowUpRight className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" /></button>
+                </form>
               </div>
             </div>
             
