@@ -54,7 +54,7 @@ export default function SettingsPage() {
   const [isSavingCompany, setIsSavingCompany] = useState(false);
 
   // User Profile state
-  const [userProfile, setUserProfile] = useState<{ name: string, email: string, pin: string, avatarUrl?: string } | null>(null);
+  const [userProfile, setUserProfile] = useState<{ name: string, email: string, pin: string, avatarUrl?: string, companyName?: string } | null>(null);
 
   const loadVillages = async () => {
     try {
@@ -360,10 +360,10 @@ export default function SettingsPage() {
               <span className="text-muted-foreground text-[10px] sm:text-xs font-semibold tracking-widest uppercase opacity-70">
                 PIN: {userProfile?.pin ? "••••" : "Not Set"}
               </span>
-              {(userProfile as any)?.companyName && (
-                <span className="text-muted-foreground text-[10px] sm:text-xs font-bold tracking-widest uppercase opacity-90 mt-1 flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                  {(userProfile as any).companyName}
+              {userProfile?.companyName && (
+                <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase mt-1 flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shrink-0" />
+                  {userProfile.companyName}
                 </span>
               )}
             </div>
@@ -424,7 +424,16 @@ export default function SettingsPage() {
                     )}
                   </div>
 
-                  {/* Removed Company Name Input */}
+                  {/* Company Name — read-only display */}
+                  {companyName && (
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 border-b border-border/50 pb-5">
+                      <span className="text-sm font-bold text-muted-foreground uppercase tracking-wide sm:w-1/3">Company Name</span>
+                      <div className="sm:w-2/3 flex items-center gap-2 bg-secondary/40 border border-border rounded-xl px-4 py-2.5">
+                        <span className="text-sm font-semibold text-foreground truncate">{companyName}</span>
+                        <span className="ml-auto text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-secondary border border-border px-2 py-0.5 rounded-full shrink-0">Read Only</span>
+                      </div>
+                    </div>
+                  )}
 
                   <button
                     type="submit"
