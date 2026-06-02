@@ -240,50 +240,61 @@ export default function WelcomePage() {
         </section>
 
         {/* ── Footer / Let's Work ── */}
-        <footer className="w-full bg-[#030303]">
+        <footer className="w-full bg-[#030303] border-t border-white/5">
           <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-24 pt-32 pb-12">
-            <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-12 mb-24 md:mb-32 border-b border-white/10 pb-16 text-center md:text-left">
-              <h2 className="text-[clamp(3rem,10vw,7rem)] font-bold tracking-tighter leading-none">Let's Work</h2>
+            <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-12 mb-32 border-b border-white/10 pb-20 text-center md:text-left">
+              <div>
+                <h2 className="text-[clamp(3.5rem,10vw,8rem)] font-bold tracking-tighter leading-none mb-4">Let's Work</h2>
+                <p className="text-sm text-white/40 font-light max-w-sm mx-auto md:mx-0">Transform your loan collection process with our next-generation platform designed for field mobility.</p>
+              </div>
               <Link href="/login/auth">
-                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border border-white/50 flex flex-col items-center justify-center hover:bg-white hover:text-black hover:scale-105 transition-all cursor-pointer group relative overflow-hidden shrink-0">
-                  <div className="absolute inset-2 rounded-full border border-dashed border-current animate-[spin_15s_linear_infinite] opacity-50 group-hover:opacity-100" />
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-center leading-tight z-10">Start<br/>Now</span>
+                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border border-white/20 flex flex-col items-center justify-center hover:bg-white hover:text-black hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden shrink-0">
+                  <div className="absolute inset-3 rounded-full border border-dashed border-current animate-[spin_20s_linear_infinite] opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
+                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-center leading-tight z-10">Start<br/>Now</span>
                 </div>
               </Link>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 text-xs font-light">
-              <div className="flex flex-col gap-3">
-                <h4 className="font-bold mb-2">Sitemap</h4>
-                <Link href="#" className="text-white/50 hover:text-white transition-colors">Home</Link>
-                <Link href="#" className="text-white/50 hover:text-white transition-colors">About</Link>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-16 md:gap-12 text-sm font-light">
+              <div className="flex flex-col gap-4 text-center sm:text-left">
+                <h4 className="font-bold text-white mb-2 text-xs uppercase tracking-widest">Sitemap</h4>
+                <Link href="#" className="text-white/50 hover:text-white transition-colors">Platform</Link>
                 <Link href="#" className="text-white/50 hover:text-white transition-colors">Features</Link>
                 <Link href="#" className="text-white/50 hover:text-white transition-colors">Pricing</Link>
+                <Link href="#" className="text-white/50 hover:text-white transition-colors">About Us</Link>
               </div>
               
-              <div className="flex flex-col gap-3">
-                <h4 className="font-bold mb-2">Contact</h4>
-                <p className="text-white/50 leading-relaxed">123 Colombo Road<br/>Colombo 00300, Sri Lanka</p>
+              <div className="flex flex-col gap-4 text-center sm:text-left">
+                <h4 className="font-bold text-white mb-2 text-xs uppercase tracking-widest">Contact</h4>
+                <p className="text-white/50 leading-relaxed">Level 4, Access Tower<br/>Union Place, Colombo 02</p>
                 <p className="text-white/50 mt-2">T: +94 11 234 5678</p>
-                <p className="text-white/50 hover:text-white transition-colors cursor-pointer">E: hello@domain.com</p>
+                <p className="text-white/50 hover:text-white transition-colors cursor-pointer">hello@credflow.com</p>
               </div>
               
-              <div className="sm:col-span-2">
-                <h4 className="font-bold mb-4">Subscribe to our newsletter</h4>
-                <div className="flex items-center border-b border-white/20 pb-2 focus-within:border-white transition-colors">
-                  <input type="email" placeholder="Email Address" className="bg-transparent outline-none flex-1 text-xs placeholder:text-white/30" />
-                  <button className="hover:scale-110 transition-transform p-1"><ArrowUpRight className="w-4 h-4 text-white hover:text-white" /></button>
+              <div className="sm:col-span-2 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <h4 className="font-bold text-white mb-6 text-xs uppercase tracking-widest">Newsletter</h4>
+                <p className="text-white/40 mb-6 max-w-sm">Subscribe to receive the latest updates on product features and fintech insights.</p>
+                <div className="flex items-center border-b border-white/20 pb-3 focus-within:border-white transition-colors w-full max-w-sm group">
+                  <input type="email" placeholder="Your Email Address" className="bg-transparent outline-none flex-1 text-sm placeholder:text-white/20" />
+                  <button className="p-2 -mr-2 group-hover:translate-x-1 transition-transform"><ArrowUpRight className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" /></button>
                 </div>
               </div>
             </div>
             
-            <div className="mt-24 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6">
-              <span className="text-[10px] text-white/30 uppercase tracking-widest">
-                © {new Date().getFullYear()} {config.appName} Platform
-              </span>
-              <span className="text-[10px] text-white/30 uppercase tracking-widest">
-                Built for Sri Lanka
-              </span>
+            <div className="mt-32 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+              <div className="flex items-center gap-3">
+                <CredFlowLogo className="w-6 h-6 grayscale opacity-50" />
+                <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">
+                  © {new Date().getFullYear()} {config.appName}
+                </span>
+              </div>
+              <div className="flex items-center gap-6">
+                <Link href="#" className="text-[10px] text-white/30 hover:text-white uppercase tracking-widest transition-colors">Privacy</Link>
+                <Link href="#" className="text-[10px] text-white/30 hover:text-white uppercase tracking-widest transition-colors">Terms</Link>
+                <span className="text-[10px] text-white/20 uppercase tracking-widest ml-4">
+                  Built for Sri Lanka
+                </span>
+              </div>
             </div>
           </div>
         </footer>
