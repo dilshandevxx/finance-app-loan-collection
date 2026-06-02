@@ -237,6 +237,12 @@ export async function getReceiptDetails(installmentId: string) {
       .filter(i => i.status === "PAID")
       .reduce((sum, i) => sum + Number(i.amount), 0);
 
+    // The current remaining_balance in DB is AFTER payment deduction.
+    // Compute the previous balance (before this payment) for receipt clarity.
+    const currentRemainingBalance = Number(loan.remaining_balance);
+    const thisInstallmentPaid = Number(installment.amount);
+    const previousBalance = currentRemainingBalance + thisInstallmentPaid;
+
     return {
       installment: {
         id: installment.id,
@@ -251,7 +257,8 @@ export async function getReceiptDetails(installmentId: string) {
         id: loan.id,
         principalAmount: Number(loan.principal_amount),
         totalAmountDue: Number(loan.total_amount_due),
-        remainingBalance: Number(loan.remaining_balance),
+        remainingBalance: currentRemainingBalance,
+        previousBalance,
         weeklyInstallment: Number(loan.weekly_installment),
         totalPaid,
       },

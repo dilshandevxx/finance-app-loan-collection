@@ -31,6 +31,7 @@ interface ReceiptDetails {
     principalAmount: number;
     totalAmountDue: number;
     remainingBalance: number;
+    previousBalance: number;
     weeklyInstallment: number;
     totalPaid: number;
   };
@@ -167,6 +168,8 @@ export function QuickPaymentModal({
     let message = "";
     if (receiptData) {
       const instNo = `${receiptData.installment.index} of ${receiptData.installment.totalCount}`;
+      const prevBal = receiptData.loan.previousBalance;
+      const newBal = receiptData.loan.remainingBalance;
       message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `🏢 *${config.appName}*\n` +
@@ -174,25 +177,32 @@ export function QuickPaymentModal({
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*👤 CLIENT DETAILS*\n` +
+        `*👤 CUSTOMER*\n` +
         `• Name: ${receiptData.customer.name}\n` +
-        `• ID (NIC): ${nicStr}\n` +
-        `• User ID: ${receiptData.customer.memberId || 'N/A'}\n` +
+        `• NIC: ${nicStr}\n` +
+        `• ID: ${receiptData.customer.memberId || 'N/A'}\n` +
         `• Phone: ${formatLKPhone(receiptData.customer.phone)}\n` +
-        `• Address: ${parsedAddressStr}\n\n` +
-        `*💰 PAYMENT DETAILS*\n` +
-        `• Installment: ${instNo}\n` +
-        `• Amount Paid: *${formatLKR(finalAmount)}*\n` +
-        `• Status: PAID SUCCESSFUL ✅\n` +
+        `• Address: ${parsedAddressStr}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*📊 LOAN ACCOUNT SUMMARY*\n` +
-        `• Loan Principal: ${formatLKR(receiptData.loan.principalAmount)}\n` +
-        `• Full Amount: ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
-        `• Total Paid to Date (Installment): ${formatLKR(receiptData.loan.totalPaid)}\n` +
-        `• Customer Paid Amount: *${formatLKR(finalAmount)}*\n` +
-        `• *Remaining Balance:* *${formatLKR(receiptData.loan.remainingBalance)}*\n` +
+        `*📋 LOAN DETAILS*\n` +
+        `• Principal (Given):     ${formatLKR(receiptData.loan.principalAmount)}\n` +
+        `• Full Amount (+ Interest): ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
+        `• Weekly Installment:    ${formatLKR(receiptData.loan.weeklyInstallment)}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `Thank you for your business!\n`;
+        `*💰 TODAY'S PAYMENT*\n` +
+        `• Installment No:  ${instNo}\n` +
+        `• Due Amount:      ${formatLKR(receiptData.loan.weeklyInstallment)}\n` +
+        `• *Customer Paid:  ${formatLKR(finalAmount)}* ✅\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*📊 BALANCE*\n` +
+        `• Previous Balance: ${formatLKR(prevBal)}\n` +
+        `• Paid Today:       - ${formatLKR(finalAmount)}\n` +
+        `                    ──────────\n` +
+        `• *New Balance:     ${formatLKR(newBal)}*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `• Total Paid So Far: ${formatLKR(receiptData.loan.totalPaid)}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `Thank you for your payment! 🙏\n`;
     } else {
       message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -201,15 +211,15 @@ export function QuickPaymentModal({
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*👤 CLIENT DETAILS*\n` +
+        `*👤 CUSTOMER*\n` +
         `• Name: ${customer.name}\n` +
-        `• Member ID: ${customer.memberId || 'N/A'}\n` +
+        `• ID: ${customer.memberId || 'N/A'}\n` +
         `• Phone: ${formatLKPhone(customer.phone)}\n\n` +
-        `*💰 PAYMENT DETAILS*\n` +
-        `• Amount Paid: *${formatLKR(finalAmount)}*\n` +
-        `• Status: PAID SUCCESSFUL ✅${isOfflineSaved ? ' (Pending Sync)' : ''}\n` +
+        `*💰 TODAY'S PAYMENT*\n` +
+        `• Customer Paid: *${formatLKR(finalAmount)}* ✅\n` +
+        `• Status: PAID${isOfflineSaved ? ' (Pending Sync)' : ''}\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `Thank you for your business!\n`;
+        `Thank you for your payment! 🙏\n`;
     }
 
     window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
@@ -256,6 +266,8 @@ export function QuickPaymentModal({
         principal: receiptData?.loan.principalAmount || 0,
         totalLoanAmount: receiptData?.loan.totalAmountDue || 0,
         remainingBalance: receiptData?.loan.remainingBalance || 0,
+        previousBalance: receiptData?.loan.previousBalance || 0,
+        weeklyInstallment: receiptData?.loan.weeklyInstallment || 0,
         totalPaid: receiptData?.loan.totalPaid || finalAmount,
         installmentNo: receiptData
           ? `${receiptData.installment.index} of ${receiptData.installment.totalCount}`
@@ -316,13 +328,13 @@ export function QuickPaymentModal({
         </div>
 
         {isSuccess ? (
-          <div className="p-6 flex flex-col items-center gap-6 text-center animate-in fade-in zoom-in-95 duration-300">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-2 ${isOfflineSaved ? 'bg-orange-100 dark:bg-orange-500/10 text-orange-500' : 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'}`}>
-              <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
+          <div className="p-6 flex flex-col items-center gap-5 text-center animate-in fade-in zoom-in-95 duration-300">
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center ${isOfflineSaved ? 'bg-orange-100 dark:bg-orange-500/10 text-orange-500' : 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'}`}>
+              <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
             </div>
 
             <div className="flex flex-col items-center gap-1">
-              <span className="text-4xl font-black tracking-tighter text-black dark:text-white">{formatLKR(parseFloat(amount || expectedAmount.toString()))}</span>
+              <span className="text-3xl font-black tracking-tighter text-black dark:text-white">{formatLKR(parseFloat(amount || expectedAmount.toString()))}</span>
               <span className="text-sm font-medium text-gray-500 dark:text-white/50">Collected from {customer.name}</span>
             </div>
 
@@ -332,7 +344,46 @@ export function QuickPaymentModal({
               </div>
             )}
 
-            <div className="flex flex-col gap-3 w-full mt-2">
+            {/* Loan Summary Card - Clear breakdown */}
+            {receiptData && (
+              <div className="w-full bg-gray-50 dark:bg-muted/50 border border-gray-200 dark:border-border rounded-2xl p-4 text-left space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-white/40">Loan Summary</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/60">Principal (Given)</span>
+                    <span className="font-semibold text-black dark:text-white">{formatLKR(receiptData.loan.principalAmount)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/60">Full Amount</span>
+                    <span className="font-semibold text-black dark:text-white">{formatLKR(receiptData.loan.totalAmountDue)}</span>
+                  </div>
+                  <div className="h-px bg-gray-200 dark:bg-border" />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/60">Installment</span>
+                    <span className="font-medium text-black dark:text-white">{receiptData.installment.index} of {receiptData.installment.totalCount}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/60">Customer Paid</span>
+                    <span className="font-bold text-primary">{formatLKR(parseFloat(amount || expectedAmount.toString()))}</span>
+                  </div>
+                  <div className="h-px bg-gray-200 dark:bg-border" />
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/60">Previous Balance</span>
+                    <span className="font-medium text-black dark:text-white">{formatLKR(receiptData.loan.previousBalance)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/60">Paid Today</span>
+                    <span className="font-medium text-primary">- {formatLKR(parseFloat(amount || expectedAmount.toString()))}</span>
+                  </div>
+                  <div className="flex justify-between text-sm bg-black/5 dark:bg-white/5 -mx-2 px-2 py-2 rounded-xl">
+                    <span className="font-bold text-black dark:text-white">Remaining Balance</span>
+                    <span className="font-black text-black dark:text-white">{formatLKR(receiptData.loan.remainingBalance)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3 w-full mt-1">
               <button
                 onClick={handlePDFShare}
                 disabled={isSharingPdf}
