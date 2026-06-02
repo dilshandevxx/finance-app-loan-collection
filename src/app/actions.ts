@@ -101,11 +101,7 @@ export async function createLoan(formData: FormData) {
         phone: phone,
         member_id: memberId?.trim() || null,
         avatar_url: avatarUrl,
-        address: serializedAddress,
-        street_address: addressVal.trim() || null,
-        village: stateVal.trim() || null,
-        company_name: companyNameVal.trim() || null,
-        nic_number: idNumberVal.trim() || null
+        address: serializedAddress
       })
       .select()
       .single();

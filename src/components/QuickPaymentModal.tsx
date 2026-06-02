@@ -148,43 +148,45 @@ export function QuickPaymentModal({
     let message = "";
     if (receiptData) {
       const instNo = `${receiptData.installment.index} of ${receiptData.installment.totalCount}`;
-      message = `🧾 *PAYMENT RECEIPT* 🧾\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `🏢 *${config.appName}*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*Client Details:*\n` +
-        `• *Name:* ${receiptData.customer.name}\n` +
-        `• *Member ID:* ${receiptData.customer.memberId || 'N/A'}\n` +
-        `• *Phone:* ${formatLKPhone(receiptData.customer.phone)}\n\n` +
-        `*Payment Details:*\n` +
-        `• *Installment:* ${instNo}\n` +
-        `• *Amount Paid:* ${formatLKR(finalAmount)}\n` +
-        `• *Status:* PAID SUCCESSFUL ✅\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*Loan Balance Summary:*\n` +
-        `• *Principal Amount:* ${formatLKR(receiptData.loan.principalAmount)}\n` +
-        `• *Total Paid So Far:* ${formatLKR(receiptData.loan.totalPaid)}\n` +
-        `• *Remaining Balance:* ${formatLKR(receiptData.loan.remainingBalance)}\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `Thank you for your payment!\n` +
-        `- *${config.appName}*`;
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*👤 CLIENT DETAILS*\n` +
+        `• Name: ${receiptData.customer.name}\n` +
+        `• Member ID: ${receiptData.customer.memberId || 'N/A'}\n` +
+        `• Phone: ${formatLKPhone(receiptData.customer.phone)}\n\n` +
+        `*💰 PAYMENT DETAILS*\n` +
+        `• Installment: ${instNo}\n` +
+        `• Amount Paid: *${formatLKR(finalAmount)}*\n` +
+        `• Status: PAID SUCCESSFUL ✅\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*📊 LOAN ACCOUNT SUMMARY*\n` +
+        `• Total Loan Amount: ${formatLKR(receiptData.loan.totalAmountDue)}\n` +
+        `• Total Paid to Date: ${formatLKR(receiptData.loan.totalPaid)}\n` +
+        `• *Remaining Balance:* *${formatLKR(receiptData.loan.remainingBalance)}*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `Thank you for your business!\n`;
     } else {
-      message = `🧾 *PAYMENT RECEIPT* 🧾\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `🏢 *${config.appName}*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*Client Details:*\n` +
-        `• *Name:* ${customer.name}\n` +
-        `• *Member ID:* ${customer.memberId || 'N/A'}\n` +
-        `• *Phone:* ${formatLKPhone(customer.phone)}\n\n` +
-        `*Payment Details:*\n` +
-        `• *Amount Paid:* ${formatLKR(finalAmount)}\n` +
-        `• *Status:* PAID SUCCESSFUL ✅${isOfflineSaved ? ' (Offline Sync Pending)' : ''}\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `Thank you for your payment!\n` +
-        `- *${config.appName}*`;
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `*👤 CLIENT DETAILS*\n` +
+        `• Name: ${customer.name}\n` +
+        `• Member ID: ${customer.memberId || 'N/A'}\n` +
+        `• Phone: ${formatLKPhone(customer.phone)}\n\n` +
+        `*💰 PAYMENT DETAILS*\n` +
+        `• Amount Paid: *${formatLKR(finalAmount)}*\n` +
+        `• Status: PAID SUCCESSFUL ✅${isOfflineSaved ? ' (Pending Sync)' : ''}\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `Thank you for your business!\n`;
     }
 
     window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
@@ -209,7 +211,7 @@ export function QuickPaymentModal({
         phone: formatLKPhone(receiptData?.customer.phone || customer.phone),
         amountPaid: finalAmount,
         status: isOfflineSaved ? "PAID (OFFLINE)" : "PAID SUCCESSFUL",
-        principal: receiptData?.loan.principalAmount || 0,
+        totalLoanAmount: receiptData?.loan.totalAmountDue || 0,
         remainingBalance: receiptData?.loan.remainingBalance || 0,
         totalPaid: receiptData?.loan.totalPaid || finalAmount,
         installmentNo: receiptData

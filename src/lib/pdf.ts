@@ -8,7 +8,7 @@ export type ReceiptPDFData = {
   phone: string;
   amountPaid: number;
   status: string;
-  principal: number;
+  totalLoanAmount: number;
   remainingBalance: number;
   totalPaid: number;
   installmentNo: string;
@@ -34,11 +34,11 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  doc.text("DAILY LOAN COLLECTION RECEIPT", cx, 17, { align: "center" });
+  doc.text("OFFICIAL PAYMENT RECEIPT", cx, 17, { align: "center" });
 
   // Divider Line
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.2);
+  doc.setLineWidth(0.4);
   doc.line(5, 20, 75, 20);
 
   // Metadata
@@ -75,57 +75,62 @@ export function generateReceiptPDF(data: ReceiptPDFData): jsPDF {
 
   // Payment Summary
   doc.setFont("helvetica", "bold");
-  doc.text("PAYMENT SUMMARY", 5, 60);
+  doc.setFillColor(240, 240, 240);
+  doc.rect(5, 57, 70, 6, "F");
+  doc.text("PAYMENT DETAILS", 40, 61.5, { align: "center" });
 
   doc.setFont("helvetica", "normal");
-  doc.text("Installment:", 5, 65);
-  doc.text(data.installmentNo, 35, 65);
+  doc.text("Installment No:", 5, 67);
+  doc.text(data.installmentNo, 75, 67, { align: "right" });
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9.5);
-  doc.text("Amount Paid:", 5, 71);
-  doc.text(`Rs. ${data.amountPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 35, 71);
+  doc.text("Amount Paid:", 5, 73);
+  doc.text(`Rs. ${data.amountPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 73, { align: "right" });
 
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "normal");
-  doc.text("Status:", 5, 77);
+  doc.text("Status:", 5, 79);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(34, 197, 94); // Emerald Green
-  doc.text(data.status, 35, 77);
+  doc.text(data.status, 75, 79, { align: "right" });
   doc.setTextColor(0, 0, 0); // Reset color
-
-  // Divider Line
-  doc.line(5, 81, 75, 81);
 
   // Loan Progress Balance
   doc.setFont("helvetica", "bold");
-  doc.text("LOAN BALANCE ACCOUNT", 5, 86);
+  doc.setFillColor(240, 240, 240);
+  doc.rect(5, 83, 70, 6, "F");
+  doc.text("LOAN ACCOUNT SUMMARY", 40, 87.5, { align: "center" });
 
   doc.setFont("helvetica", "normal");
-  doc.text("Principal:", 5, 91);
-  doc.text(`Rs. ${data.principal.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 35, 91);
+  doc.text("Total Loan Amount:", 5, 94);
+  doc.text(`Rs. ${data.totalLoanAmount.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 94, { align: "right" });
 
-  doc.text("Total Paid:", 5, 95);
-  doc.text(`Rs. ${data.totalPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 35, 95);
+  doc.text("Total Paid to Date:", 5, 99);
+  doc.text(`Rs. ${data.totalPaid.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 99, { align: "right" });
 
   doc.setFont("helvetica", "bold");
-  doc.text("Remaining:", 5, 100);
-  doc.text(`Rs. ${data.remainingBalance.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 35, 100);
+  doc.text("Remaining Balance:", 5, 105);
+  doc.setFontSize(10);
+  doc.text(`Rs. ${data.remainingBalance.toLocaleString("en-LK", { minimumFractionDigits: 2 })}`, 75, 105, { align: "right" });
 
   // Divider Line
-  doc.line(5, 105, 75, 105);
+  doc.setLineWidth(0.3);
+  doc.line(5, 110, 75, 110);
 
   // Footer
   doc.setFont("helvetica", "italic");
   doc.setFontSize(7.5);
-  doc.text("Thank you for your payment!", cx, 112, { align: "center" });
+  doc.text("Thank you for your business!", cx, 118, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(5.5);
-  doc.text("This is an official computer-generated receipt.", cx, 116, { align: "center" });
+  doc.setTextColor(100, 100, 100);
+  doc.text("This is an official computer-generated receipt.", cx, 122, { align: "center" });
 
   // Border Outer Frame
-  doc.setDrawColor(200, 200, 200);
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
   doc.rect(2, 2, 76, 136);
 
   return doc;
