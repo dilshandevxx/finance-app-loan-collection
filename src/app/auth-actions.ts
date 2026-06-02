@@ -237,6 +237,7 @@ export async function getUserProfile() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
+  try {
     const { data: profile } = await supabase
       .from("user_profiles")
       .select(`
