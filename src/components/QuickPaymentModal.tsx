@@ -227,7 +227,7 @@ export function QuickPaymentModal({
 
       // Extract address safely
       let parsedAddressStr = "N/A";
-      let nicStr = receiptData?.customer.idNumber || customer.id_number || "N/A";
+      let nicStr = receiptData?.customer.idNumber || customer.idNumber || "N/A";
       const rawAddress = receiptData?.customer.address || customer.address;
       
       try {
