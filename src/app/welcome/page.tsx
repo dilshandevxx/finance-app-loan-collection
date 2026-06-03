@@ -109,22 +109,22 @@ export default function WelcomePage() {
                   <p className="text-xs text-white/50 font-light leading-relaxed">Collect anywhere. Auto-sync later when you have internet.</p>
                 </div>
               </div>
-              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-500 bg-[url('/mobile_ui.png')] bg-cover bg-center" />
-                <div className="absolute inset-0 bg-[#111]/80" />
-                <MapPin className="w-8 h-8 text-white/30 group-hover:text-white transition-colors relative z-10" />
+              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-primary/30 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-60 group-hover:opacity-80 transition-opacity duration-500 bg-[url('/mobile_ui.png')] bg-cover bg-center" />
+                <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-[#111]/70" />
+                <MapPin className="w-8 h-8 text-primary relative z-10" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2">Smart Routing</h3>
-                  <p className="text-xs text-white/50 font-light leading-relaxed">Organize customers by area and focus on the daily target.</p>
+                  <p className="text-xs text-white/70 font-light leading-relaxed">Organize customers by area and focus on the daily target.</p>
                 </div>
               </div>
-              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20 group-hover:opacity-50 transition-opacity duration-500 bg-[url('/finance_dashboard.png')] bg-cover bg-left" />
-                <div className="absolute inset-0 bg-[#111]/80" />
-                <BarChart3 className="w-8 h-8 text-white/30 group-hover:text-primary transition-colors relative z-10" />
+              <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-primary/30 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-60 group-hover:opacity-80 transition-opacity duration-500 bg-[url('/finance_dashboard.png')] bg-cover bg-center" />
+                <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-[#111]/70" />
+                <BarChart3 className="w-8 h-8 text-primary relative z-10" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2 text-white">Real-time Analytics</h3>
-                  <p className="text-xs text-white/50 font-light leading-relaxed">Know your numbers instantly without any manual work.</p>
+                  <p className="text-xs text-white/70 font-light leading-relaxed">Know your numbers instantly without any manual work.</p>
                 </div>
               </div>
             </div>
