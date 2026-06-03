@@ -1,36 +1,36 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Minimal Violet ─────────── */
+/* ─── Light Mode: Crisp Minimal Yellow ─────────── */
 :root {
-  --background: #F8F7FA;
-  --foreground: #0B0914;
+  --background: #F8F9FA;
+  --foreground: #0A0A0A;
   --card: #FFFFFF;
-  --card-foreground: #0B0914;
+  --card-foreground: #0A0A0A;
   --popover: #FFFFFF;
-  --popover-foreground: #0B0914;
-  --primary: #7C3AED; /* Vibrant Violet */
-  --primary-foreground: #FFFFFF;
-  --secondary: #F3F0F8;
-  --secondary-foreground: #0B0914;
-  --muted: #F3F0F8;
-  --muted-foreground: #6B7280;
-  --accent: #F3F0F8;
-  --accent-foreground: #0B0914;
+  --popover-foreground: #0A0A0A;
+  --primary: #FFB800; /* Vibrant Yellow */
+  --primary-foreground: #0A0A0A; /* Black text on yellow */
+  --secondary: #F4F4F5;
+  --secondary-foreground: #18181B;
+  --muted: #F4F4F5;
+  --muted-foreground: #71717A;
+  --accent: #F4F4F5;
+  --accent-foreground: #18181B;
   --destructive: #FEE2E2;
   --destructive-foreground: #DC2626;
-  --border: #E5E7EB;
+  --border: #E4E4E7;
   --input: #FFFFFF;
-  --ring: #7C3AED;
+  --ring: #FFB800;
 
   /* Custom chart variables */
-  --chart-collected: #7C3AED; 
-  --chart-expected: #E5E7EB;
+  --chart-collected: #FFB800; 
+  --chart-expected: #E4E4E7;
 
   /* Custom vibe accent colors */
-  --vibe-coral: #DC2626;
-  --vibe-pink: #D97706;
-  --vibe-violet: #7C3AED;
-  --vibe-sky: #2563EB;
+  --vibe-coral: #EF4444;
+  --vibe-pink: #FFB800;
+  --vibe-violet: #8B5CF6;
+  --vibe-sky: #3B82F6;
 
   --vibe-coral-lt: #FEF2F2;
   --vibe-pink-lt: #FFFBEB;
@@ -38,40 +38,40 @@
   --vibe-sky-lt: #EFF6FF;
 }
 
-/* ─── Dark Mode: Deep Space Violet (Reference App Vibe) ──────────────── */
+/* ─── Dark Mode: Premium Agency Dark (Reference App Vibe) ──────────────── */
 .dark {
-  --background: #0B0914; /* Deep, almost black violet */
-  --foreground: #FFFFFF;
-  --card: #17132A; /* Soft deep violet for cards */
-  --card-foreground: #FFFFFF;
-  --popover: #17132A;
-  --popover-foreground: #FFFFFF;
-  --primary: #7C3AED; /* Vibrant Violet for buttons/accents */
-  --primary-foreground: #FFFFFF;
-  --secondary: #1F193B; /* Lighter violet for secondary blocks */
-  --secondary-foreground: #FFFFFF;
-  --muted: #17132A;
-  --muted-foreground: #9CA3AF; /* Light gray text */
-  --accent: #1F193B;
-  --accent-foreground: #FFFFFF;
-  --destructive: #4C0519;
-  --destructive-foreground: #F43F5E;
-  --border: #2D264B; /* Very subtle violet border */
-  --input: #17132A;
-  --ring: #7C3AED;
+  --background: #0A0A0A; /* Very deep black */
+  --foreground: #FAFAFA;
+  --card: #141414; /* Slightly lighter deep gray */
+  --card-foreground: #FAFAFA;
+  --popover: #141414;
+  --popover-foreground: #FAFAFA;
+  --primary: #FFB800; /* Vibrant Yellow */
+  --primary-foreground: #000000; /* Black text on yellow */
+  --secondary: #222222; /* Medium dark gray */
+  --secondary-foreground: #FAFAFA;
+  --muted: #1A1A1A;
+  --muted-foreground: #A1A1AA; /* Light gray text */
+  --accent: #222222;
+  --accent-foreground: #FAFAFA;
+  --destructive: #450A0A;
+  --destructive-foreground: #F87171;
+  --border: #27272A; /* Subtle gray border */
+  --input: #141414;
+  --ring: #FFB800;
 
   /* Custom chart variables */
-  --chart-collected: #7C3AED; 
-  --chart-expected: #1F193B; 
+  --chart-collected: #FFB800; 
+  --chart-expected: #27272A; 
 
   /* Custom vibe accent colors */
-  --vibe-coral: #F43F5E;
-  --vibe-pink: #F59E0B;
+  --vibe-coral: #EF4444;
+  --vibe-pink: #FFB800;
   --vibe-violet: #8B5CF6;
   --vibe-sky: #3B82F6;
 
-  --vibe-coral-lt: #4C0519;
-  --vibe-pink-lt: #45290A;
+  --vibe-coral-lt: #450A0A;
+  --vibe-pink-lt: #422006;
   --vibe-violet-lt: #2E1065;
   --vibe-sky-lt: #172554;
 }
