@@ -86,7 +86,7 @@ export default function VillagesClientManager({ initialStats }: VillagesClientMa
       <div className="text-left">
         <h3 className="text-lg font-bold text-foreground">Route Villages Registry</h3>
         <p className="text-xs text-muted-foreground mt-1">
-          Create and manage villages independently. Registered villages will be selectable from the dropdown when creating client accounts.
+          Create and manage areas independently. Registered areas will be selectable from the dropdown when creating client accounts.
         </p>
       </div>
 
@@ -105,7 +105,7 @@ export default function VillagesClientManager({ initialStats }: VillagesClientMa
         </div>
       )}
 
-      {/* Add Village Form */}
+      {/* Add Area Form */}
       <form onSubmit={handleAddVillage} className="flex gap-2.5 items-stretch">
         <div className="relative flex-1 group">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
@@ -130,7 +130,7 @@ export default function VillagesClientManager({ initialStats }: VillagesClientMa
             <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
           ) : (
             <>
-              <Plus className="w-3.5 h-3.5 stroke-[3]" /> Add Village
+              <Plus className="w-3.5 h-3.5 stroke-[3]" /> Add Area
             </>
           )}
         </button>

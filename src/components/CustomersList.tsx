@@ -142,7 +142,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
               onChange={(e) => setSelectedVillage(e.target.value)}
               className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-4 pr-10 py-4 text-base text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm appearance-none font-medium cursor-pointer"
             >
-              <option value="">📍 All Villages</option>
+              <option value="">📍 All Areas</option>
               {villages.map(v => (
                 <option key={v} value={v}>📍 {v}</option>
               ))}
@@ -152,7 +152,7 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
             </div>
           </div>
           <Link href="/villages" className="text-right text-[11px] font-bold text-primary hover:underline px-1 flex items-center justify-end gap-1">
-            <span>Manage Villages</span> ⚙️
+            <span>Manage Areas</span> ⚙️
           </Link>
         </div>
       </div>

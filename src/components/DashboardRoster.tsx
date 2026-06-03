@@ -253,7 +253,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               onChange={(e) => setSelectedVillage(e.target.value)}
               className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-3 pr-8 py-3 text-sm text-foreground focus:outline-none transition-all appearance-none font-medium cursor-pointer"
             >
-              <option value="">📍 All Villages</option>
+              <option value="">📍 All Areas</option>
               {villages.map(v => (
                 <option key={v} value={v}>📍 {v}</option>
               ))}

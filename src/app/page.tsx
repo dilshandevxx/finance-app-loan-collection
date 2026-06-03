@@ -176,7 +176,7 @@ export default async function Home() {
               href="/villages"
               className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
             >
-              📍 Manage Villages
+              📍 Manage Areas
             </Link>
           </div>
         </div>
@@ -198,7 +198,7 @@ export default async function Home() {
               href="/villages"
               className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
             >
-              📍 Manage Villages
+              📍 Manage Areas
             </Link>
           </div>
 

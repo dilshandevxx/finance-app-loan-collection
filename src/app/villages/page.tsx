@@ -30,7 +30,7 @@ export default async function VillagesPage() {
             <ChevronLeft className="w-5 h-5" />
           </button>
         </Link>
-        <span className="text-sm font-semibold tracking-tight text-foreground">Manage Route Villages</span>
+        <span className="text-sm font-semibold tracking-tight text-foreground">Manage Route Areas</span>
         <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm">
           Settings
         </span>

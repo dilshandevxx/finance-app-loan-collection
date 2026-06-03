@@ -211,7 +211,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Company Name",
       "Member ID",
       "Phone Number",
-      "Address / Village",
+      "Address / Area",
       "Loan Principal",
       "Interest Rate",
       "Total Repayable",
@@ -299,7 +299,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       ];
     });
 
-    // Village Breakdown section appended at the end of the CSV
+    // Area Breakdown section appended at the end of the CSV
     const villageSection = [
       "",
       "\"VILLAGE BREAKDOWN\"",
@@ -378,7 +378,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       "Company Name",
       "Member ID",
       "Phone Number",
-      "Address / Village",
+      "Address / Area",
       "Loan Principal",
       "Interest Rate",
       "Total Repayable",
@@ -475,7 +475,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
       { wch: 22 }, // Company Name
       { wch: 14 }, // Member ID
       { wch: 16 }, // Phone Number
-      { wch: 32 }, // Address / Village
+      { wch: 32 }, // Address / Area
       { wch: 16 }, // Loan Principal
       { wch: 14 }, // Interest Rate
       { wch: 16 }, // Total Repayable
@@ -509,10 +509,10 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     // ── Village Summary Sheet ──────────────────────────────────
     const villageSummaryData = [
       [companyName || "Loan Collection App"],
-      ["VILLAGE BREAKDOWN SUMMARY"],
+      ["AREA BREAKDOWN SUMMARY"],
       [`Period: ${startDate} to ${endDate}`],
       [],
-      ["Village", "Total Clients", "Active Loans", "Total Expected", "Total Collected", "Collection Rate", "Outstanding Balance"],
+      ["Area", "Total Clients", "Active Loans", "Total Expected", "Total Collected", "Collection Rate", "Outstanding Balance"],
       ...villageBreakdown.map(v => {
         const vRate = v.totalExpected > 0 ? ((v.totalCollected / v.totalExpected) * 100).toFixed(1) + "%" : "0%";
         return [v.village, v.totalClients, v.activeLoansCount, formatLKR(v.totalExpected), formatLKR(v.totalCollected), vRate, formatLKR(v.outstandingBalance)];
@@ -762,15 +762,15 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         </Card>
       </section>
 
-      {/* Village Breakdown */}
+      {/* Area Breakdown */}
       <section className="mt-2">
-        <h3 className="text-sm font-bold text-foreground print:text-black mb-3 px-1 uppercase tracking-widest">Village Breakdown</h3>
+        <h3 className="text-sm font-bold text-foreground print:text-black mb-3 px-1 uppercase tracking-widest">Area Breakdown</h3>
         <Card className="bg-card print:bg-white print:border-black/20 print:shadow-none border-border rounded-[2rem] overflow-hidden shadow-sm mb-6">
           <CardContent className="p-0 overflow-x-auto">
             <table className="w-full text-left text-sm print:text-black whitespace-nowrap">
               <thead className="bg-secondary/50 print:bg-black/5 text-muted-foreground print:text-black/60 uppercase tracking-widest text-[10px] font-bold">
                 <tr>
-                  <th className="p-4 px-6">Village</th>
+                  <th className="p-4 px-6">Area</th>
                   <th className="p-4 text-center">Total Clients</th>
                   <th className="p-4 text-center">Active Loans</th>
                   <th className="p-4 text-right">Total Expected</th>
@@ -806,7 +806,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                 return (
                   <tfoot className="bg-secondary/40 border-t-2 border-border print:border-black/20">
                     <tr className="text-foreground print:text-black font-black">
-                      <td className="p-4 px-6 text-xs uppercase tracking-wider font-black">All Villages</td>
+                      <td className="p-4 px-6 text-xs uppercase tracking-wider font-black">All Areas</td>
                       <td className="p-4 text-center text-xs">{villageBreakdown.reduce((s, v) => s + v.totalClients, 0)}</td>
                       <td className="p-4 text-center text-xs">{villageBreakdown.reduce((s, v) => s + v.activeLoansCount, 0)}</td>
                       <td className="p-4 text-right text-sm">{formatLKR(grandExpected)}</td>

@@ -65,7 +65,7 @@ export function VillageCollectionBars({ installments, loans, customers }: Villag
             <MapPin className="w-3.5 h-3.5 text-primary" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">By Village</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">By Area</p>
             <p className="text-xs font-bold text-foreground">Collection progress</p>
           </div>
         </div>
@@ -91,7 +91,7 @@ export function VillageCollectionBars({ installments, loans, customers }: Villag
 
           return (
             <div key={v.name} className="flex flex-col gap-1.5">
-              {/* Village name + rate */}
+              {/* Area name + rate */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <span className="text-[10px] font-black text-primary">📍</span>

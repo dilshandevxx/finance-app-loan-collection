@@ -449,7 +449,7 @@ export default function SettingsPage() {
 
           {/* Villages Management */}
           <section>
-            <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Villages & Routes</h3>
+            <h3 className="text-muted-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Areas & Routes</h3>
             <Card className="bg-card border-border rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-0 flex flex-col">
                 <Link

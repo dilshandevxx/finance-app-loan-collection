@@ -361,7 +361,7 @@ export async function getSystemVillages(): Promise<string[]> {
 export async function addSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
   const supabase = await createClient();
   const trimmedName = villageName.trim();
-  if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
+  if (!trimmedName) return { success: false, error: "Area name cannot be empty." };
 
   const currentVillages = await getSystemVillages();
   const lowercased = currentVillages.map(v => v.toLowerCase());
@@ -390,7 +390,7 @@ export async function addSystemVillage(villageName: string): Promise<{ success: 
 export async function removeSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
   const supabase = await createClient();
   const trimmedName = villageName.trim();
-  if (!trimmedName) return { success: false, error: "Village name cannot be empty." };
+  if (!trimmedName) return { success: false, error: "Area name cannot be empty." };
 
   // Check if any customer is using this village
   const { data: customerData, error: custError } = await supabase.from("customers").select("address, village");

@@ -63,7 +63,7 @@ export default function WelcomePage() {
               <div className="md:col-span-4 flex flex-col gap-3">
                 <h3 className="text-sm font-bold text-white mb-4">Field Collection</h3>
                 <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Offline Mode</p>
-                <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Route Villages</p>
+                <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Route Areas</p>
                 <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">PDF Receipts</p>
                 <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Quick Search</p>
                 
@@ -115,7 +115,7 @@ export default function WelcomePage() {
                 <MapPin className="w-8 h-8 text-white/30 group-hover:text-white transition-colors relative z-10" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2">Smart Routing</h3>
-                  <p className="text-xs text-white/50 font-light leading-relaxed">Organize customers by village and focus on the daily target.</p>
+                  <p className="text-xs text-white/50 font-light leading-relaxed">Organize customers by area and focus on the daily target.</p>
                 </div>
               </div>
               <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">

@@ -792,7 +792,7 @@ export function NewLoanForm({
               </div>
             </div>
 
-            {/* Collection Area Selector with Inline Add Village Modal Trigger */}
+            {/* Collection Area Selector with Inline Add Area Modal Trigger */}
             <div className="space-y-1.5 col-span-2">
               <div className="flex items-center justify-between">
                 <label htmlFor="village-select" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Collection Area (Village)</label>
@@ -817,7 +817,7 @@ export function NewLoanForm({
                     validationErrors.state ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/10" : "border-border/60 focus:border-primary focus:ring-primary/10"
                   } rounded-2xl pl-11 pr-10 py-4 text-foreground focus:outline-none focus:ring-4 transition appearance-none font-semibold cursor-pointer`}
                 >
-                  <option value="" disabled>Select village...</option>
+                  <option value="" disabled>Select area...</option>
                   {localVillages.map(v => {
                     const days = getDaysForVillage(v);
                     const daysStr = days.length > 0 ? ` (${days.join(", ")})` : "";
