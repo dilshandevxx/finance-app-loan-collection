@@ -35,7 +35,7 @@ export default function WelcomePage() {
               <h1 className="text-[clamp(3.5rem,10vw,8rem)] font-bold tracking-tighter leading-[1.0] text-white mb-8">
                 Collect.<br />
                 Track.<br />
-                <span className="text-white/50">Grow.</span>
+                <span className="text-primary">Grow.</span>
               </h1>
             </div>
             
@@ -44,7 +44,7 @@ export default function WelcomePage() {
                 Think of this as the world's most advanced loan collection platform. Built for field agents, blending modern mobility with the reassurance of professional design.
               </p>
               <Link href="/login/auth">
-                <button className="px-6 py-3 bg-white text-black hover:bg-transparent hover:text-white border border-white transition-colors text-xs font-bold uppercase tracking-widest">
+                <button className="px-6 py-3 bg-primary text-black hover:bg-transparent hover:text-primary border border-primary transition-colors text-xs font-bold uppercase tracking-widest">
                   Start Collecting
                 </button>
               </Link>
@@ -68,7 +68,7 @@ export default function WelcomePage() {
                 <p className="text-sm text-white/60 font-light hover:text-white transition-colors cursor-default">Quick Search</p>
                 
                 <Link href="/login/auth" className="mt-8 inline-block">
-                  <button className="px-5 py-2.5 border border-white/20 hover:border-white transition-colors text-[10px] font-bold uppercase tracking-widest">
+                  <button className="px-5 py-2.5 border border-primary text-primary hover:bg-primary hover:text-black transition-colors text-[10px] font-bold uppercase tracking-widest">
                     See Details
                   </button>
                 </Link>
@@ -111,7 +111,7 @@ export default function WelcomePage() {
               </div>
               <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-500 bg-[url('/mobile_ui.png')] bg-cover bg-center" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-[#111]/80" />
                 <MapPin className="w-8 h-8 text-white/30 group-hover:text-white transition-colors relative z-10" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2">Smart Routing</h3>
@@ -120,8 +120,8 @@ export default function WelcomePage() {
               </div>
               <div className="aspect-square sm:aspect-[4/5] bg-[#111] p-8 flex flex-col justify-between group cursor-pointer border border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 opacity-20 group-hover:opacity-50 transition-opacity duration-500 bg-[url('/finance_dashboard.png')] bg-cover bg-left" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-80" />
-                <BarChart3 className="w-8 h-8 text-white/30 group-hover:text-[#FFB800] transition-colors relative z-10" />
+                <div className="absolute inset-0 bg-[#111]/80" />
+                <BarChart3 className="w-8 h-8 text-white/30 group-hover:text-primary transition-colors relative z-10" />
                 <div className="relative z-10">
                   <h3 className="text-lg font-bold mb-2 text-white">Real-time Analytics</h3>
                   <p className="text-xs text-white/50 font-light leading-relaxed">Know your numbers instantly without any manual work.</p>
@@ -130,7 +130,7 @@ export default function WelcomePage() {
             </div>
             <div className="flex justify-center mt-12">
               <Link href="/login/auth">
-                <button className="px-6 py-3 border border-white/20 hover:border-white transition-colors text-xs font-bold uppercase tracking-widest bg-[#111]">
+                <button className="px-6 py-3 border border-primary text-primary hover:bg-primary hover:text-black transition-colors text-xs font-bold uppercase tracking-widest bg-[#111]">
                   View All Features
                 </button>
               </Link>
@@ -194,7 +194,7 @@ export default function WelcomePage() {
         <section className="w-full border-b border-white/10">
           <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-24 py-24">
             <div className="w-full aspect-video md:aspect-[21/9] bg-[#111] flex items-center justify-center relative overflow-hidden group cursor-pointer border border-white/10">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+              <div className="absolute inset-0 bg-[#111]/60 z-10" />
               <div className="absolute inset-0 opacity-40 bg-[url('/finance_dashboard.png')] bg-cover bg-center group-hover:scale-105 transition-transform duration-[2000ms] ease-out" />
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/30 flex items-center justify-center z-20 group-hover:bg-white group-hover:text-black transition-colors backdrop-blur-sm">
                 <PlayCircle className="w-6 h-6 md:w-8 md:h-8" />
@@ -220,7 +220,7 @@ export default function WelcomePage() {
                 ].map((t, i) => (
                   <div key={i} className="p-8 border border-white/10 bg-[#0a0a0a] flex flex-col gap-6 hover:border-white/20 hover:bg-[#111] transition-all cursor-default">
                     <div className="flex gap-1">
-                      {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-[#FFB800] text-[#FFB800]" />)}
+                      {[...Array(5)].map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />)}
                     </div>
                     <p className="text-sm font-medium leading-relaxed text-white/90">"{t.quote}"</p>
                     <div className="flex items-center gap-3 mt-auto pt-5 border-t border-white/5">
@@ -248,7 +248,7 @@ export default function WelcomePage() {
                 <p className="text-base md:text-lg text-white/50 font-light max-w-md mx-auto md:mx-0 leading-relaxed">Transform your loan collection process with our next-generation platform designed for field mobility.</p>
               </div>
               <Link href="/login/auth">
-                <div className="w-40 h-40 md:w-48 md:h-48 rounded-full border border-white/20 flex flex-col items-center justify-center hover:bg-white hover:text-black hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden shrink-0">
+                <div className="w-40 h-40 md:w-48 md:h-48 rounded-full border border-white/20 flex flex-col items-center justify-center hover:bg-primary hover:border-primary hover:text-black hover:scale-105 transition-all duration-500 cursor-pointer group relative overflow-hidden shrink-0">
                   <div className="absolute inset-3 rounded-full border border-dashed border-current animate-[spin_20s_linear_infinite] opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
                   <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-center leading-tight z-10">Start<br/>Now</span>
                 </div>
