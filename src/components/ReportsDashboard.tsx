@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Customer, Installment, Loan } from "@/data/db";
 import { formatLKR } from "@/lib/format";
+import { PortfolioSummaryCard } from "@/components/PortfolioSummaryCard";
 
 type ReportsDashboardProps = {
   installments: Installment[];
@@ -97,6 +98,33 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
 
     return instDate >= start && instDate <= end;
   });
+
+  const filteredLoans = loans.filter((loan) => {
+    if (!startDate && !endDate) return true;
+    const loanDate = new Date(loan.startDate);
+    const start = startDate ? new Date(startDate) : new Date("2000-01-01");
+    const end = endDate ? new Date(endDate) : new Date("2100-01-01");
+    return loanDate >= start && loanDate <= end;
+  });
+
+  const loanSizeDistribution = (() => {
+    const map = new Map<number, { count: number, active: number }>();
+    filteredLoans.forEach(loan => {
+      const p = loan.principalAmount;
+      if (!map.has(p)) map.set(p, { count: 0, active: 0 });
+      const stats = map.get(p)!;
+      stats.count += 1;
+      if (loan.status === "ACTIVE") stats.active += 1;
+    });
+    return Array.from(map.entries())
+      .map(([principal, stats]) => ({
+        principal,
+        count: stats.count,
+        active: stats.active,
+        totalCapital: principal * stats.count
+      }))
+      .sort((a, b) => b.principal - a.principal);
+  })();
 
   const villageBreakdown = (() => {
     const map = new Map<string, {
@@ -646,6 +674,11 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
         </div>
       </div>
 
+      {/* Portfolio Summary Card */}
+      <section className="print:hidden">
+        <PortfolioSummaryCard loans={filteredLoans} />
+      </section>
+
       {/* Summary Metrics */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="bg-card border-border rounded-3xl overflow-hidden shadow-sm relative">
@@ -759,6 +792,42 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
               </div>
             )}
           </div>
+        </Card>
+      </section>
+
+      {/* Loan Size Distribution */}
+      <section className="mt-2">
+        <h3 className="text-sm font-bold text-foreground print:text-black mb-3 px-1 uppercase tracking-widest">Loan Size Distribution</h3>
+        <Card className="bg-card print:bg-white print:border-black/20 print:shadow-none border-border rounded-[2rem] overflow-hidden shadow-sm mb-6">
+          <CardContent className="p-0 overflow-x-auto">
+            <table className="w-full text-left text-sm print:text-black whitespace-nowrap">
+              <thead className="bg-secondary/50 print:bg-black/5 text-muted-foreground print:text-black/60 uppercase tracking-widest text-[10px] font-bold">
+                <tr>
+                  <th className="p-4 px-6">Principal Amount</th>
+                  <th className="p-4 text-center">Total Count</th>
+                  <th className="p-4 text-center">Active Count</th>
+                  <th className="p-4 text-right px-6">Total Capital Allocated</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border print:divide-black/10">
+                {loanSizeDistribution.map((item) => (
+                  <tr key={item.principal} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
+                    <td className="p-4 px-6 font-bold text-sm text-primary">{formatLKR(item.principal)}</td>
+                    <td className="p-4 text-center text-xs font-semibold">{item.count} loans</td>
+                    <td className="p-4 text-center text-xs font-semibold text-emerald-600 dark:text-emerald-400">{item.active} active</td>
+                    <td className="p-4 px-6 text-right font-black text-sm">{formatLKR(item.totalCapital)}</td>
+                  </tr>
+                ))}
+                {loanSizeDistribution.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="p-8 text-center text-muted-foreground print:text-black/50 text-sm">
+                      No loans found for this period.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </CardContent>
         </Card>
       </section>
 
