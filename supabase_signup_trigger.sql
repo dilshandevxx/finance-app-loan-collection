@@ -16,7 +16,7 @@ BEGIN
   user_full_name := COALESCE(new.raw_user_meta_data->>'full_name', 'Agent');
 
   -- Create new tenant (isolated company namespace)
-  INSERT INTO public.tenants (name, status)
+  INSERT INTO public.tenants (company_name, status)
   VALUES (user_company_name, 'ACTIVE')
   RETURNING id INTO new_tenant_id;
 

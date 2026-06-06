@@ -1,10 +1,11 @@
 import { AlertCircle, Users } from "lucide-react";
-import { getCustomers, getDashboardInstallments, getActiveLoans } from "@/data/db";
+import { getCustomers, getDashboardInstallments, getLoans } from "@/data/db";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
 import Link from "next/link";
 import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
+import { PortfolioSummaryCard } from "@/components/PortfolioSummaryCard";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
@@ -44,7 +45,7 @@ export default async function Home() {
 
   const [customers, loans, installments] = await Promise.all([
     getCustomers(),
-    getActiveLoans(),
+    getLoans(),
     getDashboardInstallments(),
   ]);
 
@@ -120,6 +121,9 @@ export default async function Home() {
               <span className="text-[10px] text-zinc-500 dark:text-muted-foreground font-medium">total overdue amount</span>
             </div>
           </div>
+
+          {/* Portfolio Summary Card */}
+          <PortfolioSummaryCard loans={loans} />
 
           {/* Portfolio Status Card */}
           <CollectionGoalCard
