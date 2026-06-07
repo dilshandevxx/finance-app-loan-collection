@@ -83,14 +83,9 @@ export function DashboardHeader({
         
         {/* Greeting Text */}
         <div className="flex flex-col justify-center">
-          <div className="flex items-center gap-1.5 mb-1">
-            <div className={`flex items-center justify-center p-0.5 rounded-md border ${iconClass} shadow-sm backdrop-blur-sm`}>
-              <Icon className="w-3.5 h-3.5" strokeWidth={2.5} />
-            </div>
-            <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">
-              {greeting}
-            </span>
-          </div>
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground mb-1">
+            {greeting}
+          </span>
           <h1 className="text-[1.75rem] font-black tracking-tight leading-none bg-gradient-to-r from-white via-white/90 to-white/60 bg-clip-text text-transparent drop-shadow-sm">
             {agentName.split(" ")[0]}
           </h1>
