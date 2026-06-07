@@ -148,6 +148,33 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     return new Date(a.oldestInstallment.dueDate).getTime() - new Date(b.oldestInstallment.dueDate).getTime();
   }), [customerGroups]);
 
+  // Group by village to create a daily route planner
+  const villageGroups = React.useMemo(() => {
+    const groups = new Map<string, typeof sortedCustomerGroups>();
+    sortedCustomerGroups.forEach(group => {
+      const village = group.customer.state?.trim() || "Unassigned Area";
+      if (!groups.has(village)) {
+        groups.set(village, []);
+      }
+      groups.get(village)!.push(group);
+    });
+    
+    return Array.from(groups.entries())
+      .map(([village, customers]) => ({
+        village,
+        customers,
+        totalAmount: customers.reduce((sum, c) => sum + c.totalAmount, 0),
+        hasOverdue: customers.some(c => c.isOverdue)
+      }))
+      .sort((a, b) => {
+        if (a.village === "Unassigned Area") return 1;
+        if (b.village === "Unassigned Area") return -1;
+        if (a.hasOverdue && !b.hasOverdue) return -1;
+        if (!a.hasOverdue && b.hasOverdue) return 1;
+        return a.village.localeCompare(b.village);
+      });
+  }, [sortedCustomerGroups]);
+
   const handlePayClick = React.useCallback((e: React.MouseEvent, installmentId: string, customer: Customer, expectedAmount: number) => {
     e.preventDefault(); // Prevent navigating to customer details
     setSelectedPayment({ customer, installmentId, expectedAmount });
@@ -276,73 +303,91 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               <p className="text-muted-foreground text-sm">You&apos;re all caught up for the day.</p>
             </div>
           ) : (
-            <div className="divide-y divide-border">
-              {sortedCustomerGroups.map((group) => {
-                const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
-
-                return (
-                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
-                    <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
-
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
-                          <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="flex flex-col min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
-                            <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
-                            {isOverdue && (
-                              <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-white bg-destructive-foreground px-2 py-0.5 rounded-full">
-                                <AlertCircle className="w-2.5 h-2.5" /> Overdue
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-xs text-muted-foreground mt-0.5 break-words flex items-center gap-1.5 flex-wrap">
-                            {customer.state && (
-                              <span className="flex items-center gap-0.5 text-primary dark:text-white/70 font-semibold uppercase bg-primary/10 dark:bg-white/10 px-1.5 py-0.5 rounded text-[10px] shrink-0">
-                                📍 {customer.state}
-                              </span>
-                            )}
-                            <span className="shrink-0">{customer.memberId || customer.id.slice(0, 8)}</span>
-                            <span className="shrink-0">•</span>
-                            <span className="shrink-0">{installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}</span>
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className={`font-bold text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
-                          {formatLKR(totalAmount)}
+            <div className="flex flex-col gap-4">
+              {villageGroups.map((villageGroup) => (
+                <div key={villageGroup.village} className="bg-secondary/10 border border-border rounded-2xl overflow-hidden">
+                  <div className="bg-secondary/30 px-4 py-3 border-b border-border flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                        📍 {villageGroup.village}
+                      </span>
+                      {villageGroup.hasOverdue && (
+                        <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-white bg-destructive-foreground px-2 py-0.5 rounded-full">
+                          <AlertCircle className="w-2.5 h-2.5" /> Overdue
                         </span>
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
-                            title="WhatsApp"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all active:scale-95 shrink-0 cursor-pointer"
-                          >
-                            <MessageCircle className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
-                            title="SMS"
-                            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-secondary hover:bg-border/50 text-foreground border border-border transition-all active:scale-95 shrink-0 cursor-pointer"
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                          </button>
-                          <Button
-                            onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
-                            disabled={isPending}
-                            className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
-                          >
-                            Pay
-                          </Button>
-                        </div>
-                      </div>
-
+                      )}
                     </div>
-                  </Link>
-                );
-              })}
+                    <div className="text-right flex flex-col">
+                      <span className="text-xs font-bold text-foreground">{formatLKR(villageGroup.totalAmount)}</span>
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{villageGroup.customers.length} Collections</span>
+                    </div>
+                  </div>
+                  
+                  <div className="divide-y divide-border/50">
+                    {villageGroup.customers.map((group) => {
+                      const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
+
+                      return (
+                        <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
+                          <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
+
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
+                                <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="flex flex-col min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
+                                  <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
+                                  {isOverdue && (
+                                    <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
+                                      Overdue
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-xs text-muted-foreground mt-0.5 break-words flex items-center gap-1.5 flex-wrap">
+                                  <span className="shrink-0 font-mono">{customer.memberId || customer.id.slice(0, 8)}</span>
+                                  <span className="shrink-0">•</span>
+                                  <span className="shrink-0">{installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}</span>
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className={`font-bold text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
+                                {formatLKR(totalAmount)}
+                              </span>
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
+                                  title="WhatsApp"
+                                  className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all active:scale-95 shrink-0 cursor-pointer"
+                                >
+                                  <MessageCircle className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
+                                  title="SMS"
+                                  className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-secondary hover:bg-border/50 text-foreground border border-border transition-all active:scale-95 shrink-0 cursor-pointer"
+                                >
+                                  <MessageSquare className="w-4 h-4" />
+                                </button>
+                                <Button
+                                  onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
+                                  disabled={isPending}
+                                  className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
+                                >
+                                  Pay
+                                </Button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </CardContent>
