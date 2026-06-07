@@ -10,6 +10,7 @@ import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
+import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
 import { FeaturedSections } from "@/components/FeaturedSections";
 import { createClient } from "@/utils/supabase/server";
