@@ -82,12 +82,12 @@ export function CollectionGoalCard({
 
           {/* Big amount */}
           <div className="flex items-start mt-1">
-            <span className="text-2xl font-black text-white mt-2 mr-1">Rs.</span>
+            <span className="text-xl sm:text-2xl font-black text-white mt-2 mr-1">Rs.</span>
             <div className="flex items-baseline gap-0.5 flex-wrap overflow-hidden">
-              <span className="text-[3.2rem] font-black text-white leading-none tracking-tight truncate max-w-full">
+              <span className="text-4xl sm:text-5xl xl:text-[3.2rem] font-black text-white leading-none tracking-tight truncate max-w-full">
                 {fmt(mounted ? animatedAmount : 0)}
               </span>
-              <span className="text-2xl font-black text-white/80 self-end mb-1">
+              <span className="text-lg sm:text-2xl font-black text-white/80 self-end mb-1">
                 .{dec(mounted ? animatedAmount : 0)}
               </span>
             </div>

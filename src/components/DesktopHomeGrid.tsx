@@ -61,10 +61,10 @@ export function DesktopHomeGrid({
   overdueAmount,
 }: DesktopHomeGridProps) {
   return (
-    <div className="hidden md:grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 w-full max-w-[1400px] mt-4">
+    <div className="hidden md:flex flex-col xl:grid xl:grid-cols-12 gap-6 xl:gap-8 w-full mt-4">
       
       {/* ── Top Level Hero Card (Left Column on Desktop) ── */}
-      <div className="w-full lg:col-span-5 xl:col-span-4 flex flex-col justify-start">
+      <div className="w-full xl:col-span-5 2xl:col-span-4 flex flex-col justify-start">
         <CollectionGoalCard
           expectedToday={expectedToday}
           collectedToday={collectedToday}
@@ -76,7 +76,7 @@ export function DesktopHomeGrid({
       </div>
 
       {/* ── Navigation Grid (Right Column on Desktop) ──── */}
-      <div className="lg:col-span-7 xl:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 items-start h-fit">
+      <div className="xl:col-span-7 2xl:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-2 gap-6 items-start h-fit">
         {NAV_CARDS.map((card, idx) => (
           <Link href={card.href} key={idx} className="group block relative w-full h-full min-h-[160px]">
             <div className={`absolute top-0 right-0 w-32 h-32 ${card.glow} rounded-full blur-[60px] pointer-events-none mix-blend-screen opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
