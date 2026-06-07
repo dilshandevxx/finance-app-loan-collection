@@ -5,13 +5,14 @@ import { DashboardRoster } from "@/components/DashboardRoster";
 import Link from "next/link";
 import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
-import { PortfolioSummaryCard } from "@/components/PortfolioSummaryCard";
 import { DashboardHeader } from "@/components/DashboardHeader";
+import { PortfolioSummaryCard } from "@/components/PortfolioSummaryCard";
+import { TopBar } from "@/components/TopBar";
 import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
-import { VillageCollectionBars } from "@/components/VillageCollectionBars";
+import { VillageProgressCard } from "@/components/VillageProgressCard";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';

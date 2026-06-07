@@ -8,8 +8,8 @@
   --card-foreground: #0A0A0A;
   --popover: #FFFFFF;
   --popover-foreground: #0A0A0A;
-  --primary: #FFB800; /* Vibrant Yellow */
-  --primary-foreground: #0A0A0A; /* Black text on yellow */
+  --primary: #10B981; /* Emerald Green */
+  --primary-foreground: #FFFFFF; /* White text on green */
   --secondary: #F4F4F5;
   --secondary-foreground: #18181B;
   --muted: #F4F4F5;
@@ -20,10 +20,10 @@
   --destructive-foreground: #DC2626;
   --border: #E4E4E7;
   --input: #FFFFFF;
-  --ring: #FFB800;
+  --ring: #10B981;
 
   /* Custom chart variables */
-  --chart-collected: #FFB800; 
+  --chart-collected: #10B981; 
   --chart-expected: #E4E4E7;
 
   /* Custom vibe accent colors */
@@ -46,8 +46,8 @@
   --card-foreground: #FAFAFA;
   --popover: #141414;
   --popover-foreground: #FAFAFA;
-  --primary: #FFB800; /* Vibrant Yellow */
-  --primary-foreground: #000000; /* Black text on yellow */
+  --primary: #10B981; /* Emerald Green */
+  --primary-foreground: #FFFFFF; /* White text on green */
   --secondary: #222222; /* Medium dark gray */
   --secondary-foreground: #FAFAFA;
   --muted: #1A1A1A;
@@ -58,10 +58,10 @@
   --destructive-foreground: #F87171;
   --border: #27272A; /* Subtle gray border */
   --input: #141414;
-  --ring: #FFB800;
+  --ring: #10B981;
 
   /* Custom chart variables */
-  --chart-collected: #FFB800; 
+  --chart-collected: #10B981; 
   --chart-expected: #27272A; 
 
   /* Custom vibe accent colors */
