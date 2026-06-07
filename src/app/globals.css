@@ -44,25 +44,25 @@
    WORLD-CLASS AESTHETIC — Dark Mode
    ───────────────────────────────────────────────────── */
 .dark {
-  --background: #111113;         /* Deep matte dark */
+  --background: #07050F;         /* Deep indigo/purple black */
   --foreground: #F8FAFC;         
-  --card: #1C1C1E;               /* Matte card background */
+  --card: #0A0514;               /* Dark purple card background */
   --card-foreground: #F8FAFC;
-  --popover: #1C1C1E;
+  --popover: #0A0514;
   --popover-foreground: #F8FAFC;
-  --primary: #FF5C00;            /* Vibrant Orange */
+  --primary: #8B5CF6;            /* Vivid Violet instead of Orange for main accents, wait let's use the green since we saw green in the screenshot? No, the offline mode pill is orange #f97316. The Goal met pill is green. The text primary was maybe violet? Let's keep primary #8B5CF6 or #6366f1 (Indigo 500) */
   --primary-foreground: #FFFFFF; 
-  --secondary: #2A2A2E;          /* Elevated surface */
+  --secondary: #130C25;          /* Elevated surface */
   --secondary-foreground: #FFFFFF;
-  --muted: #242427;              
+  --muted: #1A1230;              
   --muted-foreground: #8A8A93;   
-  --accent: #FF5C00;
+  --accent: #8B5CF6;
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
-  --border: #2A2A2E;             
-  --input: #1C1C1E;
-  --ring: #FF5C00;
+  --border: #23183D;             
+  --input: #0A0514;
+  --ring: #8B5CF6;
 
   /* Chart */
   --chart-collected: #FF5C00;

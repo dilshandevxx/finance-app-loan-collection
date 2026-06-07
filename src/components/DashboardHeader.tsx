@@ -66,9 +66,28 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6 px-4 mb-8">
-      {/* Left: Text Greeting */}
-      <div className="flex flex-col gap-1">
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6 px-4 mb-4 md:mb-8">
+      {/* Mobile Header (Hidden on Desktop) */}
+      <div className="flex md:hidden items-center justify-between w-full">
+        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/10 shrink-0 bg-primary/20 flex items-center justify-center">
+          {agentAvatar ? (
+             <img src={agentAvatar} alt={agentName} className="w-full h-full object-cover" />
+          ) : (
+             <span className="text-primary font-bold">{agentName.charAt(0).toUpperCase()}</span>
+          )}
+        </div>
+        <span className="text-xl font-black text-white tracking-tight">{agentName}</span>
+        <div className="shrink-0 flex items-center justify-center">
+          <NotificationPanel
+            customers={customers}
+            loans={loans}
+            installments={installments}
+          />
+        </div>
+      </div>
+
+      {/* Desktop Header (Hidden on Mobile) */}
+      <div className="hidden md:flex flex-col gap-1 w-full md:w-auto">
         <h1 className="text-2xl md:text-[32px] font-medium tracking-tight text-foreground">
           Welcome back, {agentName}!!
         </h1>
@@ -77,12 +96,8 @@ export function DashboardHeader({
         </p>
       </div>
 
-      {/* Right: Action Buttons */}
-      <div className="flex items-center gap-3 w-full md:w-auto">
-        <Link href="/new" className="flex-1 md:hidden flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
-          <Plus className="w-4 h-4" strokeWidth={2.5} />
-          New Client
-        </Link>
+      {/* Right: Action Buttons (Desktop Only) */}
+      <div className="hidden md:flex items-center gap-3 w-full md:w-auto">
         <button onClick={() => window.location.reload()} className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-secondary/50 hover:bg-secondary text-foreground border border-border px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
           <Calendar className="w-4 h-4 text-muted-foreground" />
           Refresh
