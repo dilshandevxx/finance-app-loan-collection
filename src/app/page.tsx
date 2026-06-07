@@ -106,7 +106,7 @@ export default async function Home() {
         />
 
         {/* Big Portfolio Header on Home */}
-        <BigPortfolioHeader loans={loans} />
+        <BigPortfolioHeader loans={loans} customers={customers} />
 
         {/* Featured Sections (Horizontally Scrollable Cards) */}
         <FeaturedSections
@@ -176,7 +176,7 @@ export default async function Home() {
 
         {/* RIGHT PANEL — Goals & Roster */}
         <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4">
-          <BigPortfolioHeader loans={loans} />
+          <BigPortfolioHeader loans={loans} customers={customers} />
           <CollectionGoalCard
             expectedToday={expectedToday}
             collectedToday={collectedToday}
