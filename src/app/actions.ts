@@ -759,3 +759,65 @@ export async function saveVillageSchedule(schedule: VillageSchedule) {
   revalidatePath("/");
   return res;
 }
+
+export async function editInstallment(installmentId: string, status: string, amount: number) {
+  const supabase = await createClient();
+
+  if (isNaN(amount) || amount <= 0) {
+    return { success: false, error: "Amount must be greater than zero." };
+  }
+
+  // 1. Update the installment
+  const paidDate = status === "PAID" ? new Date().toISOString() : null;
+  const { error: updateError } = await supabase
+    .from("installments")
+    .update({ status, amount, paid_date: paidDate })
+    .eq("id", installmentId);
+
+  if (updateError) {
+    return { success: false, error: "Failed to update installment: " + updateError.message };
+  }
+
+  // 2. Fetch all installments for the loan to recalculate the remaining balance
+  const { data: inst } = await supabase
+    .from("installments")
+    .select("loan_id")
+    .eq("id", installmentId)
+    .single();
+
+  if (!inst) return { success: false, error: "Installment not found" };
+
+  const { data: allInsts } = await supabase
+    .from("installments")
+    .select("status, amount")
+    .eq("loan_id", inst.loan_id);
+
+  if (allInsts) {
+    let totalPaid = 0;
+    for (const i of allInsts) {
+      if (i.status === "PAID") {
+        totalPaid += Number(i.amount);
+      }
+    }
+
+    const { data: loan } = await supabase
+      .from("loans")
+      .select("total_amount_due, customer_id")
+      .eq("id", inst.loan_id)
+      .single();
+
+    if (loan) {
+      const newRemaining = Math.max(0, loan.total_amount_due - totalPaid);
+      const newLoanStatus = newRemaining <= 0 ? "PAID_OFF" : "ACTIVE";
+
+      await supabase
+        .from("loans")
+        .update({ remaining_balance: newRemaining, status: newLoanStatus })
+        .eq("id", inst.loan_id);
+
+      revalidatePath(/customers/ + loan.customer_id);
+    }
+  }
+
+  return { success: true };
+}

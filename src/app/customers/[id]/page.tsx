@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getCustomerById, getLoansByCustomerId, getInstallmentsByLoanId, getCustomerNotes } from "@/data/db";
 import { CustomerContactActions, CustomerPaymentActions } from "@/components/CustomerActions";
 import { CustomerOperations } from "@/components/CustomerOperations";
+import { InstallmentTimeline } from "@/components/InstallmentTimeline";
 import { formatLKR, formatLKRShort, formatLKRDecimal } from "@/lib/format";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -284,80 +285,7 @@ export default async function CustomerDetails({ params }: Props) {
                 <div className="absolute left-[39px] top-8 bottom-8 w-px bg-gray-200 dark:bg-border" />
 
                 <div className="flex flex-col">
-                  {(() => {
-                    const paidInstallments = installments.map((inst, i) => ({ inst, i })).filter(({ inst }) => inst.status === "PAID");
-                    const pendingInstallments = installments.map((inst, i) => ({ inst, i })).filter(({ inst }) => inst.status !== "PAID");
-
-                    return (
-                      <>
-                        {paidInstallments.length > 0 && (
-                          <details className="group">
-                            <summary className="flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl list-none cursor-pointer mt-2 z-10">
-                              <div className="flex items-center gap-4 relative z-10">
-                                <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full shadow-sm border border-border/50">
-                                  <ChevronDown className="w-5 h-5 text-muted-foreground transition-transform group-open:rotate-180" />
-                                </div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm text-foreground">Past Paid Installments</span>
-                                  <span className="text-xs text-muted-foreground">{paidInstallments.length} weeks successfully paid</span>
-                                </div>
-                              </div>
-                            </summary>
-                            <div className="flex flex-col opacity-75">
-                              {paidInstallments.map(({ inst, i }) => (
-                                <div key={inst.id} className="flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl">
-                                  <div className="flex items-center gap-4 relative z-10">
-                                    <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
-                                      <CheckCircle2 className="w-6 h-6 text-primary" />
-                                    </div>
-                                    <div className="flex flex-col">
-                                      <span className="font-medium text-sm text-foreground">Week {i + 1}</span>
-                                      <span className="text-xs text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    <span className="font-medium text-sm text-foreground">
-                                      {formatLKR(inst.amount)}
-                                    </span>
-                                    {inst.paidDate && (
-                                      <span className="text-xs text-muted-foreground">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </details>
-                        )}
-
-                        {pendingInstallments.map(({ inst, i }) => {
-                          const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
-                          return (
-                            <div key={inst.id} className={`flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl ${i === installments.length - 1 ? 'mb-2' : ''}`}>
-                              <div className="flex items-center gap-4 relative z-10">
-                                <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
-                                  {isOverdue ? (
-                                    <AlertCircle className="w-6 h-6 text-destructive-foreground" />
-                                  ) : (
-                                    <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-border bg-white dark:bg-card" />
-                                  )}
-                                </div>
-                                <div className="flex flex-col">
-                                  <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>Week {i + 1}</span>
-                                  <span className="text-xs text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-col items-end">
-                                <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
-                                  {formatLKR(inst.amount)}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </>
-                    );
-                  })()}
+                  <InstallmentTimeline installments={installments} loan={loan} />
                 </div>
               </CardContent>
             </Card>
