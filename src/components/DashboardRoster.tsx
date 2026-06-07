@@ -293,54 +293,66 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="flex flex-col gap-3">
             {sortedCustomerGroups.map((group) => {
               const { customer, totalAmount, isOverdue } = group;
-              const firstName = customer.name.split(" ")[0];
-              const shortName = firstName.length > 8 ? firstName.slice(0, 7) + "." : firstName;
-
+              
               return (
-                <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-95 transition-transform">
-                  <div className={`flex flex-col p-5 rounded-[1.5rem] bg-card/50 backdrop-blur-md border shadow-sm transition-all duration-300 ${
+                <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-[0.98] transition-transform">
+                  <div className={`flex items-center justify-between p-4 rounded-[1.25rem] bg-card/40 hover:bg-card/80 backdrop-blur-md border shadow-sm transition-all duration-300 relative overflow-hidden ${
                     isOverdue 
-                      ? "border-destructive/30 hover:border-destructive/50 hover:shadow-[0_4px_20px_-4px_rgba(244,63,94,0.15)]" 
-                      : "border-border/50 hover:border-primary/30 hover:shadow-[0_4px_20px_-4px_rgba(99,102,241,0.1)]"
+                      ? "border-destructive/30 hover:border-destructive/50" 
+                      : "border-border/50 hover:border-primary/30"
                   }`}>
                     
-                    {/* Top Section: Initials & Status */}
-                    <div className="flex items-center justify-between mb-4">
-                      {/* Clean Initials Badge instead of ugly image */}
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-black tracking-widest text-primary ${
-                        isOverdue ? 'bg-destructive/10 text-destructive' : 'bg-primary/10'
-                      }`}>
-                        {customer.name.substring(0, 2).toUpperCase()}
-                      </div>
-                      
-                      {isOverdue && (
-                        <div className="px-2 py-0.5 rounded-md bg-destructive/10 border border-destructive/20 flex items-center shadow-sm">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-destructive animate-pulse">Overdue</span>
+                    {/* Background Subtle Gradient */}
+                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r ${isOverdue ? 'from-destructive/5' : 'from-primary/5'} to-transparent`} />
+
+                    {/* Left: Avatar & Info */}
+                    <div className="flex items-center gap-4 relative z-10">
+                      {/* Avatar */}
+                      <div className="relative shrink-0">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-[14px] font-black tracking-widest ${
+                          isOverdue ? 'bg-destructive/10 text-destructive shadow-[0_0_15px_rgba(244,63,94,0.2)]' : 'bg-primary/10 text-primary shadow-[0_0_15px_rgba(99,102,241,0.2)]'
+                        }`}>
+                          {customer.name.substring(0, 2).toUpperCase()}
                         </div>
-                      )}
-                    </div>
+                        {isOverdue && (
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-destructive border-[3px] border-background animate-pulse" />
+                        )}
+                      </div>
 
-                    {/* Middle Section: Name & Area */}
-                    <div className="flex flex-col mb-4">
-                      <span className="font-extrabold text-foreground text-[15px] truncate tracking-tight">{shortName}</span>
-                      <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-widest truncate mt-0.5">
-                        {customer.state || "Unknown Area"}
-                      </span>
-                    </div>
-
-                    {/* Bottom Section: Amount */}
-                    <div className="mt-auto">
+                      {/* Name & Area */}
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Expected</span>
+                        <span className="font-extrabold text-foreground text-[15px] tracking-tight truncate max-w-[140px] sm:max-w-[200px]">
+                          {customer.name}
+                        </span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
+                          <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-widest truncate">
+                            {customer.state || "Unknown Area"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Amount & Action */}
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className="flex flex-col items-end">
+                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${isOverdue ? 'text-destructive' : 'text-muted-foreground'}`}>
+                          {isOverdue ? 'Overdue' : 'Expected'}
+                        </span>
                         <div className="flex items-baseline gap-1">
-                          <span className={`text-[11px] font-bold leading-none ${isOverdue ? "text-destructive" : "text-primary"}`}>Rs.</span>
-                          <span className={`text-xl font-black leading-none tracking-tighter ${isOverdue ? "text-destructive" : "text-foreground"}`}>
+                          <span className={`text-[11px] font-bold leading-none ${isOverdue ? 'text-destructive' : 'text-primary'}`}>Rs.</span>
+                          <span className={`text-lg font-black leading-none tracking-tighter ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
                             {Math.floor(totalAmount).toLocaleString("en-LK")}
                           </span>
                         </div>
+                      </div>
+
+                      {/* Chevron Arrow */}
+                      <div className="w-8 h-8 rounded-full bg-secondary/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:translate-x-1 transition-all">
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                     </div>
 
