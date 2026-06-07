@@ -340,8 +340,8 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             </div>
 
             {/* DESKTOP VIEW: Data Table */}
-            <div className="hidden md:block w-full overflow-hidden rounded-[1.5rem] border border-border bg-card shadow-sm">
-              <table className="w-full text-left border-collapse">
+            <div className="hidden md:block w-full overflow-x-auto rounded-[1.5rem] border border-border bg-card shadow-sm">
+              <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
                   <tr className="border-b border-border bg-secondary/50">
                     <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Customer</th>

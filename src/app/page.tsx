@@ -146,7 +146,7 @@ export default async function Home() {
       />
 
       {/* ── Desktop: Action Required Roster ──────────────────────── */}
-      <div className="hidden md:flex flex-col mt-6 bg-[#0A0514]/80 backdrop-blur-md border border-white/5 rounded-[2rem] p-6 shadow-xl">
+      <div className="hidden md:flex flex-col mt-6 bg-[#0A0514]/80 backdrop-blur-md border border-white/5 rounded-[2rem] p-6 shadow-xl w-full overflow-hidden">
         <h2 className="text-xl font-black text-white tracking-tight mb-4 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
           Action Required Today
