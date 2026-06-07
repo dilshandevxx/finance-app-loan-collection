@@ -210,10 +210,10 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
         </button>
       </div>
 
-      {/* Grid of Clients */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Grid / Table of Clients */}
+      <div className="w-full">
         {displayCustomers.length === 0 ? (
-          <div className="col-span-full text-center py-16 px-4 rounded-[2rem] border border-dashed border-border bg-card/30 flex flex-col items-center justify-center gap-4">
+          <div className="text-center py-16 px-4 rounded-[2rem] border border-dashed border-border bg-card/30 flex flex-col items-center justify-center gap-4">
             <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
               <Inbox className="w-8 h-8 text-muted-foreground" />
             </div>
@@ -229,99 +229,190 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
             </div>
           </div>
         ) : (
-          displayCustomers.map((customer, i) => {
-            const customerLoans = localLoans.filter(l => l.customerId === customer.id);
-            const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
-            const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
-            const isOverdue = customerLoans.some(l =>
-              localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
-            );
+          <>
+            {/* MOBILE VIEW: Cards */}
+            <div className="grid md:hidden grid-cols-1 gap-4">
+              {displayCustomers.map((customer, i) => {
+                const customerLoans = localLoans.filter(l => l.customerId === customer.id);
+                const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
+                const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
+                const isOverdue = customerLoans.some(l =>
+                  localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+                );
 
-            return (
-              <Link key={customer.id} href={`/customers/${customer.id}`} className="group outline-none block">
-                <Card className="bg-card/80 backdrop-blur-sm border-border/60 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform group-hover:-translate-y-1 group-focus-visible:ring-4 ring-primary/20">
-                  <CardContent className="p-5 sm:p-6 flex flex-col gap-4">
+                return (
+                  <Link key={customer.id} href={`/customers/${customer.id}`} className="group outline-none block">
+                    <Card className="bg-card/80 backdrop-blur-sm border-border/60 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform group-hover:-translate-y-1 group-focus-visible:ring-4 ring-primary/20">
+                      <CardContent className="p-5 sm:p-6 flex flex-col gap-4">
 
-                    {/* Top Section: Avatar & Info */}
-                    <div className="flex items-start gap-4">
-                      {/* Avatar */}
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/10 overflow-hidden relative shrink-0 shadow-md bg-secondary group-hover:scale-105 transition-transform duration-300">
-                        <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                      </div>
+                        {/* Top Section: Avatar & Info */}
+                        <div className="flex items-start gap-4">
+                          {/* Avatar */}
+                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/10 overflow-hidden relative shrink-0 shadow-md bg-secondary group-hover:scale-105 transition-transform duration-300">
+                            <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
+                          </div>
 
-                      {/* Info */}
-                      <div className="flex flex-col flex-1 min-w-0 pt-0.5">
-                        <div className="flex items-center justify-between gap-2 w-full mb-1">
-                          <span className="font-extrabold text-[17px] text-foreground truncate tracking-tight">{customer.name}</span>
-                          {isOverdue ? (
-                            <span className="px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 shrink-0 shadow-sm animate-pulse">Overdue</span>
-                          ) : activeLoan ? (
-                            <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20 shrink-0 shadow-sm">Active</span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] uppercase font-bold tracking-widest border border-border shrink-0 shadow-sm">Settled</span>
-                          )}
-                        </div>
+                          {/* Info */}
+                          <div className="flex flex-col flex-1 min-w-0 pt-0.5">
+                            <div className="flex items-center justify-between gap-2 w-full mb-1">
+                              <span className="font-extrabold text-[17px] text-foreground truncate tracking-tight">{customer.name}</span>
+                              {isOverdue ? (
+                                <span className="px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 shrink-0 shadow-sm animate-pulse">Overdue</span>
+                              ) : activeLoan ? (
+                                <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20 shrink-0 shadow-sm">Active</span>
+                              ) : (
+                                <span className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] uppercase font-bold tracking-widest border border-border shrink-0 shadow-sm">Settled</span>
+                              )}
+                            </div>
 
-                        <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground min-w-0 flex-wrap font-semibold">
-                          {customer.state && (
-                            <span className="flex items-center gap-1 text-primary bg-primary/5 px-1.5 py-0.5 rounded-md shrink-0 border border-primary/10">
-                              📍 {customer.state}
-                            </span>
-                          )}
-                          <span className="shrink-0 flex items-center gap-1">
-                            <Phone className="w-3 h-3" />
-                            {formatLKPhone(customer.phone)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Section: Financials & Progress */}
-                    <div className="mt-2 pt-4 border-t border-border/50 flex flex-col gap-3">
-                      <div className="flex items-end justify-between">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-0.5">Balance</span>
-                          {activeLoan ? (
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-xs font-bold text-foreground/50">Rs.</span>
-                              <span className={`font-black text-xl tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
-                                {totalRemaining.toLocaleString("en-LK")}
+                            <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground min-w-0 flex-wrap font-semibold">
+                              {customer.state && (
+                                <span className="flex items-center gap-1 text-primary bg-primary/5 px-1.5 py-0.5 rounded-md shrink-0 border border-primary/10">
+                                  📍 {customer.state}
+                                </span>
+                              )}
+                              <span className="shrink-0 flex items-center gap-1">
+                                <Phone className="w-3 h-3" />
+                                {formatLKPhone(customer.phone)}
                               </span>
                             </div>
-                          ) : (
-                            <span className="text-sm font-bold text-primary flex items-center gap-1">
-                              Fully Paid <CheckCircle2 className="w-4 h-4" />
-                            </span>
+                          </div>
+                        </div>
+
+                        {/* Bottom Section: Financials & Progress */}
+                        <div className="mt-2 pt-4 border-t border-border/50 flex flex-col gap-3">
+                          <div className="flex items-end justify-between">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-0.5">Balance</span>
+                              {activeLoan ? (
+                                <div className="flex items-baseline gap-1">
+                                  <span className="text-xs font-bold text-foreground/50">Rs.</span>
+                                  <span className={`font-black text-xl tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
+                                    {totalRemaining.toLocaleString("en-LK")}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-sm font-bold text-primary flex items-center gap-1">
+                                  Fully Paid <CheckCircle2 className="w-4 h-4" />
+                                </span>
+                              )}
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
+                               <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
+                            </div>
+                          </div>
+
+                          {activeLoan && (
+                            <div className="flex flex-col gap-1.5 w-full">
+                              <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                <span>Repayment</span>
+                                <span className={isOverdue ? 'text-destructive' : 'text-primary'}>
+                                  {Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%
+                                </span>
+                              </div>
+                              <div className="w-full h-2 bg-secondary rounded-full overflow-hidden shadow-inner">
+                                <div
+                                  className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverdue ? 'bg-destructive' : 'bg-primary'}`}
+                                  style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
+                                />
+                              </div>
+                            </div>
                           )}
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
-                           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
-                        </div>
-                      </div>
 
-                      {activeLoan && (
-                        <div className="flex flex-col gap-1.5 w-full">
-                          <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                            <span>Repayment</span>
-                            <span className={isOverdue ? 'text-destructive' : 'text-primary'}>
-                              {Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* DESKTOP VIEW: Data Table */}
+            <div className="hidden md:block w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-card/40 backdrop-blur-md shadow-sm">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Client</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Contact & Area</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Status</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Progress</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground text-right">Balance</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {displayCustomers.map((customer, i) => {
+                    const customerLoans = localLoans.filter(l => l.customerId === customer.id);
+                    const activeLoan = customerLoans.find(l => l.status === "ACTIVE");
+                    const totalRemaining = customerLoans.reduce((sum, l) => sum + (l.status === 'ACTIVE' ? l.remainingBalance : 0), 0);
+                    const isOverdue = customerLoans.some(l =>
+                      localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+                    );
+                    const progress = activeLoan ? Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)) : 100;
+
+                    return (
+                      <tr key={customer.id} className="group hover:bg-white/5 transition-colors duration-200">
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-secondary border border-white/10 overflow-hidden shrink-0">
+                               <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
+                            </div>
+                            <span className="font-bold text-[14px] text-foreground tracking-tight">{customer.name}</span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex flex-col gap-1.5">
+                            <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5">
+                              <Phone className="w-3 h-3 text-primary/70" /> {formatLKPhone(customer.phone)}
                             </span>
+                            {customer.state && <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest bg-secondary px-2 py-0.5 rounded-md w-fit">{customer.state}</span>}
                           </div>
-                          <div className="w-full h-2 bg-secondary rounded-full overflow-hidden shadow-inner">
-                            <div
-                              className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverdue ? 'bg-destructive' : 'bg-primary'}`}
-                              style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
-                            />
+                        </td>
+                        <td className="p-4">
+                          {isOverdue ? (
+                            <span className="px-2.5 py-1 rounded-md bg-destructive/10 text-destructive text-[10px] font-black uppercase tracking-widest border border-destructive/20 shadow-sm animate-pulse">Overdue</span>
+                          ) : activeLoan ? (
+                            <span className="px-2.5 py-1 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20 shadow-sm">Active</span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground text-[10px] font-bold uppercase tracking-widest border border-border shadow-sm">Settled</span>
+                          )}
+                        </td>
+                        <td className="p-4 w-[160px]">
+                          {activeLoan ? (
+                            <div className="flex items-center gap-2 w-full">
+                               <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                                 <div className={`h-full rounded-full ${isOverdue ? 'bg-destructive' : 'bg-primary'}`} style={{width: `${progress}%`}} />
+                               </div>
+                               <span className="text-[10px] font-bold text-muted-foreground shrink-0 w-8 text-right">{Math.round(progress)}%</span>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-primary font-bold flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5"/> 100%</span>
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          <div className="flex flex-col items-end">
+                            {activeLoan ? (
+                               <div className="flex items-baseline gap-1">
+                                 <span className="text-[10px] font-bold text-foreground/50">Rs.</span>
+                                 <span className={`text-[15px] font-black tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>{totalRemaining.toLocaleString("en-LK")}</span>
+                               </div>
+                            ) : (
+                               <span className="text-xs text-muted-foreground font-semibold">0.00</span>
+                            )}
                           </div>
-                        </div>
-                      )}
-                    </div>
-
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })
+                        </td>
+                        <td className="p-4 text-center">
+                          <Link href={`/customers/${customer.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground text-muted-foreground transition-colors duration-200 shadow-sm group-hover:scale-110">
+                            <ChevronRight className="w-4 h-4" />
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

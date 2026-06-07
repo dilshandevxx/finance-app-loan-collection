@@ -132,109 +132,92 @@ export default async function Home() {
         />
       </div>
 
-      {/* ── Desktop: Bento-Box Dashboard Layout ───────────────────────────── */}
-      <div className="hidden md:grid grid-cols-1 md:grid-cols-12 gap-6 xl:gap-8 items-start w-full">
+      {/* ── Desktop: Clean Standard Dashboard Layout ───────────────────────────── */}
+      <div className="hidden md:flex flex-col gap-8 w-full max-w-[1400px]">
         
-        {/* LEFT COLUMN — Main Insights (Spans 12 on md, 5 on xl) */}
-        <div className="flex flex-col gap-6 md:col-span-12 xl:col-span-5">
-          
-          {/* Top Quick Stats Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Active Loans Stat */}
-            <div className="relative group rounded-[2rem] p-6 bg-card/40 hover:bg-card/80 backdrop-blur-md border border-white/10 hover:border-primary/50 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-[0_8px_40px_rgb(99,102,241,0.2)] hover:-translate-y-1">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-[50px] group-hover:bg-primary/30 transition-colors duration-500" />
+        {/* Top Row: Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <CollectionGoalCard
+              expectedToday={expectedToday}
+              collectedToday={collectedToday}
+              totalClientsToday={totalClientsToday}
+              collectedClientsToday={collectedClientsToday}
+              activeLoans={activeLoans}
+              overdueAmount={overdueAmount}
+            />
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="relative group rounded-[2rem] p-6 bg-card/40 hover:bg-card/80 backdrop-blur-md border border-white/10 hover:border-primary/50 transition-all duration-500 overflow-hidden shadow-sm h-full flex flex-col justify-center">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-[50px] group-hover:bg-primary/20 transition-colors duration-500" />
               <div className="relative z-10 flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-primary mb-2">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                     <Users className="w-4 h-4" />
                   </div>
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">Active Loans</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Active Loans</span>
                 </div>
                 <div className="flex items-end gap-2">
-                  <span className="text-5xl font-black tracking-tighter text-foreground drop-shadow-md">{activeLoans}</span>
+                  <span className="text-5xl font-black tracking-tighter text-foreground">{activeLoans}</span>
                   <span className="text-sm font-semibold text-muted-foreground mb-1.5">running</span>
                 </div>
               </div>
             </div>
-
-            {/* Overdue Stat */}
-            <div className="relative group rounded-[2rem] p-6 bg-card/40 hover:bg-card/80 backdrop-blur-md border border-white/10 hover:border-destructive/50 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-[0_8px_40px_rgb(244,63,94,0.2)] hover:-translate-y-1">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-destructive/20 rounded-full blur-[50px] group-hover:bg-destructive/30 transition-colors duration-500" />
+          </div>
+          
+          <div className="flex flex-col gap-6">
+            <div className="relative group rounded-[2rem] p-6 bg-card/40 hover:bg-card/80 backdrop-blur-md border border-white/10 hover:border-destructive/50 transition-all duration-500 overflow-hidden shadow-sm h-full flex flex-col justify-center">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-destructive/10 rounded-full blur-[50px] group-hover:bg-destructive/20 transition-colors duration-500" />
               <div className="relative z-10 flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-destructive mb-2">
                   <div className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center border border-destructive/20">
                     <AlertCircle className="w-4 h-4" />
                   </div>
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-destructive transition-colors">Total Overdue</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Total Overdue</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[12px] font-bold text-destructive mb-0.5">Rs.</span>
-                  <span className="text-4xl lg:text-5xl font-black tracking-tighter text-foreground truncate drop-shadow-md" title={Math.floor(overdueAmount).toString()}>
+                  <span className="text-4xl lg:text-5xl font-black tracking-tighter text-foreground truncate" title={Math.floor(overdueAmount).toString()}>
                     {Math.floor(overdueAmount).toLocaleString("en-LK")}
                   </span>
                 </div>
               </div>
             </div>
           </div>
-
-          <PortfolioSummaryCard loans={loans} />
-          
-          <DueTomorrowCard installments={installments} loans={loans} customers={customers} />
-          
         </div>
 
-        {/* MIDDLE COLUMN — Analytics & Collections (Spans 7 on md, 4 on xl) */}
-        <div className="flex flex-col gap-6 md:col-span-7 xl:col-span-4">
-          <CollectionGoalCard
-            expectedToday={expectedToday}
-            collectedToday={collectedToday}
-            totalClientsToday={totalClientsToday}
-            collectedClientsToday={collectedClientsToday}
-            activeLoans={activeLoans}
-            overdueAmount={overdueAmount}
-          />
-
-          <div className="rounded-[2rem] bg-card/40 backdrop-blur-xl border border-white/10 p-6 shadow-sm hover:border-white/20 transition-all duration-500">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-primary mb-1">Collections</p>
-                <p className="text-lg font-black text-foreground tracking-tight">Weekly Performance</p>
+        {/* Middle Row: Analytics & Summary */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+           <div className="lg:col-span-1">
+             <PortfolioSummaryCard loans={loans} />
+           </div>
+           <div className="lg:col-span-2 rounded-[2rem] bg-card/40 backdrop-blur-xl border border-white/10 p-6 shadow-sm hover:border-white/20 transition-all duration-500 flex flex-col">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-primary mb-1">Collections</p>
+                  <p className="text-lg font-black text-foreground tracking-tight">Weekly Performance</p>
+                </div>
               </div>
-              <div className="px-3 py-1 rounded-full bg-secondary/50 border border-white/5 text-xs font-bold text-muted-foreground">This Week</div>
-            </div>
-            <div className="h-[200px] w-full">
-              <AnalyticsChart />
-            </div>
-          </div>
-          
-          <VillageCollectionBars installments={installments} loans={loans} customers={customers} />
-          
-          <TopOverdueCard installments={installments} loans={loans} customers={customers} />
+              <div className="flex-1 min-h-[250px] w-full">
+                <AnalyticsChart />
+              </div>
+           </div>
         </div>
 
-        {/* RIGHT COLUMN — Action Center & Roster (Spans 5 on md, 3 on xl) */}
-        <div className="flex flex-col gap-6 md:col-span-5 xl:col-span-3 md:sticky md:top-6 md:max-h-[calc(100vh-2rem)]">
-          <FeaturedSections
-            customers={customers}
-            installments={installments}
-            loans={loans}
-          />
-          
-          <div className="rounded-[2rem] bg-card/20 backdrop-blur-2xl border border-white/10 flex-1 overflow-hidden flex flex-col shadow-2xl hover:border-white/20 transition-all duration-500 min-h-[400px]">
-            <div className="p-4 border-b border-white/5 bg-white/5 backdrop-blur-md">
-              <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                Live Action Feed
-              </h3>
-            </div>
-            <div className="flex-1 overflow-y-auto p-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/50 [&::-webkit-scrollbar-thumb]:rounded-full">
-              <DashboardRoster
-                pendingInstallments={pendingInstallments}
-                customers={customers}
-                loans={loans}
-              />
-            </div>
-          </div>
+        {/* Bottom Section: Dashboard Roster */}
+        <div className="w-full mb-8">
+           <div className="rounded-[2rem] bg-card/20 backdrop-blur-2xl border border-white/10 flex flex-col shadow-sm p-6 lg:p-8">
+             <h3 className="font-black text-xl text-foreground mb-6 flex items-center gap-2">
+               <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+               Live Action Feed
+             </h3>
+             <DashboardRoster
+               pendingInstallments={pendingInstallments}
+               customers={customers}
+               loans={loans}
+             />
+           </div>
         </div>
       </div>
 

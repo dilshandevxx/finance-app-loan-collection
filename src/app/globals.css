@@ -10,22 +10,22 @@
   --card-foreground: #0F172A;
   --popover: #FFFFFF;
   --popover-foreground: #0F172A;
-  --primary: #6366F1;            /* Vibrant Indigo */
+  --primary: #10B981;            /* Emerald Green */
   --primary-foreground: #FFFFFF;
-  --secondary: #EEF2FF;          /* Indigo 50 */
-  --secondary-foreground: #4338CA;
+  --secondary: #ECFDF5;          /* Emerald 50 */
+  --secondary-foreground: #047857;
   --muted: #F1F5F9;              /* Slate 100 */
   --muted-foreground: #64748B;   /* Slate 500 */
-  --accent: #E0E7FF;             /* Indigo 100 */
-  --accent-foreground: #3730A3;
+  --accent: #D1FAE5;             /* Emerald 100 */
+  --accent-foreground: #065F46;
   --destructive: #FEF2F2;
   --destructive-foreground: #DC2626;
   --border: #E2E8F0;             /* Clean Slate 200 border */
   --input: #FFFFFF;
-  --ring: #6366F1;
+  --ring: #10B981;
 
   /* Chart */
-  --chart-collected: #6366F1;
+  --chart-collected: #10B981;
   --chart-expected: #E2E8F0;
 
   /* Vibe accents */
@@ -50,22 +50,22 @@
   --card-foreground: #F8FAFC;
   --popover: #12121A;
   --popover-foreground: #F8FAFC;
-  --primary: #818CF8;            /* Bright luminous indigo */
-  --primary-foreground: #FFFFFF;
-  --secondary: #1E1E2D;          /* Elevated surface */
-  --secondary-foreground: #C7D2FE;
+  --primary: #34D399;            /* Bright luminous Emerald */
+  --primary-foreground: #022C22; /* High contrast text */
+  --secondary: #064E3B;          /* Elevated surface Emerald */
+  --secondary-foreground: #A7F3D0;
   --muted: #1E1E28;              /* Soft dark background */
   --muted-foreground: #94A3B8;   /* Clear slate 400 for readable secondary text */
-  --accent: #26263B;
-  --accent-foreground: #E0E7FF;
+  --accent: #065F46;
+  --accent-foreground: #D1FAE5;
   --destructive: #3F1414;
   --destructive-foreground: #FCA5A5;
   --border: #2A2A3C;             /* Clear, visible border for dark mode */
   --input: #12121A;
-  --ring: #818CF8;
+  --ring: #34D399;
 
   /* Chart */
-  --chart-collected: #818CF8;
+  --chart-collected: #34D399;
   --chart-expected: #2A2A3C;
 
   /* Vibe accents */

@@ -280,7 +280,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
         </div>
       </div>
 
-      {/* 4. CUSTOMER GRID */}
+      {/* 4. CUSTOMER GRID / TABLE */}
       <div className="w-full">
         {sortedCustomerGroups.length === 0 ? (
           <Card className="rounded-[1.5rem] border border-white/5 bg-card shadow-sm">
@@ -293,74 +293,107 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             </CardContent>
           </Card>
         ) : (
-          <div className="flex flex-col gap-3">
-            {sortedCustomerGroups.map((group) => {
-              const { customer, totalAmount, isOverdue } = group;
-              
-              return (
-                <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-[0.98] transition-transform">
-                  <div className={`flex items-center justify-between p-4 rounded-[1.25rem] bg-card/40 hover:bg-card/80 backdrop-blur-md border shadow-sm transition-all duration-300 relative overflow-hidden ${
-                    isOverdue 
-                      ? "border-destructive/30 hover:border-destructive/50" 
-                      : "border-border/50 hover:border-primary/30"
-                  }`}>
-                    
-                    {/* Background Subtle Gradient */}
-                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r ${isOverdue ? 'from-destructive/5' : 'from-primary/5'} to-transparent`} />
-
-                    {/* Left: Avatar & Info */}
-                    <div className="flex items-center gap-4 relative z-10">
-                      {/* Avatar */}
-                      <div className="relative shrink-0">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-[14px] font-black tracking-widest ${
-                          isOverdue ? 'bg-destructive/10 text-destructive shadow-[0_0_15px_rgba(244,63,94,0.2)]' : 'bg-primary/10 text-primary shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-                        }`}>
-                          {customer.name.substring(0, 2).toUpperCase()}
+          <>
+            {/* MOBILE VIEW: Cards */}
+            <div className="flex md:hidden flex-col gap-3">
+              {sortedCustomerGroups.map((group) => {
+                const { customer, totalAmount, isOverdue } = group;
+                return (
+                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-[0.98] transition-transform">
+                    <div className={`flex items-center justify-between p-4 rounded-[1.25rem] bg-card/40 hover:bg-card/80 backdrop-blur-md border shadow-sm transition-all duration-300 relative overflow-hidden ${
+                      isOverdue ? "border-destructive/30 hover:border-destructive/50" : "border-border/50 hover:border-primary/30"
+                    }`}>
+                      <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r ${isOverdue ? 'from-destructive/5' : 'from-primary/5'} to-transparent`} />
+                      <div className="flex items-center gap-4 relative z-10">
+                        <div className="relative shrink-0">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-[14px] font-black tracking-widest ${
+                            isOverdue ? 'bg-destructive/10 text-destructive shadow-[0_0_15px_rgba(244,63,94,0.2)]' : 'bg-primary/10 text-primary shadow-[0_0_15px_rgba(99,102,241,0.2)]'
+                          }`}>
+                            {customer.name.substring(0, 2).toUpperCase()}
+                          </div>
+                          {isOverdue && <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-destructive border-[3px] border-background animate-pulse" />}
                         </div>
-                        {isOverdue && (
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-destructive border-[3px] border-background animate-pulse" />
-                        )}
+                        <div className="flex flex-col">
+                          <span className="font-extrabold text-foreground text-[15px] tracking-tight truncate max-w-[140px] sm:max-w-[200px]">{customer.name}</span>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
+                            <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-widest truncate">{customer.state || "Unknown Area"}</span>
+                          </div>
+                        </div>
                       </div>
-
-                      {/* Name & Area */}
-                      <div className="flex flex-col">
-                        <span className="font-extrabold text-foreground text-[15px] tracking-tight truncate max-w-[140px] sm:max-w-[200px]">
-                          {customer.name}
-                        </span>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
-                          <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-widest truncate">
-                            {customer.state || "Unknown Area"}
-                          </span>
+                      <div className="flex items-center gap-4 relative z-10">
+                        <div className="flex flex-col items-end">
+                          <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${isOverdue ? 'text-destructive' : 'text-muted-foreground'}`}>{isOverdue ? 'Overdue' : 'Expected'}</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className={`text-[11px] font-bold leading-none ${isOverdue ? 'text-destructive' : 'text-primary'}`}>Rs.</span>
+                            <span className={`text-lg font-black leading-none tracking-tighter ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>{Math.floor(totalAmount).toLocaleString("en-LK")}</span>
+                          </div>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-secondary/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:translate-x-1 transition-all">
+                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                         </div>
                       </div>
                     </div>
+                  </Link>
+                );
+              })}
+            </div>
 
-                    {/* Right: Amount & Action */}
-                    <div className="flex items-center gap-4 relative z-10">
-                      <div className="flex flex-col items-end">
-                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${isOverdue ? 'text-destructive' : 'text-muted-foreground'}`}>
-                          {isOverdue ? 'Overdue' : 'Expected'}
-                        </span>
-                        <div className="flex items-baseline gap-1">
-                          <span className={`text-[11px] font-bold leading-none ${isOverdue ? 'text-destructive' : 'text-primary'}`}>Rs.</span>
-                          <span className={`text-lg font-black leading-none tracking-tighter ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
-                            {Math.floor(totalAmount).toLocaleString("en-LK")}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Chevron Arrow */}
-                      <div className="w-8 h-8 rounded-full bg-secondary/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:translate-x-1 transition-all">
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                    </div>
-
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+            {/* DESKTOP VIEW: Data Table */}
+            <div className="hidden md:block w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-card/40 backdrop-blur-md shadow-sm">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Customer</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Area</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Status</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground text-right">Expected</th>
+                    <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {sortedCustomerGroups.map((group) => {
+                    const { customer, totalAmount, isOverdue } = group;
+                    return (
+                      <tr key={customer.id} className="group hover:bg-white/5 transition-colors duration-200">
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black tracking-widest shrink-0 ${
+                              isOverdue ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'
+                            }`}>
+                              {customer.name.substring(0, 2).toUpperCase()}
+                            </div>
+                            <span className="font-bold text-[14px] text-foreground">{customer.name}</span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <span className="text-[11px] font-bold text-muted-foreground bg-secondary px-2.5 py-1 rounded-md">{customer.state || "Unknown"}</span>
+                        </td>
+                        <td className="p-4">
+                          {isOverdue ? (
+                            <span className="px-2.5 py-1 rounded-md bg-destructive/10 text-destructive text-[10px] font-black uppercase tracking-widest border border-destructive/20 shadow-sm animate-pulse">Overdue</span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20 shadow-sm">Pending</span>
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          <div className="flex items-baseline justify-end gap-1">
+                            <span className={`text-[10px] font-bold ${isOverdue ? 'text-destructive' : 'text-primary'}`}>Rs.</span>
+                            <span className={`text-[15px] font-black tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>{Math.floor(totalAmount).toLocaleString("en-LK")}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 text-center">
+                          <Link href={`/customers/${customer.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground text-muted-foreground transition-colors duration-200 shadow-sm group-hover:scale-110">
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
