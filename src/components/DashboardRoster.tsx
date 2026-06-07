@@ -193,19 +193,31 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   return (
     <section className="flex flex-col h-full w-full max-w-full">
 
-      {/* 1. SEARCH FIELD */}
-      <div className="relative w-full mb-4 drop-shadow-xl">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search a customer..."
-          className="w-full bg-white dark:bg-white text-black font-semibold rounded-[2rem] pl-6 pr-16 py-4 text-[15px] placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-white/20 transition-all shadow-sm"
-        />
-        <div className="absolute inset-y-0 right-2 flex items-center">
-          <div className="w-10 h-10 bg-black dark:bg-[#1c1c1e] rounded-full flex items-center justify-center cursor-pointer hover:bg-neutral-800 transition-colors">
-            <Search className="h-4 w-4 text-white" strokeWidth={2.5} />
+      {/* 1. SEARCH FIELD — Beautiful mobile-first */}
+      <div className="relative w-full mb-5">
+        {/* Glow effect */}
+        <div className="absolute -inset-[1px] rounded-[1.75rem] bg-gradient-to-r from-primary/30 via-transparent to-primary/10 opacity-60 blur-[2px] pointer-events-none" />
+        <div className="relative flex items-center bg-secondary/80 dark:bg-secondary/60 border border-border/60 backdrop-blur-sm rounded-[1.75rem] overflow-hidden shadow-lg shadow-black/5 dark:shadow-black/20 transition-all focus-within:border-primary/40 focus-within:shadow-primary/10 focus-within:shadow-xl">
+          {/* Icon left */}
+          <div className="pl-4 pr-2 flex items-center shrink-0">
+            <Search className="h-4 w-4 text-muted-foreground" strokeWidth={2} />
           </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search customer, ID or area..."
+            className="flex-1 bg-transparent py-3.5 pr-3 text-[14px] font-medium text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
+          />
+          {/* Clear button */}
+          {searchQuery.length > 0 && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="mr-2 w-7 h-7 rounded-full bg-border/60 hover:bg-border flex items-center justify-center transition-colors shrink-0"
+            >
+              <span className="text-muted-foreground text-xs font-bold leading-none">✕</span>
+            </button>
+          )}
         </div>
       </div>
 
