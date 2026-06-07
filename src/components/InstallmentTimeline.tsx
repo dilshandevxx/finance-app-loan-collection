@@ -146,7 +146,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
                     </div>
                     <button
                       onClick={() => startEditing(inst)}
-                      className="opacity-0 group-hover/row:opacity-100 transition-opacity p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+                      className="p-2 rounded-lg hover:bg-secondary text-muted-foreground/50 hover:text-foreground transition-colors"
                       title="Edit Installment"
                     >
                       <Edit2 className="w-4 h-4" />
@@ -190,7 +190,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
               </div>
               <button
                 onClick={() => startEditing(inst)}
-                className="opacity-0 group-hover/row:opacity-100 transition-opacity p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+                className="p-2 rounded-lg hover:bg-secondary text-muted-foreground/50 hover:text-foreground transition-colors"
                 title="Edit Installment"
               >
                 <Edit2 className="w-4 h-4" />
