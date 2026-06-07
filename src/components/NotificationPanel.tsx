@@ -183,12 +183,12 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
       {/* Bell Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="relative w-12 h-12 rounded-[1.25rem] bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-black/20 group cursor-pointer"
+        className="relative w-12 h-12 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center transition-all active:scale-95 shadow-lg group cursor-pointer"
         aria-label="Open notifications"
       >
-        <Bell className="w-5.5 h-5.5 text-muted-foreground group-hover:text-white transition-colors duration-300 origin-top group-hover:animate-[bell-ring_0.8s_ease-in-out_infinite]" />
+        <Bell className="w-6 h-6 text-foreground font-light group-hover:text-white transition-colors duration-300 origin-top group-hover:animate-[bell-ring_0.8s_ease-in-out_infinite]" strokeWidth={1.5} />
         {totalCount > 0 && (
-          <span className="absolute top-2.5 right-2.5 w-3 h-3 bg-rose-500 rounded-full border-2 border-background animate-pulse shadow-[0_0_8px_var(--vibe-coral)]" />
+          <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-background animate-pulse shadow-[0_0_8px_var(--vibe-coral)]" />
         )}
       </button>
 

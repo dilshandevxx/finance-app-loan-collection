@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { NotificationPanel } from "./NotificationPanel";
 import { Customer, Loan, Installment } from "@/data/db";
-import { Calendar, Sun, Moon, CloudSun } from "lucide-react";
+import { Calendar, Sun, Moon, CloudSun, Plus } from "lucide-react";
+import Link from "next/link";
 
 interface DashboardHeaderProps {
   agentName: string;
@@ -65,55 +66,28 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between pt-2 px-1 mb-2">
-      <div className="flex items-center gap-4">
-        {/* Profile Avatar / Initial */}
-        <div className="relative group cursor-pointer">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-primary/70 flex items-center justify-center shadow-xl shadow-primary/20 group-hover:scale-105 transition-all duration-300 ring-2 ring-background overflow-hidden">
-            {agentAvatar ? (
-              <img src={agentAvatar} alt={agentName} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-xl font-black text-primary-foreground drop-shadow-md">
-                {agentName.charAt(0).toUpperCase()}
-              </span>
-            )}
-          </div>
-          {/* Online Indicator */}
-          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-[2.5px] border-background rounded-full z-10 flex items-center justify-center">
-            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse opacity-80" />
-          </div>
-        </div>
+    <header className="flex items-center justify-between pt-6 px-4 mb-8">
+      {/* Left: Bold Title */}
+      <h1 className="text-4xl font-extrabold text-foreground tracking-tight">
+        Home
+      </h1>
 
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <div className={`flex items-center justify-center p-1 rounded-md border ${iconClass}`}>
-              <Icon className="w-3 h-3" />
-            </div>
-            <p className="text-[11px] font-extrabold text-muted-foreground uppercase tracking-widest mt-0.5">
-              {greeting}
-            </p>
-          </div>
-          <h1 className="text-2xl font-black text-foreground tracking-tight leading-none flex items-center gap-2.5">
-            {agentName.split(" ")[0]}
-            <span className="text-[9px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20 tracking-widest uppercase mt-0.5">
-              Agent
-            </span>
-          </h1>
-        </div>
-      </div>
-
+      {/* Right: Circular Icon Buttons */}
       <div className="flex items-center gap-3">
-        {/* Date Pill (Desktop Only) */}
-        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/80 border border-border">
-          <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{formattedDate}</span>
-        </div>
-
+        {/* Notification Bell */}
         <NotificationPanel
           customers={customers}
           loans={loans}
           installments={installments}
         />
+
+        {/* Plus Button */}
+        <Link 
+          href="/new" 
+          className="relative w-12 h-12 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center transition-all active:scale-95 shadow-lg group cursor-pointer"
+        >
+          <Plus className="w-6 h-6 text-foreground font-light" strokeWidth={1.5} />
+        </Link>
       </div>
     </header>
   );

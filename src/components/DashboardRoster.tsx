@@ -3,7 +3,7 @@
 import React, { useState, useTransition, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown } from "lucide-react";
+import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown, Plus, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/db";
@@ -247,32 +247,58 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
   return (
     <section className="flex flex-col h-full w-full max-w-full">
-      <div className="flex items-center justify-between mb-4 gap-4">
-        <h2 className="text-xl font-bold tracking-tight text-foreground truncate">Due Today</h2>
-        <Link href="/customers" className="shrink-0">
-          <Button variant="ghost" className="text-muted-foreground hover:text-foreground group text-sm h-8 px-2 sm:px-4">
-            See all
-            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </Link>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 w-full mb-4">
-        {/* Search Field */}
-        <div className="relative flex-1 group">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </div>
+      
+      {/* 1. SEARCH FIELD (Vibe Style) */}
+      <div className="flex flex-col gap-3 w-full mb-4">
+        <div className="relative flex-1 group w-full drop-shadow-xl">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, ID, or village…"
-            className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-all"
+            placeholder="Search a customer..."
+            className="w-full bg-white dark:bg-white text-black font-semibold rounded-[2rem] pl-6 pr-16 py-4 text-[15px] placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-white/20 transition-all shadow-sm"
           />
+          <div className="absolute inset-y-0 right-2 flex items-center">
+            <div className="w-10 h-10 bg-black dark:bg-[#1c1c1e] rounded-full flex items-center justify-center cursor-pointer hover:bg-neutral-800 transition-colors shadow-inner">
+              <Search className="h-4 w-4 text-white font-bold" strokeWidth={2.5} />
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Village Filter Selector */}
+      {/* 2. ACTION BUTTONS (Vibe Style) */}
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        <Link
+          href="/new"
+          className="flex items-center gap-3 p-4 bg-[#2c2c2e] hover:bg-[#3c3c3e] rounded-[1.25rem] transition-all active:scale-[0.98]"
+        >
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+            <Plus className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-sm font-semibold text-white leading-tight">Create<br/>Account</span>
+        </Link>
+        <Link
+          href="/villages"
+          className="flex items-center gap-3 p-4 bg-[#2c2c2e] hover:bg-[#3c3c3e] rounded-[1.25rem] transition-all active:scale-[0.98]"
+        >
+          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+            <MapPin className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-sm font-semibold text-white leading-tight">Manage<br/>Areas</span>
+        </Link>
+      </div>
+
+      {/* 3. LIST HEADER & FILTER */}
+      <div className="flex items-center justify-between mb-4 gap-4">
+        <h2 className="text-xl font-bold tracking-tight text-foreground truncate">Due Today</h2>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link href="/customers" className="shrink-0">
+            <Button variant="ghost" className="text-muted-foreground hover:text-foreground group text-sm h-8 px-2 sm:px-3">
+              See all
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+          {/* Village Filter Selector */}
         {villages.length > 0 && (
           <div className="relative min-w-[180px] shrink-0">
             <select
@@ -303,70 +329,26 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               <p className="text-muted-foreground text-sm">You&apos;re all caught up for the day.</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
-              {villageGroups.map((villageGroup) => (
-                <div key={villageGroup.village} className="bg-secondary/10 border border-border rounded-2xl overflow-hidden">
-                  <div className="bg-secondary/30 px-4 py-3 border-b border-border flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                        📍 {villageGroup.village}
-                      </span>
-                      {villageGroup.hasOverdue && (
-                        <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-white bg-destructive-foreground px-2 py-0.5 rounded-full">
-                          <AlertCircle className="w-2.5 h-2.5" /> Overdue
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-right flex flex-col">
-                      <span className="text-xs font-bold text-foreground">{formatLKR(villageGroup.totalAmount)}</span>
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{villageGroup.customers.length} Collections</span>
-                    </div>
-                  </div>
-                  
-                  <div className="divide-y divide-border/50">
-                    {villageGroup.customers.map((group) => {
-                      const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
+            <div className="flex flex-col">
+              <div className="divide-y divide-border/50">
+                {sortedCustomerGroups.map((group) => {
+                  const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
 
-                      return (
-                        <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
-                          <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
+                  return (
+                    <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
+                      <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
 
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
-                                <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                              </div>
-                              <div className="flex flex-col min-w-0 flex-1">
-                                <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
-                                  <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
-                                  {isOverdue && (
-                                    <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
-                                      Overdue
-                                    </span>
-                                  )}
-                                </div>
-                                <span className="text-xs text-muted-foreground mt-0.5 break-words flex items-center gap-1.5 flex-wrap">
-                                  <span className="shrink-0 font-mono">{customer.memberId || customer.id.slice(0, 8)}</span>
-                                  <span className="shrink-0">•</span>
-                                  <span className="shrink-0">{installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}</span>
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
+                            <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
+                              <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
+                              {isOverdue && (
+                                <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
+                                  Overdue
                                 </span>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-2 shrink-0">
-                              <span className={`font-bold text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
-                                {formatLKR(totalAmount)}
-                              </span>
-                              <div className="flex items-center gap-1.5">
-                                <button
-                                  onClick={(e) => handleWhatsAppReminder(e, customer, totalAmount)}
-                                  title="WhatsApp"
-                                  className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all active:scale-95 shrink-0 cursor-pointer"
-                                >
-                                  <MessageCircle className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={(e) => handleSmsReminder(e, customer, totalAmount)}
-                                  title="SMS"
                                   className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-secondary hover:bg-border/50 text-foreground border border-border transition-all active:scale-95 shrink-0 cursor-pointer"
                                 >
                                   <MessageSquare className="w-4 h-4" />

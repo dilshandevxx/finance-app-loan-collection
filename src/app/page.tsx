@@ -182,15 +182,7 @@ export default async function Home() {
             overdueAmount={overdueAmount}
           />
 
-          {/* Quick Nav — Desktop & Mobile */}
-          <div className="flex gap-3 print:hidden">
-            <Link
-              href="/villages"
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
-            >
-              📍 Manage Areas
-            </Link>
-          </div>
+          {/* Quick Nav moved to DashboardRoster to match Vibe layout */}
 
           {/* Due Today Roster */}
           <div className="md:max-h-[calc(100vh-18rem)] md:overflow-y-auto md:rounded-2xl">
