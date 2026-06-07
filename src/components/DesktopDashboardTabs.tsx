@@ -57,7 +57,7 @@ export function DesktopDashboardTabs({
     <div className="hidden md:flex flex-col gap-6 w-full max-w-[1400px]">
 
       {/* ── Tab Bar ─────────────────────────────────────── */}
-      <div className="flex items-center gap-1.5 p-1.5 bg-secondary/60 border border-border/60 rounded-2xl w-fit backdrop-blur-sm">
+      <div className="flex items-center gap-1.5 p-2 bg-[#0A0514]/80 border border-white/5 rounded-2xl w-fit backdrop-blur-md shadow-2xl">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.key;
           return (
@@ -65,21 +65,27 @@ export function DesktopDashboardTabs({
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`
-                relative flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold
-                transition-all duration-300 cursor-pointer select-none
+                relative flex items-center gap-2 px-6 py-3 rounded-[14px] text-sm font-bold
+                transition-all duration-300 cursor-pointer select-none overflow-hidden
                 ${isActive
-                  ? "bg-card text-foreground shadow-md border border-border/80"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/40"
+                  ? "text-white shadow-lg bg-white/5 border border-white/10"
+                  : "text-white/40 hover:text-white/80 hover:bg-white/5 border border-transparent"
                 }
               `}
             >
-              <span className={`transition-colors duration-300 ${isActive ? "text-primary" : ""}`}>
+              {/* Active glow background */}
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-50 blur-xl" />
+              )}
+              
+              <span className={`relative z-10 transition-colors duration-300 ${isActive ? "text-primary drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]" : ""}`}>
                 {tab.icon}
               </span>
-              {tab.label}
-              {/* Active dot under icon */}
+              <span className="relative z-10 tracking-wide">{tab.label}</span>
+              
+              {/* Active indicator bar */}
               {isActive && (
-                <span className="absolute -bottom-px left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-primary" />
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 rounded-t-full bg-primary shadow-[0_0_12px_rgba(139,92,246,0.8)]" />
               )}
             </button>
           );
@@ -94,8 +100,8 @@ export function DesktopDashboardTabs({
           <div className="flex flex-col gap-6 animate-tabFade">
 
             {/* Row 1: Collection Goal + KPI Summary */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-              <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch">
+              <div className="lg:col-span-3 flex">
                 <CollectionGoalCard
                   expectedToday={expectedToday}
                   collectedToday={collectedToday}
@@ -105,7 +111,7 @@ export function DesktopDashboardTabs({
                   overdueAmount={overdueAmount}
                 />
               </div>
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 flex">
                 <PortfolioSummaryCard loans={loans} />
               </div>
             </div>
@@ -121,14 +127,14 @@ export function DesktopDashboardTabs({
 
         {/* ═══ ANALYTICS TAB ═══ */}
         {activeTab === "analytics" && (
-          <div className="flex flex-col gap-6 animate-tabFade">
+          <div className="flex flex-col gap-6 lg:gap-8 animate-tabFade">
 
             {/* Row 1: Chart */}
-            <div className="rounded-3xl bg-card border border-border p-6 lg:p-8 shadow-sm hover:border-border/80 transition-all duration-300">
+            <div className="rounded-[2rem] bg-[#0A0514]/40 border border-white/5 p-6 lg:p-8 shadow-sm backdrop-blur-sm hover:bg-[#0A0514]/60 hover:border-white/10 transition-all duration-300">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">Collections</p>
-                  <p className="text-xl font-black text-foreground tracking-tight">Weekly Performance</p>
+                  <p className="text-xl font-black text-white tracking-tight">Weekly Performance</p>
                 </div>
               </div>
               <div className="min-h-[280px] w-full">
@@ -137,7 +143,7 @@ export function DesktopDashboardTabs({
             </div>
 
             {/* Row 2: Due Tomorrow + Top Overdue side-by-side */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               <DueTomorrowCard installments={installments} loans={loans} customers={customers} />
               <TopOverdueCard installments={installments} loans={loans} customers={customers} />
             </div>

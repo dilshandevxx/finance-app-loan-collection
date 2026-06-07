@@ -35,112 +35,125 @@ export function PortfolioSummaryCard({ loans }: PortfolioSummaryCardProps) {
   })();
 
   return (
-    <div className="w-full rounded-[2rem] bg-card border border-border p-6 flex flex-col gap-6 shadow-sm relative overflow-hidden">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Briefcase className="w-5 h-5 text-primary" />
-          <h2 className="text-sm md:text-base font-bold tracking-tight text-foreground">Portfolio Summary</h2>
-        </div>
-        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
-          {totalLoans} Total Records
-        </div>
-      </div>
-
-      {/* Main Financial Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {/* Total Capital */}
-        <div className="flex flex-col gap-1 bg-secondary/30 p-4 rounded-2xl">
-          <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-            <Landmark className="w-3.5 h-3.5" /> Total Capital
-          </div>
-          <span className="text-lg sm:text-xl font-black tracking-tight text-foreground" title={formatLKR(totalCapital)}>
-            {formatLKR(totalCapital)}
-          </span>
-        </div>
-
-        {/* Expected Interest */}
-        <div className="flex flex-col gap-1 bg-secondary/30 p-4 rounded-2xl">
-          <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> Expected Interest
-          </div>
-          <span className="text-lg sm:text-xl font-black tracking-tight text-foreground" title={formatLKR(totalInterest)}>
-            {formatLKR(totalInterest)}
-          </span>
-          <span className="text-[10px] text-muted-foreground font-medium">~{roi}% ROI</span>
-        </div>
-
-        {/* Total Collected */}
-        <div className="flex flex-col gap-1 bg-secondary/30 p-4 rounded-2xl">
-          <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-            <ArrowDownToLine className="w-3.5 h-3.5 text-primary" /> Collected
-          </div>
-          <span className="text-lg sm:text-xl font-black tracking-tight text-foreground" title={formatLKR(totalCollected)}>
-            {formatLKR(totalCollected)}
-          </span>
-        </div>
-
-        {/* Outstanding Balance */}
-        <div className="flex flex-col gap-1 bg-secondary/30 p-4 rounded-2xl">
-          <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-            <Wallet className="w-3.5 h-3.5 text-orange-500" /> Outstanding
-          </div>
-          <span className="text-lg sm:text-xl font-black tracking-tight text-foreground" title={formatLKR(outstandingBalance)}>
-            {formatLKR(outstandingBalance)}
-          </span>
-        </div>
-      </div>
-
-      {/* Secondary Metrics / Counts */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border/50">
+    <div className="w-full relative rounded-[2rem] overflow-hidden bg-[#0a0514] border border-white/10 shadow-2xl transition-all duration-500 h-full flex flex-col justify-between p-6 sm:p-8">
+      {/* Ambient Glows */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none mix-blend-screen" />
+      
+      <div className="relative z-10 flex flex-col gap-6 h-full">
         
-        {/* Active Loans */}
-        <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-secondary/20">
-          <div className="flex items-center gap-1">
-            <Clock className="w-3 h-3 text-primary" />
-            <span className="text-xl font-black">{activeLoans}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Briefcase className="w-6 h-6 text-primary" />
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">Portfolio Summary</h2>
           </div>
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Active Loans</span>
+          <div className="text-[10px] font-extrabold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20 shadow-sm backdrop-blur-sm">
+            {totalLoans} Total Records
+          </div>
         </div>
 
-        {/* Settled Loans */}
-        <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-secondary/20">
-          <div className="flex items-center gap-1">
-            <CheckCircle className="w-3 h-3 text-emerald-500" />
-            <span className="text-xl font-black">{settledLoans}</span>
+        {/* Main Financial Metrics */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {/* Total Capital */}
+          <div className="group relative flex flex-col justify-between min-h-[140px] shrink-0 p-5 rounded-[1.5rem] bg-white/[0.03] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative flex items-center gap-2 mb-2 text-white/50 text-[11px] font-bold uppercase tracking-wider">
+              <Landmark className="w-4 h-4 text-white/60" /> Total Capital
+            </div>
+            <span className="relative text-2xl sm:text-3xl font-black tracking-tighter text-white" title={formatLKR(totalCapital)}>
+              {formatLKR(totalCapital)}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Settled Loans</span>
+
+          {/* Expected Interest */}
+          <div className="group relative flex flex-col justify-between min-h-[140px] shrink-0 p-5 rounded-[1.5rem] bg-white/[0.03] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative flex items-center gap-2 mb-2 text-white/50 text-[11px] font-bold uppercase tracking-wider">
+              <TrendingUp className="w-4 h-4 text-emerald-400" /> Expected Interest
+            </div>
+            <div className="relative flex flex-col">
+              <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white" title={formatLKR(totalInterest)}>
+                {formatLKR(totalInterest)}
+              </span>
+              <span className="text-[11px] text-emerald-400 font-bold mt-1">~{roi}% ROI</span>
+            </div>
+          </div>
+
+          {/* Total Collected */}
+          <div className="group relative flex flex-col justify-between min-h-[140px] shrink-0 p-5 rounded-[1.5rem] bg-white/[0.03] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative flex items-center gap-2 mb-2 text-white/50 text-[11px] font-bold uppercase tracking-wider">
+              <ArrowDownToLine className="w-4 h-4 text-primary" /> Collected
+            </div>
+            <span className="relative text-2xl sm:text-3xl font-black tracking-tighter text-white" title={formatLKR(totalCollected)}>
+              {formatLKR(totalCollected)}
+            </span>
+          </div>
+
+          {/* Outstanding Balance */}
+          <div className="group relative flex flex-col justify-between min-h-[140px] shrink-0 p-5 rounded-[1.5rem] bg-white/[0.03] hover:bg-white/[0.08] backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative flex items-center gap-2 mb-2 text-white/50 text-[11px] font-bold uppercase tracking-wider">
+              <Wallet className="w-4 h-4 text-orange-400" /> Outstanding
+            </div>
+            <span className="relative text-2xl sm:text-3xl font-black tracking-tighter text-white" title={formatLKR(outstandingBalance)}>
+              {formatLKR(outstandingBalance)}
+            </span>
+          </div>
         </div>
 
-        {/* Defaulted Loans */}
-        <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-secondary/20">
-          <div className="flex items-center gap-1">
-            <AlertTriangle className="w-3 h-3 text-destructive" />
-            <span className="text-xl font-black">{defaultedLoans}</span>
+        {/* Secondary Metrics / Counts */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 mt-auto">
+          
+          {/* Active Loans */}
+          <div className="flex flex-col p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="w-4 h-4 text-primary" />
+              <span className="text-xl font-black text-white">{activeLoans}</span>
+            </div>
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Active Loans</span>
           </div>
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Defaulted</span>
+
+          {/* Settled Loans */}
+          <div className="flex flex-col p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <span className="text-xl font-black text-white">{settledLoans}</span>
+            </div>
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Settled Loans</span>
+          </div>
+
+          {/* Defaulted Loans */}
+          <div className="flex flex-col p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+            <div className="flex items-center gap-2 mb-1">
+              <AlertTriangle className="w-4 h-4 text-rose-400" />
+              <span className="text-xl font-black text-white">{defaultedLoans}</span>
+            </div>
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Defaulted</span>
+          </div>
+
+          {/* Average Size */}
+          <div className="flex flex-col p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+            <span className="text-xl font-black text-white mb-1 tracking-tight">{formatLKR(avgLoanSize)}</span>
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Avg. Loan Size</span>
+          </div>
         </div>
 
-        {/* Average Size */}
-        <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-secondary/20">
-          <span className="text-lg font-black tracking-tight">{formatLKR(avgLoanSize)}</span>
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Avg. Loan Size</span>
-        </div>
+        {/* Popular Loan Sizes */}
+        {topLoanSizes.length > 0 && (
+          <div className="pt-5 border-t border-white/10">
+            <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-3">Popular Packages</h3>
+            <div className="flex flex-wrap gap-2">
+              {topLoanSizes.map(({ amount, count }) => (
+                <div key={amount} className="flex items-center gap-2 bg-white/[0.03] border border-white/10 px-3 py-1.5 rounded-full hover:bg-white/[0.08] transition-colors">
+                  <span className="text-xs font-bold text-white">{formatLKR(amount)}</span>
+                  <span className="text-[10px] font-black text-primary bg-primary/20 px-2 py-0.5 rounded-full">{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Popular Loan Sizes */}
-      {topLoanSizes.length > 0 && (
-        <div className="pt-4 border-t border-border/50">
-          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">Popular Loan Packages</h3>
-          <div className="flex flex-wrap gap-2">
-            {topLoanSizes.map(({ amount, count }) => (
-              <div key={amount} className="flex items-center gap-1.5 bg-secondary/40 border border-border px-3 py-1.5 rounded-xl">
-                <span className="text-xs font-bold text-foreground">{formatLKR(amount)}</span>
-                <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-md">{count} clients</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
