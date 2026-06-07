@@ -1,85 +1,83 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────
-   DEEP VIOLET PRO — Light Mode
-   Inspired by: Figma, Framer, Loom
+   WORLD-CLASS AESTHETIC — Light Mode
    ───────────────────────────────────────────────────── */
 :root {
-  --background: #F7F5FF;         /* Soft violet-tinted white */
-  --foreground: #0F0A1E;         /* Deep violet-black text */
-  --card: #FFFFFF;
-  --card-foreground: #0F0A1E;
+  --background: #F8F7FB;         /* Ultra-soft premium gray-violet */
+  --foreground: #0F172A;         /* Slate 900 for max readability */
+  --card: #FFFFFF;               /* Pure white cards */
+  --card-foreground: #0F172A;
   --popover: #FFFFFF;
-  --popover-foreground: #0F0A1E;
-  --primary: #7C3AED;            /* Violet 600 */
+  --popover-foreground: #0F172A;
+  --primary: #6366F1;            /* Vibrant Indigo */
   --primary-foreground: #FFFFFF;
-  --secondary: #EDE9FE;          /* Violet 100 */
-  --secondary-foreground: #4C1D95;
-  --muted: #F3F0FF;
-  --muted-foreground: #7C6FA0;
-  --accent: #DDD6FE;             /* Violet 200 */
-  --accent-foreground: #4C1D95;
-  --destructive: #FEE2E2;
+  --secondary: #EEF2FF;          /* Indigo 50 */
+  --secondary-foreground: #4338CA;
+  --muted: #F1F5F9;              /* Slate 100 */
+  --muted-foreground: #64748B;   /* Slate 500 */
+  --accent: #E0E7FF;             /* Indigo 100 */
+  --accent-foreground: #3730A3;
+  --destructive: #FEF2F2;
   --destructive-foreground: #DC2626;
-  --border: #E0D9F7;
+  --border: #E2E8F0;             /* Clean Slate 200 border */
   --input: #FFFFFF;
-  --ring: #7C3AED;
+  --ring: #6366F1;
 
   /* Chart */
-  --chart-collected: #7C3AED;
-  --chart-expected: #E0D9F7;
+  --chart-collected: #6366F1;
+  --chart-expected: #E2E8F0;
 
   /* Vibe accents */
-  --vibe-coral:    #EF4444;
+  --vibe-coral:    #F43F5E;
   --vibe-pink:     #EC4899;
-  --vibe-violet:   #7C3AED;
-  --vibe-sky:      #6366F1;
+  --vibe-violet:   #8B5CF6;
+  --vibe-sky:      #0EA5E9;
 
-  --vibe-coral-lt:  #FEF2F2;
+  --vibe-coral-lt:  #FFF1F2;
   --vibe-pink-lt:   #FDF2F8;
   --vibe-violet-lt: #F5F3FF;
-  --vibe-sky-lt:    #EEF2FF;
+  --vibe-sky-lt:    #F0F9FF;
 }
 
 /* ─────────────────────────────────────────────────────
-   DEEP VIOLET PRO — Dark Mode
-   Deep indigo-black / violet card system
+   WORLD-CLASS AESTHETIC — Dark Mode
    ───────────────────────────────────────────────────── */
 .dark {
-  --background: #07050F;         /* Deep indigo-black */
-  --foreground: #F0EEFF;         /* Soft violet-white */
-  --card: #0F0B1A;               /* Slightly lighter violet-black */
-  --card-foreground: #F0EEFF;
-  --popover: #0F0B1A;
-  --popover-foreground: #F0EEFF;
-  --primary: #8B5CF6;            /* Violet 500 — luminous on dark */
+  --background: #05050A;         /* Deepest space black */
+  --foreground: #F8FAFC;         /* Bright slate 50 text */
+  --card: #12121A;               /* Distinct, elevated card background */
+  --card-foreground: #F8FAFC;
+  --popover: #12121A;
+  --popover-foreground: #F8FAFC;
+  --primary: #818CF8;            /* Bright luminous indigo */
   --primary-foreground: #FFFFFF;
-  --secondary: #1A1428;          /* Muted violet-dark */
-  --secondary-foreground: #C4B5FD;
-  --muted: #120F1E;
-  --muted-foreground: #8B80A8;   /* Muted violet-grey */
-  --accent: #1E1535;
-  --accent-foreground: #C4B5FD;
-  --destructive: #2A0A0A;
-  --destructive-foreground: #F87171;
-  --border: #2A1F45;             /* Violet-tinted dark border */
-  --input: #0F0B1A;
-  --ring: #8B5CF6;
+  --secondary: #1E1E2D;          /* Elevated surface */
+  --secondary-foreground: #C7D2FE;
+  --muted: #1E1E28;              /* Soft dark background */
+  --muted-foreground: #94A3B8;   /* Clear slate 400 for readable secondary text */
+  --accent: #26263B;
+  --accent-foreground: #E0E7FF;
+  --destructive: #3F1414;
+  --destructive-foreground: #FCA5A5;
+  --border: #2A2A3C;             /* Clear, visible border for dark mode */
+  --input: #12121A;
+  --ring: #818CF8;
 
   /* Chart */
-  --chart-collected: #8B5CF6;
-  --chart-expected: #2A1F45;
+  --chart-collected: #818CF8;
+  --chart-expected: #2A2A3C;
 
   /* Vibe accents */
-  --vibe-coral:    #F87171;
+  --vibe-coral:    #FB7185;
   --vibe-pink:     #F472B6;
   --vibe-violet:   #A78BFA;
-  --vibe-sky:      #818CF8;
+  --vibe-sky:      #38BDF8;
 
-  --vibe-coral-lt:  #2A0A0A;
-  --vibe-pink-lt:   #2D0B1E;
+  --vibe-coral-lt:  #2A1215;
+  --vibe-pink-lt:   #2B1422;
   --vibe-violet-lt: #1E1535;
-  --vibe-sky-lt:    #1E1B4B;
+  --vibe-sky-lt:    #0C1E2E;
 }
 
 /* ─────────────────────────────────────────────────────
