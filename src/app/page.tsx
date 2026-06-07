@@ -12,7 +12,7 @@ import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
-import { VillageProgressCard } from "@/components/VillageProgressCard";
+import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
