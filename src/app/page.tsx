@@ -104,26 +104,6 @@ export default async function Home() {
           overdueAmount={overdueAmount}
         />
 
-        {/* Mini Stat Pills */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-[1.5rem] p-4 flex flex-col gap-1 bg-card border border-white/5 shadow-sm">
-            <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-              <Users className="w-3.5 h-3.5 text-primary" /> Active Loans
-            </div>
-            <span className="text-3xl font-black tracking-tight text-foreground">{activeLoans}</span>
-            <span className="text-[10px] text-muted-foreground font-medium">loans running</span>
-          </div>
-          <div className="rounded-[1.5rem] p-4 flex flex-col gap-1 bg-card border border-white/5 shadow-sm">
-            <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-              <AlertCircle className="w-3.5 h-3.5 text-rose-400" /> Overdue
-            </div>
-            <span className="text-2xl font-black tracking-tight text-foreground truncate" title={formatLKR(overdueAmount)}>
-              {formatLKR(overdueAmount)}
-            </span>
-            <span className="text-[10px] text-muted-foreground font-medium">total overdue</span>
-          </div>
-        </div>
-
         {/* Fast Collection Bar */}
         <FastCollectionBar
           customers={customers}
