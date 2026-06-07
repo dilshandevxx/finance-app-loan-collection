@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Loan, Customer } from "@/data/db";
 import { ChevronDown, TrendingUp, Star, Target, CheckCircle2 } from "lucide-react";
