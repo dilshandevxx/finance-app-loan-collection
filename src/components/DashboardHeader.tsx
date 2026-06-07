@@ -66,15 +66,35 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between pt-6 px-4 mb-6">
-      {/* Left: Gradient Title */}
-      <div className="flex flex-col">
-        <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground mb-0.5">
-          {greeting}
-        </span>
-        <h1 className="text-[2.2rem] font-extrabold tracking-tight leading-none bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
-          Home
-        </h1>
+    <header className="flex items-center justify-between pt-6 px-4 mb-8">
+      {/* Left: Avatar & Greeting */}
+      <div className="flex items-center gap-4">
+        {/* Profile Avatar with subtle glow */}
+        <div className="relative group">
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-md group-hover:blur-lg transition-all" />
+          <div className="relative w-14 h-14 rounded-full border border-white/10 shadow-xl overflow-hidden bg-secondary">
+            <img 
+              src={agentAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(agentName)}`} 
+              alt={agentName} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+        
+        {/* Greeting Text */}
+        <div className="flex flex-col justify-center">
+          <div className="flex items-center gap-1.5 mb-1">
+            <div className={`flex items-center justify-center p-0.5 rounded-md border ${iconClass} shadow-sm backdrop-blur-sm`}>
+              <Icon className="w-3.5 h-3.5" strokeWidth={2.5} />
+            </div>
+            <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">
+              {greeting}
+            </span>
+          </div>
+          <h1 className="text-[1.75rem] font-black tracking-tight leading-none bg-gradient-to-r from-white via-white/90 to-white/60 bg-clip-text text-transparent drop-shadow-sm">
+            {agentName.split(" ")[0]}
+          </h1>
+        </div>
       </div>
 
       {/* Right: Circular Icon Buttons */}
@@ -85,14 +105,6 @@ export function DashboardHeader({
           loans={loans}
           installments={installments}
         />
-
-        {/* Plus Button */}
-        <Link 
-          href="/new" 
-          className="relative w-12 h-12 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center transition-all active:scale-95 shadow-lg group cursor-pointer"
-        >
-          <Plus className="w-6 h-6 text-foreground font-light" strokeWidth={1.5} />
-        </Link>
       </div>
     </header>
   );
