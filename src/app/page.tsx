@@ -132,51 +132,82 @@ export default async function Home() {
         />
       </div>
 
-      {/* ── Desktop: 2-Column Grid ───────────────────────────── */}
-      <div className="hidden md:grid md:grid-cols-12 gap-5 items-start">
-
-        {/* LEFT PANEL — Metrics, Portfolio, Chart */}
-        <div className="flex flex-col gap-5 md:col-span-7">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-[1.5rem] p-5 flex flex-col gap-1 bg-white dark:bg-card border border-zinc-200 dark:border-border text-zinc-900 dark:text-white shadow-sm">
-              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-                <Users className="w-3.5 h-3.5 text-primary" /> Active Loans
+      {/* ── Desktop: 2-Column Grid (High-End Dashboard Layout) ───────────────────────────── */}
+      <div className="hidden md:grid md:grid-cols-12 gap-8 items-start max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8">
+        
+        {/* LEFT PANEL — Primary Insights & Analytics */}
+        <div className="flex flex-col gap-6 md:col-span-8 lg:col-span-8 xl:col-span-8">
+          
+          {/* Top Quick Stats Grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Active Loans Stat */}
+            <div className="relative group rounded-[2rem] p-6 bg-card/40 hover:bg-card/80 backdrop-blur-md border border-border/50 hover:border-primary/30 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgb(99,102,241,0.12)]">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-colors" />
+              <div className="relative z-10 flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-primary mb-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">Active Loans</span>
+                </div>
+                <div className="flex items-end gap-2">
+                  <span className="text-5xl font-black tracking-tighter text-foreground">{activeLoans}</span>
+                  <span className="text-sm font-semibold text-muted-foreground mb-1.5">running</span>
+                </div>
               </div>
-              <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
-              <span className="text-[10px] text-zinc-500 dark:text-muted-foreground font-medium">loans running</span>
             </div>
-            <div className="rounded-[1.5rem] p-5 flex flex-col gap-1 bg-white dark:bg-card border border-zinc-200 dark:border-border text-zinc-900 dark:text-white shadow-sm">
-              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
-                <AlertCircle className="w-3.5 h-3.5 text-destructive-foreground" /> Overdue
+
+            {/* Overdue Stat */}
+            <div className="relative group rounded-[2rem] p-6 bg-card/40 hover:bg-card/80 backdrop-blur-md border border-border/50 hover:border-destructive/30 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgb(244,63,94,0.12)]">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/10 rounded-full blur-[40px] group-hover:bg-destructive/20 transition-colors" />
+              <div className="relative z-10 flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-destructive mb-2">
+                  <div className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <AlertCircle className="w-4 h-4" />
+                  </div>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-destructive transition-colors">Total Overdue</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] font-bold text-destructive mb-0.5">Rs.</span>
+                  <span className="text-4xl lg:text-5xl font-black tracking-tighter text-foreground truncate" title={Math.floor(overdueAmount).toString()}>
+                    {Math.floor(overdueAmount).toLocaleString("en-LK")}
+                  </span>
+                </div>
               </div>
-              <span className="text-4xl font-black tracking-tight truncate" title={formatLKR(overdueAmount)}>
-                {formatLKR(overdueAmount)}
-              </span>
-              <span className="text-[10px] text-zinc-500 dark:text-muted-foreground font-medium">total overdue amount</span>
             </div>
           </div>
 
-          <PortfolioSummaryCard loans={loans} />
-
-          <div className="rounded-2xl bg-card border border-white/5 dark:border-white/10 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Collections</p>
-                <p className="text-sm font-bold text-foreground">Weekly Performance</p>
-              </div>
-              <span className="text-xs text-muted-foreground font-medium">This Week</span>
+          {/* Main Analytics Row */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6">
+              <PortfolioSummaryCard loans={loans} />
+              <DueTomorrowCard installments={installments} loans={loans} customers={customers} />
             </div>
-            <AnalyticsChart />
+            
+            <div className="flex flex-col gap-6">
+              <div className="rounded-[2rem] bg-card/40 backdrop-blur-md border border-border/50 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-primary mb-1">Collections</p>
+                    <p className="text-lg font-black text-foreground tracking-tight">Weekly Performance</p>
+                  </div>
+                  <div className="px-3 py-1 rounded-full bg-secondary text-xs font-bold text-muted-foreground">This Week</div>
+                </div>
+                <div className="h-[200px] w-full">
+                  <AnalyticsChart />
+                </div>
+              </div>
+              <TopOverdueCard installments={installments} loans={loans} customers={customers} />
+            </div>
           </div>
 
-          <DueTomorrowCard installments={installments} loans={loans} customers={customers} />
-          <TopOverdueCard installments={installments} loans={loans} customers={customers} />
           <VillageCollectionBars installments={installments} loans={loans} customers={customers} />
         </div>
 
-        {/* RIGHT PANEL — Goals & Roster */}
-        <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4">
+        {/* RIGHT PANEL — Action Center & Roster */}
+        <div className="flex flex-col gap-6 md:col-span-4 lg:col-span-4 xl:col-span-4 md:sticky md:top-6">
           <BigPortfolioHeader loans={loans} customers={customers} />
+          
           <CollectionGoalCard
             expectedToday={expectedToday}
             collectedToday={collectedToday}
@@ -185,17 +216,21 @@ export default async function Home() {
             activeLoans={activeLoans}
             overdueAmount={overdueAmount}
           />
+          
           <FeaturedSections
             customers={customers}
             installments={installments}
             loans={loans}
           />
-          <div className="md:max-h-[calc(100vh-24rem)] md:overflow-y-auto md:rounded-2xl">
-            <DashboardRoster
-              pendingInstallments={pendingInstallments}
-              customers={customers}
-              loans={loans}
-            />
+          
+          <div className="rounded-[2rem] bg-card/20 backdrop-blur-xl border border-white/5 md:max-h-[calc(100vh-28rem)] md:overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/50 [&::-webkit-scrollbar-thumb]:rounded-full shadow-2xl">
+            <div className="p-1">
+              <DashboardRoster
+                pendingInstallments={pendingInstallments}
+                customers={customers}
+                loans={loans}
+              />
+            </div>
           </div>
         </div>
       </div>
