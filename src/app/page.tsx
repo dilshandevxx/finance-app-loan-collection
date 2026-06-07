@@ -13,7 +13,7 @@ import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
 import { FeaturedSections } from "@/components/FeaturedSections";
 import { BigPortfolioHeader } from "@/components/BigPortfolioHeader";
-import { DesktopDashboardTabs } from "@/components/DesktopDashboardTabs";
+import { DesktopHomeGrid } from "@/components/DesktopHomeGrid";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -132,12 +132,11 @@ export default async function Home() {
         />
       </div>
 
-      {/* ── Desktop: Tabbed Dashboard Layout ───────────────────────────── */}
-      <DesktopDashboardTabs
+      {/* ── Desktop: Navigation Grid ─────────────────────────────────── */}
+      <DesktopHomeGrid
         customers={customers}
         loans={loans}
         installments={installments}
-        pendingInstallments={pendingInstallments}
         expectedToday={expectedToday}
         collectedToday={collectedToday}
         totalClientsToday={totalClientsToday}
