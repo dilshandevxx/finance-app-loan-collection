@@ -12,6 +12,7 @@ import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
 import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
+import { FastCollectionBar } from "@/components/FastCollectionBar";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -123,6 +124,13 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* Fast Collection Bar */}
+        <FastCollectionBar
+          customers={customers}
+          installments={installments}
+          loans={loans}
+        />
+
         {/* Due Today Roster */}
         <DashboardRoster
           pendingInstallments={pendingInstallments}
@@ -192,7 +200,12 @@ export default async function Home() {
             activeLoans={activeLoans}
             overdueAmount={overdueAmount}
           />
-          <div className="md:max-h-[calc(100vh-18rem)] md:overflow-y-auto md:rounded-2xl">
+          <FastCollectionBar
+            customers={customers}
+            installments={installments}
+            loans={loans}
+          />
+          <div className="md:max-h-[calc(100vh-24rem)] md:overflow-y-auto md:rounded-2xl">
             <DashboardRoster
               pendingInstallments={pendingInstallments}
               customers={customers}
