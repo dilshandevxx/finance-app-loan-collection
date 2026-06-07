@@ -13,6 +13,7 @@ import { TopOverdueCard } from "@/components/TopOverdueCard";
 import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
 import { FeaturedSections } from "@/components/FeaturedSections";
+import { BigPortfolioHeader } from "@/components/BigPortfolioHeader";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -104,6 +105,9 @@ export default async function Home() {
           overdueAmount={overdueAmount}
         />
 
+        {/* Big Portfolio Header on Home */}
+        <BigPortfolioHeader loans={loans} />
+
         {/* Featured Sections (Horizontally Scrollable Cards) */}
         <FeaturedSections
           customers={customers}
@@ -172,6 +176,7 @@ export default async function Home() {
 
         {/* RIGHT PANEL — Goals & Roster */}
         <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4">
+          <BigPortfolioHeader loans={loans} />
           <CollectionGoalCard
             expectedToday={expectedToday}
             collectedToday={collectedToday}

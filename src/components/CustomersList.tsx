@@ -139,58 +139,55 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
 
       {/* Search and Village Filter */}
-      <div className="flex flex-col sm:flex-row gap-3 w-full">
+      <div className="flex flex-col sm:flex-row gap-4 w-full">
         {/* Search Field */}
         <div className="relative flex-1 group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+          <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
           </div>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search name, ID, phone, or village..."
-            className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-12 pr-4 py-4 text-base text-black dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm"
+            placeholder="Search name, ID, phone, or area..."
+            className="w-full bg-card/50 backdrop-blur-xl border border-border/50 rounded-[1.5rem] pl-14 pr-4 py-4 text-[15px] font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all shadow-sm"
           />
         </div>
 
         {/* Village Filter Selector */}
         <div className="flex flex-col gap-1.5 min-w-[200px] shrink-0">
-          <div className="relative">
+          <div className="relative group">
             <select
               value={selectedVillage}
               onChange={(e) => setSelectedVillage(e.target.value)}
-              className="w-full bg-white dark:bg-muted border border-gray-200 dark:border-border rounded-2xl pl-4 pr-10 py-4 text-base text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm appearance-none font-medium cursor-pointer"
+              className="w-full bg-card/50 backdrop-blur-xl border border-border/50 rounded-[1.5rem] pl-5 pr-12 py-4 text-[15px] text-foreground focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all shadow-sm appearance-none font-medium cursor-pointer"
             >
-              <option value="">📍 All Areas</option>
+              <option value="">🌍 All Areas</option>
               {villages.map(v => (
                 <option key={v} value={v}>📍 {v}</option>
               ))}
             </select>
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-455 dark:text-white/40">
+            <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-muted-foreground group-hover:text-primary transition-colors">
               <ChevronDown className="w-5 h-5" />
             </div>
           </div>
-          <Link href="/villages" className="text-right text-[11px] font-bold text-primary hover:underline px-1 flex items-center justify-end gap-1">
-            <span>Manage Areas</span> ⚙️
-          </Link>
         </div>
       </div>
 
       {/* Segmented Tab Switcher */}
-      <div className="flex bg-gray-50 dark:bg-muted p-1.5 rounded-2xl w-full max-w-sm mx-auto shadow-inner border border-gray-100 dark:border-border/30">
+      <div className="flex bg-secondary/50 backdrop-blur-md p-1.5 rounded-[1.25rem] w-full max-w-md mx-auto shadow-sm border border-border/50">
         <button
           onClick={() => setActiveTab("active")}
           className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${activeTab === "active"
-              ? "bg-white dark:bg-card text-black dark:text-white shadow-md"
-              : "text-gray-500 dark:text-white/40 hover:text-black dark:hover:text-white"
+              ? "bg-card text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
+              : "text-muted-foreground hover:text-foreground"
             }`}
         >
           <UserCheck className="w-4 h-4" />
           Active Clients
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${activeTab === "active"
-              ? "bg-primary/20 text-primary dark:bg-primary/10 dark:text-primary-foreground"
-              : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-wide ${activeTab === "active"
+              ? "bg-primary/10 text-primary"
+              : "bg-muted text-muted-foreground"
             }`}>
             {allActiveCustomers.length}
           </span>
@@ -198,15 +195,15 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
         <button
           onClick={() => setActiveTab("settled")}
           className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${activeTab === "settled"
-              ? "bg-white dark:bg-card text-black dark:text-white shadow-md"
-              : "text-gray-500 dark:text-white/40 hover:text-black dark:hover:text-white"
+              ? "bg-card text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
+              : "text-muted-foreground hover:text-foreground"
             }`}
         >
           <CheckCircle2 className="w-4 h-4" />
           Settled
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${activeTab === "settled"
-              ? "bg-primary/20 text-primary dark:bg-primary/10 dark:text-primary-foreground"
-              : "bg-gray-200 dark:bg-card text-gray-600 dark:text-white/40"
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-wide ${activeTab === "settled"
+              ? "bg-primary/10 text-primary"
+              : "bg-muted text-muted-foreground"
             }`}>
             {allSettledCustomers.length}
           </span>
@@ -216,15 +213,17 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
       {/* Grid of Clients */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {displayCustomers.length === 0 ? (
-          <div className="col-span-full text-center py-16 px-4 rounded-2xl border border-dashed border-gray-200 dark:border-border bg-gray-50/50 dark:bg-card/30 flex flex-col items-center justify-center gap-3">
-            <Inbox className="w-8 h-8 text-gray-300 dark:text-neutral-700" />
+          <div className="col-span-full text-center py-16 px-4 rounded-[2rem] border border-dashed border-border bg-card/30 flex flex-col items-center justify-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
+              <Inbox className="w-8 h-8 text-muted-foreground" />
+            </div>
             <div className="flex flex-col gap-1">
-              <p className="text-gray-500 dark:text-white/50 text-sm font-medium">
+              <p className="text-foreground text-[15px] font-bold">
                 No {activeTab} clients found
               </p>
               {searchQuery && (
-                <p className="text-xs text-gray-400 dark:text-white/30">
-                  Try adjusting your search query &quot;{searchQuery}&quot;
+                <p className="text-xs text-muted-foreground font-medium">
+                  Try adjusting your search query "{searchQuery}"
                 </p>
               )}
             </div>
@@ -239,90 +238,85 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
             );
 
             return (
-              <Link key={customer.id} href={`/customers/${customer.id}`}>
-                <Card className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-primary/40 transition-all cursor-pointer group transform hover:-translate-y-0.5">
-                  <CardContent className="p-4 sm:p-5 flex items-start sm:items-center gap-3 sm:gap-4">
+              <Link key={customer.id} href={`/customers/${customer.id}`} className="group outline-none block">
+                <Card className="bg-card/80 backdrop-blur-sm border-border/60 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform group-hover:-translate-y-1 group-focus-visible:ring-4 ring-primary/20">
+                  <CardContent className="p-5 sm:p-6 flex flex-col gap-4">
 
-                    {/* Avatar */}
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-gray-100 dark:border-border overflow-hidden relative shrink-0 shadow-sm mt-0.5 sm:mt-0 bg-gray-50 dark:bg-muted">
-                      <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                    </div>
-
-                    {/* Right Side: Info & Balance Column */}
-                    <div className="flex flex-col flex-1 min-w-0 gap-2 sm:gap-3">
-
-                      {/* Top Row: Name/ID and Balance */}
-                      <div className="flex items-start justify-between gap-2 w-full">
-
-                        <div className="flex flex-col min-w-0 gap-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-bold text-base sm:text-lg text-black dark:text-white truncate tracking-tight">{customer.name}</span>
-                            {isOverdue ? (
-                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-red-200 dark:border-red-500/20">Overdue</span>
-                            ) : activeLoan ? (
-                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[9px] sm:text-[10px] uppercase font-black tracking-wider shrink-0 border border-primary/20">Active</span>
-                            ) : (
-                              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/60 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider shrink-0 border border-gray-200 dark:border-white/10">Settled</span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-gray-500 dark:text-white/50 min-w-0 flex-wrap font-medium">
-                            {customer.state && (
-                              <>
-                                <span className="flex items-center gap-0.5 text-primary dark:text-white/70 font-semibold uppercase bg-primary/10 dark:bg-white/10 px-1.5 py-0.5 rounded text-[10px] shrink-0">
-                                  📍 {customer.state}
-                                </span>
-                                <span className="shrink-0 text-gray-300 dark:text-white/20 hidden sm:block">•</span>
-                              </>
-                            )}
-                            <span className="shrink-0 text-gray-400 dark:text-white/40">ID: {customer.memberId || customer.id}</span>
-                            <span className="shrink-0 text-gray-300 dark:text-white/20 hidden sm:block">•</span>
-                            <span className="flex items-center gap-1 shrink-0">
-                              <Phone className="w-3 h-3" />
-                              {formatLKPhone(customer.phone)}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 shrink-0">
-                          <div className="flex flex-col items-end">
-                            {activeLoan ? (
-                              <>
-                                <span className={`font-bold text-base sm:text-lg tracking-tight ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-black dark:text-white'}`}>
-                                  {formatLKR(totalRemaining)}
-                                </span>
-                                <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-gray-400 dark:text-white/40">Remaining</span>
-                              </>
-                            ) : (
-                              <span className="text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full flex items-center gap-1 select-none">
-                                Paid ✅
-                              </span>
-                            )}
-                          </div>
-                          <div className="hidden sm:flex w-8 h-8 rounded-full bg-gray-50 dark:bg-muted border border-gray-100 dark:border-border items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-secondary transition-colors shrink-0">
-                            <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors" />
-                          </div>
-                        </div>
-
+                    {/* Top Section: Avatar & Info */}
+                    <div className="flex items-start gap-4">
+                      {/* Avatar */}
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/10 overflow-hidden relative shrink-0 shadow-md bg-secondary group-hover:scale-105 transition-transform duration-300">
+                        <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                       </div>
 
-                      {/* Bottom Row: Progress Bar */}
+                      {/* Info */}
+                      <div className="flex flex-col flex-1 min-w-0 pt-0.5">
+                        <div className="flex items-center justify-between gap-2 w-full mb-1">
+                          <span className="font-extrabold text-[17px] text-foreground truncate tracking-tight">{customer.name}</span>
+                          {isOverdue ? (
+                            <span className="px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 shrink-0 shadow-sm animate-pulse">Overdue</span>
+                          ) : activeLoan ? (
+                            <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20 shrink-0 shadow-sm">Active</span>
+                          ) : (
+                            <span className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] uppercase font-bold tracking-widest border border-border shrink-0 shadow-sm">Settled</span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground min-w-0 flex-wrap font-semibold">
+                          {customer.state && (
+                            <span className="flex items-center gap-1 text-primary bg-primary/5 px-1.5 py-0.5 rounded-md shrink-0 border border-primary/10">
+                              📍 {customer.state}
+                            </span>
+                          )}
+                          <span className="shrink-0 flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            {formatLKPhone(customer.phone)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Section: Financials & Progress */}
+                    <div className="mt-2 pt-4 border-t border-border/50 flex flex-col gap-3">
+                      <div className="flex items-end justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-0.5">Balance</span>
+                          {activeLoan ? (
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-xs font-bold text-foreground/50">Rs.</span>
+                              <span className={`font-black text-xl tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
+                                {totalRemaining.toLocaleString("en-LK")}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-sm font-bold text-primary flex items-center gap-1">
+                              Fully Paid <CheckCircle2 className="w-4 h-4" />
+                            </span>
+                          )}
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
+                           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
+                        </div>
+                      </div>
+
                       {activeLoan && (
-                        <div className="flex flex-col gap-1.5 w-full pr-0 sm:pr-12">
-                          <div className="flex items-center justify-between text-[10px] font-semibold text-gray-500 dark:text-white/50">
-                            <span>Repayment Progress</span>
-                            <span>{Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%</span>
+                        <div className="flex flex-col gap-1.5 w-full">
+                          <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                            <span>Repayment</span>
+                            <span className={isOverdue ? 'text-destructive' : 'text-primary'}>
+                              {Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%
+                            </span>
                           </div>
-                          <div className="w-full h-1.5 sm:h-2 bg-gray-100 dark:bg-secondary rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-secondary rounded-full overflow-hidden shadow-inner">
                             <div
-                              className={`h-full rounded-full transition-all duration-500 ${isOverdue ? 'bg-red-500' : 'bg-black dark:bg-white'}`}
+                              className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverdue ? 'bg-destructive' : 'bg-primary'}`}
                               style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
                             />
                           </div>
                         </div>
                       )}
-
                     </div>
+
                   </CardContent>
                 </Card>
               </Link>
