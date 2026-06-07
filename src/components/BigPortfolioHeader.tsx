@@ -94,50 +94,76 @@ export function BigPortfolioHeader({ loans, customers }: BigPortfolioHeaderProps
         </div>
 
         {/* Expandable Advanced Analytics */}
-        <div className={`grid grid-cols-2 gap-3 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+        <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[300px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
           
-          <div className="bg-white/5 border border-white/5 rounded-[1.25rem] p-4 flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-primary">
-              <TrendingUp className="w-4 h-4" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Projected Profit</span>
-            </div>
-            <span className="text-lg font-black text-white">Rs. {Math.floor(totalInterest).toLocaleString("en-LK")}</span>
-          </div>
-
-          <div className="bg-white/5 border border-white/5 rounded-[1.25rem] p-4 flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-[#34d399]">
-              <Target className="w-4 h-4" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Popular Loan</span>
-            </div>
-            <span className="text-lg font-black text-white">Rs. {Number(popularLoanAmount).toLocaleString("en-LK")}</span>
-          </div>
-
-          {bestCustomer && (
-            <div className="bg-white/5 border border-white/5 rounded-[1.25rem] p-4 flex flex-col gap-2 col-span-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#f472b6]">
-                  <Star className="w-4 h-4" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">Top Client Volume</span>
+          <div className="flex gap-3 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory -mx-6 px-6 sm:-mx-8 sm:px-8">
+            
+            {/* 1. Projected Profit */}
+            <div className="flex flex-col justify-between w-[150px] shrink-0 p-4 rounded-[1.5rem] bg-white/5 hover:bg-white/10 border border-white/5 transition-colors snap-start">
+              <div className="flex flex-col gap-2 mb-4">
+                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                  <TrendingUp className="w-4 h-4" />
                 </div>
-                <div className="w-6 h-6 rounded-full overflow-hidden bg-white/10 border border-white/20">
-                   <img src={bestCustomer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(bestCustomer.name)}`} alt="Top Client" className="w-full h-full object-cover" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">Projected Profit</span>
+              </div>
+              <span className="text-lg font-black text-white tracking-tight">Rs. {Math.floor(totalInterest).toLocaleString("en-LK")}</span>
+            </div>
+
+            {/* 2. Popular Loan */}
+            <div className="flex flex-col justify-between w-[150px] shrink-0 p-4 rounded-[1.5rem] bg-white/5 hover:bg-white/10 border border-white/5 transition-colors snap-start">
+              <div className="flex flex-col gap-2 mb-4">
+                <div className="w-8 h-8 rounded-full bg-[#34d399]/20 flex items-center justify-center text-[#34d399]">
+                  <Target className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">Popular Loan</span>
+              </div>
+              <span className="text-lg font-black text-white tracking-tight">Rs. {Number(popularLoanAmount).toLocaleString("en-LK")}</span>
+            </div>
+
+            {/* 3. Avg Loan Size */}
+            <div className="flex flex-col justify-between w-[150px] shrink-0 p-4 rounded-[1.5rem] bg-white/5 hover:bg-white/10 border border-white/5 transition-colors snap-start">
+              <div className="flex flex-col gap-2 mb-4">
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">Avg Loan Size</span>
+              </div>
+              <span className="text-lg font-black text-white tracking-tight">Rs. {activeLoans.length > 0 ? Math.floor(totalCapital / activeLoans.length).toLocaleString("en-LK") : 0}</span>
+            </div>
+
+            {/* 4. Top Client Volume */}
+            {bestCustomer && (
+              <div className="flex flex-col justify-between w-[200px] shrink-0 p-4 rounded-[1.5rem] bg-white/5 hover:bg-white/10 border border-white/5 transition-colors snap-start">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#f472b6]/20 flex items-center justify-center text-[#f472b6]">
+                      <Star className="w-4 h-4" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">Top Client</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white font-black text-xs ring-2 ring-white/5">
+                    {bestCustomer.name.substring(0, 2).toUpperCase()}
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] font-bold text-white truncate">{bestCustomer.name}</span>
+                  <span className="text-lg font-black text-[#f472b6] tracking-tight">Rs. {Math.floor(customerScores[bestCustomer.id]).toLocaleString("en-LK")}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-1">
-                 <span className="text-sm font-bold text-white truncate max-w-[150px]">{bestCustomer.name}</span>
-                 <span className="text-sm font-black text-[#f472b6]">Rs. {Math.floor(customerScores[bestCustomer.id]).toLocaleString("en-LK")}</span>
+            )}
+
+            {/* 5. Settled Loans */}
+            <div className="flex flex-col justify-between w-[150px] shrink-0 p-4 rounded-[1.5rem] bg-white/5 hover:bg-white/10 border border-white/5 transition-colors snap-start">
+              <div className="flex flex-col gap-2 mb-4">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/80">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">Total Settled</span>
               </div>
+              <span className="text-3xl font-black text-white tracking-tight">{settledLoansCount}</span>
             </div>
-          )}
 
-          <div className="bg-white/5 border border-white/5 rounded-[1.25rem] p-4 flex flex-col gap-2 col-span-2 flex-row items-center justify-between">
-            <div className="flex items-center gap-2 text-white/60">
-              <CheckCircle2 className="w-4 h-4" />
-              <span className="text-xs font-bold tracking-wide">Successfully Settled Loans</span>
-            </div>
-            <span className="text-lg font-black text-white">{settledLoansCount}</span>
           </div>
-
         </div>
 
       </div>
