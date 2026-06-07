@@ -30,9 +30,9 @@ export function FeaturedSections({ customers, installments, loans }: Props) {
 
   const sections = [
     {
-      title: "Portfolio",
-      subtitle: "All Customers",
-      value: formatLKRShort(totalPrincipal),
+      title: "Clients",
+      subtitle: "Directory",
+      value: `${customers.length} Total`,
       trend: `${activeLoansCount} active loans`,
       icon: <Users className="w-5 h-5 text-indigo-400" />,
       href: "/customers",
