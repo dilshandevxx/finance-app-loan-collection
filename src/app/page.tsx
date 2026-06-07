@@ -183,16 +183,10 @@ export default async function Home() {
           />
 
           {/* Quick Nav — Desktop & Mobile */}
-          <div className="grid grid-cols-2 gap-3 print:hidden">
-            <Link
-              href="/new"
-              className="flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl text-xs font-black shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
-            >
-              ➕ New Account
-            </Link>
+          <div className="flex gap-3 print:hidden">
             <Link
               href="/villages"
-              className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
             >
               📍 Manage Areas
             </Link>

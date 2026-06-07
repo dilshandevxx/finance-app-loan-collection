@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ArrowUpRight, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 import { formatLKR, formatLKRShort, formatLKRDecimal } from "@/lib/format";
 
 interface CollectionGoalCardProps {
@@ -104,19 +103,7 @@ export function CollectionGoalCard({
         </div>
       </div>
 
-      {/* Bottom CTA Buttons */}
-      <div className="flex gap-3 relative z-10 pt-2 border-t border-border">
-        <Link href="/new" className="flex-1">
-          <button className="w-full h-11 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20 cursor-pointer">
-            <Plus className="w-4 h-4 stroke-[2.5]" /> New Loan
-          </button>
-        </Link>
-        <Link href="/reports" className="flex-1">
-          <button className="w-full h-11 rounded-2xl border border-border bg-secondary hover:bg-border/50 text-foreground font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer">
-            <ArrowUpRight className="w-4 h-4" /> Reports
-          </button>
-        </Link>
-      </div>
+
     </div>
   );
 }
