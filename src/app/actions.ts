@@ -25,6 +25,14 @@ export async function createLoan(formData: FormData) {
   const weeksRaw = parseInt(weeksStr);
 
   const existingCustomerId = formData.get("existingCustomerId") as string | null;
+  const isOngoingLoan = formData.get("isOngoingLoan") === "true";
+  const amountAlreadyPaidStr = formData.get("amountAlreadyPaid") as string;
+  const originalStartDate = formData.get("originalStartDate") as string;
+
+  let amountAlreadyPaid = 0;
+  if (isOngoingLoan && amountAlreadyPaidStr) {
+    amountAlreadyPaid = parseFloat(amountAlreadyPaidStr) || 0;
+  }
 
   if (isNaN(principalAmount) || principalAmount <= 0) {
     return { error: "Please enter a valid principal amount greater than 0." };
@@ -119,13 +127,20 @@ export async function createLoan(formData: FormData) {
 
   const totalAmountDue = principalAmount * (1 + interest / 100);
   
+  if (amountAlreadyPaid < 0 || amountAlreadyPaid > totalAmountDue) {
+    return { error: "Invalid amount already paid. Must be between 0 and total due." };
+  }
+
+  // Calculate starting balance for the ledger
+  const startingBalance = Math.max(0, totalAmountDue - amountAlreadyPaid);
+
   // For custom installment, weekly installment is exactly the preferred installment,
   // otherwise it is totalAmountDue / weeks.
   const weeklyInstallment = (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0)
     ? preferredInstallment
     : totalAmountDue / weeks;
 
-  const startDate = new Date().toISOString().split('T')[0];
+  const startDate = (isOngoingLoan && originalStartDate) ? originalStartDate : new Date().toISOString().split('T')[0];
 
   const { data: newLoan, error: loanError } = await supabase
     .from("loans")
@@ -133,10 +148,10 @@ export async function createLoan(formData: FormData) {
       customer_id: customerId,
       principal_amount: principalAmount,
       total_amount_due: totalAmountDue,
-      remaining_balance: totalAmountDue,
+      remaining_balance: startingBalance,
       weekly_installment: weeklyInstallment,
       start_date: startDate,
-      status: "ACTIVE"
+      status: startingBalance <= 0 ? "PAID_OFF" : "ACTIVE"
     })
     .select()
     .single();
@@ -147,24 +162,83 @@ export async function createLoan(formData: FormData) {
   }
 
   const installments = [];
-  const currentDate = new Date();
+  const currentDate = new Date(startDate);
+  
+  let unallocatedPaid = amountAlreadyPaid;
+  let totalGenerated = 0;
+
   for (let i = 0; i < weeks; i++) {
     currentDate.setDate(currentDate.getDate() + 7);
     
     let amount = weeklyInstallment;
+    
+    // For custom installments on the very last calculated week
     if (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0 && i === weeks - 1) {
-      // The last installment settles the remaining balance
       amount = totalAmountDue - (weeklyInstallment * (weeks - 1));
-      // Round to 2 decimal places to be safe with floats
-      amount = Math.round(amount * 100) / 100;
     }
+    amount = Math.round(amount * 100) / 100;
+    
+    // If the amount is trivially small or less than 0, skip (safety check)
+    if (amount <= 0) continue;
 
-    installments.push({
-      loan_id: newLoan.id,
-      amount: amount,
-      due_date: currentDate.toISOString().split('T')[0],
-      status: "PENDING"
-    });
+    const dueDateStr = currentDate.toISOString().split('T')[0];
+
+    // Distribute unallocated paid amount chronologically
+    if (unallocatedPaid >= amount - 0.01) {
+      // Fully paid installment
+      installments.push({
+        loan_id: newLoan.id,
+        amount: amount,
+        due_date: dueDateStr,
+        status: "PAID",
+        paid_date: dueDateStr // Record it as paid on its due date historically
+      });
+      unallocatedPaid -= amount;
+      totalGenerated += amount;
+    } else if (unallocatedPaid > 0) {
+      // Partially paid installment
+      // Split into two: one PAID, one PENDING (or MISSED if date is in past, but DB defaults to PENDING)
+      const paidPortion = Math.round(unallocatedPaid * 100) / 100;
+      const pendingPortion = Math.round((amount - paidPortion) * 100) / 100;
+
+      installments.push({
+        loan_id: newLoan.id,
+        amount: paidPortion,
+        due_date: dueDateStr,
+        status: "PAID",
+        paid_date: dueDateStr
+      });
+
+      installments.push({
+        loan_id: newLoan.id,
+        amount: pendingPortion,
+        due_date: dueDateStr,
+        status: "PENDING"
+      });
+      
+      totalGenerated += amount;
+      unallocatedPaid = 0;
+    } else {
+      // Completely unpaid future/missed installment
+      installments.push({
+        loan_id: newLoan.id,
+        amount: amount,
+        due_date: dueDateStr,
+        status: "PENDING"
+      });
+      totalGenerated += amount;
+    }
+  }
+
+  // If there's any weird leftover due to floating point math, add a tiny extra padding (rare)
+  if (totalAmountDue - totalGenerated > 0.01) {
+     installments.push({
+        loan_id: newLoan.id,
+        amount: Math.round((totalAmountDue - totalGenerated) * 100) / 100,
+        due_date: currentDate.toISOString().split('T')[0],
+        status: unallocatedPaid > 0 ? "PAID" : "PENDING",
+        paid_date: unallocatedPaid > 0 ? currentDate.toISOString().split('T')[0] : null
+     });
   }
 
   const { error: installmentsError } = await supabase

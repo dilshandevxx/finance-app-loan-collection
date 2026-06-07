@@ -90,6 +90,16 @@ export function NewLoanForm({
   const [isCustomInstallment, setIsCustomInstallment] = useState<boolean>(false);
   const [preferredInstallment, setPreferredInstallment] = useState<string>("");
 
+  // Ongoing loan states
+  const [isOngoingLoan, setIsOngoingLoan] = useState<boolean>(false);
+  const [amountAlreadyPaid, setAmountAlreadyPaid] = useState<string>("");
+  const [originalStartDate, setOriginalStartDate] = useState<string>(() => {
+    // Default to a month ago as a reasonable starting point if checked
+    const d = new Date();
+    d.setMonth(d.getMonth() - 1);
+    return d.toISOString().split("T")[0];
+  });
+
   useEffect(() => {
     if (!isCustomInstallment) {
       setInterest(40);
@@ -370,6 +380,15 @@ export function NewLoanForm({
       }
       if (weeks <= 0) {
         newErrors.weeks = "Duration must be at least 1 week.";
+      }
+      if (isOngoingLoan) {
+        const paidVal = parseFloat(amountAlreadyPaid) || 0;
+        const totalDue = principal * (1 + interest / 100);
+        if (paidVal < 0) {
+          newErrors.amountAlreadyPaid = "Amount paid cannot be negative.";
+        } else if (paidVal > totalDue) {
+          newErrors.amountAlreadyPaid = `Amount paid cannot exceed total due (Rs. ${totalDue.toLocaleString("en-LK")}).`;
+        }
       }
     }
 
@@ -1199,6 +1218,118 @@ export function NewLoanForm({
               {isCustomInstallment ? "Extended to match preferred payment." : "Fixed at 14 weeks duration."}
             </div>
           </div>
+        </div>
+
+        {/* ──────────────────────────────────────────────────────────
+            ONGOING LOAN SECTION (Historical Import)
+            ────────────────────────────────────────────────────────── */}
+        <div className="bg-secondary/30 dark:bg-card border border-border/60 rounded-3xl p-5 space-y-4">
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <div className="relative flex items-start pt-1">
+              <input
+                type="checkbox"
+                name="isOngoingLoan"
+                value="true"
+                checked={isOngoingLoan}
+                onChange={(e) => {
+                  setIsOngoingLoan(e.target.checked);
+                  if (!e.target.checked) {
+                    setAmountAlreadyPaid("");
+                    if (validationErrors.amountAlreadyPaid) {
+                      setValidationErrors(prev => ({ ...prev, amountAlreadyPaid: "" }));
+                    }
+                  }
+                }}
+                className="peer sr-only"
+              />
+              <div className="w-5 h-5 rounded border-2 border-muted-foreground/50 peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+                <Check className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 scale-50 peer-checked:scale-100 transition-all" />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                Is this an ongoing legacy loan?
+              </span>
+              <span className="text-xs text-muted-foreground font-medium mt-0.5 leading-relaxed">
+                Check this if the borrower has already started paying off this loan. You can enter their original start date and the amount they have already paid to accurately preserve their history.
+              </span>
+            </div>
+          </label>
+
+          {isOngoingLoan && (
+            <div className="pl-8 animate-in slide-in-from-top-2 fade-in duration-200 space-y-4">
+              
+              {/* Original Start Date Input */}
+              <div className="space-y-1.5 relative">
+                <label htmlFor="originalStartDate" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Original Start Date</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  </div>
+                  <input
+                    type="date"
+                    id="originalStartDate"
+                    name="originalStartDate"
+                    value={originalStartDate}
+                    max={new Date().toISOString().split("T")[0]}
+                    onChange={(e) => setOriginalStartDate(e.target.value)}
+                    className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
+                  />
+                </div>
+              </div>
+
+              {/* Amount Already Paid Input */}
+              <div className="space-y-1.5 relative">
+                <label htmlFor="amountAlreadyPaid" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Amount Already Paid (Rs.)</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span className="text-muted-foreground font-bold group-focus-within:text-primary transition-colors">Rs</span>
+                  </div>
+                  <input
+                    type="number"
+                    id="amountAlreadyPaid"
+                    name="amountAlreadyPaid"
+                    value={amountAlreadyPaid}
+                    onChange={(e) => {
+                      setAmountAlreadyPaid(e.target.value);
+                      if (validationErrors.amountAlreadyPaid) {
+                        setValidationErrors(prev => ({ ...prev, amountAlreadyPaid: "" }));
+                      }
+                    }}
+                    placeholder="e.g. 15000"
+                    className={`w-full bg-card border ${
+                      validationErrors.amountAlreadyPaid ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/10" : "border-border/60 focus:border-primary focus:ring-primary/10"
+                    } rounded-2xl pl-11 pr-4 py-3 text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-4 transition font-bold`}
+                  />
+                </div>
+                {validationErrors.amountAlreadyPaid && (
+                  <p className="text-xs font-bold text-red-500 flex items-center gap-1 mt-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {validationErrors.amountAlreadyPaid}
+                  </p>
+                )}
+              </div>
+              
+              {/* Visual Math Helper */}
+              {parseFloat(amountAlreadyPaid) > 0 && parseFloat(amountAlreadyPaid) <= (principal * (1 + interest / 100)) && (
+                <div className="mt-3 bg-primary/10 border border-primary/20 rounded-xl p-3 flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-primary/70">
+                    <span>Total Due:</span>
+                    <span>{formatLKR(principal * (1 + interest / 100))}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-primary/70">
+                    <span>Historical Paid:</span>
+                    <span>- {formatLKR(parseFloat(amountAlreadyPaid))}</span>
+                  </div>
+                  <div className="h-px bg-primary/20 w-full my-0.5" />
+                  <div className="flex items-center justify-between text-xs font-black text-primary">
+                    <span>Remaining Balance:</span>
+                    <span>{formatLKR((principal * (1 + interest / 100)) - parseFloat(amountAlreadyPaid))}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* High-Fidelity Repayment Estimator Widget */}
