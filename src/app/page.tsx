@@ -2,17 +2,16 @@ import { AlertCircle, Users } from "lucide-react";
 import { getCustomers, getDashboardInstallments, getLoans } from "@/data/db";
 import { BottomNav } from "@/components/BottomNav";
 import { DashboardRoster } from "@/components/DashboardRoster";
-import Link from "next/link";
 import { config } from "@/lib/config";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { PortfolioSummaryCard } from "@/components/PortfolioSummaryCard";
-import { TopBar } from "@/components/TopBar";
 import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
 import { VillageCollectionBars } from "@/components/VillageCollectionBars";
+import { MobileDashboardSections } from "@/components/MobileDashboardSections";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -91,23 +90,62 @@ export default async function Home() {
         installments={installments}
       />
 
-      {/* ── Desktop: 2-Column Grid │ Mobile: Single Column ───── */}
-      <div className="flex flex-col md:grid md:grid-cols-12 gap-5 items-start">
+      {/* ── Mobile: Single column layout ─────────────────────── */}
+      <div className="flex flex-col gap-4 md:hidden">
 
-        {/* ════════════════════════════════════════
-            LEFT PANEL — Metrics, Portfolio, Chart
-            ════════════════════════════════════════ */}
-        <div className="flex flex-col gap-5 md:col-span-7 order-2 md:order-1">
+        {/* Goal Card */}
+        <CollectionGoalCard
+          expectedToday={expectedToday}
+          collectedToday={collectedToday}
+          totalClientsToday={totalClientsToday}
+          collectedClientsToday={collectedClientsToday}
+          activeLoans={activeLoans}
+          overdueAmount={overdueAmount}
+        />
 
-          {/* Section Divider for Mobile */}
-          <div className="md:hidden flex items-center justify-center py-2 mb-2">
-             <div className="h-px bg-border flex-1" />
-             <span className="px-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-background">Analytics & Portfolio</span>
-             <div className="h-px bg-border flex-1" />
+        {/* Mini Stat Pills */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-[1.5rem] p-4 flex flex-col gap-1 bg-card border border-white/5 shadow-sm">
+            <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
+              <Users className="w-3.5 h-3.5 text-primary" /> Active Loans
+            </div>
+            <span className="text-3xl font-black tracking-tight text-foreground">{activeLoans}</span>
+            <span className="text-[10px] text-muted-foreground font-medium">loans running</span>
           </div>
+          <div className="rounded-[1.5rem] p-4 flex flex-col gap-1 bg-card border border-white/5 shadow-sm">
+            <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-400" /> Overdue
+            </div>
+            <span className="text-2xl font-black tracking-tight text-foreground truncate" title={formatLKR(overdueAmount)}>
+              {formatLKR(overdueAmount)}
+            </span>
+            <span className="text-[10px] text-muted-foreground font-medium">total overdue</span>
+          </div>
+        </div>
 
-          {/* Active Loans */}
-          <div className="grid grid-cols-2 gap-3 mt-2 md:mt-0">
+        {/* Due Today Roster */}
+        <DashboardRoster
+          pendingInstallments={pendingInstallments}
+          customers={customers}
+          loans={loans}
+        />
+
+        {/* Expandable Analytics Sections */}
+        <MobileDashboardSections
+          loans={loans}
+          installments={installments}
+          customers={customers}
+          activeLoans={activeLoans}
+          overdueAmount={overdueAmount}
+        />
+      </div>
+
+      {/* ── Desktop: 2-Column Grid ───────────────────────────── */}
+      <div className="hidden md:grid md:grid-cols-12 gap-5 items-start">
+
+        {/* LEFT PANEL — Metrics, Portfolio, Chart */}
+        <div className="flex flex-col gap-5 md:col-span-7">
+          <div className="grid grid-cols-2 gap-3">
             <div className="rounded-[1.5rem] p-5 flex flex-col gap-1 bg-white dark:bg-card border border-zinc-200 dark:border-border text-zinc-900 dark:text-white shadow-sm">
               <div className="flex items-center gap-1.5 text-zinc-500 dark:text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
                 <Users className="w-3.5 h-3.5 text-primary" /> Active Loans
@@ -115,8 +153,6 @@ export default async function Home() {
               <span className="text-4xl font-black tracking-tight">{activeLoans}</span>
               <span className="text-[10px] text-zinc-500 dark:text-muted-foreground font-medium">loans running</span>
             </div>
-
-            {/* Overdue */}
             <div className="rounded-[1.5rem] p-5 flex flex-col gap-1 bg-white dark:bg-card border border-zinc-200 dark:border-border text-zinc-900 dark:text-white shadow-sm">
               <div className="flex items-center gap-1.5 text-zinc-500 dark:text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
                 <AlertCircle className="w-3.5 h-3.5 text-destructive-foreground" /> Overdue
@@ -128,10 +164,8 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Portfolio Summary Card */}
           <PortfolioSummaryCard loans={loans} />
 
-          {/* Weekly Collections Chart */}
           <div className="rounded-2xl bg-card border border-white/5 dark:border-white/10 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
             <div className="flex items-center justify-between mb-3">
               <div>
@@ -143,36 +177,13 @@ export default async function Home() {
             <AnalyticsChart />
           </div>
 
-          {/* Due Tomorrow Preview */}
-          <DueTomorrowCard
-            installments={installments}
-            loans={loans}
-            customers={customers}
-          />
-
-          {/* Top Overdue Customers */}
-          <TopOverdueCard
-            installments={installments}
-            loans={loans}
-            customers={customers}
-          />
-
-          {/* Village Collection Bars */}
-          <VillageCollectionBars
-            installments={installments}
-            loans={loans}
-            customers={customers}
-          />
-
+          <DueTomorrowCard installments={installments} loans={loans} customers={customers} />
+          <TopOverdueCard installments={installments} loans={loans} customers={customers} />
+          <VillageCollectionBars installments={installments} loans={loans} customers={customers} />
         </div>
 
-        {/* ════════════════════════════════════════
-            RIGHT PANEL — Tasks, Goals & Quick Nav
-            (On Mobile, this moves to the top via flex-col-reverse)
-            ════════════════════════════════════════ */}
-        <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4 order-1 md:order-2 mb-4 md:mb-0">
-          
-          {/* Today's Goals (Moved from Left to Right for better mobile hierarchy) */}
+        {/* RIGHT PANEL — Goals & Roster */}
+        <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4">
           <CollectionGoalCard
             expectedToday={expectedToday}
             collectedToday={collectedToday}
@@ -181,10 +192,6 @@ export default async function Home() {
             activeLoans={activeLoans}
             overdueAmount={overdueAmount}
           />
-
-          {/* Quick Nav moved to DashboardRoster to match Vibe layout */}
-
-          {/* Due Today Roster */}
           <div className="md:max-h-[calc(100vh-18rem)] md:overflow-y-auto md:rounded-2xl">
             <DashboardRoster
               pendingInstallments={pendingInstallments}
@@ -193,7 +200,6 @@ export default async function Home() {
             />
           </div>
         </div>
-
       </div>
 
       <BottomNav />
