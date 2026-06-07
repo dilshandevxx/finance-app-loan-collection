@@ -273,78 +273,70 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
         </div>
       </div>
 
-      {/* 4. CUSTOMER LIST */}
-      <Card className="rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
-        <CardContent className="p-0">
-          {sortedCustomerGroups.length === 0 ? (
-            <div className="p-12 flex flex-col items-center justify-center text-center">
+      {/* 4. CUSTOMER GRID */}
+      <div className="w-full">
+        {sortedCustomerGroups.length === 0 ? (
+          <Card className="rounded-[1.5rem] border border-white/5 bg-card shadow-sm">
+            <CardContent className="p-12 flex flex-col items-center justify-center text-center">
               <div className="w-12 h-12 rounded-full bg-secondary border border-border flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-6 h-6 text-muted-foreground/40" />
               </div>
               <h4 className="text-foreground font-semibold mb-1">No pending collections</h4>
               <p className="text-muted-foreground text-sm">You&apos;re all caught up for the day.</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-border/50">
-              {sortedCustomerGroups.map((group) => {
-                const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
-                return (
-                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
-                    <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
-                          <img
-                            src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`}
-                            alt={customer.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex flex-col min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
-                            <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
-                            {isOverdue && (
-                              <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
-                                Overdue
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5 flex-wrap">
-                            <span className="shrink-0 font-mono">{customer.memberId || customer.id.slice(0, 8)}</span>
-                            {customer.state && (
-                              <>
-                                <span className="shrink-0">•</span>
-                                <span className="shrink-0 text-primary font-semibold uppercase text-[10px] bg-primary/10 px-1 py-0.5 rounded">
-                                  📍 {customer.state}
-                                </span>
-                              </>
-                            )}
-                            <span className="shrink-0">•</span>
-                            <span className="shrink-0">
-                              {installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}
-                            </span>
-                          </span>
-                        </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {sortedCustomerGroups.map((group) => {
+              const { customer, totalAmount, isOverdue } = group;
+              const firstName = customer.name.split(" ")[0];
+              const shortName = firstName.length > 8 ? firstName.slice(0, 7) + "." : firstName;
+
+              return (
+                <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-95 transition-transform">
+                  <div className={`flex flex-col p-4 rounded-[1.5rem] bg-card border shadow-sm transition-colors ${
+                    isOverdue ? "border-rose-500/20 hover:border-rose-500/40" : "border-white/5 hover:border-white/10 dark:border-white/10 dark:hover:border-white/20"
+                  }`}>
+                    
+                    {/* Top Row: Avatar & Status */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-10 h-10 rounded-full bg-secondary overflow-hidden relative shrink-0 ring-2 ring-background">
+                        <img
+                          src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`}
+                          alt={customer.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className={`font-bold text-sm ${isOverdue ? "text-destructive" : "text-foreground"}`}>
-                          {formatLKR(totalAmount)}
+                      {isOverdue && (
+                        <span className="w-2 h-2 rounded-full bg-rose-500 mt-1 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                      )}
+                    </div>
+
+                    {/* Middle: Name & Area */}
+                    <div className="flex flex-col mb-3">
+                      <span className="font-bold text-foreground text-sm truncate">{shortName}</span>
+                      <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider truncate">
+                        {customer.state || "Unknown Area"}
+                      </span>
+                    </div>
+
+                    {/* Bottom: Amount */}
+                    <div className="mt-auto pt-3 border-t border-border/50">
+                      <div className="flex items-baseline gap-0.5">
+                        <span className={`text-[10px] font-bold leading-none mr-0.5 ${isOverdue ? "text-rose-400" : "text-muted-foreground"}`}>Rs.</span>
+                        <span className={`text-lg font-black leading-none tracking-tight ${isOverdue ? "text-rose-500" : "text-foreground"}`}>
+                          {Math.floor(totalAmount).toLocaleString("en-LK")}
                         </span>
-                        <Button
-                          onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
-                          disabled={isPending}
-                          className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
-                        >
-                          Pay
-                        </Button>
                       </div>
                     </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {selectedPayment && (
         <QuickPaymentModal
