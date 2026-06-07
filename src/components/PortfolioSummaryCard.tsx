@@ -39,7 +39,7 @@ export function PortfolioSummaryCard({ loans }: PortfolioSummaryCardProps) {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Briefcase className="w-5 h-5 text-primary" />
-          <h2 className="text-sm font-bold tracking-tight text-foreground">Portfolio Summary</h2>
+          <h2 className="text-sm md:text-base font-bold tracking-tight text-foreground">Portfolio Summary</h2>
         </div>
         <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
           {totalLoans} Total Records
@@ -47,7 +47,7 @@ export function PortfolioSummaryCard({ loans }: PortfolioSummaryCardProps) {
       </div>
 
       {/* Main Financial Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 2xl:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {/* Total Capital */}
         <div className="flex flex-col gap-1 bg-secondary/30 p-4 rounded-2xl">
           <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
@@ -91,7 +91,7 @@ export function PortfolioSummaryCard({ loans }: PortfolioSummaryCardProps) {
       </div>
 
       {/* Secondary Metrics / Counts */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 2xl:grid-cols-2 gap-3 pt-4 border-t border-border/50">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border/50">
         
         {/* Active Loans */}
         <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-secondary/20">

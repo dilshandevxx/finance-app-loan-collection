@@ -74,11 +74,11 @@ export function FeaturedSections({ customers, installments, loans }: Props) {
   return (
     <div className="w-full flex flex-col gap-3">
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-[13px] font-bold text-foreground">Featured Sections</h2>
+        <h2 className="text-[13px] md:text-sm font-bold text-foreground">Featured Sections</h2>
       </div>
 
-      {/* Horizontal Scroll Area */}
-      <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 scrollbar-none no-scrollbar snap-x">
+      {/* Horizontal Scroll on mobile, Grid on desktop */}
+      <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 scrollbar-none no-scrollbar snap-x md:grid md:grid-cols-4 md:overflow-visible md:pb-0 md:mx-0 md:px-0 md:gap-4">
         <style jsx>{`
           .no-scrollbar::-webkit-scrollbar { display: none; }
           .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -88,26 +88,26 @@ export function FeaturedSections({ customers, installments, loans }: Props) {
           <Link
             key={idx}
             href={section.href}
-            className="flex flex-col justify-between shrink-0 w-[140px] p-4 rounded-[1.5rem] bg-card border border-white/5 dark:border-white/10 shadow-lg shadow-black/5 snap-start relative overflow-hidden group active:scale-95 transition-transform"
+            className="flex flex-col justify-between shrink-0 w-[140px] md:w-full p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 dark:border-white/10 shadow-lg shadow-black/5 snap-start relative overflow-hidden group active:scale-95 md:active:scale-[0.98] transition-transform md:hover:border-primary/30 md:hover:shadow-xl"
           >
             {/* Background Gradient overlay */}
             <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-50 group-hover:opacity-100 transition-opacity`} />
             
             {/* Top row: Icon and Title */}
             <div className="relative z-10 flex flex-col gap-3 mb-4">
-              <div className={`w-10 h-10 rounded-full ${section.iconBg} flex items-center justify-center`}>
+              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full ${section.iconBg} flex items-center justify-center`}>
                 {section.icon}
               </div>
               <div className="flex flex-col">
-                <span className="text-[14px] font-extrabold text-foreground leading-tight tracking-tight">{section.title}</span>
-                <span className="text-[10px] text-muted-foreground font-medium">{section.subtitle}</span>
+                <span className="text-[14px] md:text-[16px] font-extrabold text-foreground leading-tight tracking-tight">{section.title}</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground font-medium">{section.subtitle}</span>
               </div>
             </div>
 
             {/* Bottom row: Value and Trend */}
             <div className="relative z-10 flex flex-col mt-auto">
-              <span className="text-[16px] font-black text-foreground tracking-tight">{section.value}</span>
-              <span className="text-[10px] font-bold text-muted-foreground mt-0.5">{section.trend}</span>
+              <span className="text-[16px] md:text-lg font-black text-foreground tracking-tight">{section.value}</span>
+              <span className="text-[10px] md:text-xs font-bold text-muted-foreground mt-0.5">{section.trend}</span>
             </div>
           </Link>
         ))}

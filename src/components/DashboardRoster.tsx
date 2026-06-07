@@ -222,24 +222,24 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       </div>
 
       {/* 2. ACTION BUTTONS */}
-      <div className="grid grid-cols-2 gap-3 mb-8">
+      <div className="grid grid-cols-2 gap-3 mb-8 md:hidden">
         <Link
           href="/new"
-          className="flex items-center gap-3 p-4 bg-[#2c2c2e] hover:bg-[#3c3c3e] rounded-[1.25rem] transition-all active:scale-[0.98]"
+          className="flex items-center gap-3 p-4 bg-secondary hover:bg-secondary/80 rounded-[1.25rem] transition-all active:scale-[0.98] border border-border/40"
         >
-          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-            <Plus className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <Plus className="w-4 h-4 text-primary" />
           </div>
-          <span className="text-sm font-semibold text-white leading-tight">Create<br />Account</span>
+          <span className="text-sm font-semibold text-foreground leading-tight">Create<br />Account</span>
         </Link>
         <Link
           href="/villages"
-          className="flex items-center gap-3 p-4 bg-[#2c2c2e] hover:bg-[#3c3c3e] rounded-[1.25rem] transition-all active:scale-[0.98]"
+          className="flex items-center gap-3 p-4 bg-secondary hover:bg-secondary/80 rounded-[1.25rem] transition-all active:scale-[0.98] border border-border/40"
         >
-          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-            <MapPin className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <MapPin className="w-4 h-4 text-primary" />
           </div>
-          <span className="text-sm font-semibold text-white leading-tight">Manage<br />Areas</span>
+          <span className="text-sm font-semibold text-foreground leading-tight">Manage<br />Areas</span>
         </Link>
       </div>
 
@@ -363,11 +363,11 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                             }`}>
                               {customer.name.substring(0, 2).toUpperCase()}
                             </div>
-                            <span className="font-bold text-[14px] text-foreground">{customer.name}</span>
+                            <span className="font-bold text-[15px] text-foreground">{customer.name}</span>
                           </div>
                         </td>
                         <td className="p-4">
-                          <span className="text-[11px] font-bold text-muted-foreground bg-secondary px-2.5 py-1 rounded-md">{customer.state || "Unknown"}</span>
+                          <span className="text-xs font-bold text-muted-foreground bg-secondary px-2.5 py-1 rounded-md">{customer.state || "Unknown"}</span>
                         </td>
                         <td className="p-4">
                           {isOverdue ? (

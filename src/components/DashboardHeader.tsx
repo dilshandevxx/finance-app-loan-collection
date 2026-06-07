@@ -69,7 +69,7 @@ export function DashboardHeader({
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6 px-4 mb-8">
       {/* Left: Text Greeting */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl md:text-[28px] font-medium tracking-tight text-foreground">
+        <h1 className="text-2xl md:text-[32px] font-medium tracking-tight text-foreground">
           Welcome back, {agentName}!!
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -79,7 +79,7 @@ export function DashboardHeader({
 
       {/* Right: Action Buttons */}
       <div className="flex items-center gap-3 w-full md:w-auto">
-        <Link href="/new" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
+        <Link href="/new" className="flex-1 md:hidden flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
           <Plus className="w-4 h-4" strokeWidth={2.5} />
           New Client
         </Link>

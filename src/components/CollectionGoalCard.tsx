@@ -114,36 +114,36 @@ export function CollectionGoalCard({
       </div>
 
       {/* ── MINI STAT CARDS ──────────────────────────── */}
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-3 gap-2.5 md:gap-4">
 
         {/* Clients Paid */}
-        <div className="flex flex-col gap-1.5 p-4 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
+        <div className="flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
           <div className="flex items-center justify-between">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400">Paid</span>
+            <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-emerald-400">Paid</span>
           </div>
-          <span className="text-2xl font-black text-foreground leading-none">{collectedClientsToday}</span>
-          <span className="text-[9px] text-muted-foreground font-medium">clients</span>
+          <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{collectedClientsToday}</span>
+          <span className="text-[9px] md:text-xs text-muted-foreground font-medium">clients</span>
         </div>
 
         {/* Pending */}
-        <div className="flex flex-col gap-1.5 p-4 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
+        <div className="flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
           <div className="flex items-center justify-between">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span className="text-[8px] font-black uppercase tracking-widest text-amber-400">Due</span>
+            <Clock className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-amber-400">Due</span>
           </div>
-          <span className="text-2xl font-black text-foreground leading-none">{pendingClients}</span>
-          <span className="text-[9px] text-muted-foreground font-medium">pending</span>
+          <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{pendingClients}</span>
+          <span className="text-[9px] md:text-xs text-muted-foreground font-medium">pending</span>
         </div>
 
         {/* Active Loans */}
-        <div className="flex flex-col gap-1.5 p-4 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
+        <div className="flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
           <div className="flex items-center justify-between">
-            <Users className="w-4 h-4 text-violet-400" />
-            <span className="text-[8px] font-black uppercase tracking-widest text-violet-400">Active</span>
+            <Users className="w-4 h-4 md:w-5 md:h-5 text-violet-400" />
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-violet-400">Active</span>
           </div>
-          <span className="text-2xl font-black text-foreground leading-none">{activeLoans}</span>
-          <span className="text-[9px] text-muted-foreground font-medium">loans</span>
+          <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{activeLoans}</span>
+          <span className="text-[9px] md:text-xs text-muted-foreground font-medium">loans</span>
         </div>
 
       </div>

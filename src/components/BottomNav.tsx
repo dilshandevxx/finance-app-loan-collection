@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, Plus, Settings, FileText } from "lucide-react";
+import { Home, Users, Plus, Settings, FileText, Map, Bell } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
@@ -10,6 +10,11 @@ const NAV = [
   { href: "/customers", Icon: Users,    label: "Clients"  },
   { href: "/reports",   Icon: FileText, label: "Reports"  },
   { href: "/settings",  Icon: Settings, label: "Settings" },
+];
+
+const SECONDARY_NAV = [
+  { href: "/villages",               Icon: Map,  label: "Villages" },
+  { href: "/settings/notifications", Icon: Bell, label: "Notifications" },
 ];
 
 export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } = {}) {
@@ -121,6 +126,35 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
                 {/* Active indicator bar */}
                 {active && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full bg-primary" />
+                )}
+              </Link>
+            );
+          })}
+
+          {/* Divider */}
+          <div className="w-full px-4 my-3">
+            <div className="h-px bg-border/60" />
+          </div>
+          <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">Quick Access</p>
+          {SECONDARY_NAV.map(({ href, Icon, label }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`
+                  relative w-full flex items-center gap-4
+                  px-4 py-3 rounded-[1.25rem] transition-all duration-300
+                  ${active
+                    ? "text-foreground bg-secondary font-bold shadow-sm"
+                    : "text-muted-foreground font-semibold hover:text-foreground hover:bg-white/5"
+                  }
+                `}
+              >
+                <Icon className={`w-4.5 h-4.5 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                <span className="text-[14px]">{label}</span>
+                {active && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-7 rounded-r-full bg-primary" />
                 )}
               </Link>
             );
