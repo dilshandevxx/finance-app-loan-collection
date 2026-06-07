@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useTransition, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { Search, AlertCircle, CheckCircle2, ArrowRight, MessageCircle, MessageSquare, ChevronDown, Plus, MapPin } from "lucide-react";
+import { Search, CheckCircle2, ArrowRight, ChevronDown, Plus, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Installment, Loan, Customer } from "@/data/db";
@@ -87,7 +86,6 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
     if (!customer) return false;
 
-    // 1. Village filter match
     if (selectedVillage && customer.state !== selectedVillage) {
       return false;
     }
@@ -102,7 +100,6 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     return nameMatch || idMatch || stateMatch;
   }), [localInstallments, localLoans, localCustomers, selectedVillage, searchQuery]);
 
-  // Group the filtered installments by customer
   const customerGroups = React.useMemo(() => filteredInstallments.reduce((acc, inst) => {
     const loan = localLoans.find(l => l.id === inst.loanId);
     const customer = localCustomers.find(c => c.id === loan?.customerId);
@@ -118,7 +115,6 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       if (isOverdue) {
         existingGroup.isOverdue = true;
       }
-      // Keep oldest installment
       if (new Date(inst.dueDate) < new Date(existingGroup.oldestInstallment.dueDate)) {
         existingGroup.oldestInstallment = inst;
       }
@@ -141,42 +137,14 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     oldestInstallment: Installment;
   }>), [filteredInstallments, localLoans, localCustomers]);
 
-  // Sort customer groups: overdue first, then by oldest installment date ascending
   const sortedCustomerGroups = React.useMemo(() => [...customerGroups].sort((a, b) => {
     if (a.isOverdue && !b.isOverdue) return -1;
     if (!a.isOverdue && b.isOverdue) return 1;
     return new Date(a.oldestInstallment.dueDate).getTime() - new Date(b.oldestInstallment.dueDate).getTime();
   }), [customerGroups]);
 
-  // Group by village to create a daily route planner
-  const villageGroups = React.useMemo(() => {
-    const groups = new Map<string, typeof sortedCustomerGroups>();
-    sortedCustomerGroups.forEach(group => {
-      const village = group.customer.state?.trim() || "Unassigned Area";
-      if (!groups.has(village)) {
-        groups.set(village, []);
-      }
-      groups.get(village)!.push(group);
-    });
-    
-    return Array.from(groups.entries())
-      .map(([village, customers]) => ({
-        village,
-        customers,
-        totalAmount: customers.reduce((sum, c) => sum + c.totalAmount, 0),
-        hasOverdue: customers.some(c => c.isOverdue)
-      }))
-      .sort((a, b) => {
-        if (a.village === "Unassigned Area") return 1;
-        if (b.village === "Unassigned Area") return -1;
-        if (a.hasOverdue && !b.hasOverdue) return -1;
-        if (!a.hasOverdue && b.hasOverdue) return 1;
-        return a.village.localeCompare(b.village);
-      });
-  }, [sortedCustomerGroups]);
-
   const handlePayClick = React.useCallback((e: React.MouseEvent, installmentId: string, customer: Customer, expectedAmount: number) => {
-    e.preventDefault(); // Prevent navigating to customer details
+    e.preventDefault();
     setSelectedPayment({ customer, installmentId, expectedAmount });
   }, []);
 
@@ -187,7 +155,6 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       startTransition(async () => {
         try {
           if (!navigator.onLine) {
-            // Queue offline
             const queueStr = localStorage.getItem("offlineSyncQueue");
             const queue = queueStr ? JSON.parse(queueStr) : [];
             queue.push({
@@ -223,50 +190,26 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     });
   };
 
-  const handleWhatsAppReminder = (e: React.MouseEvent, customer: Customer, amount: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const loan = localLoans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
-    const remaining = loan ? loan.remainingBalance : amount;
-    const phone = phoneToDial(customer.phone);
-    const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
-    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of ${formatLKR(amount)} is due today. Your remaining balance is ${formatLKR(remaining)}. Please coordinate with your collection agent. Thank you!`;
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
-  };
-
-  const handleSmsReminder = (e: React.MouseEvent, customer: Customer, amount: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const loan = localLoans.find(l => l.customerId === customer.id && l.status === 'ACTIVE');
-    const remaining = loan ? loan.remainingBalance : amount;
-    const phone = customer.phone.replace(/[^0-9]/g, '');
-    const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening";
-    const text = `${greeting} ${customer.name}, this is a friendly reminder from LoanTrack Pro that your weekly installment of ${formatLKR(amount)} is due today. Your remaining balance is ${formatLKR(remaining)}. Please coordinate with your collection agent. Thank you!`;
-    window.open(`sms:${phone}?body=${encodeURIComponent(text)}`, '_blank');
-  };
-
   return (
     <section className="flex flex-col h-full w-full max-w-full">
-      
-      {/* 1. SEARCH FIELD (Vibe Style) */}
-      <div className="flex flex-col gap-3 w-full mb-4">
-        <div className="relative flex-1 group w-full drop-shadow-xl">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search a customer..."
-            className="w-full bg-white dark:bg-white text-black font-semibold rounded-[2rem] pl-6 pr-16 py-4 text-[15px] placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-white/20 transition-all shadow-sm"
-          />
-          <div className="absolute inset-y-0 right-2 flex items-center">
-            <div className="w-10 h-10 bg-black dark:bg-[#1c1c1e] rounded-full flex items-center justify-center cursor-pointer hover:bg-neutral-800 transition-colors shadow-inner">
-              <Search className="h-4 w-4 text-white font-bold" strokeWidth={2.5} />
-            </div>
+
+      {/* 1. SEARCH FIELD */}
+      <div className="relative w-full mb-4 drop-shadow-xl">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search a customer..."
+          className="w-full bg-white dark:bg-white text-black font-semibold rounded-[2rem] pl-6 pr-16 py-4 text-[15px] placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-white/20 transition-all shadow-sm"
+        />
+        <div className="absolute inset-y-0 right-2 flex items-center">
+          <div className="w-10 h-10 bg-black dark:bg-[#1c1c1e] rounded-full flex items-center justify-center cursor-pointer hover:bg-neutral-800 transition-colors">
+            <Search className="h-4 w-4 text-white" strokeWidth={2.5} />
           </div>
         </div>
       </div>
 
-      {/* 2. ACTION BUTTONS (Vibe Style) */}
+      {/* 2. ACTION BUTTONS */}
       <div className="grid grid-cols-2 gap-3 mb-8">
         <Link
           href="/new"
@@ -275,7 +218,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
             <Plus className="w-4 h-4 text-white" />
           </div>
-          <span className="text-sm font-semibold text-white leading-tight">Create<br/>Account</span>
+          <span className="text-sm font-semibold text-white leading-tight">Create<br />Account</span>
         </Link>
         <Link
           href="/villages"
@@ -284,7 +227,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
             <MapPin className="w-4 h-4 text-white" />
           </div>
-          <span className="text-sm font-semibold text-white leading-tight">Manage<br/>Areas</span>
+          <span className="text-sm font-semibold text-white leading-tight">Manage<br />Areas</span>
         </Link>
       </div>
 
@@ -298,26 +241,27 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          {/* Village Filter Selector */}
-        {villages.length > 0 && (
-          <div className="relative min-w-[180px] shrink-0">
-            <select
-              value={selectedVillage}
-              onChange={(e) => setSelectedVillage(e.target.value)}
-              className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-3 pr-8 py-3 text-sm text-foreground focus:outline-none transition-all appearance-none font-medium cursor-pointer"
-            >
-              <option value="">📍 All Areas</option>
-              {villages.map(v => (
-                <option key={v} value={v}>📍 {v}</option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-muted-foreground">
-              <ChevronDown className="w-4 h-4" />
+          {villages.length > 0 && (
+            <div className="relative min-w-[140px] shrink-0">
+              <select
+                value={selectedVillage}
+                onChange={(e) => setSelectedVillage(e.target.value)}
+                className="w-full bg-secondary border border-border focus:border-ring/40 rounded-2xl pl-3 pr-8 py-2 text-sm text-foreground focus:outline-none transition-all appearance-none font-medium cursor-pointer"
+              >
+                <option value="">All Areas</option>
+                {villages.map(v => (
+                  <option key={v} value={v}>{v}</option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-muted-foreground">
+                <ChevronDown className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
+      {/* 4. CUSTOMER LIST */}
       <Card className="rounded-2xl overflow-hidden border border-border bg-card shadow-sm">
         <CardContent className="p-0">
           {sortedCustomerGroups.length === 0 ? (
@@ -329,59 +273,62 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               <p className="text-muted-foreground text-sm">You&apos;re all caught up for the day.</p>
             </div>
           ) : (
-            <div className="flex flex-col">
-              <div className="divide-y divide-border/50">
-                {sortedCustomerGroups.map((group) => {
-                  const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
-
-                  return (
-                    <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
-                      <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
-
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
-                            <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="flex flex-col min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
-                              <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
-                              {isOverdue && (
-                                <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
-                                  Overdue
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-xs text-muted-foreground mt-0.5 break-words flex items-center gap-1.5 flex-wrap">
-                              <span className="shrink-0 font-mono">{customer.memberId || customer.id.slice(0, 8)}</span>
-                              {customer.state && (
-                                <>
-                                  <span className="shrink-0">•</span>
-                                  <span className="shrink-0 text-primary font-semibold uppercase text-[10px] bg-primary/10 px-1 py-0.5 rounded">📍 {customer.state}</span>
-                                </>
-                              )}
-                              <span className="shrink-0">•</span>
-                              <span className="shrink-0">{installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}</span>
-                            </span>
-                          </div>
+            <div className="divide-y divide-border/50">
+              {sortedCustomerGroups.map((group) => {
+                const { customer, installments, totalAmount, isOverdue, oldestInstallment } = group;
+                return (
+                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block hover:bg-secondary/50 transition-colors">
+                    <div className="flex items-center justify-between p-3 sm:p-4 gap-2">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden relative shrink-0">
+                          <img
+                            src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`}
+                            alt={customer.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className={`font-bold text-sm ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
-                            {formatLKR(totalAmount)}
+                        <div className="flex flex-col min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 min-w-0 w-full flex-wrap">
+                            <span className="font-semibold text-foreground text-sm break-words">{customer.name}</span>
+                            {isOverdue && (
+                              <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
+                                Overdue
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5 flex-wrap">
+                            <span className="shrink-0 font-mono">{customer.memberId || customer.id.slice(0, 8)}</span>
+                            {customer.state && (
+                              <>
+                                <span className="shrink-0">•</span>
+                                <span className="shrink-0 text-primary font-semibold uppercase text-[10px] bg-primary/10 px-1 py-0.5 rounded">
+                                  📍 {customer.state}
+                                </span>
+                              </>
+                            )}
+                            <span className="shrink-0">•</span>
+                            <span className="shrink-0">
+                              {installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}
+                            </span>
                           </span>
-                          <Button
-                            onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
-                            disabled={isPending}
-                            className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
-                          >
-                            Pay
-                          </Button>
                         </div>
                       </div>
-                    </Link>
-                  );
-                })}
-              </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`font-bold text-sm ${isOverdue ? "text-destructive" : "text-foreground"}`}>
+                          {formatLKR(totalAmount)}
+                        </span>
+                        <Button
+                          onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
+                          disabled={isPending}
+                          className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
+                        >
+                          Pay
+                        </Button>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           )}
         </CardContent>
