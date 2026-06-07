@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loan, Installment, Customer, Note } from "@/data/db";
+import { Loan, Installment, Customer, CustomerNote } from "@/data/db";
 import { InstallmentTimeline } from "@/components/InstallmentTimeline";
 import { CustomerOperations } from "@/components/CustomerOperations";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +11,7 @@ type CustomerTabsProps = {
   loan: Loan;
   installments: Installment[];
   customer: Customer;
-  notes: Note[];
+  notes: CustomerNote[];
   paidCount: number;
   nextInstallment: Installment | undefined;
 };
