@@ -14,7 +14,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
   // Dashboard layout wrapper
   return (
-    <main className="flex-1 max-w-md md:max-w-6xl mx-auto w-full px-2.5 sm:px-4 md:px-8 pt-4 md:pl-24 relative z-10">
+    <main className="flex-1 w-full mx-auto max-w-md md:max-w-[1600px] px-2.5 sm:px-4 md:px-8 pt-4 md:pl-24 relative z-10">
       {children}
     </main>
   );
