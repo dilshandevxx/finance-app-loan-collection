@@ -349,27 +349,39 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                                 <span className="flex shrink-0 items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-destructive px-1.5 py-0.5 rounded-sm bg-destructive/10">
                                   Overdue
                                 </span>
-                                  className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl bg-secondary hover:bg-border/50 text-foreground border border-border transition-all active:scale-95 shrink-0 cursor-pointer"
-                                >
-                                  <MessageSquare className="w-4 h-4" />
-                                </button>
-                                <Button
-                                  onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
-                                  disabled={isPending}
-                                  className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
-                                >
-                                  Pay
-                                </Button>
-                              </div>
+                              )}
                             </div>
-
+                            <span className="text-xs text-muted-foreground mt-0.5 break-words flex items-center gap-1.5 flex-wrap">
+                              <span className="shrink-0 font-mono">{customer.memberId || customer.id.slice(0, 8)}</span>
+                              {customer.state && (
+                                <>
+                                  <span className="shrink-0">•</span>
+                                  <span className="shrink-0 text-primary font-semibold uppercase text-[10px] bg-primary/10 px-1 py-0.5 rounded">📍 {customer.state}</span>
+                                </>
+                              )}
+                              <span className="shrink-0">•</span>
+                              <span className="shrink-0">{installments.length > 1 ? `${installments.length} installments` : `Due ${oldestInstallment.dueDate}`}</span>
+                            </span>
                           </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className={`font-bold text-sm ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
+                            {formatLKR(totalAmount)}
+                          </span>
+                          <Button
+                            onClick={(e) => handlePayClick(e, oldestInstallment.id, customer, oldestInstallment.amount)}
+                            disabled={isPending}
+                            className="h-8 px-3 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shrink-0 border-none cursor-pointer shadow-md shadow-primary/10"
+                          >
+                            Pay
+                          </Button>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           )}
         </CardContent>
