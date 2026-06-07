@@ -10,9 +10,8 @@ import { AnalyticsChart } from "@/components/AnalyticsChart";
 import { formatLKR } from "@/lib/format";
 import { DueTomorrowCard } from "@/components/DueTomorrowCard";
 import { TopOverdueCard } from "@/components/TopOverdueCard";
-import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
-import { FastCollectionBar } from "@/components/FastCollectionBar";
+import { FeaturedSections } from "@/components/FeaturedSections";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -104,8 +103,8 @@ export default async function Home() {
           overdueAmount={overdueAmount}
         />
 
-        {/* Fast Collection Bar */}
-        <FastCollectionBar
+        {/* Featured Sections (Horizontally Scrollable Cards) */}
+        <FeaturedSections
           customers={customers}
           installments={installments}
           loans={loans}
@@ -180,7 +179,7 @@ export default async function Home() {
             activeLoans={activeLoans}
             overdueAmount={overdueAmount}
           />
-          <FastCollectionBar
+          <FeaturedSections
             customers={customers}
             installments={installments}
             loans={loans}
