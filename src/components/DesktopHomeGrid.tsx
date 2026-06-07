@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
 import { BarChart3, Radio, Users, FileText } from "lucide-react";
 import { Customer, Loan, Installment } from "@/data/db";
@@ -149,8 +150,8 @@ export function DesktopHomeGrid({
 
 // -- Spotlight Card Subcomponent --
 function NavCard({ card, widget }: { card: any, widget: React.ReactNode }) {
-  const [mousePosition, setMousePosition] = import("react").useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = import("react").useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
   function handleMouseMove(e: React.MouseEvent<HTMLAnchorElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
