@@ -192,3 +192,22 @@ html, body {
   0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
   50% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--tw-rotate, 0deg)); }
+  50% { transform: translateY(-20px) rotate(calc(var(--tw-rotate, 0deg) + 5deg)); }
+}
+
+.animate-float-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-float-fast {
+  animation: float 4s ease-in-out infinite;
+  animation-delay: 2s;
+}
