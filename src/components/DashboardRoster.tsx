@@ -301,39 +301,46 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
               return (
                 <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-95 transition-transform">
-                  <div className={`flex flex-col p-4 rounded-[1.5rem] bg-card border shadow-sm transition-colors ${
-                    isOverdue ? "border-rose-500/20 hover:border-rose-500/40" : "border-white/5 hover:border-white/10 dark:border-white/10 dark:hover:border-white/20"
+                  <div className={`flex flex-col p-5 rounded-[1.5rem] bg-card/50 backdrop-blur-md border shadow-sm transition-all duration-300 ${
+                    isOverdue 
+                      ? "border-destructive/30 hover:border-destructive/50 hover:shadow-[0_4px_20px_-4px_rgba(244,63,94,0.15)]" 
+                      : "border-border/50 hover:border-primary/30 hover:shadow-[0_4px_20px_-4px_rgba(99,102,241,0.1)]"
                   }`}>
                     
-                    {/* Top Row: Avatar & Status */}
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="w-10 h-10 rounded-full bg-secondary overflow-hidden relative shrink-0 ring-2 ring-background">
-                        <img
-                          src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`}
-                          alt={customer.name}
-                          className="w-full h-full object-cover"
-                        />
+                    {/* Top Section: Initials & Status */}
+                    <div className="flex items-center justify-between mb-4">
+                      {/* Clean Initials Badge instead of ugly image */}
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-black tracking-widest text-primary ${
+                        isOverdue ? 'bg-destructive/10 text-destructive' : 'bg-primary/10'
+                      }`}>
+                        {customer.name.substring(0, 2).toUpperCase()}
                       </div>
+                      
                       {isOverdue && (
-                        <span className="w-2 h-2 rounded-full bg-rose-500 mt-1 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                        <div className="px-2 py-0.5 rounded-md bg-destructive/10 border border-destructive/20 flex items-center shadow-sm">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-destructive animate-pulse">Overdue</span>
+                        </div>
                       )}
                     </div>
 
-                    {/* Middle: Name & Area */}
-                    <div className="flex flex-col mb-3">
-                      <span className="font-bold text-foreground text-sm truncate">{shortName}</span>
-                      <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider truncate">
+                    {/* Middle Section: Name & Area */}
+                    <div className="flex flex-col mb-4">
+                      <span className="font-extrabold text-foreground text-[15px] truncate tracking-tight">{shortName}</span>
+                      <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-widest truncate mt-0.5">
                         {customer.state || "Unknown Area"}
                       </span>
                     </div>
 
-                    {/* Bottom: Amount */}
-                    <div className="mt-auto pt-3 border-t border-border/50">
-                      <div className="flex items-baseline gap-0.5">
-                        <span className={`text-[10px] font-bold leading-none mr-0.5 ${isOverdue ? "text-rose-400" : "text-muted-foreground"}`}>Rs.</span>
-                        <span className={`text-lg font-black leading-none tracking-tight ${isOverdue ? "text-rose-500" : "text-foreground"}`}>
-                          {Math.floor(totalAmount).toLocaleString("en-LK")}
-                        </span>
+                    {/* Bottom Section: Amount */}
+                    <div className="mt-auto">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Expected</span>
+                        <div className="flex items-baseline gap-1">
+                          <span className={`text-[11px] font-bold leading-none ${isOverdue ? "text-destructive" : "text-primary"}`}>Rs.</span>
+                          <span className={`text-xl font-black leading-none tracking-tighter ${isOverdue ? "text-destructive" : "text-foreground"}`}>
+                            {Math.floor(totalAmount).toLocaleString("en-LK")}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
