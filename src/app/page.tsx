@@ -96,12 +96,17 @@ export default async function Home() {
         {/* ════════════════════════════════════════
             LEFT PANEL — Metrics, Portfolio, Chart
             ════════════════════════════════════════ */}
-        <div className="flex flex-col gap-5 md:col-span-7">
+        <div className="flex flex-col gap-5 md:col-span-7 order-2 md:order-1">
 
-          {/* Metric Pills */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Section Divider for Mobile */}
+          <div className="md:hidden flex items-center justify-center py-2 mb-2">
+             <div className="h-px bg-border flex-1" />
+             <span className="px-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-background">Analytics & Portfolio</span>
+             <div className="h-px bg-border flex-1" />
+          </div>
 
-            {/* Active Loans */}
+          {/* Active Loans */}
+          <div className="grid grid-cols-2 gap-3 mt-2 md:mt-0">
             <div className="rounded-[1.5rem] p-5 flex flex-col gap-1 bg-white dark:bg-card border border-zinc-200 dark:border-border text-zinc-900 dark:text-white shadow-sm">
               <div className="flex items-center gap-1.5 text-zinc-500 dark:text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
                 <Users className="w-3.5 h-3.5 text-primary" /> Active Loans
@@ -124,16 +129,6 @@ export default async function Home() {
 
           {/* Portfolio Summary Card */}
           <PortfolioSummaryCard loans={loans} />
-
-          {/* Portfolio Status Card */}
-          <CollectionGoalCard
-            expectedToday={expectedToday}
-            collectedToday={collectedToday}
-            totalClientsToday={totalClientsToday}
-            collectedClientsToday={collectedClientsToday}
-            activeLoans={activeLoans}
-            overdueAmount={overdueAmount}
-          />
 
           {/* Weekly Collections Chart */}
           <div className="rounded-2xl bg-card border border-white/5 dark:border-white/10 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
@@ -168,30 +163,26 @@ export default async function Home() {
             customers={customers}
           />
 
-          {/* Quick Nav — Mobile only */}
-          <div className="grid grid-cols-2 gap-3 md:hidden print:hidden">
-            <Link
-              href="/new"
-              className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
-            >
-              ➕ New Account
-            </Link>
-            <Link
-              href="/villages"
-              className="flex items-center justify-center gap-2 py-3 bg-card hover:bg-secondary border border-border rounded-2xl text-xs font-black text-foreground shadow-sm transition-all active:scale-[0.98]"
-            >
-              📍 Manage Areas
-            </Link>
-          </div>
         </div>
 
         {/* ════════════════════════════════════════
-            RIGHT PANEL — Quick Nav + Roster
+            RIGHT PANEL — Tasks, Goals & Quick Nav
+            (On Mobile, this moves to the top via flex-col-reverse)
             ════════════════════════════════════════ */}
-        <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4">
+        <div className="flex flex-col gap-4 md:col-span-5 md:sticky md:top-4 order-1 md:order-2 mb-4 md:mb-0">
+          
+          {/* Today's Goals (Moved from Left to Right for better mobile hierarchy) */}
+          <CollectionGoalCard
+            expectedToday={expectedToday}
+            collectedToday={collectedToday}
+            totalClientsToday={totalClientsToday}
+            collectedClientsToday={collectedClientsToday}
+            activeLoans={activeLoans}
+            overdueAmount={overdueAmount}
+          />
 
-          {/* Quick Nav — Desktop only */}
-          <div className="hidden md:grid grid-cols-2 gap-3 print:hidden">
+          {/* Quick Nav — Desktop & Mobile */}
+          <div className="grid grid-cols-2 gap-3 print:hidden">
             <Link
               href="/new"
               className="flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl text-xs font-black shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
@@ -206,8 +197,8 @@ export default async function Home() {
             </Link>
           </div>
 
-          {/* Due Today Roster — sticky & scrollable on desktop */}
-          <div className="md:max-h-[calc(100vh-11rem)] md:overflow-y-auto md:rounded-2xl">
+          {/* Due Today Roster */}
+          <div className="md:max-h-[calc(100vh-18rem)] md:overflow-y-auto md:rounded-2xl">
             <DashboardRoster
               pendingInstallments={pendingInstallments}
               customers={customers}
