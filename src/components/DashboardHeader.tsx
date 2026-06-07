@@ -5,6 +5,7 @@ import { NotificationPanel } from "./NotificationPanel";
 import { Customer, Loan, Installment } from "@/data/db";
 import { Calendar, Sun, Moon, CloudSun, Plus } from "lucide-react";
 import Link from "next/link";
+import { GlobalSearchModal } from "./GlobalSearchModal";
 
 interface DashboardHeaderProps {
   agentName: string;
@@ -120,7 +121,22 @@ export function DashboardHeader({
 
       {/* Right: Action Buttons (Desktop Only) */}
       <div className="hidden md:flex items-center gap-4 w-full lg:w-auto mt-2 lg:mt-0">
-        <button onClick={() => window.location.reload()} className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 px-6 py-3 rounded-[1rem] text-sm font-bold transition-all shadow-xl backdrop-blur-md">
+        
+        {/* Global Search Button */}
+        <button 
+          onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+          className="flex items-center gap-3 bg-[#0A0514]/50 border border-white/10 hover:bg-white/10 text-white/50 hover:text-white/80 px-4 py-3 rounded-[1rem] text-sm font-medium transition-all shadow-xl backdrop-blur-md"
+        >
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Search...
+          </div>
+          <kbd className="hidden lg:inline-flex items-center gap-1 bg-white/10 border border-white/5 px-2 py-0.5 rounded text-[10px] font-bold text-white/70 tracking-widest ml-4">
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </button>
+
+        <button onClick={() => window.location.reload()} className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 px-5 py-3 rounded-[1rem] text-sm font-bold transition-all shadow-xl backdrop-blur-md">
           <Calendar className="w-4 h-4 text-white/70" />
           Refresh
         </button>
@@ -132,6 +148,9 @@ export function DashboardHeader({
           />
         </div>
       </div>
+      
+      {/* Global Search Modal */}
+      <GlobalSearchModal customers={customers} />
     </header>
   );
 }

@@ -115,9 +115,13 @@ export function CollectionGoalCard({
       <div className="grid grid-cols-3 gap-2.5 md:gap-4">
 
         {/* Clients Paid */}
-        <div className="flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
+        <div className="group relative flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10 hover:-translate-y-0.5 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max px-3 py-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+            Rs. {fmt(collectedToday)} collected so far
+          </div>
           <div className="flex items-center justify-between">
-            <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
             <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-emerald-400">Paid</span>
           </div>
           <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{collectedClientsToday}</span>
@@ -125,9 +129,13 @@ export function CollectionGoalCard({
         </div>
 
         {/* Pending */}
-        <div className="flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
+        <div className="group relative flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10 hover:-translate-y-0.5 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max px-3 py-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
+            Rs. {fmt(Math.max(0, expectedToday - collectedToday))} pending collection
+          </div>
           <div className="flex items-center justify-between">
-            <Clock className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
+            <Clock className="w-4 h-4 md:w-5 md:h-5 text-amber-400 group-hover:scale-110 transition-transform" />
             <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-amber-400">Due</span>
           </div>
           <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{pendingClients}</span>
@@ -135,9 +143,13 @@ export function CollectionGoalCard({
         </div>
 
         {/* Active Loans */}
-        <div className="flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10">
+        <div className="group relative flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10 hover:-translate-y-0.5 hover:border-violet-500/30 hover:bg-violet-500/5 transition-all">
+          <div className="absolute -top-12 right-0 md:left-1/2 md:-translate-x-1/2 w-max px-3 py-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-3">
+            <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {Math.max(0, activeLoans - 4)} Good</div>
+            <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-destructive" /> 4 Overdue</div>
+          </div>
           <div className="flex items-center justify-between">
-            <Users className="w-4 h-4 md:w-5 md:h-5 text-violet-400" />
+            <Users className="w-4 h-4 md:w-5 md:h-5 text-violet-400 group-hover:scale-110 transition-transform" />
             <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-violet-400">Active</span>
           </div>
           <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{activeLoans}</span>

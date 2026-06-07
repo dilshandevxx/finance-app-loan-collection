@@ -138,30 +138,63 @@ export function DesktopHomeGrid({
           }
 
           return (
-            <Link href={card.href} key={idx} className="group block relative w-full h-full min-h-[220px]">
-              <div className={`absolute top-0 right-0 w-32 h-32 ${card.glow} rounded-full blur-[60px] pointer-events-none mix-blend-screen opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
-              
-              <div className="relative h-full rounded-[2rem] bg-[#0A0514]/80 backdrop-blur-md border border-white/5 p-6 shadow-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col">
-                <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                
-                <div className="relative z-10 w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
-                  {card.icon}
-                </div>
-                
-                {widget && <div className="relative z-10">{widget}</div>}
-                
-                <div className="relative z-10 flex flex-col gap-1 mt-auto">
-                  <h3 className="text-xl font-black text-white tracking-tight">{card.title}</h3>
-                  <p className="text-sm font-medium text-white/50 leading-relaxed">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
-            </Link>
+            <NavCard key={idx} card={card} widget={widget} />
           );
         })}
       </div>
 
     </div>
+  );
+}
+
+// -- Spotlight Card Subcomponent --
+function NavCard({ card, widget }: { card: any, widget: React.ReactNode }) {
+  const [mousePosition, setMousePosition] = import("react").useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = import("react").useState(false);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLAnchorElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }
+
+  return (
+    <Link 
+      href={card.href} 
+      className="group block relative w-full h-full min-h-[220px] rounded-[2rem] overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {/* Background container */}
+      <div className="absolute inset-0 bg-[#0A0514]/80 backdrop-blur-md border border-white/5" />
+      
+      {/* Flashlight Spotlight Effect */}
+      <div 
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+        style={{
+          opacity: isHovering ? 1 : 0,
+          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.06), transparent 40%)`
+        }}
+      />
+      
+      <div className={`absolute top-0 right-0 w-32 h-32 ${card.glow} rounded-full blur-[60px] pointer-events-none mix-blend-screen opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
+      
+      <div className="relative h-full p-6 shadow-xl flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+        
+        <div className="relative z-10 w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
+          {card.icon}
+        </div>
+        
+        {widget && <div className="relative z-10">{widget}</div>}
+        
+        <div className="relative z-10 flex flex-col gap-1 mt-auto">
+          <h3 className="text-xl font-black text-white tracking-tight">{card.title}</h3>
+          <p className="text-sm font-medium text-white/50 leading-relaxed">
+            {card.description}
+          </p>
+        </div>
+      </div>
+    </Link>
   );
 }
