@@ -53,6 +53,9 @@ const NAV_CARDS = [
 ];
 
 export function DesktopHomeGrid({
+  customers,
+  loans,
+  installments,
   expectedToday,
   collectedToday,
   totalClientsToday,
@@ -60,6 +63,28 @@ export function DesktopHomeGrid({
   activeLoans,
   overdueAmount,
 }: DesktopHomeGridProps) {
+  
+  // -- Calculate Live Widgets Data --
+  // 1. Sparkline (Last 7 Days)
+  const last7Days = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toDateString();
+  });
+  const dailyTotals = last7Days.map(dateStr => {
+    return installments
+      .filter(i => i.status === "PAID" && i.paidDate && new Date(i.paidDate).toDateString() === dateStr)
+      .reduce((sum, inst) => sum + inst.amount, 0);
+  });
+  const maxTotal = Math.max(...dailyTotals, 1);
+  const sparklineBars = dailyTotals.map(t => Math.max(10, Math.round((t / maxTotal) * 100)));
+
+  // 2. Recent Payments (Feed)
+  const recentPayments = installments
+    .filter(i => i.status === "PAID" && i.paidDate)
+    .sort((a, b) => new Date(b.paidDate!).getTime() - new Date(a.paidDate!).getTime())
+    .slice(0, 2);
+
   return (
     <div className="hidden md:flex flex-col xl:grid xl:grid-cols-12 gap-6 xl:gap-8 w-full mt-4">
       
@@ -77,26 +102,64 @@ export function DesktopHomeGrid({
 
       {/* ── Navigation Grid (Right Column on Desktop) ──── */}
       <div className="xl:col-span-7 2xl:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-2 gap-6 items-start h-fit">
-        {NAV_CARDS.map((card, idx) => (
-          <Link href={card.href} key={idx} className="group block relative w-full h-full min-h-[160px]">
-            <div className={`absolute top-0 right-0 w-32 h-32 ${card.glow} rounded-full blur-[60px] pointer-events-none mix-blend-screen opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
-            
-            <div className="relative h-full rounded-[2rem] bg-[#0A0514]/80 backdrop-blur-md border border-white/5 p-6 shadow-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between gap-4">
-              <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-              
-              <div className="relative z-10 w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                {card.icon}
+        {NAV_CARDS.map((card, idx) => {
+          
+          let widget = null;
+          if (card.title === "Portfolio Analytics") {
+            widget = (
+              <div className="flex items-end gap-1.5 h-10 mt-2 mb-4 w-full">
+                {sparklineBars.map((h, i) => (
+                  <div key={i} className="w-full bg-emerald-500/20 rounded-t-sm" style={{ height: '100%' }}>
+                    <div className="w-full bg-emerald-400 rounded-t-sm transition-all duration-1000 mt-auto" style={{ height: `${h}%` }} />
+                  </div>
+                ))}
               </div>
-              
-              <div className="relative z-10 flex flex-col gap-1.5">
-                <h3 className="text-xl font-black text-white tracking-tight">{card.title}</h3>
-                <p className="text-sm font-medium text-white/50 leading-relaxed">
-                  {card.description}
-                </p>
+            );
+          } else if (card.title === "Live Action Feed") {
+            widget = (
+              <div className="flex flex-col gap-2 mt-2 mb-4 w-full">
+                {recentPayments.length > 0 ? recentPayments.map((p, i) => {
+                  const loan = loans.find(l => l.id === p.loanId);
+                  const cust = customers.find(c => c.id === loan?.customerId);
+                  return (
+                    <div key={i} className="flex items-center gap-2 bg-black/20 rounded-lg p-1.5 border border-white/5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                      <span className="text-[10px] text-white/80 font-bold truncate">{cust?.name || "Client"}</span>
+                      <span className="text-[10px] text-primary font-black ml-auto">Rs.{p.amount}</span>
+                    </div>
+                  );
+                }) : (
+                  <div className="flex items-center gap-2 bg-black/20 rounded-lg p-2 border border-white/5">
+                     <span className="text-[10px] text-white/40">Waiting for payments...</span>
+                  </div>
+                )}
               </div>
-            </div>
-          </Link>
-        ))}
+            );
+          }
+
+          return (
+            <Link href={card.href} key={idx} className="group block relative w-full h-full min-h-[220px]">
+              <div className={`absolute top-0 right-0 w-32 h-32 ${card.glow} rounded-full blur-[60px] pointer-events-none mix-blend-screen opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
+              
+              <div className="relative h-full rounded-[2rem] bg-[#0A0514]/80 backdrop-blur-md border border-white/5 p-6 shadow-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                
+                <div className="relative z-10 w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
+                  {card.icon}
+                </div>
+                
+                {widget && <div className="relative z-10">{widget}</div>}
+                
+                <div className="relative z-10 flex flex-col gap-1 mt-auto">
+                  <h3 className="text-xl font-black text-white tracking-tight">{card.title}</h3>
+                  <p className="text-sm font-medium text-white/50 leading-relaxed">
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
 
     </div>
