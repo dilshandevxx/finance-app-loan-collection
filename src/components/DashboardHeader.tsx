@@ -66,40 +66,34 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between pt-6 px-4 mb-8">
-      {/* Left: Avatar & Greeting */}
-      <div className="flex items-center gap-4">
-        {/* Profile Avatar with subtle glow */}
-        <div className="relative group">
-          <div className="absolute inset-0 bg-primary/20 rounded-full blur-md group-hover:blur-lg transition-all" />
-          <div className="relative w-14 h-14 rounded-full border border-white/10 shadow-xl overflow-hidden bg-secondary">
-            <img 
-              src={agentAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(agentName)}`} 
-              alt={agentName} 
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-        
-        {/* Greeting Text */}
-        <div className="flex flex-col justify-center">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground mb-1">
-            {greeting}
-          </span>
-          <h1 className="text-[1.75rem] font-black tracking-tight leading-none bg-gradient-to-r from-white via-white/90 to-white/60 bg-clip-text text-transparent drop-shadow-sm">
-            {agentName.split(" ")[0]}
-          </h1>
-        </div>
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6 px-4 mb-8">
+      {/* Left: Text Greeting */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl md:text-[28px] font-medium tracking-tight text-foreground">
+          Welcome back, {agentName}!!
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Your latest portfolio analytics are ready. Let's check your progress.
+        </p>
       </div>
 
-      {/* Right: Circular Icon Buttons */}
-      <div className="flex items-center gap-3">
-        {/* Notification Bell */}
-        <NotificationPanel
-          customers={customers}
-          loans={loans}
-          installments={installments}
-        />
+      {/* Right: Action Buttons */}
+      <div className="flex items-center gap-3 w-full md:w-auto">
+        <Link href="/new" className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
+          <Plus className="w-4 h-4" strokeWidth={2.5} />
+          New Client
+        </Link>
+        <button onClick={() => window.location.reload()} className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-secondary/50 hover:bg-secondary text-foreground border border-border px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm">
+          <Calendar className="w-4 h-4 text-muted-foreground" />
+          Refresh
+        </button>
+        <div className="shrink-0">
+          <NotificationPanel
+            customers={customers}
+            loans={loans}
+            installments={installments}
+          />
+        </div>
       </div>
     </header>
   );

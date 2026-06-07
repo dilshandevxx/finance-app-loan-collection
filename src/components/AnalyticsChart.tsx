@@ -77,10 +77,8 @@ export function AnalyticsChart() {
           />
           {/* Expected – muted tint */}
           <Bar dataKey="expected" name="Expected" radius={[8, 8, 4, 4]} fill="var(--muted)" />
-          {/* Collected – vibrant cycling colors */}
-          <Bar dataKey="collected" name="Collected" radius={[8, 8, 4, 4]}>
-            {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-          </Bar>
+          {/* Collected – vibrant primary color */}
+          <Bar dataKey="collected" name="Collected" radius={[8, 8, 4, 4]} fill="var(--primary)" />
         </BarChart>
       </ResponsiveContainer>
     </div>

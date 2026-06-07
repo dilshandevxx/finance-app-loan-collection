@@ -60,41 +60,23 @@ export function CollectionGoalCard({
     <div className="flex flex-col gap-3 w-full">
 
       {/* ── HERO CARD ─────────────────────────────────── */}
-      <div className="relative w-full rounded-[2rem] overflow-hidden" style={{ minHeight: 180 }}>
-
-        {/* Gradient background */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: isGoalMet
-              ? "linear-gradient(135deg, #059669 0%, #10b981 40%, #34d399 100%)"
-              : "linear-gradient(135deg, #6d28d9 0%, #7c3aed 40%, #8b5cf6 70%, #a78bfa 100%)",
-          }}
-        />
-
-        {/* Noise texture overlay for premium feel */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")" }}
-        />
-
+      <div className="relative w-full rounded-[2rem] bg-card border border-border p-6 flex flex-col gap-2 shadow-sm">
+        
         {/* Glow orb */}
-        <div className="absolute -bottom-16 -right-12 w-56 h-56 rounded-full opacity-20 blur-3xl"
-          style={{ background: isGoalMet ? "#34d399" : "#c4b5fd" }}
-        />
-        <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full opacity-10 blur-2xl"
-          style={{ background: "white" }}
+        <div className="absolute -bottom-16 -right-12 w-56 h-56 rounded-full opacity-10 blur-3xl"
+          style={{ background: isGoalMet ? "#10b981" : "var(--primary)" }}
         />
 
         {/* Content */}
-        <div className="relative z-10 p-6 flex flex-col gap-2">
+        <div className="relative z-10 flex flex-col gap-2">
 
           {/* Label row */}
           <div className="flex items-center justify-between">
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/70">
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-muted-foreground">
               Today&apos;s Collection
             </p>
             {isGoalMet && (
-              <span className="flex items-center gap-1 text-[10px] font-black bg-white/20 text-white px-2.5 py-1 rounded-full">
+              <span className="flex items-center gap-1 text-[10px] font-black bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 px-2.5 py-1 rounded-full">
                 ✅ Goal Met
               </span>
             )}
@@ -102,12 +84,12 @@ export function CollectionGoalCard({
 
           {/* Big amount */}
           <div className="flex items-start mt-1">
-            <span className="text-2xl font-black text-white/80 mt-2 mr-1">Rs.</span>
+            <span className="text-2xl font-black text-foreground mt-2 mr-1">Rs.</span>
             <div className="flex items-baseline gap-0.5">
-              <span className="text-[3.2rem] font-black text-white leading-none tracking-tight">
+              <span className="text-[3.2rem] font-black text-foreground leading-none tracking-tight">
                 {fmt(mounted ? animatedAmount : 0)}
               </span>
-              <span className="text-2xl font-black text-white/60 self-end mb-1">
+              <span className="text-2xl font-black text-muted-foreground self-end mb-1">
                 .{dec(mounted ? animatedAmount : 0)}
               </span>
             </div>
@@ -116,7 +98,7 @@ export function CollectionGoalCard({
           {/* Trend sub-line */}
           <div className="flex items-center gap-2 mt-0.5">
             <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-black ${
-              isPositive ? "bg-white/20 text-white" : "bg-black/20 text-white/60"
+              isPositive ? "bg-primary/20 text-primary border border-primary/20" : "bg-secondary text-muted-foreground"
             }`}>
               {isPositive ? (
                 <TrendingUp className="w-3 h-3" />
@@ -125,7 +107,7 @@ export function CollectionGoalCard({
               )}
               <span>Rs. {fmt(changeAmount)} ({changePct}%)</span>
             </div>
-            <span className="text-white/50 text-[10px] font-semibold">of Rs. {fmt(totalTarget)} target</span>
+            <span className="text-muted-foreground text-[10px] font-semibold">of Rs. {fmt(totalTarget)} target</span>
           </div>
 
         </div>
@@ -175,9 +157,9 @@ export function CollectionGoalCard({
               style={{
                 width: `${progressPercent}%`,
                 background: isGoalMet
-                  ? "#34d399"
+                  ? "#10b981"
                   : progressPercent > 65
-                  ? "#8b5cf6"
+                  ? "var(--primary)"
                   : progressPercent > 35
                   ? "#f59e0b"
                   : "#f43f5e",

@@ -52,9 +52,6 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 md:pb-0 relative overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <OfflineProvider>
-            {/* Ambient violet glow blobs — Deep Violet Pro */}
-            <div className="fixed top-[-15%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-600/5 dark:bg-violet-500/8 blur-[140px] pointer-events-none z-0" />
-            <div className="fixed bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full bg-indigo-500/4 dark:bg-indigo-400/6 blur-[120px] pointer-events-none z-0" />
 
             <LayoutWrapper>
               {children}

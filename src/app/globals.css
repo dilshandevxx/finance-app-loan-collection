@@ -44,29 +44,29 @@
    WORLD-CLASS AESTHETIC — Dark Mode
    ───────────────────────────────────────────────────── */
 .dark {
-  --background: #05050A;         /* Deepest space black */
-  --foreground: #F8FAFC;         /* Bright slate 50 text */
-  --card: #12121A;               /* Distinct, elevated card background */
+  --background: #111113;         /* Deep matte dark */
+  --foreground: #F8FAFC;         
+  --card: #1C1C1E;               /* Matte card background */
   --card-foreground: #F8FAFC;
-  --popover: #12121A;
+  --popover: #1C1C1E;
   --popover-foreground: #F8FAFC;
-  --primary: #34D399;            /* Bright luminous Emerald */
-  --primary-foreground: #022C22; /* High contrast text */
-  --secondary: #064E3B;          /* Elevated surface Emerald */
-  --secondary-foreground: #A7F3D0;
-  --muted: #1E1E28;              /* Soft dark background */
-  --muted-foreground: #94A3B8;   /* Clear slate 400 for readable secondary text */
-  --accent: #065F46;
-  --accent-foreground: #D1FAE5;
-  --destructive: #3F1414;
-  --destructive-foreground: #FCA5A5;
-  --border: #2A2A3C;             /* Clear, visible border for dark mode */
-  --input: #12121A;
-  --ring: #34D399;
+  --primary: #FF5C00;            /* Vibrant Orange */
+  --primary-foreground: #FFFFFF; 
+  --secondary: #2A2A2E;          /* Elevated surface */
+  --secondary-foreground: #FFFFFF;
+  --muted: #242427;              
+  --muted-foreground: #8A8A93;   
+  --accent: #FF5C00;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #2A2A2E;             
+  --input: #1C1C1E;
+  --ring: #FF5C00;
 
   /* Chart */
-  --chart-collected: #34D399;
-  --chart-expected: #2A2A3C;
+  --chart-collected: #FF5C00;
+  --chart-expected: #2A2A2E;
 
   /* Vibe accents */
   --vibe-coral:    #FB7185;
@@ -150,9 +150,7 @@ html, body {
 
 /* Premium ambient glow on dark body */
 .dark body {
-  background-image:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+  background-image: none;
 }
 
 /* Scrollbar */

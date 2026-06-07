@@ -300,8 +300,8 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                 const { customer, totalAmount, isOverdue } = group;
                 return (
                   <Link key={customer.id} href={`/customers/${customer.id}`} className="block group active:scale-[0.98] transition-transform">
-                    <div className={`flex items-center justify-between p-4 rounded-[1.25rem] bg-card/40 hover:bg-card/80 backdrop-blur-md border shadow-sm transition-all duration-300 relative overflow-hidden ${
-                      isOverdue ? "border-destructive/30 hover:border-destructive/50" : "border-border/50 hover:border-primary/30"
+                    <div className={`flex items-center justify-between p-4 rounded-[1.25rem] bg-card hover:bg-secondary border shadow-sm transition-all duration-300 relative overflow-hidden ${
+                      isOverdue ? "border-destructive/30 hover:border-destructive/50" : "border-border hover:border-primary/30"
                     }`}>
                       <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r ${isOverdue ? 'from-destructive/5' : 'from-primary/5'} to-transparent`} />
                       <div className="flex items-center gap-4 relative z-10">
@@ -340,10 +340,10 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
             </div>
 
             {/* DESKTOP VIEW: Data Table */}
-            <div className="hidden md:block w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-card/40 backdrop-blur-md shadow-sm">
+            <div className="hidden md:block w-full overflow-hidden rounded-[1.5rem] border border-border bg-card shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
+                  <tr className="border-b border-border bg-secondary/50">
                     <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Customer</th>
                     <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Area</th>
                     <th className="p-4 font-bold text-[10px] tracking-widest uppercase text-muted-foreground">Status</th>
@@ -355,7 +355,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                   {sortedCustomerGroups.map((group) => {
                     const { customer, totalAmount, isOverdue } = group;
                     return (
-                      <tr key={customer.id} className="group hover:bg-white/5 transition-colors duration-200">
+                      <tr key={customer.id} className="group hover:bg-secondary transition-colors duration-200">
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black tracking-widest shrink-0 ${

@@ -81,20 +81,19 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
           DESKTOP: Fixed full-height left sidebar
           ───────────────────────────────────────────── */}
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[260px] flex-col items-start z-50
-        bg-card/95 backdrop-blur-3xl
-        border-r border-white/5
-        py-8 px-5 gap-6 shadow-[4px_0_24px_rgba(0,0,0,0.2)]
+        bg-card border-r border-border
+        py-8 px-5 gap-6
       ">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3 px-2 mb-2 w-full">
-          <div className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
+          <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
             <div className="w-4 h-4 bg-primary rounded-[4px] rotate-45" />
           </div>
-          <span className="text-[22px] font-black tracking-tight text-foreground bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">CredFlow</span>
+          <span className="text-[22px] font-black tracking-tight text-foreground">Movea</span>
         </div>
 
         {/* New Account Button */}
-        <Link href="/new" className="group flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-3.5 transition-all duration-300 active:scale-[0.98] shadow-[0_4px_14px_rgba(99,102,241,0.4)]">
+        <Link href="/new" className="group flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-3.5 transition-all duration-300 active:scale-[0.98] shadow-sm">
           <Plus className="w-5 h-5" strokeWidth={2.5} />
           <span className="text-sm font-bold">New Account</span>
         </Link>
@@ -112,7 +111,7 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
                   relative w-full flex items-center gap-4
                   px-4 py-3.5 rounded-[1.25rem] transition-all duration-300
                   ${active
-                    ? "text-primary bg-primary/10 font-bold shadow-sm"
+                    ? "text-foreground bg-secondary font-bold shadow-sm"
                     : "text-muted-foreground font-semibold hover:text-foreground hover:bg-white/5"
                   }
                 `}
@@ -129,7 +128,7 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
         </nav>
 
         {/* Bottom */}
-        <div className="mt-auto pt-6 border-t border-border/40 w-full flex flex-col gap-4">
+        <div className="mt-auto pt-6 border-t border-border w-full flex flex-col gap-4">
           <div className="flex items-center justify-between px-4">
             <span className="text-xs font-semibold text-muted-foreground">Theme</span>
             <ThemeToggle />
