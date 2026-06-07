@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { config } from "@/lib/config";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0c",
+  themeColor: "#07050F",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -45,14 +46,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-background`}
+      className={`${plusJakarta.variable} ${geistMono.variable} h-full antialiased bg-background`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 md:pb-0 relative overflow-x-hidden">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <OfflineProvider>
-            {/* Ambient background glows for premium desktop look */}
-            <div className="hidden md:block absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/3 dark:bg-primary/5 blur-[120px] pointer-events-none z-0" />
+            {/* Ambient violet glow blobs — Deep Violet Pro */}
+            <div className="fixed top-[-15%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-600/5 dark:bg-violet-500/8 blur-[140px] pointer-events-none z-0" />
+            <div className="fixed bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full bg-indigo-500/4 dark:bg-indigo-400/6 blur-[120px] pointer-events-none z-0" />
 
             <LayoutWrapper>
               {children}

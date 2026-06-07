@@ -1,81 +1,90 @@
 @import "tailwindcss";
 
-/* ─── Light Mode: Crisp Minimal Yellow ─────────── */
+/* ─────────────────────────────────────────────────────
+   DEEP VIOLET PRO — Light Mode
+   Inspired by: Figma, Framer, Loom
+   ───────────────────────────────────────────────────── */
 :root {
-  --background: #F8F9FA;
-  --foreground: #0A0A0A;
+  --background: #F7F5FF;         /* Soft violet-tinted white */
+  --foreground: #0F0A1E;         /* Deep violet-black text */
   --card: #FFFFFF;
-  --card-foreground: #0A0A0A;
+  --card-foreground: #0F0A1E;
   --popover: #FFFFFF;
-  --popover-foreground: #0A0A0A;
-  --primary: #10B981; /* Emerald Green */
-  --primary-foreground: #FFFFFF; /* White text on green */
-  --secondary: #F4F4F5;
-  --secondary-foreground: #18181B;
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A;
-  --accent: #F4F4F5;
-  --accent-foreground: #18181B;
+  --popover-foreground: #0F0A1E;
+  --primary: #7C3AED;            /* Violet 600 */
+  --primary-foreground: #FFFFFF;
+  --secondary: #EDE9FE;          /* Violet 100 */
+  --secondary-foreground: #4C1D95;
+  --muted: #F3F0FF;
+  --muted-foreground: #7C6FA0;
+  --accent: #DDD6FE;             /* Violet 200 */
+  --accent-foreground: #4C1D95;
   --destructive: #FEE2E2;
   --destructive-foreground: #DC2626;
-  --border: #E4E4E7;
+  --border: #E0D9F7;
   --input: #FFFFFF;
-  --ring: #10B981;
+  --ring: #7C3AED;
 
-  /* Custom chart variables */
-  --chart-collected: #10B981; 
-  --chart-expected: #E4E4E7;
+  /* Chart */
+  --chart-collected: #7C3AED;
+  --chart-expected: #E0D9F7;
 
-  /* Custom vibe accent colors */
-  --vibe-coral: #EF4444;
-  --vibe-pink: #FFB800;
-  --vibe-violet: #8B5CF6;
-  --vibe-sky: #3B82F6;
+  /* Vibe accents */
+  --vibe-coral:    #EF4444;
+  --vibe-pink:     #EC4899;
+  --vibe-violet:   #7C3AED;
+  --vibe-sky:      #6366F1;
 
-  --vibe-coral-lt: #FEF2F2;
-  --vibe-pink-lt: #FFFBEB;
+  --vibe-coral-lt:  #FEF2F2;
+  --vibe-pink-lt:   #FDF2F8;
   --vibe-violet-lt: #F5F3FF;
-  --vibe-sky-lt: #EFF6FF;
+  --vibe-sky-lt:    #EEF2FF;
 }
 
-/* ─── Dark Mode: Premium Agency Dark (Reference App Vibe) ──────────────── */
+/* ─────────────────────────────────────────────────────
+   DEEP VIOLET PRO — Dark Mode
+   Deep indigo-black / violet card system
+   ───────────────────────────────────────────────────── */
 .dark {
-  --background: #0A0A0A; /* Very deep black */
-  --foreground: #FAFAFA;
-  --card: #141414; /* Slightly lighter deep gray */
-  --card-foreground: #FAFAFA;
-  --popover: #141414;
-  --popover-foreground: #FAFAFA;
-  --primary: #10B981; /* Emerald Green */
-  --primary-foreground: #FFFFFF; /* White text on green */
-  --secondary: #222222; /* Medium dark gray */
-  --secondary-foreground: #FAFAFA;
-  --muted: #1A1A1A;
-  --muted-foreground: #A1A1AA; /* Light gray text */
-  --accent: #222222;
-  --accent-foreground: #FAFAFA;
-  --destructive: #450A0A;
+  --background: #07050F;         /* Deep indigo-black */
+  --foreground: #F0EEFF;         /* Soft violet-white */
+  --card: #0F0B1A;               /* Slightly lighter violet-black */
+  --card-foreground: #F0EEFF;
+  --popover: #0F0B1A;
+  --popover-foreground: #F0EEFF;
+  --primary: #8B5CF6;            /* Violet 500 — luminous on dark */
+  --primary-foreground: #FFFFFF;
+  --secondary: #1A1428;          /* Muted violet-dark */
+  --secondary-foreground: #C4B5FD;
+  --muted: #120F1E;
+  --muted-foreground: #8B80A8;   /* Muted violet-grey */
+  --accent: #1E1535;
+  --accent-foreground: #C4B5FD;
+  --destructive: #2A0A0A;
   --destructive-foreground: #F87171;
-  --border: #27272A; /* Subtle gray border */
-  --input: #141414;
-  --ring: #10B981;
+  --border: #2A1F45;             /* Violet-tinted dark border */
+  --input: #0F0B1A;
+  --ring: #8B5CF6;
 
-  /* Custom chart variables */
-  --chart-collected: #10B981; 
-  --chart-expected: #27272A; 
+  /* Chart */
+  --chart-collected: #8B5CF6;
+  --chart-expected: #2A1F45;
 
-  /* Custom vibe accent colors */
-  --vibe-coral: #EF4444;
-  --vibe-pink: #FFB800;
-  --vibe-violet: #8B5CF6;
-  --vibe-sky: #3B82F6;
+  /* Vibe accents */
+  --vibe-coral:    #F87171;
+  --vibe-pink:     #F472B6;
+  --vibe-violet:   #A78BFA;
+  --vibe-sky:      #818CF8;
 
-  --vibe-coral-lt: #450A0A;
-  --vibe-pink-lt: #422006;
-  --vibe-violet-lt: #2E1065;
-  --vibe-sky-lt: #172554;
+  --vibe-coral-lt:  #2A0A0A;
+  --vibe-pink-lt:   #2D0B1E;
+  --vibe-violet-lt: #1E1535;
+  --vibe-sky-lt:    #1E1B4B;
 }
 
+/* ─────────────────────────────────────────────────────
+   Theme Bridge → Tailwind CSS custom properties
+   ───────────────────────────────────────────────────── */
 @theme inline {
   --color-background:           var(--background);
   --color-foreground:           var(--foreground);
@@ -97,7 +106,6 @@
   --color-input:                var(--input);
   --color-ring:                 var(--ring);
 
-  /* ─── Custom Chart and Vibe Palettes ── */
   --color-chart-collected:      var(--chart-collected);
   --color-chart-expected:       var(--chart-expected);
 
@@ -111,35 +119,29 @@
   --color-vibe-violet-lt:       var(--vibe-violet-lt);
   --color-vibe-sky-lt:          var(--vibe-sky-lt);
 
-  /* App surface layers */
   --color-app-bg:       var(--background);
   --color-app-surface:  var(--card);
   --color-app-surface2: var(--secondary);
 
-  /* Mood-face palette (for CollectionGoalCard SVG faces) */
-  --color-mood-pink:        #E9C46A;
-  --color-mood-pink-light:  #FEF9E7;
-  --color-mood-mint:        #81A483;
-  --color-mood-mint-light:  #F2F6F3;
-  --color-mood-blue:        #D5C3B3;
-  --color-mood-blue-light:  #FAF8F5;
-  --color-mood-charcoal:    #4A4540;
-  --color-mood-gray:        #7C756E;
+  --color-mood-pink:        #C084FC;
+  --color-mood-pink-light:  #FAF5FF;
+  --color-mood-mint:        #818CF8;
+  --color-mood-mint-light:  #EEF2FF;
+  --color-mood-blue:        #A78BFA;
+  --color-mood-blue-light:  #F5F3FF;
+  --color-mood-charcoal:    #4C1D95;
+  --color-mood-gray:        #7C6FA0;
 
   --radius:    1.5rem;
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-plus-jakarta);
   --font-mono: var(--font-geist-mono);
 
   --animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-@keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
-}
-
+/* ─────────────────────────────────────────────────────
+   Base Styles
+   ───────────────────────────────────────────────────── */
 html, body {
   background-color: var(--color-background);
   color: var(--color-foreground);
@@ -148,13 +150,29 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Premium ambient glow on dark body */
+.dark body {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+}
+
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); opacity: 0.5; }
 
-/* Custom Animations */
+/* ─────────────────────────────────────────────────────
+   Animations
+   ───────────────────────────────────────────────────── */
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
 @keyframes wave {
   0%, 100% { transform: rotate(0deg); }
   10%, 30% { transform: rotate(14deg); }
@@ -170,3 +188,7 @@ html, body {
   40%, 80% { transform: rotate(15deg); }
 }
 
+@keyframes violet-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
+}

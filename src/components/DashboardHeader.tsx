@@ -66,11 +66,16 @@ export function DashboardHeader({
   }, [customers, loans, installments]);
 
   return (
-    <header className="flex items-center justify-between pt-6 px-4 mb-8">
-      {/* Left: Bold Title */}
-      <h1 className="text-4xl font-extrabold text-foreground tracking-tight">
-        Home
-      </h1>
+    <header className="flex items-center justify-between pt-6 px-4 mb-6">
+      {/* Left: Gradient Title */}
+      <div className="flex flex-col">
+        <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground mb-0.5">
+          {greeting}
+        </span>
+        <h1 className="text-[2.2rem] font-extrabold tracking-tight leading-none bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
+          Home
+        </h1>
+      </div>
 
       {/* Right: Circular Icon Buttons */}
       <div className="flex items-center gap-3">
