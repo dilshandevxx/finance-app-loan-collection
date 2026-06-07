@@ -65,7 +65,7 @@ export function FeaturedSections({ customers, installments, loans }: Props) {
       value: formatLKRShort(overdueAmount),
       trend: "Needs attention",
       icon: <AlertTriangle className="w-5 h-5 text-rose-400" />,
-      href: "/",
+      href: "/customers?filter=overdue",
       color: "from-rose-500/10 to-rose-500/5",
       iconBg: "bg-rose-500/20",
     }

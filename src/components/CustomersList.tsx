@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
@@ -19,9 +20,18 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   const [localLoans, setLocalLoans] = useState<Loan[]>(loans);
   const [localInstallments, setLocalInstallments] = useState<Installment[]>(installments);
 
+  const searchParams = useSearchParams();
+  const filterParam = searchParams.get("filter");
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"active" | "settled">("active");
   const [selectedVillage, setSelectedVillage] = useState<string>("");
+
+  useEffect(() => {
+    if (filterParam === "overdue") {
+      setActiveTab("active");
+    }
+  }, [filterParam]);
 
   const loadFromCache = async () => {
     try {
@@ -111,9 +121,19 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   });
 
   // Split search results between the active tab
-  const displayCustomers = activeTab === "active"
+  let displayCustomers = activeTab === "active"
     ? filteredCustomers.filter(c => allActiveCustomers.some(ac => ac.id === c.id))
     : filteredCustomers.filter(c => allSettledCustomers.some(sc => sc.id === c.id));
+
+  // Apply Overdue filter if param is present
+  if (filterParam === "overdue") {
+    displayCustomers = displayCustomers.filter(customer => {
+      const customerLoans = localLoans.filter(l => l.customerId === customer.id && l.status === "ACTIVE");
+      return customerLoans.some(l => 
+        localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+      );
+    });
+  }
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
