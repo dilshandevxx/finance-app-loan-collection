@@ -36,7 +36,7 @@ export function BigPortfolioHeader({ loans, customers }: BigPortfolioHeaderProps
   const bestCustomer = customers?.find(c => c.id === bestCustomerId);
 
   // Settled Loans Count
-  const settledLoansCount = loans.filter(l => l.status === "PAID").length;
+  const settledLoansCount = loans.filter(l => l.status === "PAID_OFF").length;
 
   return (
     <div className="w-full relative rounded-[2rem] overflow-hidden bg-[#0a0514] border border-white/10 shadow-2xl mb-2 transition-all duration-500">
