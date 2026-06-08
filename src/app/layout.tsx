@@ -37,6 +37,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { OfflineProvider } from "@/components/OfflineProvider";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { LayoutWrapper } from "@/components/LayoutWrapper";
+import NextTopLoader from 'nextjs-toploader';
 
 export default function RootLayout({
   children,
@@ -50,6 +51,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 md:pb-0 relative overflow-x-hidden sm:overflow-x-auto min-w-[320px] [@media(pointer:fine)]:min-w-[1024px]">
+        <NextTopLoader color="#10B981" showSpinner={false} />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <OfflineProvider>
 
