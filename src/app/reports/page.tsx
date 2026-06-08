@@ -2,6 +2,8 @@ import { ReportsDashboardWrapper } from "@/components/ReportsDashboardWrapper";
 import { BottomNav } from "@/components/BottomNav";
 import { getCustomers, getInstallments, getLoans, getCompanySettings } from "@/data/db";
 
+import { BigPortfolioHeader } from "@/components/BigPortfolioHeader";
+
 export const dynamic = 'force-dynamic';
 
 export default async function ReportsPage() {
@@ -20,6 +22,10 @@ export default async function ReportsPage() {
           Analytics
         </span>
       </header>
+
+      <div className="md:hidden px-4">
+        <BigPortfolioHeader loans={loans} customers={customers} />
+      </div>
 
       <ReportsDashboardWrapper 
         installments={installments} 

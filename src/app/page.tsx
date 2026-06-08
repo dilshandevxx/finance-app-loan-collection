@@ -12,7 +12,6 @@ import { TopOverdueCard } from "@/components/TopOverdueCard";
 import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
 import { FeaturedSections } from "@/components/FeaturedSections";
-import { BigPortfolioHeader } from "@/components/BigPortfolioHeader";
 import { DesktopHomeGrid } from "@/components/DesktopHomeGrid";
 import { createClient } from "@/utils/supabase/server";
 
@@ -104,9 +103,6 @@ export default async function Home() {
           activeLoans={activeLoans}
           overdueAmount={overdueAmount}
         />
-
-        {/* Big Portfolio Header on Home */}
-        <BigPortfolioHeader loans={loans} customers={customers} />
 
         {/* Featured Sections (Horizontally Scrollable Cards) */}
         <FeaturedSections
