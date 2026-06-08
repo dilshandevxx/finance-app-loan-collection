@@ -9,6 +9,7 @@ import { Installment, Loan, Customer } from "@/data/db";
 import { markInstallmentPaid } from "@/app/actions";
 import { formatLKR, phoneToDial } from "@/lib/format";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
+import { SidePanel } from "@/components/SidePanel";
 
 type DashboardRosterProps = {
   pendingInstallments: Installment[];
@@ -29,6 +30,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
     expectedAmount: number;
   } | null>(null);
   const [selectedVillage, setSelectedVillage] = useState<string>("");
+  const [sidePanelCustomer, setSidePanelCustomer] = useState<Customer | null>(null);
 
   const loadFromCache = async () => {
     try {
@@ -383,9 +385,12 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                           </div>
                         </td>
                         <td className="p-4 text-center">
-                          <Link href={`/customers/${customer.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground text-muted-foreground transition-colors duration-200 shadow-sm group-hover:scale-110">
+                          <button 
+                            onClick={(e) => { e.preventDefault(); setSidePanelCustomer(customer); }}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground text-muted-foreground transition-colors duration-200 shadow-sm group-hover:scale-110"
+                          >
                             <ArrowRight className="w-4 h-4" />
-                          </Link>
+                          </button>
                         </td>
                       </tr>
                     );
@@ -407,6 +412,14 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
           onConfirm={handleConfirmPayment}
         />
       )}
+
+      <SidePanel
+        isOpen={!!sidePanelCustomer}
+        onClose={() => setSidePanelCustomer(null)}
+        customer={sidePanelCustomer}
+        loans={localLoans}
+        installments={localInstallments}
+      />
     </section>
   );
 }

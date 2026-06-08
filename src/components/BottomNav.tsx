@@ -161,11 +161,27 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
           })}
         </nav>
 
-        {/* Bottom */}
-        <div className="mt-auto pt-6 border-t border-border w-full flex flex-col gap-4">
-          <div className="flex items-center justify-between px-4">
-            <span className="text-xs font-semibold text-muted-foreground">Theme</span>
-            <ThemeToggle />
+        {/* Bottom Section with Extra Info (Desktop Only) */}
+        <div className="mt-auto w-full flex flex-col gap-4">
+          <div className="mx-4 p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Map className="w-12 h-12" />
+            </div>
+            <h4 className="text-[11px] font-black uppercase tracking-widest text-primary mb-1 relative z-10">System Status</h4>
+            <div className="flex items-center gap-2 relative z-10">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-[13px] font-semibold text-foreground">All systems operational</span>
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-border w-full flex flex-col gap-4">
+            <div className="flex items-center justify-between px-4">
+              <span className="text-xs font-semibold text-muted-foreground">Theme</span>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </aside>
