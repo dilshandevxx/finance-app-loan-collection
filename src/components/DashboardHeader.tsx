@@ -69,7 +69,7 @@ export function DashboardHeader({
   return (
     <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-4 pt-6 mb-4 md:mb-8">
       {/* Mobile Header (Hidden on Desktop) */}
-      <div className="flex md:hidden items-center justify-between w-full">
+      <div className="flex md:hidden [@media(pointer:fine)]:hidden items-center justify-between w-full">
         <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/10 shrink-0 bg-primary/20 flex items-center justify-center">
           {agentAvatar ? (
              <img src={agentAvatar} alt={agentName} className="w-full h-full object-cover" />
@@ -88,7 +88,7 @@ export function DashboardHeader({
       </div>
 
       {/* Desktop Header (Hidden on Mobile) */}
-      <div className="hidden md:flex items-center gap-5 w-full lg:w-auto">
+      <div className="hidden md:flex [@media(pointer:fine)]:flex items-center gap-5 w-full lg:w-auto">
         {/* Engaging Avatar */}
         <div className="relative shrink-0">
           <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 bg-[#0A0514] shadow-2xl flex items-center justify-center">
@@ -120,7 +120,7 @@ export function DashboardHeader({
       </div>
 
       {/* Right: Action Buttons (Desktop Only) */}
-      <div className="hidden md:flex items-center gap-4 w-full lg:w-auto mt-2 lg:mt-0">
+      <div className="hidden md:flex [@media(pointer:fine)]:flex items-center gap-4 w-full lg:w-auto mt-2 lg:mt-0">
         
         {/* Global Search Button */}
         <button 

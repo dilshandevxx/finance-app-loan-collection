@@ -25,7 +25,7 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
       {/* ─────────────────────────────────────────────
           MOBILE: Bottom tab bar
           ───────────────────────────────────────────── */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 ${hideOnMobile ? 'hidden' : ''}`}>
+      <div className={`md:hidden [@media(pointer:fine)]:hidden fixed bottom-0 left-0 right-0 z-50 ${hideOnMobile ? 'hidden' : ''}`}>
         <nav className="
           flex items-center
           bg-card/80 dark:bg-card/60 backdrop-blur-3xl
@@ -85,7 +85,7 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
       {/* ─────────────────────────────────────────────
           DESKTOP: Fixed full-height left sidebar
           ───────────────────────────────────────────── */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[260px] flex-col items-start z-50
+      <aside className="hidden md:flex [@media(pointer:fine)]:flex fixed left-0 top-0 h-screen w-[260px] flex-col items-start z-50
         bg-card border-r border-border
         py-8 px-5 gap-6
       ">

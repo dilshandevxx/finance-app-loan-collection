@@ -49,7 +49,7 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${geistMono.variable} h-full antialiased bg-background`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 md:pb-0 relative overflow-x-hidden">
+      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 md:pb-0 relative overflow-x-hidden sm:overflow-x-auto min-w-[320px] [@media(pointer:fine)]:min-w-[1024px]">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <OfflineProvider>
 
