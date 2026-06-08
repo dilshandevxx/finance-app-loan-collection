@@ -13,6 +13,7 @@ import { VillageCollectionBars } from "@/components/VillageCollectionBars";
 import { MobileDashboardSections } from "@/components/MobileDashboardSections";
 import { FeaturedSections } from "@/components/FeaturedSections";
 import { DesktopHomeGrid } from "@/components/DesktopHomeGrid";
+import { DailyMotivationCard } from "@/components/DailyMotivationCard";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
@@ -102,6 +103,12 @@ export default async function Home() {
           collectedClientsToday={collectedClientsToday}
           activeLoans={activeLoans}
           overdueAmount={overdueAmount}
+        />
+
+        {/* Daily Motivation (Replaced Portfolio Section) */}
+        <DailyMotivationCard 
+          collectedToday={collectedToday}
+          expectedToday={expectedToday}
         />
 
         {/* Featured Sections (Horizontally Scrollable Cards) */}
