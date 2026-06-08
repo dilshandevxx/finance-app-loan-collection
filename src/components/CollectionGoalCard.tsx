@@ -115,45 +115,63 @@ export function CollectionGoalCard({
       <div className="grid grid-cols-3 gap-2.5 md:gap-4">
 
         {/* Clients Paid */}
-        <div className="group relative flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10 hover:-translate-y-0.5 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all">
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max px-3 py-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+        <div className="group relative flex flex-col justify-between w-full min-h-[130px] p-4 rounded-[1.5rem] bg-[#0A0514] border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#34d399]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max px-3 py-2 bg-[#0A0514] backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] shadow-[0_0_8px_#34d399]" />
             Rs. {fmt(collectedToday)} collected so far
           </div>
-          <div className="flex items-center justify-between">
-            <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-emerald-400">Paid</span>
+
+          <div className="relative flex flex-col gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#34d399]/20 flex items-center justify-center text-[#34d399] shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 leading-tight">Clients<br/>Paid</span>
           </div>
-          <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{collectedClientsToday}</span>
-          <span className="text-[9px] md:text-xs text-muted-foreground font-medium">clients</span>
+          <div className="relative flex flex-col mt-auto">
+            <span className="text-2xl font-black text-white tracking-tighter leading-none">{collectedClientsToday}</span>
+          </div>
         </div>
 
         {/* Pending */}
-        <div className="group relative flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10 hover:-translate-y-0.5 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all">
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max px-3 py-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
-            Rs. {fmt(Math.max(0, expectedToday - collectedToday))} pending collection
+        <div className="group relative flex flex-col justify-between w-full min-h-[130px] p-4 rounded-[1.5rem] bg-[#0A0514] border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#f59e0b]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max px-3 py-2 bg-[#0A0514] backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] shadow-[0_0_8px_#f59e0b]" />
+            Rs. {fmt(Math.max(0, expectedToday - collectedToday))} pending
           </div>
-          <div className="flex items-center justify-between">
-            <Clock className="w-4 h-4 md:w-5 md:h-5 text-amber-400 group-hover:scale-110 transition-transform" />
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-amber-400">Due</span>
+
+          <div className="relative flex flex-col gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#f59e0b]/20 flex items-center justify-center text-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+              <Clock className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 leading-tight">Pending<br/>Dues</span>
           </div>
-          <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{pendingClients}</span>
-          <span className="text-[9px] md:text-xs text-muted-foreground font-medium">pending</span>
+          <div className="relative flex flex-col mt-auto">
+            <span className="text-2xl font-black text-white tracking-tighter leading-none">{pendingClients}</span>
+          </div>
         </div>
 
         {/* Active Loans */}
-        <div className="group relative flex flex-col gap-1.5 p-4 md:p-5 rounded-[1.5rem] bg-card border border-white/5 shadow-md shadow-black/10 hover:-translate-y-0.5 hover:border-violet-500/30 hover:bg-violet-500/5 transition-all">
-          <div className="absolute -top-12 right-0 md:left-1/2 md:-translate-x-1/2 w-max px-3 py-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-3">
-            <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {Math.max(0, activeLoans - 4)} Good</div>
-            <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-destructive" /> 4 Overdue</div>
+        <div className="group relative flex flex-col justify-between w-full min-h-[130px] p-4 rounded-[1.5rem] bg-[#0A0514] border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#8b5cf6]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <div className="absolute -top-12 right-0 md:left-1/2 md:-translate-x-1/2 w-max px-3 py-2 bg-[#0A0514] backdrop-blur-md border border-white/10 rounded-xl shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all pointer-events-none z-50 text-[11px] font-bold text-white flex items-center gap-3">
+             <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#34d399]" /> {Math.max(0, activeLoans - 4)} Good</div>
+             <div className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-destructive" /> 4 Overdue</div>
           </div>
-          <div className="flex items-center justify-between">
-            <Users className="w-4 h-4 md:w-5 md:h-5 text-violet-400 group-hover:scale-110 transition-transform" />
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-violet-400">Active</span>
+
+          <div className="relative flex flex-col gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#8b5cf6]/20 flex items-center justify-center text-[#8b5cf6] shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+              <Users className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 leading-tight">Active<br/>Loans</span>
           </div>
-          <span className="text-2xl md:text-3xl font-black text-foreground leading-none">{activeLoans}</span>
-          <span className="text-[9px] md:text-xs text-muted-foreground font-medium">loans</span>
+          <div className="relative flex flex-col mt-auto">
+            <span className="text-2xl font-black text-white tracking-tighter leading-none">{activeLoans}</span>
+          </div>
         </div>
 
       </div>
