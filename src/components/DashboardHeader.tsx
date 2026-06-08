@@ -69,41 +69,36 @@ export function DashboardHeader({
   return (
     <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-4 pt-6 mb-4 md:mb-8">
       {/* Mobile Header (Hidden on Desktop) */}
-      <div className="flex md:hidden [@media(pointer:fine)]:hidden items-center justify-between w-full bg-card/60 backdrop-blur-2xl border border-white/5 rounded-[1.75rem] p-3 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+      <div className="flex md:hidden [@media(pointer:fine)]:hidden items-center justify-between w-full pb-2">
         <div className="flex items-center gap-3">
-          {/* Avatar with Online Indicator */}
-          <div className="relative shrink-0">
-            <div className="w-12 h-12 rounded-[1rem] overflow-hidden border border-primary/20 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-inner">
+          {/* Clean Avatar */}
+          <div className="relative">
+            <div className="w-11 h-11 rounded-full overflow-hidden bg-secondary border-[1.5px] border-border flex items-center justify-center">
               {agentAvatar ? (
                  <img src={agentAvatar} alt={agentName} className="w-full h-full object-cover" />
               ) : (
-                 <span className="text-primary text-lg font-black">{agentName.charAt(0).toUpperCase()}</span>
+                 <span className="text-primary text-base font-black">{agentName.charAt(0).toUpperCase()}</span>
               )}
             </div>
-            <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-[2.5px] border-background rounded-full shadow-[0_0_10px_rgba(16,185,129,0.6)] animate-pulse" />
+            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-background rounded-full" />
           </div>
           
-          {/* Greeting & Name */}
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.15em]">{greeting}</span>
-              <Icon className={`w-3 h-3 ${iconClass.split(' ')[0]}`} />
-            </div>
-            <span className="text-[17px] font-black text-foreground tracking-tight leading-tight mt-0.5">
-              {agentName}
-            </span>
+          {/* Clean Text */}
+          <div className="flex flex-col">
+            <span className="text-[12px] font-medium text-muted-foreground leading-tight">{greeting}</span>
+            <span className="text-[18px] font-bold text-foreground leading-tight">{agentName}</span>
           </div>
         </div>
 
-        {/* Quick Actions (Search & Notifications) */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Clean Action Icons */}
+        <div className="flex items-center gap-1">
           <button 
             onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-            className="w-10 h-10 rounded-full bg-secondary hover:bg-white/10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors border border-white/5 shadow-sm active:scale-95"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground active:bg-secondary/80 transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </button>
-          <div className="shrink-0 bg-secondary hover:bg-white/10 border border-white/5 p-1 rounded-full shadow-sm transition-colors active:scale-95">
+          <div className="flex items-center justify-center">
             <NotificationPanel
               customers={customers}
               loans={loans}
