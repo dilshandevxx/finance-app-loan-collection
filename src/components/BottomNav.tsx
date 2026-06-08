@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, Plus, Settings, FileText, Map, Bell } from "lucide-react";
+import { Home, Users, Plus, Settings, FileText, Map, Bell, Loader2 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
@@ -19,6 +20,11 @@ const SECONDARY_NAV = [
 
 export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } = {}) {
   const pathname = usePathname();
+  const [loadingPath, setLoadingPath] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoadingPath(null);
+  }, [pathname]);
 
   return (
     <>
@@ -38,8 +44,9 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
         ">
           {NAV.slice(0, 2).map(({ href, Icon, label }) => {
             const active = pathname === href;
+            const isLoading = loadingPath === href;
             return (
-              <Link key={href} href={href} className={`
+              <Link key={href} href={href} onClick={() => !active && setLoadingPath(href)} className={`
                 relative flex flex-col items-center justify-center gap-0.5
                 flex-1 p-2 rounded-2xl transition-all duration-200
                 ${active ? "text-primary" : "text-muted-foreground"}
@@ -47,7 +54,11 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
                 {active && (
                   <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-primary" />
                 )}
-                <Icon className="w-5 h-5 shrink-0" />
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 shrink-0 animate-spin" />
+                ) : (
+                  <Icon className="w-5 h-5 shrink-0" />
+                )}
                 <span className="text-[10px] font-bold">{label}</span>
               </Link>
             );
@@ -65,8 +76,9 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
 
           {NAV.slice(2).map(({ href, Icon, label }) => {
             const active = pathname === href;
+            const isLoading = loadingPath === href;
             return (
-              <Link key={href} href={href} className={`
+              <Link key={href} href={href} onClick={() => !active && setLoadingPath(href)} className={`
                 relative flex flex-col items-center justify-center gap-0.5
                 flex-1 p-2 rounded-2xl transition-all duration-200
                 ${active ? "text-primary" : "text-muted-foreground"}
@@ -74,7 +86,11 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
                 {active && (
                   <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-primary" />
                 )}
-                <Icon className="w-5 h-5 shrink-0" />
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 shrink-0 animate-spin" />
+                ) : (
+                  <Icon className="w-5 h-5 shrink-0" />
+                )}
                 <span className="text-[10px] font-bold">{label}</span>
               </Link>
             );
