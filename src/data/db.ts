@@ -449,7 +449,7 @@ export async function removeSystemVillage(villageName: string): Promise<{ succes
   return { success: true };
 }
 
-export async function getCompanySettings(): Promise<{ name: string; logo: string }> {
+export async function getCompanySettings(): Promise<{ name: string; logo: string; phone: string }> {
   const supabase = await createClient();
   const { data: nameData } = await supabase
     .from("system_settings")
@@ -463,13 +463,20 @@ export async function getCompanySettings(): Promise<{ name: string; logo: string
     .eq("key", "company_logo")
     .maybeSingle();
 
+  const { data: phoneData } = await supabase
+    .from("system_settings")
+    .select("value")
+    .eq("key", "company_phone")
+    .maybeSingle();
+
   return {
     name: nameData?.value || "",
-    logo: logoData?.value || ""
+    logo: logoData?.value || "",
+    phone: phoneData?.value || ""
   };
 }
 
-export async function updateCompanySettings(name: string, logo: string): Promise<{ success: boolean; error?: string }> {
+export async function updateCompanySettings(name: string, logo: string, phone: string): Promise<{ success: boolean; error?: string }> {
   const supabase = await createClient();
   const { error: nameError } = await supabase
     .from("system_settings")
@@ -493,6 +500,18 @@ export async function updateCompanySettings(name: string, logo: string): Promise
 
   if (logoError) {
     return { success: false, error: logoError.message };
+  }
+
+  const { error: phoneError } = await supabase
+    .from("system_settings")
+    .upsert({
+      key: "company_phone",
+      value: phone.trim(),
+      updated_at: new Date().toISOString()
+    });
+
+  if (phoneError) {
+    return { success: false, error: phoneError.message };
   }
 
   return { success: true };
