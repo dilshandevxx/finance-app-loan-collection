@@ -115,11 +115,11 @@ export function SidePanel({ isOpen, onClose, customer, loans, installments }: Si
               <div className="bg-card border border-border rounded-2xl p-4 shadow-sm space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-semibold text-muted-foreground">Amount</span>
-                  <span className="text-sm font-black text-foreground">{formatLKR(activeLoan.amount)}</span>
+                  <span className="text-sm font-black text-foreground">{formatLKR(activeLoan.principalAmount)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-semibold text-muted-foreground">Type</span>
-                  <span className="text-xs font-bold bg-secondary px-2 py-1 rounded-md text-foreground">{activeLoan.scheduleType}</span>
+                  <span className="text-xs font-bold bg-secondary px-2 py-1 rounded-md text-foreground">Weekly</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-semibold text-muted-foreground">Start Date</span>
