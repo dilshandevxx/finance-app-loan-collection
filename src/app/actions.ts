@@ -531,34 +531,44 @@ export async function fetchSystemVillages() {
   return [];
 }
 
-export async function createSystemVillage(villageName: string) {
-  const villages = await fetchSystemVillages();
-  if (!villages.includes(villageName)) {
-    villages.push(villageName);
-    const supabase = await createClient();
-    await supabase.from("system_settings").upsert({
-      key: "system_villages",
-      value: JSON.stringify(villages),
-      updated_at: new Date().toISOString()
-    });
-    revalidatePath("/villages");
+export async function createSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const villages = await fetchSystemVillages();
+    if (!villages.includes(villageName)) {
+      villages.push(villageName);
+      const supabase = await createClient();
+      const { error } = await supabase.from("system_settings").upsert({
+        key: "system_villages",
+        value: JSON.stringify(villages),
+        updated_at: new Date().toISOString()
+      });
+      if (error) return { success: false, error: error.message };
+      revalidatePath("/villages");
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || "Unknown error occurred" };
   }
-  return { success: true };
 }
 
-export async function deleteSystemVillage(villageName: string) {
-  const villages = await fetchSystemVillages();
-  if (villages.includes(villageName)) {
-    const updatedVillages = villages.filter(v => v !== villageName);
-    const supabase = await createClient();
-    await supabase.from("system_settings").upsert({
-      key: "system_villages",
-      value: JSON.stringify(updatedVillages),
-      updated_at: new Date().toISOString()
-    });
-    revalidatePath("/villages");
+export async function deleteSystemVillage(villageName: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const villages = await fetchSystemVillages();
+    if (villages.includes(villageName)) {
+      const updatedVillages = villages.filter(v => v !== villageName);
+      const supabase = await createClient();
+      const { error } = await supabase.from("system_settings").upsert({
+        key: "system_villages",
+        value: JSON.stringify(updatedVillages),
+        updated_at: new Date().toISOString()
+      });
+      if (error) return { success: false, error: error.message };
+      revalidatePath("/villages");
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || "Unknown error occurred" };
   }
-  return { success: true };
 }
 
 export async function fetchCompanySettings() {
