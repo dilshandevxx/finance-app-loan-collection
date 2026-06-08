@@ -4,6 +4,11 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { formatLKR, normalizePhone } from "@/lib/format";
+import { getCompanySettings as getCompanySettingsDB } from "@/data/db";
+
+export async function getCompanySettingsAction() {
+  return await getCompanySettingsDB();
+}
 
 export async function createLoan(formData: FormData) {
   const supabase = await createClient();
@@ -300,8 +305,7 @@ export async function getReceiptDetails(installmentId: string) {
       .select("*")
       .eq("loan_id", loan.id)
       .order("due_date", { ascending: true });
-
-    if (allInstError || !allInstallments) {
+    if (allInstError || !allInstallments) {
       console.error("Error fetching all installments for receipt:", allInstError);
       return null;
     }
@@ -318,6 +322,48 @@ export async function getReceiptDetails(installmentId: string) {
     // The current remaining_balance in DB is AFTER payment deduction.
     // Compute the previous balance (before this payment) for receipt clarity.
     const currentRemainingBalance = Number(loan.remaining_balance);
+
+    // 5. Fetch Company Settings
+    const { data: nameData } = await supabase.from("system_settings").select("value").eq("key", "company_name").maybeSingle();
+    const { data: phoneData } = await supabase.from("system_settings").select("value").eq("key", "company_phone").maybeSingle();
+
+    return {
+      installment: {
+        id: installment.id,
+        amount: Number(installment.amount),
+        dueDate: installment.due_date,
+        paidDate: installment.paid_date,
+        status: installment.status,
+        index: instIndex,
+        totalCount: totalInstallmentsCount,
+      },
+      loan: {
+        id: loan.id,
+        principalAmount: Number(loan.principal_amount),
+        totalAmountDue: Number(loan.total_amount_due),
+        remainingBalance: currentRemainingBalance,
+        previousBalance: currentRemainingBalance + Number(installment.amount),
+        weeklyInstallment: Number(loan.weekly_installment),
+        totalPaid,
+      },
+      customer: {
+        name: customer.name,
+        phone: customer.phone,
+        memberId: customer.member_id,
+        idNumber: customer.nic_number,
+        address: customer.address,
+      },
+      companyName: nameData?.value || undefined,
+      agentPhone: phoneData?.value || undefined,
+    };
+  } catch (error) {
+    console.error("Error in getReceiptDetails:", error);
+    return null;
+  }
+}
+
+export async function fetchTomorrowsWork() {
+  const supabase = await createClient();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toISOString().split("T")[0];

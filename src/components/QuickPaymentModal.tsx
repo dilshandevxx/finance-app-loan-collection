@@ -5,7 +5,7 @@ import { X, CheckCircle2, MessageCircle } from "lucide-react";
 import { Customer } from "@/data/db";
 import { config } from "@/lib/config";
 import { formatLKR, phoneToDial, formatLKPhone } from "@/lib/format";
-import { getReceiptDetails } from "@/app/actions";
+import { getReceiptDetails, getCompanySettingsAction } from "@/app/actions";
 
 type QuickPaymentModalProps = {
   customer: Customer;
@@ -71,8 +71,24 @@ export function QuickPaymentModal({
         setIsProcessing(false);
         setReceiptData(null);
         setIsSharingPdf(false);
+        
+        // Default to localStorage first
         setAgentCompany(localStorage.getItem("agentCompany") || "");
         setAgentPhone(localStorage.getItem("agentPhone") || "");
+        
+        // Then override with Supabase settings if configured
+        getCompanySettingsAction().then(settings => {
+          if (settings) {
+            if (settings.name) {
+              setAgentCompany(settings.name);
+              localStorage.setItem("agentCompany", settings.name);
+            }
+            if (settings.phone) {
+              setAgentPhone(settings.phone);
+              localStorage.setItem("agentPhone", settings.phone);
+            }
+          }
+        }).catch(console.error);
       });
       return () => cancelAnimationFrame(handle);
     }
