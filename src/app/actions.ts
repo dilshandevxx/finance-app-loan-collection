@@ -508,3 +508,55 @@ export async function editInstallment(installmentId: string, status: string, amo
 
   return { success: true };
 }
+
+export async function clearAllData() {
+  const supabase = await createClient();
+  const { error } = await supabase.from("customers").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true };
+}
+
+export async function fetchSystemVillages() {
+  const supabase = await createClient();
+  const { data } = await supabase.from("system_settings").select("value").eq("key", "system_villages").maybeSingle();
+  if (data?.value) {
+    try {
+      return JSON.parse(data.value) as string[];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+export async function createSystemVillage(villageName: string) {
+  const villages = await fetchSystemVillages();
+  if (!villages.includes(villageName)) {
+    villages.push(villageName);
+    const supabase = await createClient();
+    await supabase.from("system_settings").upsert({
+      key: "system_villages",
+      value: JSON.stringify(villages),
+      updated_at: new Date().toISOString()
+    });
+  }
+  return { success: true };
+}
+
+export async function fetchCompanySettings() {
+  const { getCompanySettings } = await import("@/data/db");
+  return await getCompanySettings();
+}
+
+export async function saveCompanySettings(name: string, logo: string, phone: string = "") {
+  const { updateCompanySettings, getCompanySettings } = await import("@/data/db");
+  const currentSettings = await getCompanySettings();
+  const finalPhone = phone || currentSettings.phone || "";
+  const res = await updateCompanySettings(name, logo, finalPhone);
+  revalidatePath("/settings");
+  revalidatePath("/");
+  return res;
+}
+
