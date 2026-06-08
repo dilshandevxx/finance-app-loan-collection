@@ -59,6 +59,8 @@ export function QuickPaymentModal({
   const [isOfflineSaved, setIsOfflineSaved] = useState(false);
   const [receiptData, setReceiptData] = useState<ReceiptDetails | null>(null);
   const [isSharingPdf, setIsSharingPdf] = useState(false);
+  const [agentCompany, setAgentCompany] = useState("");
+  const [agentPhone, setAgentPhone] = useState("");
 
   useEffect(() => {
     if (isOpen) {
@@ -69,12 +71,17 @@ export function QuickPaymentModal({
         setIsProcessing(false);
         setReceiptData(null);
         setIsSharingPdf(false);
+        setAgentCompany(localStorage.getItem("agentCompany") || "");
+        setAgentPhone(localStorage.getItem("agentPhone") || "");
       });
       return () => cancelAnimationFrame(handle);
     }
   }, [isOpen, expectedAmount]);
 
   if (!isOpen) return null;
+
+  const handleCompanyChange = (v: string) => { setAgentCompany(v); localStorage.setItem("agentCompany", v); };
+  const handlePhoneChange = (v: string) => { setAgentPhone(v); localStorage.setItem("agentPhone", v); };
 
   const handleConfirm = async () => {
     setIsProcessing(true);
@@ -173,7 +180,8 @@ export function QuickPaymentModal({
       const newBal = receiptData.loan.remainingBalance;
       message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `🏢 *${receiptData.companyName || config.appName}*\n` +
+        `🏢 *${agentCompany || receiptData.companyName || config.appName}*\n` +
+        (agentPhone ? `📞 *${agentPhone}*\n` : '') +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
@@ -207,7 +215,8 @@ export function QuickPaymentModal({
     } else {
       message = `🧾 *OFFICIAL RECEIPT* 🧾\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `🏢 *${config.appName}*\n` +
+        `🏢 *${agentCompany || config.appName}*\n` +
+        (agentPhone ? `📞 *${agentPhone}*\n` : '') +
         `━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `*Receipt No:* ${receiptId}\n` +
         `*Date:* ${dateStr}\n` +
@@ -273,7 +282,8 @@ export function QuickPaymentModal({
         installmentNo: receiptData
           ? `${receiptData.installment.index} of ${receiptData.installment.totalCount}`
           : "1 (Offline)",
-        companyName: receiptData?.companyName || config.appName,
+        companyName: agentCompany || receiptData?.companyName || config.appName,
+        agentPhone: agentPhone || undefined,
       };
 
       // Generate PDF
@@ -462,6 +472,24 @@ export function QuickPaymentModal({
             </div>
 
             <div className="p-4 sm:p-6 pt-0">
+              <div className="flex flex-col gap-3 mb-6 bg-gray-50 dark:bg-muted/50 p-4 rounded-2xl border border-gray-100 dark:border-border">
+                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Receipt Details</p>
+                <input
+                  type="text"
+                  placeholder="Company/Agent Name"
+                  value={agentCompany}
+                  onChange={(e) => handleCompanyChange(e.target.value)}
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-primary"
+                />
+                <input
+                  type="text"
+                  placeholder="Agent Phone Number"
+                  value={agentPhone}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  className="w-full bg-white dark:bg-card border border-gray-200 dark:border-border rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-primary"
+                />
+              </div>
+
               <button
                 onClick={handleConfirm}
                 disabled={isProcessing}
