@@ -541,6 +541,22 @@ export async function createSystemVillage(villageName: string) {
       value: JSON.stringify(villages),
       updated_at: new Date().toISOString()
     });
+    revalidatePath("/villages");
+  }
+  return { success: true };
+}
+
+export async function deleteSystemVillage(villageName: string) {
+  const villages = await fetchSystemVillages();
+  if (villages.includes(villageName)) {
+    const updatedVillages = villages.filter(v => v !== villageName);
+    const supabase = await createClient();
+    await supabase.from("system_settings").upsert({
+      key: "system_villages",
+      value: JSON.stringify(updatedVillages),
+      updated_at: new Date().toISOString()
+    });
+    revalidatePath("/villages");
   }
   return { success: true };
 }
