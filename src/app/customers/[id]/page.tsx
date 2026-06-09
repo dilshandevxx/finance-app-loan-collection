@@ -104,54 +104,77 @@ export default async function CustomerDetails({ params }: Props) {
         <div className="md:col-span-5 flex flex-col gap-4">
 
           {/* Profile Card */}
-          <div className="flex flex-col items-center bg-white dark:bg-card border border-gray-200 dark:border-border rounded-[2rem] p-8 shadow-sm relative">
+          <div className="flex flex-col bg-card/80 backdrop-blur-2xl border border-border/40 rounded-[2.5rem] overflow-hidden shadow-xl shadow-foreground/5 relative">
+            
+            {/* Top Pattern / Gradient Background */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent z-0" />
 
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black border border-primary/20">
-              <TrendingUp className="w-3.5 h-3.5" />
-              {reliabilityScore}
-            </div>
-
-            <div className="w-24 h-24 rounded-full bg-gray-100 dark:bg-muted overflow-hidden relative mb-5 shadow-sm border border-gray-200 dark:border-border">
-              <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-            </div>
-
-            <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
-            <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
-            {customer.companyName && (
-              <span className="text-primary font-bold text-sm mt-1">{customer.companyName}</span>
-            )}
-            {customer.state && (
-              <span className="mt-2 px-3 py-1 text-xs font-black bg-primary/10 dark:bg-white/10 text-primary dark:text-white/80 rounded-full flex items-center gap-1 select-none">
-                📍 {customer.state}
-              </span>
-            )}
-
-            <CustomerContactActions customer={customer} />
-
-            <div className="mt-8 text-center w-full">
-              <span className="text-muted-foreground text-sm font-medium">Remaining Balance</span>
-              <div className="text-5xl font-bold tracking-tighter mt-1 text-foreground">
-                Rs. {formatLKRShort(loan.remainingBalance)}<span className="text-muted-foreground text-3xl">.{formatLKRDecimal(loan.remainingBalance)}</span>
+            <div className="p-8 pb-10 relative z-10 flex flex-col items-center">
+              
+              {/* Reliability Score */}
+              <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md text-foreground text-xs font-black border border-border shadow-sm">
+                <TrendingUp className="w-3.5 h-3.5 text-primary" />
+                {reliabilityScore}
               </div>
-            </div>
 
-            {/* Progress Bar */}
-            <div className="w-full mt-8">
-              <div className="flex justify-between text-xs font-medium text-muted-foreground mb-2">
-                <span>{paidCount} of {installments.length} Paid</span>
-                <span>{progressPercent}%</span>
+              <div className="w-24 h-24 rounded-full bg-secondary overflow-hidden relative mb-4 shadow-xl shadow-black/5 border-4 border-background">
+                <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
               </div>
-              <div className="w-full h-2 bg-gray-100 dark:bg-[#222] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-            </div>
 
-            {/* Desktop Actions */}
-            <div className="hidden md:flex mt-8 w-full">
-              <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
+              <h1 className="text-2xl font-black tracking-tight mb-1 text-foreground text-center leading-tight">{customer.name}</h1>
+              
+              <div className="flex items-center gap-2 mb-4 flex-wrap justify-center">
+                <span className="text-muted-foreground text-xs font-bold bg-secondary/80 px-2.5 py-1 rounded-md">
+                  ID: {customer.memberId || customer.id}
+                </span>
+                {customer.state && (
+                  <span className="px-2.5 py-1 text-xs font-bold bg-primary/10 text-primary rounded-md flex items-center gap-1">
+                    📍 {customer.state}
+                  </span>
+                )}
+              </div>
+              
+              {customer.companyName && (
+                <span className="text-foreground font-black text-sm mb-2">{customer.companyName}</span>
+              )}
+
+              <CustomerContactActions customer={customer} />
+
+              {/* Outstanding Balance Banner */}
+              <div className="mt-8 w-full bg-gradient-to-br from-secondary/50 to-secondary/10 rounded-3xl p-6 border border-border/50 flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay" />
+                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest relative z-10">Total Outstanding</span>
+                <div className="text-5xl font-black tracking-tighter mt-1 text-foreground flex items-baseline gap-1 relative z-10">
+                  <span className="text-xl text-muted-foreground font-bold">Rs.</span>
+                  {formatLKRShort(loan.remainingBalance)}
+                  <span className="text-muted-foreground text-2xl font-bold opacity-60">.{formatLKRDecimal(loan.remainingBalance)}</span>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="w-full mt-6 bg-secondary/30 p-5 rounded-3xl border border-border/40">
+                <div className="flex items-end justify-between text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2.5">
+                  <span className="text-foreground/80">Repayment Progress</span>
+                  <span className="text-primary text-sm">{progressPercent}%</span>
+                </div>
+                <div className="w-full h-2.5 bg-foreground/5 rounded-full overflow-hidden shadow-inner">
+                  <div
+                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out relative"
+                    style={{ width: `${progressPercent}%` }}
+                  >
+                    <div className="absolute inset-0 bg-white/20 w-full animate-pulse" />
+                  </div>
+                </div>
+                <div className="flex justify-between mt-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <span>{paidCount} Paid</span>
+                  <span>{installments.length} Total</span>
+                </div>
+              </div>
+
+              {/* Desktop Actions */}
+              <div className="hidden md:flex mt-6 w-full">
+                <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
+              </div>
             </div>
           </div>
 
@@ -189,8 +212,8 @@ export default async function CustomerDetails({ params }: Props) {
       </div>
 
       {/* Sticky Mobile Action Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
-        <div className="bg-card p-2 rounded-2xl border border-border shadow-2xl backdrop-blur-xl">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background/90 to-transparent z-50 pb-6">
+        <div className="bg-card/95 p-3 rounded-[2rem] border border-border/60 shadow-2xl backdrop-blur-2xl">
           <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
         </div>
       </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown } from "lucide-react";
+import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown, AlertCircle, Banknote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
 import { formatLKR, formatLKPhone } from "@/lib/format";
@@ -24,12 +24,16 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   const filterParam = searchParams.get("filter");
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"active" | "settled">("active");
+  const [activeTab, setActiveTab] = useState<"all" | "active" | "overdue" | "settled">("active");
   const [selectedVillage, setSelectedVillage] = useState<string>("");
 
   useEffect(() => {
     if (filterParam === "overdue") {
+      setActiveTab("overdue");
+    } else if (filterParam === "active") {
       setActiveTab("active");
+    } else if (filterParam === "settled") {
+      setActiveTab("settled");
     }
   }, [filterParam]);
 
@@ -120,37 +124,40 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
     return nameMatch || idMatch || phoneMatch || stateMatch;
   });
 
-  // Split search results between the active tab
-  let displayCustomers = activeTab === "active"
-    ? filteredCustomers.filter(c => allActiveCustomers.some(ac => ac.id === c.id))
-    : filteredCustomers.filter(c => allSettledCustomers.some(sc => sc.id === c.id));
+  // Determine overdue customers
+  const allOverdueCustomers = localCustomers.filter(customer => {
+    const customerLoans = localLoans.filter(l => l.customerId === customer.id && l.status === "ACTIVE");
+    return customerLoans.some(l => 
+      localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
+    );
+  });
 
-  // Apply Overdue filter if param is present
-  if (filterParam === "overdue") {
-    displayCustomers = displayCustomers.filter(customer => {
-      const customerLoans = localLoans.filter(l => l.customerId === customer.id && l.status === "ACTIVE");
-      return customerLoans.some(l => 
-        localInstallments.some(i => i.loanId === l.id && (i.status === "MISSED" || (i.status === "PENDING" && new Date(i.dueDate) < new Date(new Date().toDateString()))))
-      );
-    });
+  // Split search results based on active tab
+  let displayCustomers = filteredCustomers;
+  if (activeTab === "active") {
+    displayCustomers = filteredCustomers.filter(c => allActiveCustomers.some(ac => ac.id === c.id));
+  } else if (activeTab === "overdue") {
+    displayCustomers = filteredCustomers.filter(c => allOverdueCustomers.some(oc => oc.id === c.id));
+  } else if (activeTab === "settled") {
+    displayCustomers = filteredCustomers.filter(c => allSettledCustomers.some(sc => sc.id === c.id));
   }
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto">
 
       {/* Search and Village Filter */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full">
+      <div className="flex flex-col sm:flex-row gap-4 w-full mt-2">
         {/* Search Field */}
         <div className="relative flex-1 group">
           <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-foreground transition-colors" />
           </div>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search name, ID, phone, or area..."
-            className="w-full bg-card/50 backdrop-blur-xl border border-border/50 rounded-[1.5rem] pl-14 pr-4 py-4 text-[15px] font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all shadow-sm"
+            className="w-full bg-card/60 backdrop-blur-2xl border border-border/40 rounded-3xl pl-12 pr-4 py-4 text-[15px] font-semibold text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground/30 focus:ring-4 focus:ring-foreground/5 transition-all shadow-sm"
           />
         </div>
 
@@ -160,54 +167,51 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
             <select
               value={selectedVillage}
               onChange={(e) => setSelectedVillage(e.target.value)}
-              className="w-full bg-card/50 backdrop-blur-xl border border-border/50 rounded-[1.5rem] pl-5 pr-12 py-4 text-[15px] text-foreground focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all shadow-sm appearance-none font-medium cursor-pointer"
+              className="w-full bg-card/60 backdrop-blur-2xl border border-border/40 rounded-3xl pl-5 pr-12 py-4 text-[15px] text-foreground focus:outline-none focus:border-foreground/30 focus:ring-4 focus:ring-foreground/5 transition-all shadow-sm appearance-none font-semibold cursor-pointer"
             >
               <option value="">🌍 All Areas</option>
               {villages.map(v => (
                 <option key={v} value={v}>📍 {v}</option>
               ))}
             </select>
-            <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-muted-foreground group-hover:text-primary transition-colors">
+            <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-muted-foreground group-hover:text-foreground transition-colors">
               <ChevronDown className="w-5 h-5" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Segmented Tab Switcher */}
-      <div className="flex bg-secondary/50 backdrop-blur-md p-1.5 rounded-[1.25rem] w-full max-w-md mx-auto shadow-sm border border-border/50">
-        <button
-          onClick={() => setActiveTab("active")}
-          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${activeTab === "active"
-              ? "bg-card text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
-              : "text-muted-foreground hover:text-foreground"
-            }`}
-        >
-          <UserCheck className="w-4 h-4" />
-          Active Clients
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-wide ${activeTab === "active"
-              ? "bg-primary/10 text-primary"
-              : "bg-muted text-muted-foreground"
-            }`}>
-            {allActiveCustomers.length}
-          </span>
-        </button>
-        <button
-          onClick={() => setActiveTab("settled")}
-          className={`flex-1 flex items-center justify-center gap-2.5 py-3 text-sm font-bold rounded-xl transition-all active:scale-[0.98] ${activeTab === "settled"
-              ? "bg-card text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
-              : "text-muted-foreground hover:text-foreground"
-            }`}
-        >
-          <CheckCircle2 className="w-4 h-4" />
-          Settled
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-wide ${activeTab === "settled"
-              ? "bg-primary/10 text-primary"
-              : "bg-muted text-muted-foreground"
-            }`}>
-            {allSettledCustomers.length}
-          </span>
-        </button>
+      {/* Horizontal Filter Chips */}
+      <div className="w-full -mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex items-center gap-2.5 min-w-max">
+          {[
+            { id: "all", label: "All Clients", count: localCustomers.length, icon: null },
+            { id: "active", label: "Active", count: allActiveCustomers.length, icon: <UserCheck className="w-3.5 h-3.5" /> },
+            { id: "overdue", label: "Overdue", count: allOverdueCustomers.length, icon: <AlertCircle className="w-3.5 h-3.5" /> },
+            { id: "settled", label: "Settled", count: allSettledCustomers.length, icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold transition-all active:scale-95 ${
+                  isActive 
+                    ? "bg-foreground text-background shadow-md" 
+                    : "bg-card text-muted-foreground border border-border/50 hover:bg-secondary/80"
+                }`}
+              >
+                {tab.icon && <span className={isActive ? "opacity-80" : "opacity-60"}>{tab.icon}</span>}
+                {tab.label}
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-black tracking-wide ${
+                  isActive ? "bg-background/20 text-background" : "bg-muted text-muted-foreground"
+                }`}>
+                  {tab.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Grid / Table of Clients */}
@@ -241,76 +245,70 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                 );
 
                 return (
-                  <Link key={customer.id} href={`/customers/${customer.id}`} className="group outline-none block">
-                    <Card className="bg-card/80 backdrop-blur-sm border-border/60 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform group-hover:-translate-y-1 group-focus-visible:ring-4 ring-primary/20">
-                      <CardContent className="p-5 sm:p-6 flex flex-col gap-4">
+                  <div key={customer.id} className="group outline-none block">
+                    <Card className="bg-card/80 backdrop-blur-md border-border/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 relative group-focus-within:ring-4 ring-primary/20">
+                      <CardContent className="p-5 flex flex-col gap-5">
 
-                        {/* Top Section: Avatar & Info */}
-                        <div className="flex items-start gap-4">
-                          {/* Avatar */}
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/10 overflow-hidden relative shrink-0 shadow-md bg-secondary group-hover:scale-105 transition-transform duration-300">
-                            <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                          </div>
-
-                          {/* Info */}
-                          <div className="flex flex-col flex-1 min-w-0 pt-0.5">
-                            <div className="flex items-center justify-between gap-2 w-full mb-1">
-                              <span className="font-extrabold text-[17px] text-foreground truncate tracking-tight">{customer.name}</span>
-                              {isOverdue ? (
-                                <span className="px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 shrink-0 shadow-sm animate-pulse">Overdue</span>
-                              ) : activeLoan ? (
-                                <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20 shrink-0 shadow-sm">Active</span>
-                              ) : (
-                                <span className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] uppercase font-bold tracking-widest border border-border shrink-0 shadow-sm">Settled</span>
-                              )}
+                        {/* Top Row: Avatar, Name, Status */}
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-14 h-14 rounded-full border border-border/50 overflow-hidden relative shrink-0 shadow-sm bg-secondary">
+                              <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                             </div>
-
-                            <div className="flex items-center gap-2.5 text-[12px] text-muted-foreground min-w-0 flex-wrap font-semibold">
-                              {customer.state && (
-                                <span className="flex items-center gap-1 text-primary bg-primary/5 px-1.5 py-0.5 rounded-md shrink-0 border border-primary/10">
-                                  📍 {customer.state}
+                            <div className="flex flex-col pt-0.5">
+                              <span className="font-bold text-lg text-foreground tracking-tight leading-tight">{customer.name}</span>
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold mt-0.5">
+                                {customer.state && (
+                                  <span className="flex items-center">
+                                    {customer.state}
+                                  </span>
+                                )}
+                                {customer.state && customer.phone && "•"}
+                                <span className="flex items-center gap-1">
+                                  {formatLKPhone(customer.phone)}
                                 </span>
-                              )}
-                              <span className="shrink-0 flex items-center gap-1">
-                                <Phone className="w-3 h-3" />
-                                {formatLKPhone(customer.phone)}
-                              </span>
+                              </div>
                             </div>
+                          </div>
+                          
+                          {/* Status Badge */}
+                          <div className="shrink-0">
+                            {isOverdue ? (
+                              <span className="px-2.5 py-1 rounded-lg bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 shadow-sm animate-pulse">Overdue</span>
+                            ) : activeLoan ? (
+                              <span className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20 shadow-sm">Active</span>
+                            ) : (
+                              <span className="px-2.5 py-1 rounded-lg bg-secondary text-muted-foreground text-[10px] uppercase font-bold tracking-widest border border-border shadow-sm">Settled</span>
+                            )}
                           </div>
                         </div>
 
-                        {/* Bottom Section: Financials & Progress */}
-                        <div className="mt-2 pt-4 border-t border-border/50 flex flex-col gap-3">
-                          <div className="flex items-end justify-between">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-0.5">Balance</span>
-                              {activeLoan ? (
-                                <div className="flex items-baseline gap-1">
-                                  <span className="text-xs font-bold text-foreground/50">Rs.</span>
-                                  <span className={`font-black text-xl tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
-                                    {totalRemaining.toLocaleString("en-LK")}
-                                  </span>
-                                </div>
-                              ) : (
-                                <span className="text-sm font-bold text-primary flex items-center gap-1">
-                                  Fully Paid <CheckCircle2 className="w-4 h-4" />
-                                </span>
-                              )}
+                        {/* Financials */}
+                        <div className="flex flex-col bg-secondary/30 rounded-2xl p-4 border border-border/30">
+                          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-1">Total Outstanding</span>
+                          {activeLoan ? (
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-sm font-bold text-foreground/50">Rs.</span>
+                              <span className={`font-black text-2xl tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
+                                {totalRemaining.toLocaleString("en-LK")}
+                              </span>
                             </div>
-                            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
-                               <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
-                            </div>
-                          </div>
+                          ) : (
+                            <span className="text-sm font-bold text-primary flex items-center gap-1">
+                              Fully Paid <CheckCircle2 className="w-4 h-4" />
+                            </span>
+                          )}
 
+                          {/* Progress */}
                           {activeLoan && (
-                            <div className="flex flex-col gap-1.5 w-full">
+                            <div className="mt-4 flex flex-col gap-1.5 w-full">
                               <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                                <span>Repayment</span>
+                                <span>Repayment Progress</span>
                                 <span className={isOverdue ? 'text-destructive' : 'text-primary'}>
                                   {Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%
                                 </span>
                               </div>
-                              <div className="w-full h-2 bg-secondary rounded-full overflow-hidden shadow-inner">
+                              <div className="w-full h-1.5 bg-foreground/5 rounded-full overflow-hidden">
                                 <div
                                   className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverdue ? 'bg-destructive' : 'bg-primary'}`}
                                   style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
@@ -320,9 +318,25 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                           )}
                         </div>
 
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                          <a 
+                            href={`tel:${customer.phone}`}
+                            className="flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/80 text-foreground font-bold py-3 rounded-xl transition-colors text-sm"
+                          >
+                            <Phone className="w-4 h-4 text-primary" /> Call
+                          </a>
+                          <Link 
+                            href={`/customers/${customer.id}`}
+                            className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-xl transition-colors shadow-md text-sm"
+                          >
+                            <Banknote className="w-4 h-4" /> View Account
+                          </Link>
+                        </div>
+
                       </CardContent>
                     </Card>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
