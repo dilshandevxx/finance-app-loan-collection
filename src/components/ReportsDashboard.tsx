@@ -15,6 +15,7 @@ type ReportsDashboardProps = {
   customers: Customer[];
   companyName?: string;
   companyLogo?: string;
+  companyPhone?: string;
 };
 
 function formatPaidDate(paidDateStr?: string): string {
@@ -38,7 +39,7 @@ function formatPaidDate(paidDateStr?: string): string {
   }
 }
 
-export function ReportsDashboard({ installments, loans, customers, companyName, companyLogo }: ReportsDashboardProps) {
+export function ReportsDashboard({ installments, loans, customers, companyName, companyLogo, companyPhone }: ReportsDashboardProps) {
   const [startDate, setStartDate] = useState(() => {
     if (installments.length === 0) {
       const now = new Date();
@@ -220,6 +221,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     // Standard Report metadata
     const metadata = [
       `"${companyName || "Loan Collection App"}"`,
+      companyPhone ? `"${companyPhone}"` : `""`,
       `"LOAN COLLECTION LEDGER REPORT"`,
       `"Period: ${startDate} to ${endDate}"`,
       `"Generated: ${new Date().toLocaleDateString()}"`,
@@ -387,6 +389,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
     // Standard Report metadata block
     const metadata = [
       [companyName || "Loan Collection App"],
+      ...(companyPhone ? [[companyPhone]] : []),
       ["LOAN COLLECTION LEDGER REPORT"],
       [`Period: ${startDate} to ${endDate}`],
       [`Generated: ${new Date().toLocaleDateString()}`],
@@ -658,6 +661,9 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
               <h1 className="text-2xl font-black tracking-tight">{companyName}</h1>
             ) : (
               <h1 className="text-2xl font-black tracking-tight">Loan Collection Report</h1>
+            )}
+            {companyPhone && (
+              <p className="text-sm font-semibold text-black/80 mt-0.5">{companyPhone}</p>
             )}
             <p className="text-xs font-bold text-black/60 uppercase tracking-widest mt-1">Loan Collection Ledger Report</p>
             <p className="text-xs text-black/50 mt-1 font-semibold">Period: {startDate || "All Time"} to {endDate || "All Time"}</p>

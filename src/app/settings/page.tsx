@@ -31,7 +31,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 import { Greeting } from "@/components/Greeting";
 import { config } from "@/lib/config";
-import { logout, getUserProfile, updateUserProfileImage } from "@/app/auth-actions";
+import { logout, getUserProfile, updateUserProfileImage, updateTenantPhone } from "@/app/auth-actions";
 import { clearAllData, fetchSystemVillages, createSystemVillage, fetchCompanySettings, saveCompanySettings } from "@/app/actions";
 
 export default function SettingsPage() {
@@ -54,7 +54,10 @@ export default function SettingsPage() {
   const [isSavingCompany, setIsSavingCompany] = useState(false);
 
   // User Profile state
-  const [userProfile, setUserProfile] = useState<{ name: string, email: string, pin: string, avatarUrl?: string, companyName?: string } | null>(null);
+  const [userProfile, setUserProfile] = useState<{ name: string, email: string, pin: string, avatarUrl?: string, companyName?: string, companyPhone?: string } | null>(null);
+  const [editCompanyPhone, setEditCompanyPhone] = useState("");
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+  const [isSavingPhone, setIsSavingPhone] = useState(false);
 
   const loadVillages = async () => {
     try {
@@ -83,6 +86,7 @@ export default function SettingsPage() {
       getUserProfile().then(res => {
         if (res) {
           setUserProfile(res);
+          setEditCompanyPhone(res.companyPhone || "");
         }
       });
       setThemeMounted(true);
@@ -201,6 +205,29 @@ export default function SettingsPage() {
       img.src = event.target?.result as string;
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleSavePhone = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingPhone(true);
+    try {
+      const res = await updateTenantPhone(editCompanyPhone);
+      if (res.success) {
+        setShowToast("Phone number updated successfully!");
+        setUserProfile(prev => prev ? { ...prev, companyPhone: editCompanyPhone } : null);
+        setIsEditingPhone(false);
+        setTimeout(() => setShowToast(null), 3000);
+      } else {
+        setShowToast(res.error || "Failed to update phone number");
+        setTimeout(() => setShowToast(null), 4000);
+      }
+    } catch (err) {
+      console.error(err);
+      setShowToast("An unexpected error occurred");
+      setTimeout(() => setShowToast(null), 4000);
+    } finally {
+      setIsSavingPhone(false);
+    }
   };
 
   const handleClearAllData = async () => {
@@ -434,6 +461,55 @@ export default function SettingsPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Company Phone — Editable */}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 border-b border-border/50 pb-5">
+                    <span className="text-sm font-bold text-muted-foreground uppercase tracking-wide sm:w-1/3">Company Phone</span>
+                    <div className="sm:w-2/3 flex items-center gap-2">
+                      {isEditingPhone ? (
+                        <div className="flex w-full items-center gap-2">
+                          <input
+                            type="text"
+                            value={editCompanyPhone}
+                            onChange={(e) => setEditCompanyPhone(e.target.value)}
+                            placeholder="e.g. 077 123 4567"
+                            className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/50"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleSavePhone}
+                            disabled={isSavingPhone}
+                            className="bg-primary text-primary-foreground font-bold px-4 py-2.5 rounded-xl text-xs transition-colors hover:bg-primary/90 disabled:opacity-50 shrink-0"
+                          >
+                            {isSavingPhone ? "Saving..." : "Save"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditCompanyPhone(userProfile?.companyPhone || "");
+                              setIsEditingPhone(false);
+                            }}
+                            className="bg-secondary text-foreground font-bold px-4 py-2.5 rounded-xl text-xs transition-colors hover:bg-secondary/80 shrink-0"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex w-full items-center justify-between bg-secondary/40 border border-border rounded-xl px-4 py-2.5">
+                          <span className="text-sm font-semibold text-foreground truncate">
+                            {userProfile?.companyPhone || "Not set"}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setIsEditingPhone(true)}
+                            className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full shrink-0"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   <button
                     type="submit"

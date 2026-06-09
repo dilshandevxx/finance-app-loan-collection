@@ -245,7 +245,8 @@ export async function getUserProfile() {
         email, 
         hashed_pin,
         tenants (
-          company_name
+          company_name,
+          phone
         )
       `)
       .eq("id", user.id)
@@ -269,7 +270,7 @@ export async function getUserProfile() {
     const avatarUrl = user.user_metadata?.avatar_url || "";
     
     // Type assertion since PostgREST can return an array or object for joins
-    const tenantData = profile?.tenants as unknown as { company_name?: string };
+    const tenantData = profile?.tenants as unknown as { company_name?: string; phone?: string };
     const userMetadataCompany = user.user_metadata?.company_name;
 
     return {
@@ -278,7 +279,8 @@ export async function getUserProfile() {
       email: displayEmail,
       pin: profile?.hashed_pin || "Not set",
       avatarUrl,
-      companyName: userMetadataCompany || tenantData?.company_name || "My Loan Company"
+      companyName: userMetadataCompany || tenantData?.company_name || "My Loan Company",
+      companyPhone: tenantData?.phone || ""
     };
   } catch (err) {
     console.error("Error fetching user profile:", err);
@@ -364,6 +366,40 @@ export async function sendPasswordResetEmail(email: string) {
     if (error) {
       return { success: false, error: error.message };
     }
+    return { success: true };
+  } catch (err) {
+    const error = err as Error;
+    return { success: false, error: error.message || "An unexpected error occurred" };
+  }
+}
+
+export async function updateTenantPhone(newPhone: string) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: "Not logged in" };
+
+    const { data: currentProfile } = await supabase
+      .from("user_profiles")
+      .select("tenant_id")
+      .eq("id", user.id)
+      .single();
+      
+    if (!currentProfile?.tenant_id) {
+      return { success: false, error: "Could not determine organization/tenant ID" };
+    }
+
+    const adminSupabase = getSupabaseClient();
+    const { error } = await adminSupabase
+      .from("tenants")
+      .update({ phone: newPhone })
+      .eq("id", currentProfile.tenant_id);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath("/settings");
     return { success: true };
   } catch (err) {
     const error = err as Error;

@@ -6,6 +6,7 @@ import { Customer } from "@/data/db";
 import { config } from "@/lib/config";
 import { formatLKR, phoneToDial, formatLKPhone } from "@/lib/format";
 import { getReceiptDetails, getCompanySettingsAction } from "@/app/actions";
+import { getUserProfile } from "@/app/auth-actions";
 
 type QuickPaymentModalProps = {
   customer: Customer;
@@ -83,10 +84,23 @@ export function QuickPaymentModal({
               setAgentCompany(settings.name);
               localStorage.setItem("agentCompany", settings.name);
             }
-            if (settings.phone) {
+            // We'll prioritize the tenant phone from user profile below
+            if (settings.phone && !localStorage.getItem("agentPhone")) {
               setAgentPhone(settings.phone);
               localStorage.setItem("agentPhone", settings.phone);
             }
+          }
+        }).catch(console.error);
+
+        // Fetch User Profile to get tenant-specific phone number
+        getUserProfile().then(profile => {
+          if (profile?.companyPhone) {
+            setAgentPhone(profile.companyPhone);
+            localStorage.setItem("agentPhone", profile.companyPhone);
+          }
+          if (profile?.companyName) {
+            setAgentCompany(profile.companyName);
+            localStorage.setItem("agentCompany", profile.companyName);
           }
         }).catch(console.error);
       });

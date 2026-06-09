@@ -1,17 +1,19 @@
 import { ReportsDashboardWrapper } from "@/components/ReportsDashboardWrapper";
 import { BottomNav } from "@/components/BottomNav";
 import { getCustomers, getInstallments, getLoans, getCompanySettings } from "@/data/db";
+import { getUserProfile } from "@/app/auth-actions";
 
 import { BigPortfolioHeader } from "@/components/BigPortfolioHeader";
 
 export const dynamic = 'force-dynamic';
 
 export default async function ReportsPage() {
-  const [customers, loans, installments, companySettings] = await Promise.all([
+  const [customers, loans, installments, companySettings, userProfile] = await Promise.all([
     getCustomers(),
     getLoans(),
     getInstallments(),
     getCompanySettings(),
+    getUserProfile()
   ]);
 
   return (
@@ -33,6 +35,7 @@ export default async function ReportsPage() {
         customers={customers} 
         companyName={companySettings.name}
         companyLogo={companySettings.logo}
+        companyPhone={userProfile?.companyPhone}
       />
       
       <div className="print:hidden">
