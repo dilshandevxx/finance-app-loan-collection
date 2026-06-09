@@ -45,6 +45,23 @@ export async function loginWithPassword(email: string, password: string) {
       await supabase.auth.updateUser({
         data: { avatar_url: null }
       });
+      
+      // CRITICAL FIX:
+      // Even though we updated the user, @supabase/ssr already wrote chunks .0 through .7
+      // into the Next.js cookieStore during signInWithPassword.
+      // updateUser only overwrites chunks .0 and .1 with the new small JWT.
+      // We MUST explicitly delete chunks .2 through .7, otherwise the browser receives
+      // the massive garbage chunks and immediately throws 494 on the next redirect!
+      const cookieStore = await cookies();
+      const allCookies = cookieStore.getAll();
+      for (const cookie of allCookies) {
+        if (cookie.name.includes("-auth-token.")) {
+           cookieStore.delete(cookie.name);
+        }
+      }
+      // Re-issue the session so it cleanly sets only the chunks it needs (.0 and .1)
+      await supabase.auth.refreshSession();
+      
     } catch (e) {
       console.error("Failed to strip massive avatar_url", e);
     }
