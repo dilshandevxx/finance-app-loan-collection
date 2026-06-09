@@ -114,20 +114,20 @@ export default async function CustomerDetails({ params }: Props) {
                 <div className="absolute bottom-1 right-2 w-5 h-5 bg-primary border-2 border-background rounded-full" />
               </div>
 
-              <h1 className="text-3xl font-extrabold tracking-tight mb-2 text-foreground text-center leading-tight">{customer.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 text-foreground text-center leading-tight break-words max-w-full px-2">{customer.name}</h1>
               
-              <div className="flex items-center gap-3 mb-6 flex-wrap justify-center text-sm font-semibold text-muted-foreground">
-                <span>ID: {customer.memberId || customer.id}</span>
+              <div className="flex items-center gap-2 sm:gap-3 mb-5 flex-wrap justify-center text-xs sm:text-sm font-semibold text-muted-foreground">
+                <span className="truncate max-w-[150px] sm:max-w-none">ID: {customer.memberId || customer.id}</span>
                 {customer.state && (
                   <>
-                    <span className="w-1 h-1 rounded-full bg-border" />
-                    <span className="text-foreground">{customer.state}</span>
+                    <span className="w-1 h-1 rounded-full bg-border shrink-0" />
+                    <span className="text-foreground truncate max-w-[120px] sm:max-w-none">{customer.state}</span>
                   </>
                 )}
               </div>
               
               {customer.companyName && (
-                <span className="text-primary font-bold text-sm mb-6 bg-primary/10 px-4 py-1.5 rounded-full">{customer.companyName}</span>
+                <span className="text-primary font-bold text-xs sm:text-sm mb-5 bg-primary/10 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full truncate max-w-full text-center">{customer.companyName}</span>
               )}
 
               <CustomerContactActions customer={customer} />
@@ -135,21 +135,21 @@ export default async function CustomerDetails({ params }: Props) {
               <div className="w-full h-px bg-border/50 my-8 max-w-sm mx-auto" />
 
               {/* Outstanding Balance Banner - Ultra Minimal */}
-              <div className="w-full flex flex-col items-center">
-                <span className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-2">Remaining Balance</span>
-                <div className="text-6xl font-black tracking-tighter text-foreground flex items-baseline">
-                  <span className="text-2xl text-muted-foreground font-bold mr-1">Rs.</span>
-                  {formatLKRShort(loan.remainingBalance)}
+              <div className="w-full flex flex-col items-center px-2">
+                <span className="text-muted-foreground text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-1 sm:mb-2 text-center">Remaining Balance</span>
+                <div className="text-5xl sm:text-6xl font-black tracking-tighter text-foreground flex items-baseline justify-center flex-wrap">
+                  <span className="text-xl sm:text-2xl text-muted-foreground font-bold mr-1.5">Rs.</span>
+                  <span className="break-all text-center">{formatLKRShort(loan.remainingBalance)}</span>
                 </div>
               </div>
 
               {/* Progress Bar - Ultra Minimal */}
-              <div className="w-full mt-8 max-w-sm">
-                <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-3">
-                  <span>{paidCount} of {installments.length} Paid</span>
-                  <span className="text-primary">{progressPercent}%</span>
+              <div className="w-full mt-6 sm:mt-8 max-w-sm px-2">
+                <div className="flex items-center justify-between text-[10px] sm:text-xs font-bold text-muted-foreground mb-2 sm:mb-3">
+                  <span className="truncate mr-2">{paidCount} of {installments.length} Paid</span>
+                  <span className="text-primary shrink-0">{progressPercent}%</span>
                 </div>
-                <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
+                <div className="w-full h-1.5 sm:h-2 bg-secondary rounded-full overflow-hidden">
                   <div
                     className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${progressPercent}%` }}
