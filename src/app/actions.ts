@@ -509,6 +509,10 @@ export async function editInstallment(installmentId: string, status: string, amo
   return { success: true };
 }
 
+export async function markInstallmentPaid(installmentId: string, amount: number) {
+  return await editInstallment(installmentId, "PAID", amount);
+}
+
 export async function clearAllData() {
   const supabase = await createClient();
   const { error } = await supabase.from("customers").delete().neq("id", "00000000-0000-0000-0000-000000000000");
