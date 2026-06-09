@@ -230,7 +230,7 @@ export async function updateAuthPassword(newPassword: string) {
   return { success: true };
 }
 
-export async function updateUserProfileImage(avatarUrl: string) {
+export async function updateUserProfileImage(avatarUrl: string): Promise<{ success: boolean; error?: string }> {
   // Storing a base64 string in user_metadata injects it into the auth JWT.
   // A 400x400 JPEG is ~30KB. Vercel's header limit is ~14KB.
   // This causes the browser to send massive cookies, resulting in 
