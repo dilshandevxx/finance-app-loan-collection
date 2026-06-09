@@ -82,7 +82,7 @@ export default async function CustomerDetails({ params }: Props) {
   const nextInstallment = installments.find(i => i.status !== "PAID");
 
   return (
-    <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
+    <div className="flex flex-col gap-6 pb-48 md:pb-12 max-w-5xl mx-auto px-4 sm:px-6">
       {/* Header */}
       <TopBar title="Customer Profile" backHref="/" />
 
@@ -99,66 +99,65 @@ export default async function CustomerDetails({ params }: Props) {
         </div>
       )}
 
-      <div className="grid md:grid-cols-12 gap-8 items-start">
-        {/* Left Column */}
-        <div className="md:col-span-5 flex flex-col gap-4">
+      <div className="grid lg:grid-cols-12 gap-8 items-start w-full">
+        {/* Left Column - Hero Profile */}
+        <div className="lg:col-span-4 flex flex-col gap-4">
 
           {/* Profile Card */}
-          <div className="flex flex-col bg-card md:border md:border-border/40 md:rounded-[2.5rem] md:shadow-xl relative overflow-hidden">
+          <div className="flex flex-col bg-card rounded-[2rem] shadow-sm border border-border/40 relative overflow-hidden">
             
-            <div className="p-6 sm:p-10 relative z-10 flex flex-col items-center pt-8">
+            <div className="p-8 relative z-10 flex flex-col items-center">
               
-              {/* Ultra Clean Avatar */}
-              <div className="w-28 h-28 rounded-full bg-secondary overflow-hidden relative mb-5 shadow-sm border-4 border-background">
+              {/* Avatar */}
+              <div className="w-24 h-24 rounded-full bg-secondary overflow-hidden relative mb-4 shadow-sm border-2 border-background">
                 <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                <div className="absolute bottom-1 right-2 w-5 h-5 bg-primary border-2 border-background rounded-full" />
+                <div className="absolute bottom-1 right-1 w-4 h-4 bg-primary border-2 border-background rounded-full" />
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 text-foreground text-center leading-tight break-words max-w-full px-2">{customer.name}</h1>
+              <h1 className="text-2xl font-black tracking-tight mb-1 text-foreground text-center leading-tight line-clamp-2">{customer.name}</h1>
               
-              <div className="flex items-center gap-2 sm:gap-3 mb-5 flex-wrap justify-center text-xs sm:text-sm font-semibold text-muted-foreground">
-                <span className="truncate max-w-[150px] sm:max-w-none">ID: {customer.memberId || customer.id}</span>
+              <div className="flex flex-col items-center gap-1 mb-4 text-xs font-semibold text-muted-foreground text-center">
+                <span>ID: {customer.memberId || customer.id}</span>
                 {customer.state && (
-                  <>
-                    <span className="w-1 h-1 rounded-full bg-border shrink-0" />
-                    <span className="text-foreground truncate max-w-[120px] sm:max-w-none">{customer.state}</span>
-                  </>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3 h-3" /> {customer.state}
+                  </span>
                 )}
               </div>
               
               {customer.companyName && (
-                <span className="text-primary font-bold text-xs sm:text-sm mb-5 bg-primary/10 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full truncate max-w-full text-center">{customer.companyName}</span>
+                <span className="text-primary font-bold text-xs mb-4 bg-primary/10 px-3 py-1 rounded-full text-center line-clamp-1">{customer.companyName}</span>
               )}
 
               <CustomerContactActions customer={customer} />
 
-              <div className="w-full h-px bg-border/50 my-8 max-w-sm mx-auto" />
+              <div className="w-full h-px bg-border/40 my-6" />
 
-              {/* Outstanding Balance Banner - Ultra Minimal */}
-              <div className="w-full flex flex-col items-center px-2">
-                <span className="text-muted-foreground text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-1 sm:mb-2 text-center">Remaining Balance</span>
-                <div className="text-5xl sm:text-6xl font-black tracking-tighter text-foreground flex items-baseline justify-center flex-wrap">
-                  <span className="text-xl sm:text-2xl text-muted-foreground font-bold mr-1.5">Rs.</span>
-                  <span className="break-all text-center">{formatLKRShort(loan.remainingBalance)}</span>
+              {/* Outstanding Balance Banner */}
+              <div className="w-full flex flex-col items-center text-center">
+                <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-1">Remaining Balance</span>
+                <div className="text-4xl font-black tracking-tighter text-foreground flex items-baseline justify-center">
+                  <span className="text-xl text-muted-foreground font-bold mr-1">Rs.</span>
+                  <span className="truncate max-w-[200px]">{formatLKRShort(loan.remainingBalance)}</span>
                 </div>
               </div>
 
-              {/* Progress Bar - Ultra Minimal */}
-              <div className="w-full mt-6 sm:mt-8 max-w-sm px-2">
-                <div className="flex items-center justify-between text-[10px] sm:text-xs font-bold text-muted-foreground mb-2 sm:mb-3">
-                  <span className="truncate mr-2">{paidCount} of {installments.length} Paid</span>
-                  <span className="text-primary shrink-0">{progressPercent}%</span>
+              {/* Progress Line */}
+              <div className="w-full mt-6">
+                <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground mb-2">
+                  <span>{paidCount} of {installments.length} Paid</span>
+                  <span className="text-primary">{progressPercent}%</span>
                 </div>
-                <div className="w-full h-1.5 sm:h-2 bg-secondary rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
+                    className="h-full bg-primary rounded-full transition-all duration-1000"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
               </div>
 
               {/* Desktop Actions */}
-              <div className="hidden md:flex mt-10 w-full justify-center max-w-sm">
+              <div className="hidden lg:flex mt-8 w-full justify-center">
                 <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
               </div>
             </div>
@@ -185,7 +184,7 @@ export default async function CustomerDetails({ params }: Props) {
         </div>
 
         {/* Right Column: Dynamic Tabs */}
-        <div className="md:col-span-7 flex flex-col gap-6 w-full">
+        <div className="lg:col-span-8 flex flex-col gap-6 w-full">
           <CustomerTabs 
             loan={loan} 
             installments={installments} 
@@ -198,8 +197,8 @@ export default async function CustomerDetails({ params }: Props) {
       </div>
 
       {/* Sticky Mobile Action Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background/90 to-transparent z-50 pb-6">
-        <div className="bg-card/95 p-3 rounded-[2rem] border border-border/60 shadow-2xl backdrop-blur-2xl">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background/95 to-transparent z-50 pb-20 sm:pb-6">
+        <div className="bg-card shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border border-border rounded-3xl p-3 flex items-center justify-center backdrop-blur-3xl">
           <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
         </div>
       </div>
