@@ -27,13 +27,27 @@ export async function loginWithEmail(email: string) {
 export async function loginWithPassword(email: string, password: string) {
   const supabase = await createClient();
   
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     return { success: false, error: error.message };
+  }
+
+  // FIX FOR 494 REQUEST_HEADER_TOO_LARGE:
+  // If the user previously saved a base64 image into user_metadata, it causes 
+  // the JWT to balloon to 30KB, exceeding Vercel's 14KB max header size limit.
+  // We must strip it out so the session cookie shrinks back down.
+  if (data?.user?.user_metadata?.avatar_url?.startsWith("data:image")) {
+    try {
+      await supabase.auth.updateUser({
+        data: { avatar_url: null }
+      });
+    } catch (e) {
+      console.error("Failed to strip massive avatar_url", e);
+    }
   }
 
   revalidatePath("/", "layout");
@@ -217,18 +231,11 @@ export async function updateAuthPassword(newPassword: string) {
 }
 
 export async function updateUserProfileImage(avatarUrl: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Not logged in" };
-
-  const { error } = await supabase.auth.updateUser({
-    data: { avatar_url: avatarUrl }
-  });
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-
+  // Storing a base64 string in user_metadata injects it into the auth JWT.
+  // A 400x400 JPEG is ~30KB. Vercel's header limit is ~14KB.
+  // This causes the browser to send massive cookies, resulting in 
+  // "494 REQUEST_HEADER_TOO_LARGE" errors on all subsequent requests!
+  // Do NOT store base64 strings in user_metadata.
   return { success: true };
 }
 
