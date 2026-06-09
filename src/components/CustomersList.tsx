@@ -32,9 +32,18 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
 
   const handleNavigateToCustomer = (customerId: string) => {
     setPendingNavigationId(customerId);
-    startTransition(() => {
-      router.push(`/customers/${customerId}`);
-    });
+    
+    // Decouple the React state update from the Next.js transition
+    // This ensures the loading spinner actually renders on screen immediately
+    setTimeout(() => {
+      import("react").then((React) => {
+        React.startTransition(() => {
+          router.push(`/customers/${customerId}`);
+        });
+      }).catch(() => {
+        router.push(`/customers/${customerId}`);
+      });
+    }, 10);
   };
 
   useEffect(() => {
