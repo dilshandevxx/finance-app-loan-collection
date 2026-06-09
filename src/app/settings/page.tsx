@@ -19,7 +19,8 @@ import {
   Info,
   Smartphone,
   Trash2,
-  Mail
+  Mail,
+  AlertCircle
 } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
@@ -697,38 +698,43 @@ export default function SettingsPage() {
           </section>
 
           {/* Danger Zone */}
-          <section className="mt-2">
-            <h3 className="text-destructive-foreground text-xs font-bold mb-3 uppercase tracking-widest px-2">Danger Zone</h3>
-            <Card className="border-destructive-foreground/30 bg-destructive rounded-2xl overflow-hidden shadow-sm">
-              <CardContent className="p-5 flex flex-col gap-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <section className="mt-8 mb-4">
+            <h3 className="text-destructive font-black text-[11px] mb-3 uppercase tracking-widest px-2 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" /> Danger Zone
+            </h3>
+            <Card className="border-destructive/30 bg-destructive/5 rounded-3xl overflow-hidden shadow-sm relative group transition-colors hover:bg-destructive/10 hover:border-destructive/40">
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-destructive" />
+              <CardContent className="p-6 sm:p-8 flex flex-col gap-6 relative z-10">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="flex flex-col text-left">
-                    <span className="text-foreground font-bold text-sm">Clear All Data</span>
-                    <span className="text-muted-foreground text-xs mt-1 max-w-[200px]">Permanently delete all customers and local caches.</span>
+                    <span className="text-foreground font-black text-lg tracking-tight">Clear All Data</span>
+                    <span className="text-muted-foreground text-xs font-medium mt-1.5 max-w-[280px] leading-relaxed">
+                      Permanently delete all local caches and stored application data. This action cannot be undone.
+                    </span>
                   </div>
                   {!showClearConfirm ? (
                     <button
                       onClick={() => setShowClearConfirm(true)}
-                      className="px-4 h-10 bg-destructive-foreground hover:bg-destructive-foreground/90 text-white font-bold rounded-xl text-xs transition-all active:scale-95 shrink-0 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-destructive-foreground/20"
+                      className="px-6 h-12 bg-destructive/10 hover:bg-destructive text-destructive hover:text-white font-bold rounded-2xl text-sm transition-all active:scale-95 shrink-0 flex items-center justify-center gap-2 cursor-pointer border border-destructive/20 shadow-sm"
                     >
                       <Trash2 className="w-4 h-4" /> Clear Data
                     </button>
                   ) : (
-                    <div className="flex flex-col gap-2 shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                       <button
                         onClick={handleClearAllData}
                         disabled={isClearing}
-                        className="px-4 h-10 bg-destructive-foreground hover:bg-destructive-foreground/90 text-white font-bold rounded-xl text-xs transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-destructive-foreground/20"
+                        className="px-6 h-12 bg-destructive hover:bg-destructive/90 text-white font-bold rounded-2xl text-sm transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-destructive/20 disabled:opacity-50"
                       >
                         {isClearing ? (
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : (
-                          "Confirm Deletion"
+                          "Confirm Delete"
                         )}
                       </button>
                       <button
                         onClick={() => setShowClearConfirm(false)}
-                        className="px-4 h-10 bg-transparent text-foreground hover:bg-secondary font-bold rounded-xl text-xs transition-all active:scale-95 cursor-pointer border border-border"
+                        className="px-6 h-12 bg-card hover:bg-secondary text-foreground font-bold rounded-2xl text-sm transition-all active:scale-95 cursor-pointer border border-border"
                       >
                         Cancel
                       </button>
