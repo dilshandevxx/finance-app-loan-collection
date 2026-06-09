@@ -28,111 +28,101 @@ export function CustomerTabs({
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      {/* Tab Navigation */}
-      <div className="w-full -mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto no-scrollbar pb-1">
-        <div className="flex items-center gap-2.5 min-w-max">
-          {[
-            { id: "overview", label: "Overview" },
-            { id: "timeline", label: "Timeline" },
-            { id: "notes", label: "Settings & Notes" },
-          ].map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-5 py-3 rounded-2xl text-sm font-bold transition-all active:scale-95 ${
-                  isActive 
-                    ? "bg-foreground text-background shadow-md" 
-                    : "bg-card text-muted-foreground border border-border/50 hover:bg-secondary/80"
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Segmented Control Tab Navigation */}
+      <div className="w-full bg-card/60 backdrop-blur-xl border border-border/40 p-1.5 rounded-[1.25rem] sm:rounded-[1.75rem] flex items-center shadow-sm">
+        {[
+          { id: "overview", label: "Overview" },
+          { id: "timeline", label: "Timeline" },
+          { id: "notes", label: "Notes" },
+        ].map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex-1 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-[11px] sm:text-sm font-bold transition-all ${
+                isActive 
+                  ? "bg-background shadow-sm text-foreground scale-100" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 scale-[0.98]"
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Tab Content */}
       <div className="w-full">
         {activeTab === "overview" && (
           <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <h3 className="text-lg font-semibold mb-4 text-foreground tracking-tight">Loan Details</h3>
-            <Card className="bg-card/80 backdrop-blur-md border border-border/40 rounded-3xl shadow-sm">
-              <CardContent className="p-6">
-                {/* Structure matching original page.tsx */}
-                <div className="flex flex-col gap-3 pb-5 border-b border-border/30">
-                  <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Principal</span>
-                      <span className="text-xs text-muted-foreground/70 font-semibold mt-0.5">Given amount</span>
-                    </div>
-                    <span className="font-bold text-lg text-foreground">{formatLKR(loan.principalAmount)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Full Amount</span>
-                      <span className="text-xs text-muted-foreground/70 font-semibold mt-0.5">With Interest</span>
-                    </div>
-                    <span className="font-bold text-lg text-foreground">{formatLKR(loan.totalAmountDue)}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3 py-5 border-b border-border/30">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Weekly Installment</span>
-                    <span className="font-bold text-foreground">{formatLKR(loan.weeklyInstallment)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Installments</span>
-                    <span className="font-bold text-foreground">{paidCount} of {installments.length} paid</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3 py-5 border-b border-border/30">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Total Paid So Far</span>
-                    <span className="font-bold text-primary">{formatLKR(loan.totalAmountDue - loan.remainingBalance)}</span>
-                  </div>
-                  <div className="flex justify-between items-center bg-secondary/50 -mx-3 px-4 py-3 rounded-2xl border border-border/40 mt-1">
-                    <span className="font-black text-foreground text-xs uppercase tracking-widest">Remaining Balance</span>
-                    <span className="font-black text-xl text-foreground">{formatLKR(loan.remainingBalance)}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3 pt-5">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Start Date</span>
-                    <span className="font-bold text-foreground text-sm">{new Date(loan.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Status</span>
-                    <span className={`font-black px-2.5 py-1 rounded-md text-[10px] flex items-center gap-1.5 uppercase tracking-widest shadow-sm ${
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              
+              <Card className="col-span-2 bg-card/60 backdrop-blur-md border-border/40 rounded-3xl shadow-sm overflow-hidden relative">
+                <CardContent className="p-5 sm:p-6 flex justify-between items-center relative z-10">
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-1">Status</span>
+                    <span className={`font-black px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 uppercase tracking-widest w-fit ${
                       loan.status === "PAID_OFF" 
                         ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
                         : loan.status === "DEFAULTED"
                         ? "text-destructive-foreground bg-destructive/10 border border-destructive/20"
                         : "text-primary bg-primary/10 border border-primary/20"
                     }`}>
-                      <div className={`w-1.5 h-1.5 rounded-full ${
+                      <div className={`w-2 h-2 rounded-full ${
                         loan.status === "PAID_OFF" ? "bg-emerald-500" : loan.status === "DEFAULTED" ? "bg-destructive" : "bg-primary"
                       }`} />
                       {loan.status === "PAID_OFF" ? "Fully Paid" : loan.status === "DEFAULTED" ? "Defaulted" : "Active"}
                     </span>
                   </div>
-                  {nextInstallment && (
-                    <div className="flex justify-between items-center mt-2 bg-primary/5 dark:bg-primary/10 -mx-3 px-4 py-3 rounded-2xl border border-primary/10 shadow-sm">
-                      <div className="flex flex-col">
-                        <span className="text-primary text-[10px] font-black uppercase tracking-widest">Next Payment Due</span>
-                        <span className="text-xs text-muted-foreground font-bold mt-0.5">{new Date(nextInstallment.dueDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                      </div>
-                      <span className="font-black text-primary text-lg">{formatLKR(nextInstallment.amount)}</span>
+                  <div className="flex flex-col items-end">
+                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-1">Start Date</span>
+                    <span className="font-bold text-foreground text-sm">{new Date(loan.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-secondary/30 backdrop-blur-md border-border/40 rounded-3xl shadow-sm">
+                <CardContent className="p-5 flex flex-col">
+                  <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-2">Given Amount</span>
+                  <span className="font-black text-xl text-foreground tracking-tight">{formatLKR(loan.principalAmount)}</span>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-secondary/30 backdrop-blur-md border-border/40 rounded-3xl shadow-sm">
+                <CardContent className="p-5 flex flex-col">
+                  <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-2">With Interest</span>
+                  <span className="font-black text-xl text-foreground tracking-tight">{formatLKR(loan.totalAmountDue)}</span>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-secondary/30 backdrop-blur-md border-border/40 rounded-3xl shadow-sm">
+                <CardContent className="p-5 flex flex-col">
+                  <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-2">Weekly</span>
+                  <span className="font-black text-xl text-foreground tracking-tight">{formatLKR(loan.weeklyInstallment)}</span>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-secondary/30 backdrop-blur-md border-border/40 rounded-3xl shadow-sm">
+                <CardContent className="p-5 flex flex-col">
+                  <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-2">Total Paid</span>
+                  <span className="font-black text-xl text-primary tracking-tight">{formatLKR(loan.totalAmountDue - loan.remainingBalance)}</span>
+                </CardContent>
+              </Card>
+
+              {nextInstallment && (
+                <Card className="col-span-2 bg-primary/5 dark:bg-primary/10 border-primary/20 rounded-3xl shadow-sm overflow-hidden">
+                  <CardContent className="p-5 sm:p-6 flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="text-primary text-[10px] font-black uppercase tracking-widest mb-1">Next Payment Due</span>
+                      <span className="text-sm font-bold text-muted-foreground">{new Date(nextInstallment.dueDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
                     </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    <span className="font-black text-2xl text-primary tracking-tight">{formatLKR(nextInstallment.amount)}</span>
+                  </CardContent>
+                </Card>
+              )}
+
+            </div>
           </section>
         )}
 

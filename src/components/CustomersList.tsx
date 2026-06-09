@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown, AlertCircle, Banknote } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Search, ChevronRight, Phone, CheckCircle2, UserCheck, Inbox, ChevronDown, AlertCircle, Banknote, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, Installment } from "@/data/db";
 import { formatLKR, formatLKPhone } from "@/lib/format";
@@ -26,6 +26,16 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | "active" | "overdue" | "settled">("active");
   const [selectedVillage, setSelectedVillage] = useState<string>("");
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [pendingNavigationId, setPendingNavigationId] = useState<string | null>(null);
+
+  const handleNavigateToCustomer = (customerId: string) => {
+    setPendingNavigationId(customerId);
+    startTransition(() => {
+      router.push(`/customers/${customerId}`);
+    });
+  };
 
   useEffect(() => {
     if (filterParam === "overdue") {
@@ -309,12 +319,17 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                           >
                             <Phone className="w-4 h-4 text-primary" /> Call
                           </a>
-                          <Link 
-                            href={`/customers/${customer.id}`}
-                            className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-2xl transition-colors shadow-sm text-sm"
+                          <button 
+                            onClick={() => handleNavigateToCustomer(customer.id)}
+                            disabled={pendingNavigationId === customer.id}
+                            className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-2xl transition-colors shadow-sm text-sm disabled:opacity-70 disabled:cursor-not-allowed"
                           >
-                            View Account
-                          </Link>
+                            {pendingNavigationId === customer.id ? (
+                              <><Loader2 className="w-4 h-4 animate-spin" /> Loading...</>
+                            ) : (
+                              "View Account"
+                            )}
+                          </button>
                         </div>
                       </CardContent>
                     </Card>
@@ -398,9 +413,17 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                           </div>
                         </td>
                         <td className="p-4 text-center">
-                          <Link href={`/customers/${customer.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground text-muted-foreground transition-colors duration-200 shadow-sm group-hover:scale-110">
-                            <ChevronRight className="w-4 h-4" />
-                          </Link>
+                          <button
+                            onClick={() => handleNavigateToCustomer(customer.id)}
+                            disabled={pendingNavigationId === customer.id}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground text-muted-foreground transition-colors duration-200 shadow-sm group-hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {pendingNavigationId === customer.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin text-primary group-hover:text-primary-foreground" />
+                            ) : (
+                              <ChevronRight className="w-4 h-4" />
+                            )}
+                          </button>
                         </td>
                       </tr>
                     );

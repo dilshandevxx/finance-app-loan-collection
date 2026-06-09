@@ -53,42 +53,45 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
 
   const renderEditForm = (inst: Installment, i: number) => {
     return (
-      <div key={inst.id} className="flex flex-col p-4 bg-primary/5 border border-primary/20 rounded-xl relative mb-2 animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between mb-4">
-          <span className="font-bold text-sm text-foreground">Edit Week {i + 1}</span>
-          <button onClick={cancelEditing} className="w-8 h-8 rounded-full bg-secondary text-muted-foreground flex items-center justify-center hover:bg-muted transition-colors">
+      <div key={inst.id} className="flex flex-col p-5 bg-card border border-border/50 shadow-sm rounded-2xl relative mb-3 animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-col">
+            <span className="font-extrabold text-foreground tracking-tight">Edit Week {i + 1}</span>
+            <span className="text-xs text-muted-foreground font-semibold">Adjust payment details</span>
+          </div>
+          <button onClick={cancelEditing} className="w-8 h-8 rounded-full bg-secondary/80 text-muted-foreground flex items-center justify-center hover:bg-secondary hover:text-foreground transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         
         {errorMsg && (
-          <div className="mb-4 text-xs font-bold text-red-500 flex items-center gap-1 bg-red-500/10 p-2 rounded-lg">
-            <AlertCircle className="w-3 h-3 shrink-0" />
+          <div className="mb-5 text-xs font-bold text-destructive flex items-center gap-2 bg-destructive/10 p-3 rounded-xl border border-destructive/20">
+            <AlertCircle className="w-4 h-4 shrink-0" />
             {errorMsg}
           </div>
         )}
 
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Status</label>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Status</label>
             <select
               value={editStatus}
               onChange={(e) => setEditStatus(e.target.value)}
-              className="bg-card border border-border/60 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary font-bold"
+              className="w-full bg-secondary/30 border border-border/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-bold appearance-none"
             >
-              <option value="PENDING">PENDING</option>
-              <option value="PAID">PAID</option>
-              <option value="MISSED">MISSED</option>
+              <option value="PENDING">Pending</option>
+              <option value="PAID">Paid</option>
+              <option value="MISSED">Missed</option>
             </select>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Amount (Rs.)</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Amount (Rs.)</label>
             <input
               type="number"
               value={editAmount}
               onChange={(e) => setEditAmount(e.target.value)}
-              className="bg-card border border-border/60 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary font-bold"
+              className="w-full bg-secondary/30 border border-border/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-bold"
             />
           </div>
         </div>
@@ -96,7 +99,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
         <button
           onClick={() => handleSave(inst.id)}
           disabled={isPending}
-          className="mt-5 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
+          className="mt-6 w-full bg-foreground text-background font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
         >
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Changes
@@ -106,8 +109,8 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
   };
 
   return (
-    <div className="flex flex-col relative">
-      <div className="absolute left-[39px] top-8 bottom-8 w-px bg-gray-200 dark:bg-border" />
+    <div className="flex flex-col relative px-2">
+      <div className="absolute left-10 top-8 bottom-8 w-px bg-border" />
 
       {paidInstallments.length > 0 && (
         <details className="group">
@@ -125,28 +128,28 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
           <div className="flex flex-col opacity-90">
             {paidInstallments.map(({ inst, i }) => (
               editingId === inst.id ? renderEditForm(inst, i) : (
-                <div key={inst.id} className="flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl group/row">
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
-                      <CheckCircle2 className="w-6 h-6 text-primary" />
+                <div key={inst.id} className="flex flex-wrap sm:flex-nowrap items-center justify-between p-4 relative hover:bg-secondary/30 transition-colors rounded-2xl group/row gap-3">
+                  <div className="flex items-center gap-4 relative z-10 shrink-0">
+                    <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full border border-border shadow-sm">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-medium text-sm text-foreground">Week {i + 1}</span>
-                      <span className="text-xs text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <span className="font-extrabold text-[15px] text-foreground tracking-tight">Week {i + 1}</span>
+                      <span className="text-xs font-medium text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col items-end">
-                      <span className="font-medium text-sm text-foreground">
+                  <div className="flex items-center gap-4 ml-16 sm:ml-0 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex flex-col sm:items-end">
+                      <span className="font-black text-[15px] text-foreground tracking-tight">
                         {formatLKR(inst.amount)}
                       </span>
                       {inst.paidDate && (
-                        <span className="text-xs text-muted-foreground">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                        <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                       )}
                     </div>
                     <button
                       onClick={() => startEditing(inst)}
-                      className="p-2 rounded-lg hover:bg-secondary text-muted-foreground/50 hover:text-foreground transition-colors"
+                      className="p-2.5 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 shrink-0"
                       title="Edit Installment"
                     >
                       <Edit2 className="w-4 h-4" />
@@ -164,33 +167,33 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
         
         const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
         return (
-          <div key={inst.id} className={`flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl group/row ${i === installments.length - 1 ? 'mb-2' : ''}`}>
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full">
+          <div key={inst.id} className={`flex flex-wrap sm:flex-nowrap items-center justify-between p-4 relative hover:bg-secondary/30 transition-colors rounded-2xl group/row gap-3 ${i === installments.length - 1 ? 'mb-2' : ''}`}>
+            <div className="flex items-center gap-4 relative z-10 shrink-0">
+              <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full border border-border shadow-sm">
                 {isOverdue ? (
-                  <AlertCircle className="w-6 h-6 text-destructive-foreground" />
+                  <AlertCircle className="w-5 h-5 text-destructive" />
                 ) : (
-                  <div className="w-3 h-3 rounded-full border-2 border-gray-300 dark:border-border bg-white dark:bg-card" />
+                  <div className="w-3 h-3 rounded-full bg-border" />
                 )}
               </div>
               <div className="flex flex-col">
-                <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>Week {i + 1}</span>
-                <span className="text-xs text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                <span className={`font-extrabold text-[15px] tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>Week {i + 1}</span>
+                <span className="text-xs font-medium text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="flex flex-col items-end">
-                <span className={`font-medium text-sm ${isOverdue ? 'text-destructive-foreground' : 'text-foreground'}`}>
+            <div className="flex items-center gap-4 ml-16 sm:ml-0 w-full sm:w-auto justify-between sm:justify-end">
+              <div className="flex flex-col sm:items-end">
+                <span className={`font-black text-[15px] tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
                   {formatLKR(inst.amount)}
                 </span>
                 {inst.status === "MISSED" && (
-                  <span className="text-xs font-bold text-destructive-foreground">MISSED</span>
+                  <span className="text-[11px] font-bold text-destructive uppercase tracking-widest">Missed</span>
                 )}
               </div>
               <button
                 onClick={() => startEditing(inst)}
-                className="p-2 rounded-lg hover:bg-secondary text-muted-foreground/50 hover:text-foreground transition-colors"
+                className="p-2.5 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 shrink-0"
                 title="Edit Installment"
               >
                 <Edit2 className="w-4 h-4" />
