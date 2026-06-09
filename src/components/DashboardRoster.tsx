@@ -252,38 +252,45 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
       </div>
 
       {/* 3. LIST HEADER & FILTER */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-3">
-          <h2 className="text-[22px] font-black tracking-tight text-foreground">Today's Clients</h2>
-          <span className="flex items-center justify-center px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black tracking-widest shadow-sm">
-            {sortedCustomerGroups.length}
-          </span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="flex items-center justify-between w-full sm:w-auto">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-black tracking-tight text-foreground">Today's Clients</h2>
+            <span className="flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-black tracking-widest shadow-sm">
+              {sortedCustomerGroups.length}
+            </span>
+          </div>
+          
+          {/* Mobile 'See all' placed opposite to Title */}
+          <Link href="/customers" className="group flex sm:hidden items-center gap-1.5 bg-secondary/50 px-3 py-1.5 rounded-full hover:bg-secondary border border-border/50 transition-colors">
+            <span className="text-[11px] font-bold text-foreground">See all</span>
+            <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-foreground transition-colors" />
+          </Link>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           {villages.length > 0 && (
-            <div className="relative group">
+            <div className="relative group w-full sm:w-auto">
               <select
                 value={selectedVillage}
                 onChange={(e) => setSelectedVillage(e.target.value)}
-                className="w-full bg-secondary/80 hover:bg-secondary border border-border/60 hover:border-border rounded-full pl-3 pr-8 py-1.5 text-[11px] font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer shadow-sm"
+                className="w-full sm:w-auto bg-card hover:bg-secondary/50 border border-border/60 rounded-xl sm:rounded-full pl-4 pr-10 py-3 sm:py-2 text-sm font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer shadow-sm"
               >
                 <option value="">🌍 All Areas</option>
                 {villages.map(v => (
                   <option key={v} value={v}>📍 {v}</option>
                 ))}
               </select>
-              <div className="absolute inset-y-0 right-2.5 flex items-center pointer-events-none text-muted-foreground group-hover:text-foreground transition-colors">
-                <ChevronDown className="w-3.5 h-3.5" />
+              <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-muted-foreground group-hover:text-foreground transition-colors">
+                <ChevronDown className="w-4 h-4" />
               </div>
             </div>
           )}
 
-          <Link href="/customers" className="group flex items-center gap-1">
-            <span className="text-[12px] font-bold text-muted-foreground group-hover:text-primary transition-colors">See all</span>
-            <div className="w-5 h-5 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-               <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
-            </div>
+          {/* Desktop 'See all' */}
+          <Link href="/customers" className="hidden sm:flex group items-center gap-1.5 bg-secondary/50 px-3 py-1.5 rounded-full hover:bg-secondary border border-border/50 transition-colors">
+            <span className="text-xs font-bold text-foreground">See all</span>
+            <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
           </Link>
         </div>
       </div>
