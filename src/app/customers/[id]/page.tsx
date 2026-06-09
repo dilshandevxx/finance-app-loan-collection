@@ -104,75 +104,61 @@ export default async function CustomerDetails({ params }: Props) {
         <div className="md:col-span-5 flex flex-col gap-4">
 
           {/* Profile Card */}
-          <div className="flex flex-col bg-card/80 backdrop-blur-2xl border border-border/40 rounded-[2.5rem] overflow-hidden shadow-xl shadow-foreground/5 relative">
+          <div className="flex flex-col bg-card md:border md:border-border/40 md:rounded-[2.5rem] md:shadow-xl relative overflow-hidden">
             
-            {/* Top Pattern / Gradient Background */}
-            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent z-0" />
-
-            <div className="p-8 pb-10 relative z-10 flex flex-col items-center">
+            <div className="p-6 sm:p-10 relative z-10 flex flex-col items-center pt-8">
               
-              {/* Reliability Score */}
-              <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md text-foreground text-xs font-black border border-border shadow-sm">
-                <TrendingUp className="w-3.5 h-3.5 text-primary" />
-                {reliabilityScore}
-              </div>
-
-              <div className="w-24 h-24 rounded-full bg-secondary overflow-hidden relative mb-4 shadow-xl shadow-black/5 border-4 border-background">
+              {/* Ultra Clean Avatar */}
+              <div className="w-28 h-28 rounded-full bg-secondary overflow-hidden relative mb-5 shadow-sm border-4 border-background">
                 <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
+                <div className="absolute bottom-1 right-2 w-5 h-5 bg-primary border-2 border-background rounded-full" />
               </div>
 
-              <h1 className="text-2xl font-black tracking-tight mb-1 text-foreground text-center leading-tight">{customer.name}</h1>
+              <h1 className="text-3xl font-extrabold tracking-tight mb-2 text-foreground text-center leading-tight">{customer.name}</h1>
               
-              <div className="flex items-center gap-2 mb-4 flex-wrap justify-center">
-                <span className="text-muted-foreground text-xs font-bold bg-secondary/80 px-2.5 py-1 rounded-md">
-                  ID: {customer.memberId || customer.id}
-                </span>
+              <div className="flex items-center gap-3 mb-6 flex-wrap justify-center text-sm font-semibold text-muted-foreground">
+                <span>ID: {customer.memberId || customer.id}</span>
                 {customer.state && (
-                  <span className="px-2.5 py-1 text-xs font-bold bg-primary/10 text-primary rounded-md flex items-center gap-1">
-                    📍 {customer.state}
-                  </span>
+                  <>
+                    <span className="w-1 h-1 rounded-full bg-border" />
+                    <span className="text-foreground">{customer.state}</span>
+                  </>
                 )}
               </div>
               
               {customer.companyName && (
-                <span className="text-foreground font-black text-sm mb-2">{customer.companyName}</span>
+                <span className="text-primary font-bold text-sm mb-6 bg-primary/10 px-4 py-1.5 rounded-full">{customer.companyName}</span>
               )}
 
               <CustomerContactActions customer={customer} />
 
-              {/* Outstanding Balance Banner */}
-              <div className="mt-8 w-full bg-gradient-to-br from-secondary/50 to-secondary/10 rounded-3xl p-6 border border-border/50 flex flex-col items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay" />
-                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest relative z-10">Total Outstanding</span>
-                <div className="text-5xl font-black tracking-tighter mt-1 text-foreground flex items-baseline gap-1 relative z-10">
-                  <span className="text-xl text-muted-foreground font-bold">Rs.</span>
+              <div className="w-full h-px bg-border/50 my-8 max-w-sm mx-auto" />
+
+              {/* Outstanding Balance Banner - Ultra Minimal */}
+              <div className="w-full flex flex-col items-center">
+                <span className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-2">Remaining Balance</span>
+                <div className="text-6xl font-black tracking-tighter text-foreground flex items-baseline">
+                  <span className="text-2xl text-muted-foreground font-bold mr-1">Rs.</span>
                   {formatLKRShort(loan.remainingBalance)}
-                  <span className="text-muted-foreground text-2xl font-bold opacity-60">.{formatLKRDecimal(loan.remainingBalance)}</span>
                 </div>
               </div>
 
-              {/* Progress Bar */}
-              <div className="w-full mt-6 bg-secondary/30 p-5 rounded-3xl border border-border/40">
-                <div className="flex items-end justify-between text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2.5">
-                  <span className="text-foreground/80">Repayment Progress</span>
-                  <span className="text-primary text-sm">{progressPercent}%</span>
+              {/* Progress Bar - Ultra Minimal */}
+              <div className="w-full mt-8 max-w-sm">
+                <div className="flex items-center justify-between text-xs font-bold text-muted-foreground mb-3">
+                  <span>{paidCount} of {installments.length} Paid</span>
+                  <span className="text-primary">{progressPercent}%</span>
                 </div>
-                <div className="w-full h-2.5 bg-foreground/5 rounded-full overflow-hidden shadow-inner">
+                <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out relative"
+                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${progressPercent}%` }}
-                  >
-                    <div className="absolute inset-0 bg-white/20 w-full animate-pulse" />
-                  </div>
-                </div>
-                <div className="flex justify-between mt-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                  <span>{paidCount} Paid</span>
-                  <span>{installments.length} Total</span>
+                  />
                 </div>
               </div>
 
               {/* Desktop Actions */}
-              <div className="hidden md:flex mt-6 w-full">
+              <div className="hidden md:flex mt-10 w-full justify-center max-w-sm">
                 <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
               </div>
             </div>
