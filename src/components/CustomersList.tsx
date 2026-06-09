@@ -247,49 +247,40 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                 return (
                   <div key={customer.id} className="group outline-none block">
                     <Card className="bg-card/80 backdrop-blur-md border-border/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 relative group-focus-within:ring-4 ring-primary/20">
-                      <CardContent className="p-5 flex flex-col gap-5">
+                      <CardContent className="p-5 sm:p-6 flex flex-col gap-0 relative">
+                        {/* Status Badge Absolute */}
+                        <div className="absolute top-5 right-5">
+                          {isOverdue ? (
+                            <span className="px-2.5 py-1 rounded-full bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 animate-pulse">Overdue</span>
+                          ) : activeLoan ? (
+                            <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20">Active</span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-full bg-secondary text-muted-foreground text-[10px] uppercase font-bold tracking-widest border border-border">Settled</span>
+                          )}
+                        </div>
 
-                        {/* Top Row: Avatar, Name, Status */}
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-14 h-14 rounded-full border border-border/50 overflow-hidden relative shrink-0 shadow-sm bg-secondary">
-                              <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="flex flex-col pt-0.5">
-                              <span className="font-bold text-lg text-foreground tracking-tight leading-tight">{customer.name}</span>
-                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold mt-0.5">
-                                {customer.state && (
-                                  <span className="flex items-center">
-                                    {customer.state}
-                                  </span>
-                                )}
-                                {customer.state && customer.phone && "•"}
-                                <span className="flex items-center gap-1">
-                                  {formatLKPhone(customer.phone)}
-                                </span>
-                              </div>
-                            </div>
+                        {/* Top Row: Avatar & Identity */}
+                        <div className="flex items-center gap-4 mb-6">
+                          <div className="w-14 h-14 rounded-full bg-secondary overflow-hidden shrink-0 shadow-sm border border-border/50">
+                            <img src={customer.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(customer.name.trim())}`} alt={customer.name} className="w-full h-full object-cover" />
                           </div>
-                          
-                          {/* Status Badge */}
-                          <div className="shrink-0">
-                            {isOverdue ? (
-                              <span className="px-2.5 py-1 rounded-lg bg-destructive/10 text-destructive text-[10px] uppercase font-black tracking-widest border border-destructive/20 shadow-sm animate-pulse">Overdue</span>
-                            ) : activeLoan ? (
-                              <span className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] uppercase font-black tracking-widest border border-primary/20 shadow-sm">Active</span>
-                            ) : (
-                              <span className="px-2.5 py-1 rounded-lg bg-secondary text-muted-foreground text-[10px] uppercase font-bold tracking-widest border border-border shadow-sm">Settled</span>
-                            )}
+                          <div className="flex flex-col pr-16">
+                            <span className="font-extrabold text-lg text-foreground tracking-tight leading-tight truncate">{customer.name}</span>
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold mt-1">
+                              {customer.state && <span className="truncate max-w-[80px]">{customer.state}</span>}
+                              {customer.state && customer.phone && <span className="w-1 h-1 rounded-full bg-border shrink-0" />}
+                              <span className="truncate">{formatLKPhone(customer.phone)}</span>
+                            </div>
                           </div>
                         </div>
 
-                        {/* Financials */}
-                        <div className="flex flex-col bg-secondary/30 rounded-2xl p-4 border border-border/30">
-                          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-1">Total Outstanding</span>
+                        {/* Financials - Minimalist */}
+                        <div className="flex flex-col mb-5">
+                          <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-1">Remaining Balance</span>
                           {activeLoan ? (
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-sm font-bold text-foreground/50">Rs.</span>
-                              <span className={`font-black text-2xl tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
+                            <div className="flex items-baseline gap-1.5">
+                              <span className="text-sm font-bold text-muted-foreground">Rs.</span>
+                              <span className={`font-black text-3xl tracking-tighter truncate ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
                                 {totalRemaining.toLocaleString("en-LK")}
                               </span>
                             </div>
@@ -298,42 +289,33 @@ export function CustomersList({ customers, loans, installments }: CustomersListP
                               Fully Paid <CheckCircle2 className="w-4 h-4" />
                             </span>
                           )}
-
-                          {/* Progress */}
-                          {activeLoan && (
-                            <div className="mt-4 flex flex-col gap-1.5 w-full">
-                              <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                                <span>Repayment Progress</span>
-                                <span className={isOverdue ? 'text-destructive' : 'text-primary'}>
-                                  {Math.round(((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100)}%
-                                </span>
-                              </div>
-                              <div className="w-full h-1.5 bg-foreground/5 rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverdue ? 'bg-destructive' : 'bg-primary'}`}
-                                  style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
-                                />
-                              </div>
-                            </div>
-                          )}
                         </div>
 
+                        {/* Progress Line */}
+                        {activeLoan && (
+                          <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden mb-6">
+                            <div
+                              className={`h-full rounded-full transition-all duration-1000 ease-out ${isOverdue ? 'bg-destructive' : 'bg-primary'}`}
+                              style={{ width: `${Math.max(0, Math.min(100, ((activeLoan.totalAmountDue - totalRemaining) / activeLoan.totalAmountDue) * 100))}%` }}
+                            />
+                          </div>
+                        )}
+
                         {/* Action Buttons */}
-                        <div className="grid grid-cols-2 gap-2 mt-1">
+                        <div className="grid grid-cols-2 gap-3 mt-auto">
                           <a 
                             href={`tel:${customer.phone}`}
-                            className="flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/80 text-foreground font-bold py-3 rounded-xl transition-colors text-sm"
+                            className="flex items-center justify-center gap-2 bg-secondary hover:bg-secondary/80 text-foreground font-bold py-3 rounded-2xl transition-colors text-sm"
                           >
                             <Phone className="w-4 h-4 text-primary" /> Call
                           </a>
                           <Link 
                             href={`/customers/${customer.id}`}
-                            className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-xl transition-colors shadow-md text-sm"
+                            className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-2xl transition-colors shadow-sm text-sm"
                           >
-                            <Banknote className="w-4 h-4" /> View Account
+                            View Account
                           </Link>
                         </div>
-
                       </CardContent>
                     </Card>
                   </div>
