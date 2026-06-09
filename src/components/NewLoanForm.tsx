@@ -699,6 +699,7 @@ export function NewLoanForm({
                 type="file"
                 id="photo-input-new"
                 accept="image/*"
+                capture="environment"
                 onChange={handlePhotoChange}
                 className="hidden"
               />
