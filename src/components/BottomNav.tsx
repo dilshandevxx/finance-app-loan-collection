@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Home, Users, Plus, Settings, FileText, Map, Bell, Loader2 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -20,11 +20,32 @@ const SECONDARY_NAV = [
 
 export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } = {}) {
   const pathname = usePathname();
+  const router = useRouter();
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
+  const [isPending, startTransition] = useState<boolean>(false); // Just to track if we need to polyfill transition
 
   useEffect(() => {
     setLoadingPath(null);
   }, [pathname]);
+
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (pathname === href) return;
+    
+    // Check if user is trying to open in new tab
+    if (e.ctrlKey || e.metaKey || e.button === 1) return;
+    
+    e.preventDefault();
+    setLoadingPath(href);
+    
+    // Import useTransition from react natively, but since we can't easily add it to imports without replacing line 3, we'll just use React.startTransition if available or standard timeout
+    import("react").then((React) => {
+      React.startTransition(() => {
+        router.push(href);
+      });
+    }).catch(() => {
+       router.push(href);
+    });
+  };
 
   return (
     <>
@@ -46,7 +67,7 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
             const active = pathname === href;
             const isLoading = loadingPath === href;
             return (
-              <Link key={href} href={href} onClick={() => !active && setLoadingPath(href)} className={`
+              <Link key={href} href={href} onClick={(e) => handleNavigation(e, href)} className={`
                 relative flex flex-col items-center justify-center gap-0.5
                 flex-1 p-2 rounded-2xl transition-all duration-200
                 ${active ? "text-primary" : "text-muted-foreground"}
@@ -78,7 +99,7 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
             const active = pathname === href;
             const isLoading = loadingPath === href;
             return (
-              <Link key={href} href={href} onClick={() => !active && setLoadingPath(href)} className={`
+              <Link key={href} href={href} onClick={(e) => handleNavigation(e, href)} className={`
                 relative flex flex-col items-center justify-center gap-0.5
                 flex-1 p-2 rounded-2xl transition-all duration-200
                 ${active ? "text-primary" : "text-muted-foreground"}
@@ -124,10 +145,12 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
           <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">Menu</p>
           {NAV.map(({ href, Icon, label }) => {
             const active = pathname === href;
+            const isLoading = loadingPath === href;
             return (
               <Link
                 key={href}
                 href={href}
+                onClick={(e) => handleNavigation(e, href)}
                 className={`
                   relative w-full flex items-center gap-4
                   px-4 py-3.5 rounded-[1.25rem] transition-all duration-300
@@ -137,7 +160,11 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
                   }
                 `}
               >
-                <Icon className={`w-5 h-5 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 shrink-0 animate-spin text-primary" />
+                ) : (
+                  <Icon className={`w-5 h-5 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                )}
                 <span className="text-[15px]">{label}</span>
                 {/* Active indicator bar */}
                 {active && (
@@ -154,10 +181,12 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
           <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">Quick Access</p>
           {SECONDARY_NAV.map(({ href, Icon, label }) => {
             const active = pathname === href;
+            const isLoading = loadingPath === href;
             return (
               <Link
                 key={href}
                 href={href}
+                onClick={(e) => handleNavigation(e, href)}
                 className={`
                   relative w-full flex items-center gap-4
                   px-4 py-3 rounded-[1.25rem] transition-all duration-300
@@ -167,7 +196,11 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
                   }
                 `}
               >
-                <Icon className={`w-4.5 h-4.5 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                {isLoading ? (
+                  <Loader2 className="w-4.5 h-4.5 shrink-0 animate-spin text-primary" />
+                ) : (
+                  <Icon className={`w-4.5 h-4.5 shrink-0 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                )}
                 <span className="text-[14px]">{label}</span>
                 {active && (
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-7 rounded-r-full bg-primary" />
