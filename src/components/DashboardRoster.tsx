@@ -10,6 +10,7 @@ import { markInstallmentPaid } from "@/app/actions";
 import { formatLKR, phoneToDial } from "@/lib/format";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 import { SidePanel } from "@/components/SidePanel";
+import { useRouter } from "next/navigation";
 
 type DashboardRosterProps = {
   pendingInstallments: Installment[];
@@ -231,24 +232,8 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
 
       {/* 2. ACTION BUTTONS */}
       <div className="grid grid-cols-2 gap-3 mb-8 md:hidden">
-        <Link
-          href="/new"
-          className="flex items-center gap-3 p-4 bg-secondary hover:bg-secondary/80 rounded-[1.25rem] transition-all active:scale-[0.98] border border-border/40"
-        >
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <Plus className="w-4 h-4 text-primary" />
-          </div>
-          <span className="text-sm font-semibold text-foreground leading-tight">Create<br />Account</span>
-        </Link>
-        <Link
-          href="/villages"
-          className="flex items-center gap-3 p-4 bg-secondary hover:bg-secondary/80 rounded-[1.25rem] transition-all active:scale-[0.98] border border-border/40"
-        >
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <MapPin className="w-4 h-4 text-primary" />
-          </div>
-          <span className="text-sm font-semibold text-foreground leading-tight">Manage<br />Areas</span>
-        </Link>
+        <NavActionButton href="/new" icon={<Plus className="w-4 h-4 text-primary" />} label={<span>Create<br />Account</span>} />
+        <NavActionButton href="/villages" icon={<MapPin className="w-4 h-4 text-primary" />} label={<span>Manage<br />Areas</span>} />
       </div>
 
       {/* 3. LIST HEADER & FILTER */}
@@ -468,5 +453,27 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
         installments={localInstallments}
       />
     </section>
+  );
+}
+
+function NavActionButton({ href, icon, label }: { href: string; icon: React.ReactNode; label: React.ReactNode }) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <button
+      onClick={() => {
+        if (isPending) return;
+        startTransition(() => {
+          router.push(href);
+        });
+      }}
+      className="flex items-center gap-3 p-4 bg-secondary hover:bg-secondary/80 rounded-[1.25rem] transition-all active:scale-[0.98] border border-border/40 text-left"
+    >
+      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+        {isPending ? <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" /> : icon}
+      </div>
+      <span className="text-sm font-semibold text-foreground leading-tight">{label}</span>
+    </button>
   );
 }

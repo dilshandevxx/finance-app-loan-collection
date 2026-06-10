@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { CollectionGoalCard } from "@/components/CollectionGoalCard";
-import { BarChart3, Radio, Users, FileText } from "lucide-react";
+import { BarChart3, Radio, Users, FileText, Loader2 } from "lucide-react";
 import { Customer, Loan, Installment } from "@/data/db";
 
 interface DesktopHomeGridProps {
@@ -152,16 +153,25 @@ export function DesktopHomeGrid({
 function NavCard({ card, widget }: { card: any, widget: React.ReactNode }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  function handleMouseMove(e: React.MouseEvent<HTMLAnchorElement>) {
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
     setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   }
 
+  function handleClick() {
+    if (isPending) return;
+    startTransition(() => {
+      router.push(card.href);
+    });
+  }
+
   return (
-    <Link 
-      href={card.href} 
-      className="group block relative w-full h-full min-h-[220px] rounded-[2rem] overflow-hidden"
+    <div 
+      onClick={handleClick}
+      className="group block relative w-full h-full min-h-[220px] rounded-[2rem] overflow-hidden cursor-pointer"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
@@ -184,7 +194,11 @@ function NavCard({ card, widget }: { card: any, widget: React.ReactNode }) {
         <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
         
         <div className="relative z-10 w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
-          {card.icon}
+          {isPending ? (
+            <Loader2 className="w-6 h-6 text-white animate-spin" />
+          ) : (
+            card.icon
+          )}
         </div>
         
         {widget && <div className="relative z-10">{widget}</div>}
@@ -196,6 +210,6 @@ function NavCard({ card, widget }: { card: any, widget: React.ReactNode }) {
           </p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
