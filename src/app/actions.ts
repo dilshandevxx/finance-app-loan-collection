@@ -494,7 +494,7 @@ export async function editInstallment(installmentId: string, status: string, amo
 
     const { data: loan } = await supabase
       .from("loans")
-      .select("total_amount_due, customer_id")
+      .select("total_amount_due, customer_id, weekly_installment")
       .eq("id", inst.loan_id)
       .single();
 
@@ -506,6 +506,74 @@ export async function editInstallment(installmentId: string, status: string, amo
         .from("loans")
         .update({ remaining_balance: newRemaining, status: newLoanStatus })
         .eq("id", inst.loan_id);
+
+      // Recalculate pending/missed installments
+      const { data: pendingInsts } = await supabase
+        .from("installments")
+        .select("*")
+        .eq("loan_id", inst.loan_id)
+        .in("status", ["PENDING", "MISSED"])
+        .order("due_date", { ascending: true });
+
+      if (newRemaining <= 0) {
+        if (pendingInsts && pendingInsts.length > 0) {
+          for (const p of pendingInsts) {
+            await supabase.from("installments").delete().eq("id", p.id);
+          }
+        }
+      } else {
+        let distributed = 0;
+        const weeklyAmount = Number(loan.weekly_installment);
+        
+        if (pendingInsts && pendingInsts.length > 0) {
+          for (let i = 0; i < pendingInsts.length; i++) {
+            const leftToDistribute = newRemaining - distributed;
+            const targetAmount = Math.min(weeklyAmount, leftToDistribute);
+
+            if (targetAmount <= 0) {
+              await supabase.from("installments").delete().eq("id", pendingInsts[i].id);
+            } else {
+              await supabase
+                .from("installments")
+                .update({ amount: Math.round(targetAmount * 100) / 100 })
+                .eq("id", pendingInsts[i].id);
+              distributed += targetAmount;
+            }
+          }
+        }
+
+        if (distributed < newRemaining - 0.01) {
+          let lastDate = new Date();
+          
+          if (pendingInsts && pendingInsts.length > 0) {
+            lastDate = new Date(pendingInsts[pendingInsts.length - 1].due_date);
+          } else {
+            const { data: allOrderedInsts } = await supabase
+              .from("installments")
+              .select("due_date")
+              .eq("loan_id", inst.loan_id)
+              .order("due_date", { ascending: true });
+              
+            if (allOrderedInsts && allOrderedInsts.length > 0) {
+              lastDate = new Date(allOrderedInsts[allOrderedInsts.length - 1].due_date);
+            }
+          }
+
+          while (distributed < newRemaining - 0.01) {
+            lastDate.setDate(lastDate.getDate() + 7);
+            const leftToDistribute = newRemaining - distributed;
+            const targetAmount = Math.min(weeklyAmount, leftToDistribute);
+
+            await supabase.from("installments").insert({
+              loan_id: inst.loan_id,
+              amount: Math.round(targetAmount * 100) / 100,
+              due_date: lastDate.toISOString().split("T")[0],
+              status: "PENDING",
+            });
+            distributed += targetAmount;
+          }
+        }
+      }
 
       revalidatePath(`/customers/${loan.customer_id}`);
     }
