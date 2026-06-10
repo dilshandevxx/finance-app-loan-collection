@@ -760,3 +760,53 @@ export async function saveCompanySettings(name: string, logo: string, phone: str
   return res;
 }
 
+export async function editCustomer(customerId: string, formData: FormData) {
+  const supabase = await createClient();
+  const name = formData.get("name") as string;
+  const phoneRaw = formData.get("phone") as string;
+  const phone = normalizePhone(phoneRaw);
+  const memberId = formData.get("memberId") as string;
+  const stateVal = formData.get("state") as string || "";
+  const addressVal = formData.get("address") as string || "";
+  const companyNameVal = formData.get("companyName") as string || "";
+  const idNumberVal = formData.get("idNumber") as string || "";
+
+  if (!name || !phone) {
+    return { error: "Name and phone number are required." };
+  }
+
+  let serializedAddress = null;
+  if (stateVal.trim() || addressVal.trim() || companyNameVal.trim() || idNumberVal.trim()) {
+    serializedAddress = JSON.stringify({
+      state: stateVal.trim(),
+      address: addressVal.trim(),
+      companyName: companyNameVal.trim(),
+      idNumber: idNumberVal.trim()
+    });
+  }
+
+  const { error: customerError } = await supabase
+    .from("customers")
+    .update({
+      name: name.trim(),
+      phone: phone,
+      member_id: memberId?.trim() || null,
+      address: serializedAddress,
+      company_name: companyNameVal.trim() || null,
+      nic_number: idNumberVal.trim() || null,
+      street_address: addressVal.trim() || null,
+      village: stateVal.trim() || null
+    })
+    .eq("id", customerId);
+
+  if (customerError) {
+    console.error("Customer update error:", customerError);
+    return { error: `Failed to update customer: ${customerError.message}` };
+  }
+
+  revalidatePath(`/customers/${customerId}`);
+  revalidatePath("/customers");
+  revalidatePath("/");
+  
+  return { success: true };
+}
