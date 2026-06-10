@@ -39,11 +39,15 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
     
     // Import useTransition from react natively, but since we can't easily add it to imports without replacing line 3, we'll just use React.startTransition if available or standard timeout
     import("react").then((React) => {
-      React.startTransition(() => {
-        router.push(href);
-      });
+      setTimeout(() => {
+        React.startTransition(() => {
+          router.push(href);
+        });
+      }, 0);
     }).catch(() => {
-       router.push(href);
+      setTimeout(() => {
+        router.push(href);
+      }, 0);
     });
   };
 

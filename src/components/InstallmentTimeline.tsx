@@ -15,6 +15,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editStatus, setEditStatus] = useState<string>("PENDING");
   const [editAmount, setEditAmount] = useState<string>("");
+  const [editDueDate, setEditDueDate] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -25,6 +26,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
     setEditingId(inst.id);
     setEditStatus(inst.status);
     setEditAmount(inst.amount.toString());
+    setEditDueDate(inst.dueDate.split('T')[0]);
     setErrorMsg("");
   };
 
@@ -42,7 +44,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
 
     setErrorMsg("");
     startTransition(async () => {
-      const res = await editInstallment(instId, editStatus, parsedAmount);
+      const res = await editInstallment(instId, editStatus, parsedAmount, editDueDate);
       if (res.success) {
         setEditingId(null);
       } else {
@@ -71,7 +73,7 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Status</label>
             <select
@@ -91,6 +93,16 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
               type="number"
               value={editAmount}
               onChange={(e) => setEditAmount(e.target.value)}
+              className="w-full bg-secondary/30 border border-border/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-bold"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Due Date</label>
+            <input
+              type="date"
+              value={editDueDate}
+              onChange={(e) => setEditDueDate(e.target.value)}
               className="w-full bg-secondary/30 border border-border/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-bold"
             />
           </div>

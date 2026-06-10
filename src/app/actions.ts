@@ -447,7 +447,7 @@ export async function saveVillageSchedule(schedule: VillageSchedule) {
   return res;
 }
 
-export async function editInstallment(installmentId: string, status: string, amount: number) {
+export async function editInstallment(installmentId: string, status: string, amount: number, dueDate?: string) {
   const supabase = await createClient();
 
   if (isNaN(amount) || amount <= 0) {
@@ -456,9 +456,14 @@ export async function editInstallment(installmentId: string, status: string, amo
 
   // 1. Update the installment
   const paidDate = status === "PAID" ? new Date().toISOString() : null;
+  const updateData: any = { status, amount, paid_date: paidDate };
+  if (dueDate) {
+    updateData.due_date = dueDate;
+  }
+
   const { error: updateError } = await supabase
     .from("installments")
-    .update({ status, amount, paid_date: paidDate })
+    .update(updateData)
     .eq("id", installmentId);
 
   if (updateError) {
