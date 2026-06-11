@@ -69,36 +69,39 @@ export function DashboardHeader({
   return (
     <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 lg:gap-4 pt-6 mb-4 md:mb-8">
       {/* Mobile Header (Hidden on Desktop) */}
-      <div className="flex md:hidden [@media(pointer:fine)]:hidden items-center justify-between w-full pb-2">
+      <div className="flex md:hidden [@media(pointer:fine)]:hidden items-center justify-between w-full px-1 pt-1 pb-3">
         <div className="flex items-center gap-3">
-          {/* Clean Avatar */}
-          <div className="relative">
-            <div className="w-11 h-11 rounded-full overflow-hidden bg-secondary border-[1.5px] border-border flex items-center justify-center">
+          {/* Refined Avatar */}
+          <div className="relative shadow-sm">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-primary/10 border border-primary/20 flex items-center justify-center">
               {agentAvatar ? (
                  <img src={agentAvatar} alt={agentName} className="w-full h-full object-cover" />
               ) : (
-                 <span className="text-primary text-base font-black">{agentName.charAt(0).toUpperCase()}</span>
+                 <span className="text-primary text-sm font-black">{agentName.charAt(0).toUpperCase()}</span>
               )}
             </div>
-            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-background rounded-full" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border border-background rounded-full shadow-[0_0_4px_rgba(16,185,129,0.5)]" />
           </div>
           
-          {/* Clean Text */}
-          <div className="flex flex-col">
-            <span className="text-[12px] font-medium text-muted-foreground leading-tight">{greeting}</span>
-            <span className="text-[18px] font-bold text-foreground leading-tight">{agentName}</span>
+          {/* Sharper Typography */}
+          <div className="flex flex-col justify-center">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">{greeting}</span>
+            <span className="text-base font-black text-foreground leading-none tracking-tight flex items-center gap-1.5">
+              {agentName}
+              <Icon className={`w-3.5 h-3.5 ${iconClass.split(' ')[0]}`} />
+            </span>
           </div>
         </div>
 
-        {/* Clean Action Icons */}
-        <div className="flex items-center gap-1">
+        {/* Polished Action Icons */}
+        <div className="flex items-center gap-2">
           <button 
             onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-            className="w-10 h-10 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground active:bg-secondary/80 transition-colors"
+            className="w-9 h-9 rounded-full flex items-center justify-center bg-secondary/60 border border-border/40 text-foreground hover:bg-secondary transition-colors shadow-sm"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </button>
-          <div className="flex items-center justify-center">
+          <div className="shrink-0 flex items-center justify-center">
             <NotificationPanel
               customers={customers}
               loans={loans}
