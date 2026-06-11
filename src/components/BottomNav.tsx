@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Home, Users, Plus, Settings, FileText, Map, Bell, Loader2 } from "lucide-react";
@@ -22,11 +22,14 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
   const pathname = usePathname();
   const router = useRouter();
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
-  const [isPending, startTransition] = useState<boolean>(false); // Just to track if we need to polyfill transition
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    setLoadingPath(null);
-  }, [pathname]);
+    // Clear loading state if navigation completes or errors out
+    if (!isPending) {
+      setLoadingPath(null);
+    }
+  }, [pathname, isPending]);
 
   const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (pathname === href) return;
@@ -37,17 +40,8 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
     e.preventDefault();
     setLoadingPath(href);
     
-    // Import useTransition from react natively, but since we can't easily add it to imports without replacing line 3, we'll just use React.startTransition if available or standard timeout
-    import("react").then((React) => {
-      setTimeout(() => {
-        React.startTransition(() => {
-          router.push(href);
-        });
-      }, 0);
-    }).catch(() => {
-      setTimeout(() => {
-        router.push(href);
-      }, 0);
+    startTransition(() => {
+      router.push(href);
     });
   };
 
@@ -90,10 +84,14 @@ export function BottomNav({ hideOnMobile = false }: { hideOnMobile?: boolean } =
           })}
 
           {/* Center FAB */}
-          <Link href="/new" className="flex flex-col items-center gap-0.5 group shrink-0 mx-1">
+          <Link href="/new" onClick={(e) => handleNavigation(e, "/new")} className="flex flex-col items-center gap-0.5 group shrink-0 mx-1">
             <div className="relative">
-              <div className="relative w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Plus className="w-6 h-6" strokeWidth={2.5} />
+              <div className="relative w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md shadow-primary/20">
+                {loadingPath === "/new" ? (
+                  <Loader2 className="w-6 h-6 animate-spin" strokeWidth={2.5} />
+                ) : (
+                  <Plus className="w-6 h-6" strokeWidth={2.5} />
+                )}
               </div>
             </div>
             <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground mt-1">New</span>
