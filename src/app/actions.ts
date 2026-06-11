@@ -10,12 +10,18 @@ import { VillageSchedule } from "@/lib/schedule";
 export async function getCompanySettingsAction() {
   return await getCompanySettingsDB();
 }
+}
 
 export async function createLoan(formData: FormData) {
   const supabase = await createClient();
   const name = formData.get("name") as string;
   const phoneRaw = formData.get("phone") as string;
   const phone = normalizePhone(phoneRaw);
+  const existingCustomerId = formData.get("existingCustomerId") as string | null;
+  const isOngoingLoan = formData.get("isOngoingLoan") === "true";
+  const amountAlreadyPaidStr = formData.get("amountAlreadyPaid") as string;
+  const startDate = formData.get("startDate") as string;
+  const createdAt = formData.get("createdAt") as string;
   const memberId = formData.get("memberId") as string;
   const principalStr = formData.get("principal") as string;
   const interestStr = formData.get("interest") as string;
@@ -24,157 +30,6 @@ export async function createLoan(formData: FormData) {
   const stateVal = formData.get("state") as string || "";
   const addressVal = formData.get("address") as string || "";
   const avatarDataUrl = formData.get("avatarDataUrl") as string || "";
-  const companyNameVal = formData.get("companyName") as string || "";
-  const idNumberVal = formData.get("idNumber") as string || "";
-
-  const principalAmount = parseFloat(principalStr);
-  const weeksRaw = parseInt(weeksStr);
-
-  const existingCustomerId = formData.get("existingCustomerId") as string | null;
-  const isOngoingLoan = formData.get("isOngoingLoan") === "true";
-  const amountAlreadyPaidStr = formData.get("amountAlreadyPaid") as string;
-  const originalStartDate = formData.get("originalStartDate") as string;
-
-  let amountAlreadyPaid = 0;
-  if (isOngoingLoan && amountAlreadyPaidStr) {
-    amountAlreadyPaid = parseFloat(amountAlreadyPaidStr) || 0;
-  }
-
-  if (isNaN(principalAmount) || principalAmount <= 0) {
-    return { error: "Please enter a valid principal amount greater than 0." };
-  }
-
-  const isCustom = formData.get("isCustom") === "true";
-  const preferredInstallmentStr = formData.get("preferredInstallment") as string;
-  const preferredInstallment = parseFloat(preferredInstallmentStr);
-
-  let weeks = weeksRaw;
-  let interest = 40;
-
-  if (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0) {
-    const stdWeeks = 14;
-    const stdInterest = principalAmount * 0.40;
-    const stdTotal = principalAmount + stdInterest;
-
-    // Step 1: Base weeks needed to pay standard total at preferred installment
-    const weeksBase = Math.ceil(stdTotal / preferredInstallment);
-
-    if (weeksBase > stdWeeks) {
-      // Step 2: Extra weeks
-      const weeksExtra = weeksBase - stdWeeks;
-
-      // Step 3: Weekly profit of standard option, rounded to nearest 100 LKR
-      const pHigh = Math.round((stdInterest / stdWeeks) / 100) * 100;
-
-      // Step 4: Calculate full profit (standard interest + extra weeks * standard weekly profit)
-      const interestAmt = stdInterest + (weeksExtra * pHigh);
-
-      // Step 5: Interest rate is calculated
-      interest = (interestAmt / principalAmount) * 100;
-
-      // Step 6: Finally calculate weeks count needed to pay full amount
-      weeks = Math.ceil((principalAmount + interestAmt) / preferredInstallment);
-    } else {
-      weeks = stdWeeks;
-      interest = 40;
-    }
-  } else {
-    weeks = 14;
-    interest = 40;
-  }
-
-  if (isNaN(weeks) || weeks < 14) {
-    return { error: "Please enter a valid loan duration of at least 14 weeks." };
-  }
-
-  let customerId = existingCustomerId || null;
-
-  if (!customerId) {
-    if (!name || !phone) {
-      return { error: "Name and phone number are required for a new customer." };
-    }
-
-    const avatarUrl = avatarDataUrl || (gender === "female"
-      ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=bigHair,bob,bun,curly,curvy,dreads01,dreads02,frida,froAndBand,frizzle,miaWallace,longButNotTooLong,straight01,straight02,straightAndStrand&facialHairProbability=0`
-      : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`);
-
-    let serializedAddress = null;
-    if (stateVal.trim() || addressVal.trim() || companyNameVal.trim() || idNumberVal.trim()) {
-      serializedAddress = JSON.stringify({
-        state: stateVal.trim(),
-        address: addressVal.trim(),
-        companyName: companyNameVal.trim(),
-        idNumber: idNumberVal.trim()
-      });
-    }
-
-    const { data: newCustomer, error: customerError } = await supabase
-      .from("customers")
-      .insert({
-        name: name.trim(),
-        phone: phone,
-        member_id: memberId?.trim() || null,
-        avatar_url: avatarUrl,
-        address: serializedAddress,
-        company_name: companyNameVal.trim() || null,
-        nic_number: idNumberVal.trim() || null,
-        street_address: addressVal.trim() || null,
-        village: stateVal.trim() || null
-      })
-      .select()
-      .single();
-
-    if (customerError) {
-      console.error("Customer insert error:", customerError);
-      return { error: `Failed to create customer: ${customerError.message}` };
-    }
-    customerId = newCustomer.id;
-  }
-
-  const totalAmountDue = principalAmount * (1 + interest / 100);
-  
-  if (amountAlreadyPaid < 0 || amountAlreadyPaid > totalAmountDue) {
-    return { error: "Invalid amount already paid. Must be between 0 and total due." };
-  }
-
-  // Calculate starting balance for the ledger
-  const startingBalance = Math.max(0, totalAmountDue - amountAlreadyPaid);
-
-  // For custom installment, weekly installment is exactly the preferred installment,
-  // otherwise it is totalAmountDue / weeks.
-  const weeklyInstallment = (isCustom && !isNaN(preferredInstallment) && preferredInstallment > 0)
-    ? preferredInstallment
-    : totalAmountDue / weeks;
-
-  const startDate = (isOngoingLoan && originalStartDate) ? originalStartDate : new Date().toISOString().split('T')[0];
-
-  const { data: newLoan, error: loanError } = await supabase
-    .from("loans")
-    .insert({
-      customer_id: customerId,
-      principal_amount: principalAmount,
-      total_amount_due: totalAmountDue,
-      remaining_balance: startingBalance,
-      weekly_installment: weeklyInstallment,
-      start_date: startDate,
-      status: startingBalance <= 0 ? "PAID_OFF" : "ACTIVE"
-    })
-    .select()
-    .single();
-
-  if (loanError) {
-    console.error("Loan insert error:", loanError);
-    return { error: `Failed to create loan: ${loanError.message}` };
-  }
-
-  const installments = [];
-  const currentDate = new Date(startDate);
-  
-  let unallocatedPaid = amountAlreadyPaid;
-  let totalGenerated = 0;
-
-  for (let i = 0; i < weeks; i++) {
-    currentDate.setDate(currentDate.getDate() + 7);
     
     let amount = weeklyInstallment;
     
@@ -306,7 +161,7 @@ export async function getReceiptDetails(installmentId: string) {
       .select("*")
       .eq("loan_id", loan.id)
       .order("due_date", { ascending: true });
-    if (allInstError || !allInstallments) {
+    if (allInstError || !allInstallments) {
       console.error("Error fetching all installments for receipt:", allInstError);
       return null;
     }
@@ -584,6 +439,58 @@ export async function editInstallment(installmentId: string, status: string, amo
 
 export async function markInstallmentPaid(installmentId: string, amount: number) {
   return await editInstallment(installmentId, "PAID", amount);
+}
+
+export async function updateLoanDates(loanId: string, newCreatedAt: string, newStartDate: string): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient();
+
+  // 1. Update the loan's start_date and created_at
+  const { error: loanError } = await supabase
+    .from("loans")
+    .update({ 
+      start_date: newStartDate,
+      created_at: new Date(newCreatedAt).toISOString()
+    })
+    .eq("id", loanId);
+
+  if (loanError) {
+    return { success: false, error: loanError.message };
+  }
+
+  // 2. Fetch all installments to adjust their due dates
+  const { data: installments, error: instError } = await supabase
+    .from("installments")
+    .select("id, due_date")
+    .eq("loan_id", loanId)
+    .order("due_date", { ascending: true });
+
+  if (instError) return { success: false, error: instError.message };
+
+  // Adjust dates sequentially starting from newStartDate
+  let currentDate = new Date(newStartDate);
+  for (const inst of installments) {
+    const newDueDate = currentDate.toISOString().split("T")[0];
+    await supabase.from("installments").update({ due_date: newDueDate }).eq("id", inst.id);
+    currentDate.setDate(currentDate.getDate() + 7);
+  }
+
+  // Log the action as a customer note
+  const { data: loan } = await supabase
+    .from("loans")
+    .select("customer_id")
+    .eq("id", loanId)
+    .single();
+
+  if (loan) {
+    await supabase.from("customer_notes").insert({
+      customer_id: loan.customer_id,
+      note: `Loan dates updated. Created on: ${newCreatedAt}, Installments Start: ${newStartDate}. Due dates adjusted.`,
+    });
+    revalidatePath(`/customers/${loan.customer_id}`);
+  }
+
+  revalidatePath("/");
+  return { success: true };
 }
 
 export async function addCustomerNote(customerId: string, note: string): Promise<{ success: boolean; error?: string }> {

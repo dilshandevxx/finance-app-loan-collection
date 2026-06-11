@@ -5,7 +5,7 @@ import { Plus, Calendar, DollarSign, Clock, MessageSquare, AlertCircle } from "l
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer, Loan, CustomerNote } from "@/data/db";
-import { addCustomerNote, postponeInstallments, restructureWeeklyInstallment } from "@/app/actions";
+import { addCustomerNote, postponeInstallments, restructureWeeklyInstallment, updateLoanDates } from "@/app/actions";
 
 type CustomerOperationsProps = {
   customer: Customer;
@@ -20,6 +20,8 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
   const [isRestructureOpen, setIsRestructureOpen] = useState(false);
   const [holidayWeeks, setHolidayWeeks] = useState(1);
   const [newWeeklyAmount, setNewWeeklyAmount] = useState(loan.weeklyInstallment.toString());
+  const [newStartDate, setNewStartDate] = useState(loan.startDate ? new Date(loan.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
+  const [newCreatedAt, setNewCreatedAt] = useState(loan.createdAt ? new Date(loan.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
   const [isPendingRestructure, startTransitionRestructure] = useTransition();
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -61,6 +63,22 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
         setIsRestructureOpen(false);
       } else {
         setErrorMsg(res.error || "Failed to restructure installment amount");
+      }
+    });
+  };
+
+  const handleUpdateStartDate = () => {
+    setErrorMsg("");
+    if (!newStartDate || !newCreatedAt) {
+      setErrorMsg("Please select valid dates");
+      return;
+    }
+    startTransitionRestructure(async () => {
+      const res = await updateLoanDates(loan.id, newCreatedAt, newStartDate);
+      if (res.success) {
+        setIsRestructureOpen(false);
+      } else {
+        setErrorMsg(res.error || "Failed to update loan dates");
       }
     });
   };
@@ -232,6 +250,46 @@ export function CustomerOperations({ customer, loan, notes }: CustomerOperations
                     className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-bold text-sm px-6 h-11 shrink-0 transition-all active:scale-[0.98] border-none"
                   >
                     {isPendingRestructure ? "Updating..." : "Restructure Amount"}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-100 dark:border-border/60" />
+
+              {/* Option C: Edit Loan Dates */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold">
+                  <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <h4 className="font-bold text-sm uppercase tracking-wide">Edit Loan Dates</h4>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-white/40">
+                  Change the creation date and the installment start date. The start date determines when installments begin.
+                </p>
+                <div className="flex flex-col gap-3 mt-1.5">
+                  <div className="flex gap-3 items-center">
+                    <span className="text-xs font-bold text-muted-foreground w-24 shrink-0">Created On</span>
+                    <input
+                      type="date"
+                      value={newCreatedAt}
+                      onChange={(e) => setNewCreatedAt(e.target.value)}
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3 text-sm text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40"
+                    />
+                  </div>
+                  <div className="flex gap-3 items-center">
+                    <span className="text-xs font-bold text-muted-foreground w-24 shrink-0">Starts On</span>
+                    <input
+                      type="date"
+                      value={newStartDate}
+                      onChange={(e) => setNewStartDate(e.target.value)}
+                      className="w-full bg-gray-50 dark:bg-muted border border-gray-200 dark:border-border rounded-xl px-4 py-3 text-sm text-black dark:text-white focus:outline-none focus:border-gray-400 dark:focus:border-white/40"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleUpdateStartDate}
+                    disabled={isPendingRestructure}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm px-6 h-11 shrink-0 transition-all active:scale-[0.98] border-none mt-2"
+                  >
+                    {isPendingRestructure ? "Updating..." : "Update Dates"}
                   </Button>
                 </div>
               </div>

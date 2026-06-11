@@ -93,11 +93,11 @@ export function NewLoanForm({
   // Ongoing loan states
   const [isOngoingLoan, setIsOngoingLoan] = useState<boolean>(false);
   const [amountAlreadyPaid, setAmountAlreadyPaid] = useState<string>("");
-  const [originalStartDate, setOriginalStartDate] = useState<string>(() => {
-    // Default to a month ago as a reasonable starting point if checked
-    const d = new Date();
-    d.setMonth(d.getMonth() - 1);
-    return d.toISOString().split("T")[0];
+  const [startDate, setStartDate] = useState<string>(() => {
+    return new Date().toISOString().split("T")[0];
+  });
+  const [createdAt, setCreatedAt] = useState<string>(() => {
+    return new Date().toISOString().split("T")[0];
   });
 
   useEffect(() => {
@@ -1221,6 +1221,48 @@ export function NewLoanForm({
           </div>
         </div>
 
+        {/* Dates input card */}
+        <div className="bg-secondary/30 dark:bg-card border border-border/60 rounded-3xl p-5 space-y-4">
+          <div className="space-y-1.5 relative">
+            <label htmlFor="createdAt" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Loan Created Date</label>
+            <p className="text-xs text-muted-foreground font-medium mb-2 leading-relaxed">
+              When was this loan given to the borrower?
+            </p>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+              <input
+                type="date"
+                id="createdAt"
+                name="createdAt"
+                value={createdAt}
+                onChange={(e) => setCreatedAt(e.target.value)}
+                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5 relative pt-4 border-t border-border/40">
+            <label htmlFor="startDate" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Installments Start Date</label>
+            <p className="text-xs text-muted-foreground font-medium mb-2 leading-relaxed">
+              When should the installments begin calculating? Weekly installments will start 7 days after this date.
+            </p>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* ──────────────────────────────────────────────────────────
             ONGOING LOAN SECTION (Historical Import)
             ────────────────────────────────────────────────────────── */}
@@ -1260,25 +1302,6 @@ export function NewLoanForm({
           {isOngoingLoan && (
             <div className="pl-8 animate-in slide-in-from-top-2 fade-in duration-200 space-y-4">
               
-              {/* Original Start Date Input */}
-              <div className="space-y-1.5 relative">
-                <label htmlFor="originalStartDate" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Original Start Date</label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  </div>
-                  <input
-                    type="date"
-                    id="originalStartDate"
-                    name="originalStartDate"
-                    value={originalStartDate}
-                    max={new Date().toISOString().split("T")[0]}
-                    onChange={(e) => setOriginalStartDate(e.target.value)}
-                    className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
-                  />
-                </div>
-              </div>
-
               {/* Amount Already Paid Input */}
               <div className="space-y-1.5 relative">
                 <label htmlFor="amountAlreadyPaid" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Amount Already Paid (Rs.)</label>
@@ -1538,6 +1561,8 @@ export function NewLoanForm({
         <input type="hidden" name="weeks" value={weeks} />
         <input type="hidden" name="isCustom" value={isCustomInstallment ? "true" : "false"} />
         <input type="hidden" name="preferredInstallment" value={preferredInstallment} />
+        <input type="hidden" name="startDate" value={startDate} />
+        <input type="hidden" name="createdAt" value={createdAt} />
 
         {/* Back and Action Buttons */}
         <div className="flex gap-3 pt-4 border-t border-border/40">
