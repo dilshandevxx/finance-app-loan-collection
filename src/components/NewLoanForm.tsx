@@ -628,15 +628,8 @@ export function NewLoanForm({
                     const searchLower = customerSearchTerm.toLowerCase();
                     const nameMatch = c.name.toLowerCase().includes(searchLower);
                     const memberIdMatch = c.memberId?.toLowerCase().includes(searchLower);
-                    let nicMatch = false;
-                    try {
-                      if (c.address) {
-                        const parsed = JSON.parse(c.address);
-                        if (parsed.idNumber && parsed.idNumber.toLowerCase().includes(searchLower)) {
-                          nicMatch = true;
-                        }
-                      }
-                    } catch (e) {}
+                    const nicMatch = c.idNumber?.toLowerCase().includes(searchLower) || false;
+                    
                     return nameMatch || memberIdMatch || nicMatch;
                   }).map(c => (
                     <button
@@ -650,7 +643,8 @@ export function NewLoanForm({
                     >
                       <div>
                         <div className="font-bold text-sm text-foreground">{c.name}</div>
-                        <div className="text-[10px] text-muted-foreground flex gap-2 mt-0.5">
+                        <div className="text-[10px] text-muted-foreground flex items-center gap-2 mt-0.5">
+                          {c.idNumber && <span className="font-bold text-primary">NIC: {c.idNumber}</span>}
                           {c.memberId && <span>{c.memberId}</span>}
                           {c.phone && <span>{c.phone}</span>}
                         </div>
@@ -662,15 +656,8 @@ export function NewLoanForm({
                     const searchLower = customerSearchTerm.toLowerCase();
                     const nameMatch = c.name.toLowerCase().includes(searchLower);
                     const memberIdMatch = c.memberId?.toLowerCase().includes(searchLower);
-                    let nicMatch = false;
-                    try {
-                      if (c.address) {
-                        const parsed = JSON.parse(c.address);
-                        if (parsed.idNumber && parsed.idNumber.toLowerCase().includes(searchLower)) {
-                          nicMatch = true;
-                        }
-                      }
-                    } catch (e) {}
+                    const nicMatch = c.idNumber?.toLowerCase().includes(searchLower) || false;
+
                     return nameMatch || memberIdMatch || nicMatch;
                   }).length === 0 && (
                     <div className="p-4 text-center text-xs text-muted-foreground">
