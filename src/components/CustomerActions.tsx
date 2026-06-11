@@ -84,7 +84,7 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
         <Button
           onClick={() => setIsModalOpen(true)}
           disabled={!nextInstallment || isPending}
-          className="relative w-full overflow-hidden group rounded-2xl h-14 md:h-16 shadow-[0_8px_30px_rgb(16,185,129,0.3)] disabled:opacity-50 transition-all duration-300 active:scale-[0.98] border-none p-0"
+          className="relative w-full overflow-hidden group rounded-xl h-12 shadow-[0_8px_30px_rgb(16,185,129,0.3)] disabled:opacity-50 transition-all duration-300 active:scale-[0.98] border-none p-0"
         >
           {/* Vibrant Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 group-hover:from-emerald-400 group-hover:via-teal-400 group-hover:to-emerald-500 transition-colors duration-500" />
@@ -98,13 +98,13 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
           <div className="relative flex items-center justify-center gap-3 w-full h-full text-white px-4">
             {isPending ? (
               <>
-                <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
-                <span className="font-extrabold text-[15px] sm:text-[17px] tracking-widest uppercase text-white/90">Processing...</span>
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                <span className="font-extrabold text-[13px] sm:text-[15px] tracking-widest uppercase text-white/90">Processing...</span>
               </>
             ) : (
               <>
-                <Banknote className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-y-0.5 group-hover:scale-110 transition-transform duration-300 drop-shadow-md text-white" />
-                <span className="font-extrabold text-[15px] sm:text-[17px] tracking-widest uppercase drop-shadow-md text-white">Record Payment</span>
+                <Banknote className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-y-0.5 group-hover:scale-110 transition-transform duration-300 drop-shadow-md text-white" />
+                <span className="font-extrabold text-[13px] sm:text-[15px] tracking-widest uppercase drop-shadow-md text-white">Record Payment</span>
               </>
             )}
           </div>

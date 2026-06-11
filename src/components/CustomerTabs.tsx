@@ -33,7 +33,7 @@ export function CustomerTabs({
         {[
           { id: "overview", label: "Overview" },
           { id: "timeline", label: "Timeline" },
-          { id: "notes", label: "Notes" },
+          { id: "notes", label: "Settings & Notes" },
         ].map((tab) => {
           const isActive = activeTab === tab.id;
           return (
