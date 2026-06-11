@@ -37,6 +37,7 @@ type Customer = {
   phone?: string;
   avatarUrl?: string;
   address?: string;
+  idNumber?: string;
 };
 
 type FormState = {
