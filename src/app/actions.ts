@@ -93,6 +93,18 @@ export async function createLoan(formData: FormData) {
       return { error: "Name and phone number are required for a new customer." };
     }
 
+    if (idNumberVal.trim()) {
+      const { data: existingNic } = await supabase
+        .from("customers")
+        .select("id")
+        .eq("nic_number", idNumberVal.trim())
+        .limit(1);
+      
+      if (existingNic && existingNic.length > 0) {
+        return { error: "A customer with this NIC / ID number already exists." };
+      }
+    }
+
     const avatarUrl = avatarDataUrl || (gender === "female"
       ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=bigHair,bob,bun,curly,curvy,dreads01,dreads02,frida,froAndBand,frizzle,miaWallace,longButNotTooLong,straight01,straight02,straightAndStrand&facialHairProbability=0`
       : `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name.trim())}&top=dreads,fro,shavedSides,shaggy,shaggyMullet,shortCurly,shortFlat,shortRound,shortWaved,sides,theCaesar,theCaesarAndSidePart&facialHairProbability=40`);
@@ -147,6 +159,18 @@ export async function createLoan(formData: FormData) {
 
   const finalStartDate = startDate || new Date().toISOString().split('T')[0];
   const finalCreatedAt = createdAt ? new Date(createdAt).toISOString() : new Date().toISOString();
+
+  // Ensure customer does not already have an active loan
+  const { data: activeLoans } = await supabase
+    .from("loans")
+    .select("id")
+    .eq("customer_id", customerId)
+    .eq("status", "ACTIVE")
+    .limit(1);
+
+  if (activeLoans && activeLoans.length > 0) {
+    return { error: "This customer already has an active loan. They cannot get another one until it is fully paid off." };
+  }
 
   const { data: newLoan, error: loanError } = await supabase
     .from("loans")

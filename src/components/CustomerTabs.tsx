@@ -9,6 +9,7 @@ import { formatLKR } from "@/lib/format";
 
 type CustomerTabsProps = {
   loan: Loan;
+  allLoans: Loan[];
   installments: Installment[];
   customer: Customer;
   notes: CustomerNote[];
@@ -18,13 +19,14 @@ type CustomerTabsProps = {
 
 export function CustomerTabs({
   loan,
+  allLoans,
   installments,
   customer,
   notes,
   paidCount,
   nextInstallment,
 }: CustomerTabsProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "timeline" | "notes">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "timeline" | "history" | "notes">("overview");
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -33,6 +35,7 @@ export function CustomerTabs({
         {[
           { id: "overview", label: "Overview" },
           { id: "timeline", label: "Timeline" },
+          { id: "history", label: "History" },
           { id: "notes", label: "Settings & Notes" },
         ].map((tab) => {
           const isActive = activeTab === tab.id;
@@ -134,6 +137,48 @@ export function CustomerTabs({
                 <InstallmentTimeline installments={installments} loan={loan} />
               </CardContent>
             </Card>
+          </section>
+        )}
+
+        {activeTab === "history" && (
+          <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <h3 className="text-lg font-semibold mb-4 text-foreground tracking-tight">Loan History</h3>
+            <div className="flex flex-col gap-3">
+              {allLoans.length > 0 ? (
+                allLoans.map((l) => (
+                  <Card key={l.id} className="bg-white dark:bg-card border-gray-200 dark:border-border rounded-2xl shadow-sm p-4 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className={`font-black px-3 py-1 rounded-full text-[10px] uppercase tracking-widest ${
+                        l.status === "PAID_OFF" 
+                          ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                          : l.status === "DEFAULTED"
+                          ? "text-destructive-foreground bg-destructive/10 border border-destructive/20"
+                          : "text-primary bg-primary/10 border border-primary/20"
+                      }`}>
+                        {l.status === "PAID_OFF" ? "Fully Paid" : l.status === "DEFAULTED" ? "Defaulted" : "Active"}
+                      </span>
+                      <span className="text-xs font-bold text-muted-foreground">
+                        {new Date(l.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-end mt-1">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-0.5">Given Amount</span>
+                        <span className="font-black text-lg text-foreground">{formatLKR(l.principalAmount)}</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-0.5">Total Paid</span>
+                        <span className="font-black text-lg text-primary">{formatLKR(l.totalAmountDue - l.remainingBalance)}</span>
+                      </div>
+                    </div>
+                  </Card>
+                ))
+              ) : (
+                <div className="text-center text-muted-foreground text-sm font-medium p-8 bg-secondary/30 rounded-2xl">
+                  No historical loans found.
+                </div>
+              )}
+            </div>
           </section>
         )}
 

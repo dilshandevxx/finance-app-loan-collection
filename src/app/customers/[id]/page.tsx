@@ -192,6 +192,7 @@ export default async function CustomerDetails({ params }: Props) {
         <div className="lg:col-span-8 flex flex-col gap-6 w-full">
           <CustomerTabs 
             loan={loan} 
+            allLoans={customerLoans}
             installments={installments} 
             customer={customer} 
             notes={notes} 
