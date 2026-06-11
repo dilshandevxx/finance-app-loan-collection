@@ -9,7 +9,7 @@ interface InteractiveLinkProps extends React.ButtonHTMLAttributes<HTMLButtonElem
   href: string;
   children: React.ReactNode;
   loadingText?: string;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?: "default" | "outline" | "secondary" | "ghost";
   className?: string;
 }
 
