@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Phone, MessageSquare, MessageCircle } from "lucide-react";
+import { Phone, MessageSquare, MessageCircle, Banknote, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuickPaymentModal } from "@/components/QuickPaymentModal";
 import { markInstallmentPaid } from "@/app/actions";
@@ -84,9 +84,30 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
         <Button
           onClick={() => setIsModalOpen(true)}
           disabled={!nextInstallment || isPending}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-bold h-12 md:h-14 shadow-md disabled:opacity-50 transition-all active:scale-95"
+          className="relative w-full overflow-hidden group rounded-2xl h-14 md:h-16 shadow-[0_8px_30px_rgb(16,185,129,0.3)] disabled:opacity-50 transition-all duration-300 active:scale-[0.98] border-none p-0"
         >
-          {isPending ? "Processing..." : "Mark Paid"}
+          {/* Vibrant Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 group-hover:from-emerald-400 group-hover:via-teal-400 group-hover:to-emerald-500 transition-colors duration-500" />
+          
+          {/* Shine Effect */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-0 left-0 w-[150%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+          </div>
+
+          {/* Button Content */}
+          <div className="relative flex items-center justify-center gap-3 w-full h-full text-white px-4">
+            {isPending ? (
+              <>
+                <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                <span className="font-extrabold text-[15px] sm:text-[17px] tracking-widest uppercase text-white/90">Processing...</span>
+              </>
+            ) : (
+              <>
+                <Banknote className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-y-0.5 group-hover:scale-110 transition-transform duration-300 drop-shadow-md text-white" />
+                <span className="font-extrabold text-[15px] sm:text-[17px] tracking-widest uppercase drop-shadow-md text-white">Record Payment</span>
+              </>
+            )}
+          </div>
         </Button>
       </div>
 
