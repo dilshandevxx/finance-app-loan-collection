@@ -82,6 +82,7 @@ export function NewLoanForm({
   const [step, setStep] = useState(1);
   const [isExisting, setIsExisting] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
+  const [customerSearchTerm, setCustomerSearchTerm] = useState("");
   const [principal, setPrincipal] = useState<number>(5000);
   const [interest, setInterest] = useState<number>(40);
   const [weeks, setWeeks] = useState<number>(14);
@@ -600,29 +601,84 @@ export function NewLoanForm({
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
-                <select
-                  id="existingCustomerId"
-                  name="existingCustomerId"
-                  value={selectedCustomerId}
+                <input
+                  type="text"
+                  placeholder="Search by Name, NIC, or Member ID..."
+                  value={customerSearchTerm}
                   onChange={(e) => {
-                    setSelectedCustomerId(e.target.value);
+                    setCustomerSearchTerm(e.target.value);
+                    if (selectedCustomerId) {
+                      setSelectedCustomerId("");
+                    }
                     if (validationErrors.existingCustomerId) {
                       setValidationErrors(prev => ({ ...prev, existingCustomerId: "" }));
                     }
                   }}
                   className={`w-full bg-card border ${
                     validationErrors.existingCustomerId ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/10" : "border-border/60 focus:border-primary focus:ring-primary/10"
-                  } rounded-2xl pl-11 pr-10 py-4 text-foreground focus:outline-none focus:ring-4 transition appearance-none font-semibold cursor-pointer`}
-                >
-                  <option value="" disabled>Choose customer account...</option>
-                  {customers.map(c => (
-                    <option key={c.id} value={c.id}>{c.name} {c.memberId ? `(${c.memberId})` : `(ID: ${c.id.slice(0, 8)})`}</option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                </div>
+                  } rounded-2xl pl-11 pr-4 py-4 text-foreground focus:outline-none focus:ring-4 transition font-semibold`}
+                />
+                <input type="hidden" name="existingCustomerId" value={selectedCustomerId} />
               </div>
+              
+              {/* Filtered Customer List */}
+              {customerSearchTerm && !selectedCustomerId && (
+                <div className="mt-2 border border-border/60 rounded-2xl bg-card overflow-hidden shadow-sm max-h-60 overflow-y-auto">
+                  {customers.filter(c => {
+                    const searchLower = customerSearchTerm.toLowerCase();
+                    const nameMatch = c.name.toLowerCase().includes(searchLower);
+                    const memberIdMatch = c.memberId?.toLowerCase().includes(searchLower);
+                    let nicMatch = false;
+                    try {
+                      if (c.address) {
+                        const parsed = JSON.parse(c.address);
+                        if (parsed.idNumber && parsed.idNumber.toLowerCase().includes(searchLower)) {
+                          nicMatch = true;
+                        }
+                      }
+                    } catch (e) {}
+                    return nameMatch || memberIdMatch || nicMatch;
+                  }).map(c => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCustomerId(c.id);
+                        setCustomerSearchTerm("");
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-secondary/50 border-b last:border-0 border-border/40 flex items-center justify-between"
+                    >
+                      <div>
+                        <div className="font-bold text-sm text-foreground">{c.name}</div>
+                        <div className="text-[10px] text-muted-foreground flex gap-2 mt-0.5">
+                          {c.memberId && <span>{c.memberId}</span>}
+                          {c.phone && <span>{c.phone}</span>}
+                        </div>
+                      </div>
+                      <ChevronDown className="w-4 h-4 text-muted-foreground -rotate-90" />
+                    </button>
+                  ))}
+                  {customers.filter(c => {
+                    const searchLower = customerSearchTerm.toLowerCase();
+                    const nameMatch = c.name.toLowerCase().includes(searchLower);
+                    const memberIdMatch = c.memberId?.toLowerCase().includes(searchLower);
+                    let nicMatch = false;
+                    try {
+                      if (c.address) {
+                        const parsed = JSON.parse(c.address);
+                        if (parsed.idNumber && parsed.idNumber.toLowerCase().includes(searchLower)) {
+                          nicMatch = true;
+                        }
+                      }
+                    } catch (e) {}
+                    return nameMatch || memberIdMatch || nicMatch;
+                  }).length === 0 && (
+                    <div className="p-4 text-center text-xs text-muted-foreground">
+                      No matching customers found.
+                    </div>
+                  )}
+                </div>
+              )}
               {validationErrors.existingCustomerId && (
                 <p className="text-xs font-bold text-red-500 flex items-center gap-1 mt-1">
                   <AlertCircle className="w-3.5 h-3.5" />
