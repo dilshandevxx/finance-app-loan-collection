@@ -3,6 +3,7 @@
 import { useState, useActionState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { InteractiveLink } from "@/components/InteractiveLink";
 import { createLoan, createSystemVillage } from "@/app/actions";
 import { 
   User, 
@@ -457,17 +458,22 @@ export function NewLoanForm({
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3.5 w-full justify-center max-w-md">
-          <Link href="/" className="w-full sm:flex-1">
-            <Button type="button" variant="secondary" className="w-full h-13 rounded-2xl font-bold cursor-pointer transition-all active:scale-[0.98]">
-              Dashboard
-            </Button>
-          </Link>
+          <InteractiveLink 
+            href="/" 
+            variant="secondary" 
+            className="w-full sm:flex-1 h-13 rounded-2xl font-bold cursor-pointer transition-all active:scale-[0.98]"
+            loadingText="Loading..."
+          >
+            Dashboard
+          </InteractiveLink>
           {!isOffline && state?.customerId && (
-            <Link href={`/customers/${state.customerId}`} className="w-full sm:flex-1">
-              <Button type="button" className="w-full h-13 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold cursor-pointer shadow-md shadow-primary/20 transition-all active:scale-[0.98]">
-                View Profile
-              </Button>
-            </Link>
+            <InteractiveLink 
+              href={`/customers/${state.customerId}`} 
+              className="w-full sm:flex-1 h-13 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold cursor-pointer shadow-md shadow-primary/20 transition-all active:scale-[0.98]"
+              loadingText="Opening..."
+            >
+              View Profile
+            </InteractiveLink>
           )}
         </div>
       </div>

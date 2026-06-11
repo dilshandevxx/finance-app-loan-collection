@@ -32,6 +32,21 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
   } | null>(null);
   const [selectedVillage, setSelectedVillage] = useState<string>("");
   const [sidePanelCustomer, setSidePanelCustomer] = useState<Customer | null>(null);
+  const [navigatingId, setNavigatingId] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isPending && navigatingId) {
+      setNavigatingId(null);
+    }
+  }, [isPending, navigatingId]);
+
+  const handleNavigate = (customerId: string) => {
+    setNavigatingId(customerId);
+    startTransition(() => {
+      router.push(`/customers/${customerId}`);
+    });
+  };
 
   const loadFromCache = async () => {
     try {
@@ -299,7 +314,11 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               {sortedCustomerGroups.map((group) => {
                 const { customer, totalAmount, isOverdue } = group;
                 return (
-                  <Link key={customer.id} href={`/customers/${customer.id}`} className="block group outline-none">
+                  <button 
+                    key={customer.id} 
+                    onClick={() => handleNavigate(customer.id)} 
+                    className="block group outline-none text-left w-full"
+                  >
                     <div className="relative bg-card/80 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-[2rem] p-5 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
                       {/* Decorative Gradient Background */}
                       <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-[40px] opacity-20 pointer-events-none transition-opacity duration-500 ${isOverdue ? 'bg-destructive' : 'bg-primary group-hover:opacity-40'}`} />
@@ -364,11 +383,15 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
                             ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-md shadow-destructive/20' 
                             : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/20 group-hover:scale-105'
                         }`}>
-                          <ArrowRight className="w-5 h-5" />
+                          {navigatingId === customer.id ? (
+                            <div className="w-5 h-5 border-2 border-current/30 border-t-current rounded-full animate-spin" />
+                          ) : (
+                            <ArrowRight className="w-5 h-5" />
+                          )}
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </button>
                 );
               })}
             </div>
