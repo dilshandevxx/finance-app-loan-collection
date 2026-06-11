@@ -202,11 +202,9 @@ export default async function CustomerDetails({ params }: Props) {
         </div>
       </div>
 
-      {/* Sticky Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background/95 to-transparent z-50 pb-20 sm:pb-6">
-        <div className="bg-card shadow-[0_-10px_40px_rgba(0,0,0,0.1)] border border-border rounded-3xl p-3 flex items-center justify-center backdrop-blur-3xl">
-          <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
-        </div>
+      {/* Floating Mobile Action Button */}
+      <div className="lg:hidden fixed bottom-24 right-4 z-50 animate-in slide-in-from-bottom-5 duration-500 fade-in">
+        <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} isFloating={true} />
       </div>
 
       <BottomNav hideOnMobile />

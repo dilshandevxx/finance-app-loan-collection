@@ -30,9 +30,10 @@ type CustomerPaymentActionsProps = {
   customer: Customer;
   loan: Loan;
   nextInstallment?: Installment;
+  isFloating?: boolean;
 };
 
-export function CustomerPaymentActions({ customer, loan, nextInstallment }: CustomerPaymentActionsProps) {
+export function CustomerPaymentActions({ customer, loan, nextInstallment, isFloating }: CustomerPaymentActionsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -80,11 +81,15 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment }: Cust
 
   return (
     <>
-      <div className="flex gap-3 w-full">
+      <div className={`flex gap-3 ${isFloating ? 'w-auto' : 'w-full'}`}>
         <Button
           onClick={() => setIsModalOpen(true)}
           disabled={!nextInstallment || isPending}
-          className="relative w-full overflow-hidden group rounded-xl h-12 shadow-[0_8px_30px_rgb(16,185,129,0.3)] disabled:opacity-50 transition-all duration-300 active:scale-[0.98] border-none p-0"
+          className={`relative overflow-hidden group shadow-[0_8px_30px_rgb(16,185,129,0.3)] disabled:opacity-50 transition-all duration-300 active:scale-[0.98] border-none p-0 ${
+            isFloating 
+              ? 'rounded-full h-14 px-6 shadow-xl shadow-emerald-500/40 hover:shadow-emerald-500/60 hover:-translate-y-1'
+              : 'w-full rounded-xl h-12'
+          }`}
         >
           {/* Vibrant Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 group-hover:from-emerald-400 group-hover:via-teal-400 group-hover:to-emerald-500 transition-colors duration-500" />
