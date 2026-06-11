@@ -40,7 +40,12 @@ export default async function CustomerDetails({ params }: Props) {
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground text-center">{customer.name}</h1>
-            <span className="text-muted-foreground text-sm font-medium">ID: {customer.memberId || customer.id}</span>
+            <div className="flex flex-col items-center gap-1 mb-2 text-sm font-medium text-muted-foreground">
+              <span>ID: {customer.memberId || customer.id.slice(0,8)}</span>
+              {customer.idNumber && (
+                <span>NIC: {customer.idNumber}</span>
+              )}
+            </div>
             {customer.companyName && (
               <span className="text-primary font-bold text-sm mt-1">{customer.companyName}</span>
             )}
@@ -122,7 +127,12 @@ export default async function CustomerDetails({ params }: Props) {
               <h1 className="text-2xl font-black tracking-tight mb-1 text-foreground text-center leading-tight line-clamp-2">{customer.name}</h1>
               
               <div className="flex flex-col items-center gap-1 mb-4 text-xs font-semibold text-muted-foreground text-center">
-                <span>ID: {customer.memberId || customer.id}</span>
+                <span>ID: {customer.memberId || customer.id.slice(0,8)}</span>
+                {customer.idNumber && (
+                  <span className="flex items-center gap-1">
+                    NIC: {customer.idNumber}
+                  </span>
+                )}
                 {customer.state && (
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3 h-3" /> {customer.state}
