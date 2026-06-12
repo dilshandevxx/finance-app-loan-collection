@@ -29,7 +29,7 @@ export default async function CustomerDetails({ params }: Props) {
 
   if (!loan) {
     return (
-      <div className="flex flex-col gap-8 pb-32 md:pb-12 max-w-5xl mx-auto">
+      <div className="flex flex-col gap-8 pb-28 md:pb-12 max-w-5xl mx-auto">
         {/* Header */}
         <TopBar title="Customer Profile" backHref="/customers" />
 
@@ -88,7 +88,7 @@ export default async function CustomerDetails({ params }: Props) {
   const nextInstallment = nextInstallmentIndex !== -1 ? installments[nextInstallmentIndex] : undefined;
 
   return (
-    <div className="flex flex-col gap-6 pb-48 md:pb-12 max-w-5xl mx-auto px-4 sm:px-6">
+    <div className="flex flex-col gap-6 pb-28 md:pb-12 max-w-5xl mx-auto px-4 sm:px-6">
       {/* Header */}
       <TopBar title="Customer Profile" backHref="/" />
 
