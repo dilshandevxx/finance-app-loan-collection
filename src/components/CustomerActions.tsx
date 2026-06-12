@@ -87,7 +87,7 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment, isFloa
           disabled={!nextInstallment || isPending}
           className={`relative overflow-hidden group shadow-[0_8px_30px_rgb(16,185,129,0.3)] disabled:opacity-50 transition-all duration-300 active:scale-[0.98] border-none p-0 ${
             isFloating 
-              ? 'rounded-full h-14 px-6 shadow-xl shadow-emerald-500/40 hover:shadow-emerald-500/60 hover:-translate-y-1'
+              ? 'rounded-full h-12 sm:h-14 px-5 sm:px-6 shadow-lg shadow-emerald-500/40 hover:shadow-emerald-500/60 hover:-translate-y-0.5'
               : 'w-full rounded-xl h-12'
           }`}
         >
@@ -100,16 +100,16 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment, isFloa
           </div>
 
           {/* Button Content */}
-          <div className="relative flex items-center justify-center gap-3 w-full h-full text-white px-4">
+          <div className="relative flex items-center justify-center gap-2.5 w-full h-full text-white px-2">
             {isPending ? (
               <>
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                <span className="font-extrabold text-[13px] sm:text-[15px] tracking-widest uppercase text-white/90">Processing...</span>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="font-extrabold text-[12px] sm:text-[14px] tracking-widest uppercase text-white/90">Processing...</span>
               </>
             ) : (
               <>
                 <Banknote className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-y-0.5 group-hover:scale-110 transition-transform duration-300 drop-shadow-md text-white" />
-                <span className="font-extrabold text-[13px] sm:text-[15px] tracking-widest uppercase drop-shadow-md text-white">Record Payment</span>
+                <span className="font-extrabold text-[12px] sm:text-[14px] tracking-widest uppercase drop-shadow-md text-white">Pay</span>
               </>
             )}
           </div>
