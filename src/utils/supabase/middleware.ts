@@ -31,7 +31,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const agentSession = request.cookies.get('agent_session')?.value
+  const agentSession = request.cookies.get('pin_session')?.value
   const pathname = request.nextUrl.pathname
 
   const isPwaFile =

@@ -109,7 +109,7 @@ export async function logout() {
   
   // Also clear the PIN session
   const cookieStore = await cookies();
-  cookieStore.delete("agent_session");
+  cookieStore.delete("pin_session");
   
   revalidatePath("/", "layout");
   return { success: true };
@@ -169,7 +169,7 @@ export async function setupAgentPin(newPin: string) {
   
   const cookieStore = await cookies();
   cookieStore.set({
-    name: "agent_session",
+    name: "pin_session",
     value: "authenticated",
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -186,7 +186,7 @@ export async function loginWithPin(pin: string) {
   if (pin === activePin) {
     const cookieStore = await cookies();
     cookieStore.set({
-      name: "agent_session",
+      name: "pin_session",
       value: "authenticated",
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
