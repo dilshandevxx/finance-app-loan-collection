@@ -30,10 +30,11 @@ type CustomerPaymentActionsProps = {
   customer: Customer;
   loan: Loan;
   nextInstallment?: Installment;
+  nextInstallmentIndex?: number;
   isFloating?: boolean;
 };
 
-export function CustomerPaymentActions({ customer, loan, nextInstallment, isFloating }: CustomerPaymentActionsProps) {
+export function CustomerPaymentActions({ customer, loan, nextInstallment, nextInstallmentIndex, isFloating }: CustomerPaymentActionsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -123,6 +124,7 @@ export function CustomerPaymentActions({ customer, loan, nextInstallment, isFloa
           customer={customer}
           expectedAmount={nextInstallment.amount}
           installmentId={nextInstallment.id}
+          installmentIndex={nextInstallmentIndex}
           onConfirm={handleConfirmPayment}
         />
       )}

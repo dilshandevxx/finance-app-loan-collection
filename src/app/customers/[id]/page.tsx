@@ -84,7 +84,8 @@ export default async function CustomerDetails({ params }: Props) {
   const reliabilityScore = paidCount > 0 ? 95 : 100; // Mock score
 
   // Find next pending installment
-  const nextInstallment = installments.find(i => i.status !== "PAID");
+  const nextInstallmentIndex = installments.findIndex(i => i.status !== "PAID");
+  const nextInstallment = nextInstallmentIndex !== -1 ? installments[nextInstallmentIndex] : undefined;
 
   return (
     <div className="flex flex-col gap-6 pb-48 md:pb-12 max-w-5xl mx-auto px-4 sm:px-6">
@@ -173,7 +174,7 @@ export default async function CustomerDetails({ params }: Props) {
 
               {/* Desktop Actions */}
               <div className="hidden lg:flex mt-8 w-full justify-center">
-                <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} />
+                <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} nextInstallmentIndex={nextInstallmentIndex !== -1 ? nextInstallmentIndex + 1 : undefined} />
               </div>
             </div>
           </div>
@@ -214,7 +215,7 @@ export default async function CustomerDetails({ params }: Props) {
 
       {/* Floating Mobile Action Button */}
       <div className="lg:hidden fixed bottom-24 right-4 z-50 animate-in slide-in-from-bottom-5 duration-500 fade-in">
-        <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} isFloating={true} />
+        <CustomerPaymentActions customer={customer} loan={loan} nextInstallment={nextInstallment} nextInstallmentIndex={nextInstallmentIndex !== -1 ? nextInstallmentIndex + 1 : undefined} isFloating={true} />
       </div>
 
       <BottomNav hideOnMobile />

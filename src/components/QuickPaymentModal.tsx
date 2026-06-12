@@ -15,6 +15,7 @@ type QuickPaymentModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (amount: number) => Promise<void>;
+  installmentIndex?: number;
 };
 
 interface ReceiptDetails {
@@ -53,6 +54,7 @@ export function QuickPaymentModal({
   isOpen,
   onClose,
   onConfirm,
+  installmentIndex,
 }: QuickPaymentModalProps) {
   const [amount, setAmount] = useState<string>(expectedAmount.toString());
   const [isProcessing, setIsProcessing] = useState(false);
@@ -464,10 +466,16 @@ export function QuickPaymentModal({
                 <div className="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-lg font-bold shrink-0">
                   {customer.name.charAt(0)}
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-black dark:text-white">{customer.name}</span>
+                <div className="flex flex-col flex-1">
+                  <span className="font-semibold text-black dark:text-white line-clamp-1">{customer.name}</span>
                   <span className="text-xs text-gray-500 dark:text-white/50">{formatLKPhone(customer.phone)}</span>
                 </div>
+                {installmentIndex !== undefined && (
+                  <div className="flex flex-col items-end shrink-0 pl-3 border-l border-border/60">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Paying For</span>
+                    <span className="font-black text-primary text-sm whitespace-nowrap">Week {installmentIndex}</span>
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
