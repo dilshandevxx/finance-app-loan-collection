@@ -839,7 +839,7 @@ export async function clearAllData() {
 
 export async function fetchSystemVillages() {
   const supabase = await createClient();
-  const { data } = await supabase.from("system_settings").select("value").eq("key", "system_villages").maybeSingle();
+  const { data } = await supabase.from("system_settings").select("value").eq("key", "villages").maybeSingle();
   if (data?.value) {
     try {
       return JSON.parse(data.value) as string[];
@@ -857,7 +857,7 @@ export async function createSystemVillage(villageName: string): Promise<{ succes
       villages.push(villageName);
       const supabase = await createClient();
       const { error } = await supabase.from("system_settings").upsert({
-        key: "system_villages",
+        key: "villages",
         value: JSON.stringify(villages),
         updated_at: new Date().toISOString()
       });
@@ -877,7 +877,7 @@ export async function deleteSystemVillage(villageName: string): Promise<{ succes
       const updatedVillages = villages.filter(v => v !== villageName);
       const supabase = await createClient();
       const { error } = await supabase.from("system_settings").upsert({
-        key: "system_villages",
+        key: "villages",
         value: JSON.stringify(updatedVillages),
         updated_at: new Date().toISOString()
       });
