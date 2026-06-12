@@ -122,18 +122,15 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
   };
 
   return (
-    <div className="flex flex-col relative py-2">
-      {/* Continuous Timeline Line */}
-      <div className="absolute left-[31px] top-6 bottom-6 w-0.5 bg-border/60 dark:bg-border/40 rounded-full" />
-
+    <div className="flex flex-col py-2 w-full overflow-hidden">
       {paidInstallments.length > 0 && (
         <div className="flex flex-col mb-4">
           <button 
             onClick={() => setIsPaidExpanded(!isPaidExpanded)}
-            className="relative z-10 flex items-center justify-between mx-4 px-5 py-3.5 bg-secondary/40 hover:bg-secondary/70 border border-border/50 rounded-2xl transition-all active:scale-[0.98]"
+            className="flex items-center justify-between mx-2 px-4 py-3.5 bg-secondary/40 hover:bg-secondary/70 border border-border/50 rounded-2xl transition-all active:scale-[0.98]"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
               <div className="flex flex-col items-start">
@@ -141,41 +138,46 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">View History</span>
               </div>
             </div>
-            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${isPaidExpanded ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-300 ${isPaidExpanded ? 'rotate-180' : ''}`} />
           </button>
 
           {isPaidExpanded && (
-            <div className="flex flex-col mt-4 animate-in slide-in-from-top-4 fade-in duration-300">
+            <div className="flex flex-col mt-2 animate-in slide-in-from-top-4 fade-in duration-300">
               {paidInstallments.map(({ inst, i }) => (
                 editingId === inst.id ? renderEditForm(inst, i) : (
-                  <div key={inst.id} className="relative flex items-center justify-between py-3.5 pr-4 group/row hover:bg-secondary/20 rounded-2xl transition-colors">
-                    <div className="flex items-center gap-4">
-                      {/* Timeline Dot */}
-                      <div className="ml-5 relative z-10 w-6 h-6 flex items-center justify-center bg-white dark:bg-card rounded-full border-[3px] border-emerald-500 shadow-sm shrink-0">
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-extrabold text-[14px] text-foreground tracking-tight leading-none mb-1">Week {i + 1}</span>
-                        <span className="text-[11px] font-medium text-muted-foreground leading-none">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                      </div>
+                  <div key={inst.id} className="flex w-full group/row hover:bg-secondary/20 transition-colors rounded-2xl">
+                    {/* Timeline Column */}
+                    <div className="w-14 shrink-0 flex flex-col items-center">
+                      <div className={`w-0.5 h-5 bg-border/60 ${i === 0 ? 'opacity-0' : ''}`} />
+                      <div className="w-5 h-5 rounded-full border-[3px] border-emerald-500 bg-card z-10 shrink-0" />
+                      <div className={`w-0.5 flex-1 bg-border/60 ${i === paidInstallments.length - 1 && pendingInstallments.length === 0 ? 'opacity-0' : ''}`} />
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <div className="flex flex-col items-end text-right">
-                        <span className="font-black text-[14px] text-foreground tracking-tight leading-none mb-1">
-                          {formatLKR(inst.amount)}
-                        </span>
-                        {inst.paidDate && (
-                          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 leading-none">
-                            Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </span>
-                        )}
+                    {/* Content Column */}
+                    <div className="flex-1 py-3 pr-2 sm:pr-4 flex items-center justify-between gap-2 overflow-hidden">
+                      <div className="flex flex-col truncate">
+                        <span className="font-extrabold text-[14px] text-foreground tracking-tight leading-none mb-1 truncate">Week {i + 1}</span>
+                        <span className="text-[11px] font-medium text-muted-foreground leading-none truncate">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                       </div>
-                      <button
-                        onClick={() => startEditing(inst)}
-                        className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 opacity-80 shrink-0"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
+
+                      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                        <div className="flex flex-col items-end text-right">
+                          <span className="font-black text-[14px] text-foreground tracking-tight leading-none mb-1">
+                            {formatLKR(inst.amount)}
+                          </span>
+                          {inst.paidDate && (
+                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 leading-none">
+                              Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => startEditing(inst)}
+                          className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 opacity-80 shrink-0"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )
@@ -191,51 +193,55 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
           
           const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
           
-          // Determine if this is the "Next" installment
           const globalIndex = installments.findIndex(x => x.id === inst.id);
           const firstPendingGlobalIndex = installments.findIndex(x => x.status === "PENDING");
           const isNext = !isOverdue && inst.status === "PENDING" && globalIndex === firstPendingGlobalIndex;
           
           return (
-            <div key={inst.id} className={`relative flex items-center justify-between py-4 pr-4 group/row hover:bg-secondary/20 rounded-2xl transition-colors ${isNext ? 'bg-primary/5 hover:bg-primary/10' : ''}`}>
-              <div className="flex items-center gap-4">
-                {/* Timeline Dot */}
-                <div className={`ml-5 relative z-10 w-6 h-6 flex items-center justify-center rounded-full border-[3px] shadow-sm bg-white dark:bg-card shrink-0 ${
+            <div key={inst.id} className={`flex w-full group/row hover:bg-secondary/20 transition-colors rounded-2xl ${isNext ? 'bg-primary/5 hover:bg-primary/10' : ''}`}>
+              {/* Timeline Column */}
+              <div className="w-14 shrink-0 flex flex-col items-center">
+                <div className={`w-0.5 h-5 bg-border/60 ${globalIndex === 0 ? 'opacity-0' : ''}`} />
+                <div className={`relative w-5 h-5 rounded-full border-[3px] bg-card z-10 shrink-0 ${
                   isOverdue ? 'border-destructive' : isNext ? 'border-primary' : 'border-border/60'
                 }`}>
-                  {isOverdue && <AlertCircle className="w-4 h-4 text-destructive absolute -top-[2px] -right-[12px]" />}
+                  {isOverdue && <AlertCircle className="w-4 h-4 text-destructive absolute -top-1 -right-2 bg-white rounded-full" />}
                 </div>
-                
-                <div className="flex flex-col">
-                  <span className={`font-extrabold text-[14px] tracking-tight leading-none mb-1 flex items-center gap-2 ${
+                <div className={`w-0.5 flex-1 bg-border/60 ${globalIndex === installments.length - 1 ? 'opacity-0' : ''}`} />
+              </div>
+
+              {/* Content Column */}
+              <div className="flex-1 py-4 pr-2 sm:pr-4 flex items-center justify-between gap-2 overflow-hidden">
+                <div className="flex flex-col truncate">
+                  <span className={`font-extrabold text-[14px] tracking-tight leading-none mb-1 flex items-center gap-1 sm:gap-2 truncate ${
                     isOverdue ? 'text-destructive' : isNext ? 'text-primary' : 'text-foreground'
                   }`}>
                     Week {globalIndex + 1} 
-                    {isNext && <span className="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded-sm uppercase tracking-widest">Next</span>}
+                    {isNext && <span className="text-[9px] bg-primary text-white px-1 py-0.5 rounded-sm uppercase tracking-widest shrink-0">Next</span>}
                   </span>
-                  <span className="text-[11px] font-medium text-muted-foreground leading-none">
+                  <span className="text-[11px] font-medium text-muted-foreground leading-none truncate">
                     {new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col items-end text-right">
-                  <span className={`font-black text-[14px] tracking-tight leading-none mb-1 ${
-                    isOverdue ? 'text-destructive' : 'text-foreground'
-                  }`}>
-                    {formatLKR(inst.amount)}
-                  </span>
-                  {inst.status === "MISSED" && (
-                    <span className="text-[10px] font-bold text-destructive uppercase tracking-widest leading-none">Missed</span>
-                  )}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <div className="flex flex-col items-end text-right">
+                    <span className={`font-black text-[14px] tracking-tight leading-none mb-1 ${
+                      isOverdue ? 'text-destructive' : 'text-foreground'
+                    }`}>
+                      {formatLKR(inst.amount)}
+                    </span>
+                    {inst.status === "MISSED" && (
+                      <span className="text-[10px] font-bold text-destructive uppercase tracking-widest leading-none">Missed</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => startEditing(inst)}
+                    className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 opacity-80 shrink-0"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => startEditing(inst)}
-                  className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 opacity-80 shrink-0"
-                >
-                  <Edit2 className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
           );
