@@ -94,7 +94,7 @@ export function VillageCollectionBars({ installments, loans, customers }: Villag
               {/* Area name + rate */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 min-w-0">
-                  <span className="text-[10px] font-black text-primary">📍</span>
+                  <MapPin className="w-3.5 h-3.5 text-primary" />
                   <span className="text-xs font-semibold text-foreground truncate">{v.name}</span>
                   <span className="text-[10px] text-muted-foreground shrink-0">
                     · {v.activeLoans} loan{v.activeLoans !== 1 ? "s" : ""}

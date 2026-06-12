@@ -860,7 +860,7 @@ export function ReportsDashboard({ installments, loans, customers, companyName, 
                   const vRateColor = vRate >= 80 ? "text-emerald-600 dark:text-emerald-400" : vRate >= 50 ? "text-amber-600 dark:text-amber-400" : "text-red-500 dark:text-red-400";
                   return (
                     <tr key={item.village} className="hover:bg-secondary/30 print:hover:bg-transparent transition-colors text-foreground print:text-black">
-                      <td className="p-4 px-6 font-semibold text-sm">📍 {item.village}</td>
+                      <td className="p-4 px-6 font-semibold text-sm">{item.village}</td>
                       <td className="p-4 text-center text-xs font-semibold">{item.totalClients}</td>
                       <td className="p-4 text-center text-xs font-semibold">{item.activeLoansCount}</td>
                       <td className="p-4 text-right font-bold text-sm">{formatLKR(item.totalExpected)}</td>

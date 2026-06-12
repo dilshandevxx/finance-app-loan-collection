@@ -892,7 +892,7 @@ export function NewLoanForm({
                     const days = getDaysForVillage(v);
                     const daysStr = days.length > 0 ? ` (${days.join(", ")})` : "";
                     return (
-                      <option key={v} value={v}>📍 {v}{daysStr}</option>
+                      <option key={v} value={v}>{v}{daysStr}</option>
                     );
                   })}
                 </select>

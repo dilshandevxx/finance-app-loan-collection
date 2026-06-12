@@ -316,7 +316,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             {/* Village Header */}
                             <div className="flex items-center justify-between px-1">
                               <span className="bg-primary/10 text-primary border border-primary/20 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
-                                📍 {village}
+                                {village}
                               </span>
                               <span className="text-[11px] text-gray-500 font-bold">{villageTasks.length} collections</span>
                             </div>
@@ -413,7 +413,7 @@ export function NotificationPanel({ customers, loans, installments }: Notificati
                             {/* Village Header */}
                             <div className="flex items-center justify-between px-1">
                               <span className="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center gap-1.5">
-                                📍 {village}
+                                {village}
                               </span>
                               <span className="text-[11px] text-gray-500 font-bold">{villageTasks.length} reminders</span>
                             </div>

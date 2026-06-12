@@ -51,7 +51,7 @@ export default async function CustomerDetails({ params }: Props) {
             )}
             {customer.state && (
               <span className="mt-2 px-3 py-1 text-xs font-black bg-primary/10 dark:bg-white/10 text-primary dark:text-white/80 rounded-full flex items-center gap-1 select-none">
-                📍 {customer.state}
+                {customer.state}
               </span>
             )}
 

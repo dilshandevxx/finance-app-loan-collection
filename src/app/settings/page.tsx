@@ -20,7 +20,8 @@ import {
   Smartphone,
   Trash2,
   Mail,
-  AlertCircle
+  AlertCircle,
+  MapPin
 } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card, CardContent } from "@/components/ui/card";
@@ -534,8 +535,8 @@ export default function SettingsPage() {
                   className="flex items-center justify-between p-4 sm:p-5 hover:bg-secondary/50 transition-colors group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors text-sm">
-                      📍
+                    <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <MapPin className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col text-left">
                       <span className="text-foreground font-semibold text-base">Route Villages Registry</span>

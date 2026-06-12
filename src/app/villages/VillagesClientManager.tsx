@@ -170,7 +170,7 @@ export default function VillagesClientManager({ initialStats }: VillagesClientMa
                 className="flex items-center justify-between p-3 bg-secondary/20 hover:bg-secondary/40 border border-border/50 rounded-xl transition-all"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">📍</span>
+                  <div className="text-muted-foreground"><MapPin className="w-4 h-4" /></div>
                   <div className="flex flex-col text-left">
                     <span className="text-sm font-semibold text-foreground">{v.name}</span>
                     <span className="text-[10px] text-muted-foreground font-medium">

@@ -278,7 +278,7 @@ export function DashboardRoster({ pendingInstallments, loans, customers }: Dashb
               >
                 <option value="">🌍 All Areas</option>
                 {villages.map(v => (
-                  <option key={v} value={v}>📍 {v}</option>
+                  <option key={v} value={v}>{v}</option>
                 ))}
               </select>
               <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-muted-foreground group-hover:text-foreground transition-colors">
