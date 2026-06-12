@@ -13,6 +13,7 @@ type InstallmentTimelineProps = {
 
 export function InstallmentTimeline({ installments, loan }: InstallmentTimelineProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isPaidExpanded, setIsPaidExpanded] = useState<boolean>(false);
   const [editStatus, setEditStatus] = useState<string>("PENDING");
   const [editAmount, setEditAmount] = useState<string>("");
   const [editDueDate, setEditDueDate] = useState<string>("");
@@ -121,99 +122,125 @@ export function InstallmentTimeline({ installments, loan }: InstallmentTimelineP
   };
 
   return (
-    <div className="flex flex-col relative px-2">
-      <div className="absolute left-10 top-8 bottom-8 w-px bg-border" />
+    <div className="flex flex-col relative py-2">
+      {/* Continuous Timeline Line */}
+      <div className="absolute left-[31px] top-6 bottom-6 w-0.5 bg-border/60 dark:bg-border/40 rounded-full" />
 
       {paidInstallments.length > 0 && (
-        <details className="group">
-          <summary className="flex items-center justify-between p-4 relative hover:bg-gray-50 dark:hover:bg-secondary/50 transition-colors rounded-xl list-none cursor-pointer mt-2 z-10">
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full shadow-sm border border-border/50">
-                <ChevronDown className="w-5 h-5 text-muted-foreground transition-transform group-open:rotate-180" />
+        <div className="flex flex-col mb-4">
+          <button 
+            onClick={() => setIsPaidExpanded(!isPaidExpanded)}
+            className="relative z-10 flex items-center justify-between mx-4 px-5 py-3.5 bg-secondary/40 hover:bg-secondary/70 border border-border/50 rounded-2xl transition-all active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <CheckCircle2 className="w-4 h-4" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-semibold text-sm text-foreground">Past Paid Installments</span>
-                <span className="text-xs text-muted-foreground">{paidInstallments.length} weeks successfully paid</span>
+              <div className="flex flex-col items-start">
+                <span className="font-black text-[13px] text-foreground tracking-tight">{paidInstallments.length} Paid Installments</span>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">View History</span>
               </div>
             </div>
-          </summary>
-          <div className="flex flex-col opacity-90">
-            {paidInstallments.map(({ inst, i }) => (
-              editingId === inst.id ? renderEditForm(inst, i) : (
-                <div key={inst.id} className="flex flex-wrap sm:flex-nowrap items-center justify-between p-4 relative hover:bg-secondary/30 transition-colors rounded-2xl group/row gap-3">
-                  <div className="flex items-center gap-4 relative z-10 shrink-0">
-                    <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full border border-border shadow-sm">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${isPaidExpanded ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isPaidExpanded && (
+            <div className="flex flex-col mt-4 animate-in slide-in-from-top-4 fade-in duration-300">
+              {paidInstallments.map(({ inst, i }) => (
+                editingId === inst.id ? renderEditForm(inst, i) : (
+                  <div key={inst.id} className="relative flex items-center justify-between py-3.5 pr-4 group/row hover:bg-secondary/20 rounded-2xl transition-colors">
+                    <div className="flex items-center gap-4">
+                      {/* Timeline Dot */}
+                      <div className="ml-5 relative z-10 w-6 h-6 flex items-center justify-center bg-white dark:bg-card rounded-full border-[3px] border-emerald-500 shadow-sm shrink-0">
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-extrabold text-[14px] text-foreground tracking-tight leading-none mb-1">Week {i + 1}</span>
+                        <span className="text-[11px] font-medium text-muted-foreground leading-none">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-extrabold text-[15px] text-foreground tracking-tight">Week {i + 1}</span>
-                      <span className="text-xs font-medium text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-end text-right">
+                        <span className="font-black text-[14px] text-foreground tracking-tight leading-none mb-1">
+                          {formatLKR(inst.amount)}
+                        </span>
+                        {inst.paidDate && (
+                          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 leading-none">
+                            Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => startEditing(inst)}
+                        className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 opacity-80 shrink-0"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 ml-16 sm:ml-0 w-full sm:w-auto justify-between sm:justify-end">
-                    <div className="flex flex-col sm:items-end">
-                      <span className="font-black text-[15px] text-foreground tracking-tight">
-                        {formatLKR(inst.amount)}
-                      </span>
-                      {inst.paidDate && (
-                        <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Paid {new Date(inst.paidDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => startEditing(inst)}
-                      className="p-2.5 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 shrink-0"
-                      title="Edit Installment"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )
-            ))}
-          </div>
-        </details>
+                )
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
-      {pendingInstallments.map(({ inst, i }) => {
-        if (editingId === inst.id) return renderEditForm(inst, i);
-        
-        const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
-        return (
-          <div key={inst.id} className={`flex flex-wrap sm:flex-nowrap items-center justify-between p-4 relative hover:bg-secondary/30 transition-colors rounded-2xl group/row gap-3 ${i === installments.length - 1 ? 'mb-2' : ''}`}>
-            <div className="flex items-center gap-4 relative z-10 shrink-0">
-              <div className="w-12 h-12 flex items-center justify-center bg-white dark:bg-card rounded-full border border-border shadow-sm">
-                {isOverdue ? (
-                  <AlertCircle className="w-5 h-5 text-destructive" />
-                ) : (
-                  <div className="w-3 h-3 rounded-full bg-border" />
-                )}
+      <div className="flex flex-col">
+        {pendingInstallments.map(({ inst, i }) => {
+          if (editingId === inst.id) return renderEditForm(inst, i);
+          
+          const isOverdue = inst.status === "MISSED" || (inst.status === "PENDING" && new Date(inst.dueDate) < new Date());
+          
+          // Determine if this is the "Next" installment
+          const globalIndex = installments.findIndex(x => x.id === inst.id);
+          const firstPendingGlobalIndex = installments.findIndex(x => x.status === "PENDING");
+          const isNext = !isOverdue && inst.status === "PENDING" && globalIndex === firstPendingGlobalIndex;
+          
+          return (
+            <div key={inst.id} className={`relative flex items-center justify-between py-4 pr-4 group/row hover:bg-secondary/20 rounded-2xl transition-colors ${isNext ? 'bg-primary/5 hover:bg-primary/10' : ''}`}>
+              <div className="flex items-center gap-4">
+                {/* Timeline Dot */}
+                <div className={`ml-5 relative z-10 w-6 h-6 flex items-center justify-center rounded-full border-[3px] shadow-sm bg-white dark:bg-card shrink-0 ${
+                  isOverdue ? 'border-destructive' : isNext ? 'border-primary' : 'border-border/60'
+                }`}>
+                  {isOverdue && <AlertCircle className="w-4 h-4 text-destructive absolute -top-[2px] -right-[12px]" />}
+                </div>
+                
+                <div className="flex flex-col">
+                  <span className={`font-extrabold text-[14px] tracking-tight leading-none mb-1 flex items-center gap-2 ${
+                    isOverdue ? 'text-destructive' : isNext ? 'text-primary' : 'text-foreground'
+                  }`}>
+                    Week {globalIndex + 1} 
+                    {isNext && <span className="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded-sm uppercase tracking-widest">Next</span>}
+                  </span>
+                  <span className="text-[11px] font-medium text-muted-foreground leading-none">
+                    {new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className={`font-extrabold text-[15px] tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>Week {i + 1}</span>
-                <span className="text-xs font-medium text-muted-foreground">{new Date(inst.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-4 ml-16 sm:ml-0 w-full sm:w-auto justify-between sm:justify-end">
-              <div className="flex flex-col sm:items-end">
-                <span className={`font-black text-[15px] tracking-tight ${isOverdue ? 'text-destructive' : 'text-foreground'}`}>
-                  {formatLKR(inst.amount)}
-                </span>
-                {inst.status === "MISSED" && (
-                  <span className="text-[11px] font-bold text-destructive uppercase tracking-widest">Missed</span>
-                )}
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col items-end text-right">
+                  <span className={`font-black text-[14px] tracking-tight leading-none mb-1 ${
+                    isOverdue ? 'text-destructive' : 'text-foreground'
+                  }`}>
+                    {formatLKR(inst.amount)}
+                  </span>
+                  {inst.status === "MISSED" && (
+                    <span className="text-[10px] font-bold text-destructive uppercase tracking-widest leading-none">Missed</span>
+                  )}
+                </div>
+                <button
+                  onClick={() => startEditing(inst)}
+                  className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 opacity-80 shrink-0"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                </button>
               </div>
-              <button
-                onClick={() => startEditing(inst)}
-                className="p-2.5 rounded-xl bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 shrink-0"
-                title="Edit Installment"
-              >
-                <Edit2 className="w-4 h-4" />
-              </button>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

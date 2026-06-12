@@ -1040,6 +1040,48 @@ export function NewLoanForm({
           <p className="text-xs text-muted-foreground">Adjust the principal, interest rate, and duration of the loan.</p>
         </div>
 
+        {/* Dates input card */}
+        <div className="bg-primary/5 dark:bg-card border border-primary/20 rounded-3xl p-5 space-y-4">
+          <div className="space-y-1.5 relative">
+            <label htmlFor="createdAt" className="text-xs font-bold text-primary uppercase tracking-wider">Loan Created Date</label>
+            <p className="text-xs text-muted-foreground font-medium mb-2 leading-relaxed">
+              When was this loan given to the borrower?
+            </p>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+              <input
+                type="date"
+                id="createdAt"
+                name="createdAt"
+                value={createdAt}
+                onChange={(e) => setCreatedAt(e.target.value)}
+                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5 relative pt-4 border-t border-border/40">
+            <label htmlFor="startDate" className="text-xs font-bold text-primary uppercase tracking-wider">Installments Start Date</label>
+            <p className="text-xs text-muted-foreground font-medium mb-2 leading-relaxed">
+              When should the installments begin calculating? Weekly installments will start 7 days after this date.
+            </p>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Principal input card */}
         <div className="bg-secondary/30 dark:bg-secondary/10 border border-border/40 rounded-3xl p-5 sm:p-6 space-y-4">
           <div className="flex justify-between items-center">
@@ -1271,47 +1313,6 @@ export function NewLoanForm({
           </div>
         </div>
 
-        {/* Dates input card */}
-        <div className="bg-secondary/30 dark:bg-card border border-border/60 rounded-3xl p-5 space-y-4">
-          <div className="space-y-1.5 relative">
-            <label htmlFor="createdAt" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Loan Created Date</label>
-            <p className="text-xs text-muted-foreground font-medium mb-2 leading-relaxed">
-              When was this loan given to the borrower?
-            </p>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              </div>
-              <input
-                type="date"
-                id="createdAt"
-                name="createdAt"
-                value={createdAt}
-                onChange={(e) => setCreatedAt(e.target.value)}
-                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
-              />
-            </div>
-          </div>
-          <div className="space-y-1.5 relative pt-4 border-t border-border/40">
-            <label htmlFor="startDate" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Installments Start Date</label>
-            <p className="text-xs text-muted-foreground font-medium mb-2 leading-relaxed">
-              When should the installments begin calculating? Weekly installments will start 7 days after this date.
-            </p>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Calendar className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              </div>
-              <input
-                type="date"
-                id="startDate"
-                name="startDate"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-card border border-border/60 focus:border-primary rounded-2xl pl-11 pr-4 py-3 text-foreground focus:outline-none focus:ring-4 focus:ring-primary/10 transition font-bold"
-              />
-            </div>
-          </div>
-        </div>
 
         {/* ──────────────────────────────────────────────────────────
             ONGOING LOAN SECTION (Historical Import)
